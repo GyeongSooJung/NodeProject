@@ -14,3 +14,9 @@ https://github.com/here4you81/mk_dokenly
 
 ### 주요 변경 사항
 * 2020-12-09일 MK 소독기 서버 서비스 시스템의 Git 저장소가 탄생했습니다.
+
+
+#### 스크립트 소개
+소스코드 root 디렉토리에 서버 운영에 유용한 스크립트들이 추가되고 있습니다.
+* show_forever_list.sh: 현재 동작중인 forever 데몬의 리스트를 확인 가능
+* show_log.sh: 현재 동작중인 서버의 로그 정보를 실시간으로 확인 가능
