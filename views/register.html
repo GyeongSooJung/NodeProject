@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>{{title}}</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+
+	<!-- ================== BEGIN BASE CSS STYLE ================== -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+	<link href="../assets/css/default/app.min.css" rel="stylesheet" />
+	<!-- ================== END BASE CSS STYLE ================== -->
+	
+	<link href="../assets/img/favicon.png" rel="icon">
+</head>
+
+<body class="pace-top">
+	<!-- begin #page-loader -->
+	<div id="page-loader" class="fade show">
+		<span class="spinner"></span>
+	</div>
+	<!-- end #page-loader -->
+
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade">
+		<!-- begin register -->
+		<div class="register register-with-news-feed">
+			<!-- begin news-feed -->
+			<div class="news-feed">
+				<div class="news-image" style="background-image: url(../assets/img/login-bg/login-bg-15.jpg)"></div>
+				<div class="news-caption">
+					<h4 class="caption-title"><b>MK</b> 차량용 오존 소독기</h4>
+					<p>
+						소독기를 켜면 오존이 나오고, 오존이 나오면 소독이 되고, 소독이 되면 회수가 되고, 회수가 되면 공정이 완료 됩니다.
+					</p>
+				</div>
+			</div>
+			<!-- end news-feed -->
+			<!-- begin right-content -->
+			<div class="right-content">
+				<!-- begin register-header -->
+				<h1 class="register-header">
+					Sign Up
+					<small>Create your Color Admin Account. It’s free and always will be.</small>
+				</h1>
+				<!-- end register-header -->
+				<!-- begin register-content -->
+
+				{% block script %}
+				<div class="register-content" >
+					<form  action = '/company/register' method="post" class="margin-bottom-0"  data-parsley-validate="true">
+						<h5>사업자 정보</h5>
+						<hr class=" bg-white-transparent-2 m-t-0 m-b-10" />
+						<label class="control-label">상 호 (업체명) <span class="text-danger">*</span></label>
+						<div class="row m-b-15">
+							<div class="col-md-12">
+								<input type="text" class="form-control" name = "CNA" placeholder="상 호 (업체명)" data-parsley-required="true"{% if CNA %} value = {{CNA}} {% endif %}/>
+							</div>
+						</div>
+						<label class="control-label">사업자 등록 번호 <span class="text-danger">*{{ErrMsg}}</span></label>
+						<div class="row m-b-15">
+							<div class="col-md-12">
+								<input type="digits" class="form-control" name = "CNU"  placeholder="사업자 등록 번호(숫자만 입력)" {% if CNU %}   data-parsley-required="true" value = {{CNU}} {% endif %} />
+							</div>
+						</div>
+						<label class="control-label">업체 전화번호 <span class="text-danger">*</span></label>
+						<div class="row m-b-15">
+							<div class="col-md-12">
+								<input type="text" class="form-control" name = "PN" placeholder="업체 전화번호(숫자만 입력)" {% if PN %} value = {{PN}} {% endif %} data-parsley-required="true" />
+							</div>
+						</div>
+						<h5 class="m-t-30">사업자 개인 정보</h5>
+						<hr class=" bg-white-transparent-2 m-t-0 m-b-10" />
+						<label class="control-label">성명 <span class="text-danger">*</span></label>
+						<div class="row m-b-15">
+							<div class="col-md-12">
+								<input type="text" class="form-control" name = "NA" placeholder="성명" {% if NA %} value = {{NA}} {% endif %} data-parsley-required="true" />
+							</div>
+						</div>
+						<label class="control-label">핸드폰번호 <span class="text-danger">*</span></label>
+						<div class="row m-b-15">
+							<div class="col-md-12">
+								<input type="text" class="form-control" name = "MN" placeholder="핸드폰번호" {% if MN %} value = {{MN}} {% endif %} data-parsley-required="true" />
+							</div>
+						</div>
+						<label class="control-label">비밀번호 <span class="text-danger">* {{message}}</span></label>
+						<div class="row m-b-15">
+							<div class="col-md-12">
+								<input type="password" class="form-control"  name = "PW" placeholder="비밀번호" data-parsley-required="true" />
+							</div>
+						</div>
+						<label class="control-label">비밀번호 확인 <span class="text-danger">*</span></label>
+						<div class="row m-b-15">
+							<div class="col-md-12">
+								<input type="password" class="form-control" name = "PW2" placeholder="비밀번호 재입력" data-parsley-required="true" />
+							</div>
+						</div>
+						<div class="checkbox checkbox-css m-b-30">
+							<div class="checkbox checkbox-css m-b-30">
+								<input type="checkbox" id="agreement_checkbox" value=""  data-parsley-required="true">
+								<label for="agreement_checkbox">
+								By clicking Sign Up, you agree to our <a href="javascript:;">Terms</a> and that you have read our <a href="javascript:;">Data Policy</a>, including our <a href="javascript:;">Cookie Use</a>.
+								</label>
+							</div>
+						</div>
+						<div class="register-buttons">
+							<button type="submit"  class="btn btn-primary btn-block btn-lg">Sign Up</button>
+						</div>
+						<div class="m-t-30 m-b-30 p-b-30">
+							이미 가입하셨나요? <a href="/login">로그인</a> 페이지로 이동
+						</div>
+						<hr />
+						<p class="text-center mb-0">
+							&copy; Color Admin All Right Reserved 2020
+						</p>
+					</form>
+				</div>
+				{% endblock %}
+				<!-- end register-content -->
+			</div>
+			<!-- end right-content -->
+		</div>
+		<!-- end register -->
+
+
+
+		<!-- begin scroll to top btn -->
+		<a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+		<!-- end scroll to top btn -->
+	</div>
+	<!-- end page container -->
+
+	<!-- ================== BEGIN BASE JS ================== -->
+	<script src="../assets/js/app.min.js"></script>
+	<script src="../assets/js/theme/default.min.js"></script>
+	<script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
+	<!-- ================== END BASE JS ================== -->
+</body>
+
+</html>
+
+
+
+

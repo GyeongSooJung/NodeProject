@@ -1,0 +1,81 @@
+const express = require('express');
+// const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
+const Device = require('../schemas/device');
+var moment = require('moment');
+const {isNotLoggedIn} = require('./middleware');
+const router = express.Router();
+
+//장비 등록
+  //페이지 호출
+
+  //DB에 등록
+router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
+  const { MD, MAC, VER, NN, CA, UA, UT } = req.body;
+    const CID = req.decoded.CID;
+    const CNU = req.decoded.CNU;
+  try {
+    const exDevice = await Device.findOne({ "MAC" : MAC });
+    if (exDevice) {
+      return res.redirect('/device_join?error=exist');
+    }
+    else{
+      const CA = moment().format('YYYY-MM-DD hh:mm:ss');
+      const UA = "";
+      await Device.create({
+        CID, MD, VER, MAC, NN, CA
+    });
+    return res.redirect('/device_join');
+    }
+  } catch (err) {
+    console.error(err);
+    return next(err);
+  }
+});
+
+
+
+//장비 수정
+  //DB
+router.post('/device_edit/upreg/:MAC', isNotLoggedIn,async (req, res, next) => {
+    const { MD, VER, NN, MAC } = req.body;
+    const CID = req.decoded.CID;
+      const CNU = req.decoded.CNU;
+    try {
+      const exDevice = await Device.find({ "MAC" :  MAC });
+      console.log(exDevice);
+      
+      if (exDevice[0]) {
+        return res.redirect('/device_list?error=exist');
+      }
+      else{
+        const UA =  moment().format();
+        const deviceone = await Device.where({"MAC" : req.params.MAC})
+        .updateMany({ "CID" : CID,
+                      "MD" : MD,
+                      "VER" : VER,
+                      "NN" : NN,
+                      "MAC" : MAC,
+                      "UA" : UA,
+          }).setOptions({runValidators : true})
+          .exec();
+          console.log(deviceone);
+      }
+    } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+  res.redirect('/device_list');
+});
+
+//장비 삭제
+router.get('/device_delete/:MAC', async (req, res, next) => {
+  try {
+    await Device.remove({ "MAC" : req.params.MAC });
+    res.redirect('/device_list');
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+    
+module.exports = router;

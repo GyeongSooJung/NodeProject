@@ -1,0 +1,86 @@
+const express = require('express');
+const Car = require('../schemas/car');
+var moment = require('moment');
+const {isNotLoggedIn} = require('./middleware');
+const router = express.Router();
+
+
+    //DB에 등록
+router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
+  const { CC, CN, SN } = req.body;
+  const CID = req.decoded.CID;
+  const CNU = req.decoded.CNU;
+  
+  try {
+    const exCar = await Car.find({ "CN" :  CN });
+    const exCar2 = await Car.find({ "SN" : SN  });
+    console.log(exCar);
+    console.log(exCar2);
+    
+    if (exCar[0] || exCar2[0]) {
+      return res.redirect('/car_join?error=exist');
+    }
+    
+    else{
+      const CA = moment().format('YYYY-MM-DD hh:mm:ss');
+      const UA = "";
+      await Car.create({
+        CID, CC, CN, SN, CA
+    });
+    return res.redirect('/car_join');
+    }
+  } catch (err) {
+    console.error(err);
+    return next(err);
+  }
+});
+
+
+
+
+//차량 수정
+  //DB
+router.post('/car_edit/upreg/:CN', isNotLoggedIn,async (req, res, next) => {
+    const { CC, CN, SN } = req.body;
+    const CID = req.decoded.CID;
+      const CNU = req.decoded.CNU;
+    try {
+      const exCar = await Car.find({ "CN" :  CN });
+      const exCar2 = await Car.find({ "SN" : SN  });
+      console.log(exCar);
+      console.log(exCar2);
+      
+      if (exCar[0] || exCar2[0]) {
+        return res.redirect('/car_list?error=exist');
+      }
+      else{
+        const UA =  moment().format();
+        const carone = await Car.where({"CN" : req.params.CN})
+          .updateMany({ "CID" : CID,
+                        "CC" : CC,
+                        "CN" : CN,
+                        "SN" : SN,
+                        "UA" : UA,
+          }).setOptions({runValidators : true})
+          .exec();
+          console.log(carone);
+      }
+    } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+  res.redirect('/car_list');
+});
+
+//차량 삭제
+router.get('/car_delete/:CN', async (req, res, next) => {
+  try {
+    await Car.remove({ "CN" : req.params.CN });
+    res.redirect('/car_list');
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+module.exports = router;
