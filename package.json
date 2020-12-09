@@ -4,7 +4,10 @@
   "description": "Company",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "sudo forever start -a --uid dokenly -w app.js",
+    "stop": "sudo forever stop dokenly",
+    "list": "sudo forever list"
   },
   "author": "MS",
   "license": "ISC",
