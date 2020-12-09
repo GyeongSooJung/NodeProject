@@ -5,9 +5,9 @@ const path = require('path');
 const nunjucks = require('nunjucks');
 const connect = require('./schemas');
 const cookieParser = require('cookie-parser');
+// Middle Ware
+//const { isLoggedIn, isNotLoggedIn } = require('./routes/middleware');
 
-const { isLoggedIn, isNotLoggedIn } = require('./routes/middleware');
-//const v1 = require('./routes/v1');
 //login with AuthRouter
 const authRouter = require('./routes/auth');
 const ProfileRouter = require('./routes/profile')
