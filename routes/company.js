@@ -24,14 +24,15 @@ router.post('/register',emailcontrol,async (req, res, next) => {
   if(EA) {EC = true;}
   
   console.log("EC :"+EC);
-   const CNU_CK  = await postCRN(CNU);
-  if(CNU_CK == false){
-    return  res.render('register',{NA,CNA,PN,MN, CNU ,ErrMsg : "잘못된 사업자 등록번호 입니다!"});
-  } 
+
   if(EC) {
       return res.render('register',{NA,CNU,CNA,PN,MN,ErrMsg : "메일 인증을 받으세요"})
       
-  }
+  };
+    const CNU_CK  = await postCRN(CNU);
+  if(CNU_CK == false){
+    return  res.render('register',{NA,CNA,PN,MN, CNU ,ErrMsg : "잘못된 사업자 등록번호 입니다!"});
+  } 
   else{
   try {
     const exCNU = await Company.findOne({"CNU" : parseInt(CNU)});
