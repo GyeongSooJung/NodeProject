@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+	
+	<script type="text/javascript">
+    window.onbeforeunload = function() {
+    	console.log("asdasdasd");
+    };
+    </script>
 
 <head>
 	<meta charset="utf-8" />
@@ -16,7 +22,7 @@
 	<link href="../assets/img/favicon.png" rel="icon">
 </head>
 
-<body class="pace-top">
+<body class="pace-top" onunload="unload();">
 	<!-- begin #page-loader -->
 	<div id="page-loader" class="fade show">
 		<span class="spinner"></span>
@@ -51,6 +57,22 @@
 				{% block script %}
 				<div class="register-content" >
 					<form  action = '/company/register' method="post" class="margin-bottom-0"  data-parsley-validate="true">
+						<h5>이메일 인증</h5>
+						<div class="row m-b-15">
+							{% if email.authNum2 %}
+							<div class="col-md-12" id = "EmailEC">
+								<span class="text-danger">인증 되었습니다.</span></label>
+								<!--<button onclick="insertTr()"  class="btn btn-primary btn-block btn-lg">인증하기</button>-->
+							</div>
+							
+							{% else %}
+							<div class="col-md-12" id = "EmailEC">
+								<!--<button onclick="insertTr()"  class="btn btn-primary btn-block btn-lg">인증하기</button>-->
+								<button class="btn btn-primary btn-block btn-lg" onclick="window.open('/email','이메일 인증','width=700,height=500,location=no,status=no,scrollbars=yes');">인증</button>
+								<span class="text-danger">{{ErrMsg2}}</span>
+							</div>
+							{% endif %}
+						</div>
 						<h5>사업자 정보</h5>
 						<hr class=" bg-white-transparent-2 m-t-0 m-b-10" />
 						<label class="control-label">상 호 (업체명) <span class="text-danger">*</span></label>
@@ -85,6 +107,7 @@
 								<input type="text" class="form-control" name = "MN" placeholder="핸드폰번호" {% if MN %} value = {{MN}} {% endif %} data-parsley-required="true" />
 							</div>
 						</div>
+						
 						<label class="control-label">비밀번호 <span class="text-danger">* {{message}}</span></label>
 						<div class="row m-b-15">
 							<div class="col-md-12">
@@ -125,12 +148,18 @@
 		<!-- end register -->
 
 
-
 		<!-- begin scroll to top btn -->
 		<a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
 		<!-- end scroll to top btn -->
 	</div>
 	<!-- end page container -->
+	
+	<!--이메일 인증 후 새로고침 시 감지하고 URL 리로드-->
+	<script type="text/javascript"> 
+		
+	
+
+	</script>
 
 	<!-- ================== BEGIN BASE JS ================== -->
 	<script src="../assets/js/app.min.js"></script>
@@ -140,7 +169,7 @@
 </body>
 
 </html>
-
+ 
 
 
 

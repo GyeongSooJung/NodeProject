@@ -6,7 +6,7 @@ const Car = require('../schemas/car');
 const Worker = require('../schemas/worker');
 //Router or MiddleWare
 const router = express.Router();
-const {isLoggedIn,isNotLoggedIn,DataSet} = require('./middleware');
+const {isLoggedIn,isNotLoggedIn,DataSet,emailcontrol} = require('./middleware');
 
 
 //홈페이지 연결 및 추가 방법 + cookie 연결 사용방법 : company.CNA or company.CNU
@@ -22,9 +22,26 @@ router.get('/login',isLoggedIn,(req,res)=>{
     {title:'Login Website - MK Corp'});
 });
 //회원 가입
-router.get('/register',isLoggedIn,(req,res)=>{
+router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
+  
+     console.log("토큰은 이거입니다22 " + req.decoded2.authNum2);
+     const authNum2 = parseInt(req.decoded2.authNum2);
+     console.log(authNum2);
+  
+  if (authNum2){
+    console.log("성공 ");
     res.render('register',
-    {title:'Register our Website - MK Corp'});
+    {title:'Register our Website - MK Corp',
+    email : req.decoded2}
+    );
+    console.log(req.decoded2);
+  }
+  else {
+    console.log("실패");
+    res.render('register',
+    {title:'Register our Website - MK Corp'}
+    );
+  }
 });
 //ERROR Page
 router.get('/error',(req,res)=>{
@@ -35,13 +52,10 @@ router.get('/',(req,res,next)=>{
     res.redirect('index');
 });
 
-
 // 공통페이지 작성 방법
 Route_page('index');
 Route_page('car_join');
 Route_page('device_join');
-
-
 
 //장비 수정 페이지
 router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {

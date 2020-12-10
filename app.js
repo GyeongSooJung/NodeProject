@@ -17,6 +17,7 @@ const deviceRouter = require('./routes/device');
 const carRouter = require('./routes/car');
 const historyRouter = require('./routes/history');
 const workerRouter = require('./routes/worker');
+const emailRouter = require('./routes/email');
 
 const app = express();
 
@@ -45,7 +46,7 @@ app.use('/device', deviceRouter);
 app.use('/car', carRouter);
 app.use('/history', historyRouter);
 app.use('/worker', workerRouter);
-
+app.use('/email', emailRouter);
 
 
 app.use(function(req, res, next) {
