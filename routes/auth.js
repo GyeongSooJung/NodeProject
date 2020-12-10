@@ -19,7 +19,7 @@ const TokenMake = function(req,res,next){
         secretObj.secret ,   // 비밀 키
       {expiresIn: '1440m'})  // 유효 시간은 1440분 하루 설정
       res.cookie("token", token); // 쿠키에 token 등록  
-      res.redirect('/')
+      res.redirect('/');
     }
     else{
       res.redirect('/login?fail=true');

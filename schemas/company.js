@@ -30,7 +30,12 @@ const CompanySchema = new Schema({
     PW :{
         type : String,
         required : true,
-    },//Create Date
+    },//E-mail
+    EA :{
+        type : String,
+        required : true,
+        unique : true
+    },
     CA :{
         type : Date,
         default : Date.now

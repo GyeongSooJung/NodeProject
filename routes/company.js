@@ -5,16 +5,33 @@ const xml2js = require('xml2js') // xml 파싱 모듈
 //const { isLoggedIn, isNotLoggedIn } = require('./middleware');
 const Company = require('../schemas/company');
 const axios = require('axios');
+const {emailcontrol} = require('./middleware');
+
 
 //Register for Client
-router.post('/register',async (req, res, next) => {
+router.post('/register',emailcontrol,async (req, res, next) => {
   //req. Body for Insert Data.
   const {NA, CNU1,CNU2,CNU3, CNA, PN, MN, PW, PW2} = req.body;
-  const CNU = CNU1+CNU2+CNU3
-  console.log(CNU);
+  //email
+  const CNU = CNU1+CNU2+CNU3;
+  const EA = req.decoded2.EA2;
+  var EC = false;
+  
+  console.log("EA :"+EA);
+  console.log("EC :"+EC);
+  
+  //이메일이 존재하면 EC를 true로 변경
+  if(EA) {EC = true;}
+  
+  console.log("EC :"+EC);
+  
+  if(EC) {
+      return res.render('register',{NA,CNU,CNA,PN,MN,ErrMsg : "메일 인증을 받으세요"})};
+  
   const CNU_CK  = await postCRN(CNU);
+             
   if(CNU_CK == false){
-    return  res.render('register',{NA,CNA,PN,MN, CNU1, CNU2, CNU3 ,ErrMsg : "잘못된 사업자 등록번호 입니다!"});
+    return  res.render('register',{NA,CNA,PN,MN, CNU ,ErrMsg : "잘못된 사업자 등록번호 입니다!"});
   }else{
   try {
     const exCNU = await Company.findOne({"CNU" : parseInt(CNU)});
@@ -36,7 +53,7 @@ router.post('/register',async (req, res, next) => {
   } catch (error) {
     console.error(error);
     return next(error);
-  }
+      }
   }
 });
 
