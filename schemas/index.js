@@ -4,7 +4,8 @@ const connect = () => {
     if(process.env.NODE_ENV !== 'production') {
         mongoose.set('debug', true);
     }
-    mongoose.connect('mongodb://13.125.32.71:27017/MK', {
+    mongoose.connect('mongodb://52.79.245.187:27017/MK', {
+        // 13.125.32.71:27017
         dbName: 'MK',
     }, (error) => {
         if(error) {

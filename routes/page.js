@@ -57,6 +57,11 @@ Route_page('index');
 Route_page('car_join');
 Route_page('device_join');
 
+<<<<<<< HEAD
+=======
+///////////////////////////////////////////////////////////
+
+>>>>>>> 97c449aa39849ca777762e50aa46be5804e54bf9
 //장비 수정 페이지
 router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
   try {

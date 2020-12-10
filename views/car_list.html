@@ -76,13 +76,19 @@
 </div>
 <!-- end #content -->
 	<!-- error script -->
-		<script>
-			window.onload = () => {
-				if (new URL(location.href).searchParams.get('error')) {
-					alert('차량번호 또는 VIN CODE를 다시 확인해 주세요.');
-				}
-			};
-		</script>
+	<script>
+		window.onload = () => {
+			if (new URL(location.href).searchParams.get('length')) {
+				alert('차량 번호 자릿수를 확인해주세요.');
+			}
+			if (new URL(location.href).searchParams.get('type')) {
+				alert('차량 번호를 확인해주세요.');
+			}
+			if (new URL(location.href).searchParams.get('error')) {
+				alert('차량번호 또는 VIN CODE를 다시 확인해주세요.');
+			}
+		};
+	</script>
 {% endblock %}
 
 {% block script %}
