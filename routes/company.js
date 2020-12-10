@@ -24,15 +24,15 @@ router.post('/register',emailcontrol,async (req, res, next) => {
   if(EA) {EC = true;}
   
   console.log("EC :"+EC);
-  
-  if(EC) {
-      return res.render('register',{NA,CNU,CNA,PN,MN,ErrMsg : "메일 인증을 받으세요"})};
-  
-  const CNU_CK  = await postCRN(CNU);
-             
+   const CNU_CK  = await postCRN(CNU);
   if(CNU_CK == false){
     return  res.render('register',{NA,CNA,PN,MN, CNU ,ErrMsg : "잘못된 사업자 등록번호 입니다!"});
-  }else{
+  } 
+  if(EC) {
+      return res.render('register',{NA,CNU,CNA,PN,MN,ErrMsg : "메일 인증을 받으세요"})
+      
+  }
+  else{
   try {
     const exCNU = await Company.findOne({"CNU" : parseInt(CNU)});
     if (exCNU) {
@@ -82,7 +82,15 @@ async function postCRN(crn){
     }
         
 }
-
+/*
+const getCRNresultFromXml = async function(dataString){
+    try{
+        let data = xml2js.parseString(dataString);
+        return data.map.trtCntn[0];
+    }catch(err){
+        console.error(err);}
+}
+*/
 function getCRNresultFromXml(dataString) {
     return new Promise((resolve, reject) => {
         xml2js.parseString(dataString, // API 응답의 'data' 에 지정된 xml 값 추출, 파싱

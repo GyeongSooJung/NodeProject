@@ -57,11 +57,9 @@ Route_page('index');
 Route_page('car_join');
 Route_page('device_join');
 
-<<<<<<< HEAD
-=======
+
 ///////////////////////////////////////////////////////////
 
->>>>>>> 97c449aa39849ca777762e50aa46be5804e54bf9
 //장비 수정 페이지
 router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
   try {
@@ -131,7 +129,7 @@ router.get('/profile',isNotLoggedIn,DataSet ,async (req, res, next) => {
 //Worker list for Workers
 router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
   try {
-    const workers = await Worker.find({});
+    const workers = await Worker.find({CID : req.decoded.CID,});
     res.render('worker_list', {company : req.decoded
                                 ,workers});
   } catch (err) {
