@@ -57,7 +57,7 @@ router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
 //Device List Data Setting for Devices
 router.get('/device_list', isNotLoggedIn,async (req, res, next) => {
   try {
-    const devices = await Device.find({});
+    const devices = await Device.find({CID : req.decoded.CID,});
     res.render('device_list', {company : req.decoded 
                                 ,devices});
   } catch (err) {
@@ -83,7 +83,7 @@ router.get('/car_edit/:CN',isNotLoggedIn,async (req, res, next) => {
 //Car List Data Setting for Cars
 router.get('/car_list',isNotLoggedIn, async (req, res, next) => {
   try {
-    const cars = await Car.find({});
+    const cars = await Car.find({CID : req.decoded.CID,});
       console.log(cars);
     res.render('car_list', {company : req.decoded 
                             ,cars});

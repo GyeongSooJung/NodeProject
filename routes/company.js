@@ -9,24 +9,20 @@ const axios = require('axios');
 //Register for Client
 router.post('/register',async (req, res, next) => {
   //req. Body for Insert Data.
-  const {NA, CNU, CNA, PN, MN, PW, PW2} = req.body;
- const CNU_CK  = await postCRN(CNU);
+  const {NA, CNU1,CNU2,CNU3, CNA, PN, MN, PW, PW2} = req.body;
+  const CNU = CNU1+CNU2+CNU3
+  console.log(CNU);
+  const CNU_CK  = await postCRN(CNU);
   if(CNU_CK == false){
-    return  res.render('register',{NA,CNA,PN,MN, CNU ,ErrMsg : "잘못된 사업자 등록번호 입니다!"});
+    return  res.render('register',{NA,CNA,PN,MN, CNU1, CNU2, CNU3 ,ErrMsg : "잘못된 사업자 등록번호 입니다!"});
   }else{
   try {
     const exCNU = await Company.findOne({"CNU" : parseInt(CNU)});
-    //const exPN = await Company.findOne({"PN" : parseInt(PN)});
-    //const exMN = await Company.findOne({"MN" : parseInt(MN)});
     if (exCNU) {
-     return  res.render('register',{NA,CNA,PN,MN, CNU ,ErrMsg : "가입된 아이디입니다."});
-    }
-    if (PW.length <8){
-      return res.render('register',{NA,CNU,CNA,PN,MN,message : "8자리 이상 입력하세요."});
-      //return res.redirect( '/register?pwlength=e');
+     return  res.render('register',{NA,CNA,PN,MN, CNU1, CNU2, CNU3 ,ErrMsg : "가입된 사업자입니다."});
     }
       if(PW ===! PW2 ){
-      return res.render('register',{NA,CNU,CNA,PN,MN,message : "비밀번호가 다릅니다."});
+      return res.render('register',{NA,CNU1, CNU2, CNU3,CNA,PN,MN,message : "비밀번호가 다릅니다."});
     }
 
     //중복값 생성시 에러 반환
