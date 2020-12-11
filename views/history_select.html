@@ -39,48 +39,6 @@
 		<!-- end panel-heading -->
 		<!-- begin panel-body -->
 		<div class="panel-body">
-			<center>
-				<div class="btn-group m-r-5 m-b-5">
-					<a href="javascript:;" class="btn btn-primary text-white">차량</a>
-					<a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle text-white"><b class="caret"></b></a>
-					<div class="dropdown-menu dropdown-menu-right">
-						{% for car in cars %}
-						<a href="/history_select/{{car.CN}}" class="dropdown-item">{{car.CN}}</a>
-						{% endfor %}
-					</div>
-				</div>
-				<div class="btn-group m-r-5 m-b-5">
-					<a href="javascript:;" class="btn btn-primary text-white">장비</a>
-					<a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle text-white"><b class="caret"></b></a>
-					<div class="dropdown-menu dropdown-menu-right">
-						{% for device in devices %}
-						<a href="/history_select/{{device.MD}}" class="dropdown-item">{{device.MD}}</a>
-						{% endfor %}
-					</div>
-				</div>
-			</center>
-			<!--<form action="/history_select" method="post" class="form-row align-items-center justify-content-center">-->
-			<!--    <div class="col-auto my-1">-->
-			<!--      <select class="custom-select mr-sm-2" id="carselect">-->
-			<!--        <option selected>차량</option>-->
-			<!--        {% for car in cars %}-->
-			<!--        <option value="{{car.CN}}">{{car.CN}}</option>-->
-			<!--        {% endfor %}-->
-			<!--      </select>-->
-			<!--    </div>-->
-			<!--    <div class="col-auto my-1">-->
-			<!--      <select class="custom-select mr-sm-2" id="deviceselect">-->
-			<!--        <option selected>장비</option>-->
-			<!--        {% for device in devices %}-->
-			<!--        <option value="{{device.MD}}">{{device.MD}}</option>-->
-			<!--        {% endfor %}-->
-			<!--      </select>-->
-			<!--    </div>-->
-			<!--    <div class="col-auto my-1">-->
-			<!--    	<button type="submit" class="btn btn-primary px-4">조회</button>-->
-			<!--    </div>-->
-			<!--</form>-->
-
 			<table id="data-table-default" class="table table-striped table-bordered table-td-valign-middle">
 				<thead>
 					<tr>

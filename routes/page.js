@@ -4,6 +4,8 @@ const Company = require('../schemas/company');
 const Device = require('../schemas/device');
 const Car = require('../schemas/car');
 const Worker = require('../schemas/worker');
+const History = require('../schemas/history');
+const moment = require('moment');
 //Router or MiddleWare
 const router = express.Router();
 const {isLoggedIn,isNotLoggedIn,DataSet,emailcontrol} = require('./middleware');
@@ -56,13 +58,6 @@ router.get('/',(req,res,next)=>{
 Route_page('index');
 Route_page('car_join');
 Route_page('device_join');
-
-<<<<<<< HEAD
-=======
-
-///////////////////////////////////////////////////////////
-
->>>>>>> 6e6eecd4315fe2161226041e104c2b79ac9928f0
 //장비 수정 페이지
 router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
   try {
@@ -141,10 +136,46 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
   }
 });
 
+///////////////////////////////////////
+//History
+router.get('/history_list',isNotLoggedIn ,async (req, res, next) => {
+   const CID = req.decoded.CID;
+   const CNU = req.decoded.CNU;
+   try {
+      const cars = await Car.find({"CID" : CID});
+      const devices = await Device.find({"CID" : CID});
+      const historys = await History.find({"CID" : CID});
+       res.render('history_list', {cars, devices, historys, moment});
+   } catch (err) {
+       console.error(err);
+       next(err);
+   }
+});
 
+router.get('/history_select/:CN', isNotLoggedIn, async (req, res, next) => {
+    try {
+      const carone = await Car.findOne({"CN" : req.params.CN});
+      var carid = "" +carone._id;
+      const historys = await History.find({"VID" : carid});
+      console.log(historys);
+      res.render('history_select', {historys, moment});
+    } catch (err) {
+        console.error(err);
+    }
+});
 
-
-
+router.get('/history_select/:MD', isNotLoggedIn, async (req, res, next) => {
+    try {
+      const deviceone = await Device.findOne({"MD" : req.params.MD});
+      var deviceid = "" +deviceone._id;
+      const historys = await History.find({"DID" : deviceid});
+      console.log(deviceid)
+      console.log(historys);
+      res.render('history_select', {historys, moment});
+    } catch (err) {
+        console.error(err);
+    }
+});
 
 module.exports = router;
 
