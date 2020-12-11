@@ -81,10 +81,12 @@
 								<input type="text" class="form-control" name = "CNA" placeholder="상 호 (업체명)" data-parsley-required="true"{% if CNA %} value = {{CNA}} {% endif %}/>
 							</div>
 						</div>
-						<label class="control-label">사업자 등록 번호 <span class="text-danger">*{{ErrMsg}}</span></label>
-						<div class="row m-b-15">
+						<label class="control-label">사업자 등록 번호 <span class="text-danger"> *{{ErrMsg}}</span></label>
+						<div class="row m-b-15" >
 							<div class="col-md-12">
-								<input type="digits" class="form-control" name = "CNU"  placeholder="사업자 등록 번호(숫자만 입력)" {% if CNU %}   data-parsley-required="true" value = {{CNU}} {% endif %} />
+								<input type="digits" class="form-control" name = "CNU1"  placeholder="3자리" maxlength=3 style="width : 15%; display: inline-block;" {% if CNU %}  data-parsley-required="true" value = {{CNU1}} {% endif %} /> -
+								<input type="digits" class="form-control" name = "CNU2"  placeholder="4자리" maxlength=4  style="width : 15%; display: inline-block;"  {% if CNU %} data-parsley-required="true" value = {{CNU2}} {% endif %} /> -
+								<input type="digits" class="form-control" name = "CNU3"  placeholder="5자리" maxlength=5 style="width :20%; display: inline-block;;"  {% if CNU %} data-parsley-required="true" value = {{CNU3}} {% endif %} /> 
 							</div>
 						</div>
 						<label class="control-label">업체 전화번호 <span class="text-danger">*</span></label>
@@ -111,13 +113,13 @@
 						<label class="control-label">비밀번호 <span class="text-danger">* {{message}}</span></label>
 						<div class="row m-b-15">
 							<div class="col-md-12">
-								<input type="password" class="form-control"  name = "PW" placeholder="비밀번호" data-parsley-required="true" />
+								<input type="password" class="form-control"  name = "PW" minlength= 8 maxlength= 16 placeholder="비밀번호(8자리이상)" data-parsley-required="true" />
 							</div>
 						</div>
 						<label class="control-label">비밀번호 확인 <span class="text-danger">*</span></label>
 						<div class="row m-b-15">
 							<div class="col-md-12">
-								<input type="password" class="form-control" name = "PW2" placeholder="비밀번호 재입력" data-parsley-required="true" />
+								<input type="password" class="form-control" name = "PW2" minlength= 8 maxlength= 16 placeholder="비밀번호 재입력" data-parsley-required="true" />
 							</div>
 						</div>
 						<div class="checkbox checkbox-css m-b-30">

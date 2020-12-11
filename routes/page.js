@@ -57,6 +57,12 @@ Route_page('index');
 Route_page('car_join');
 Route_page('device_join');
 
+<<<<<<< HEAD
+=======
+
+///////////////////////////////////////////////////////////
+
+>>>>>>> 6e6eecd4315fe2161226041e104c2b79ac9928f0
 //장비 수정 페이지
 router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
   try {
@@ -71,7 +77,7 @@ router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
 //Device List Data Setting for Devices
 router.get('/device_list', isNotLoggedIn,async (req, res, next) => {
   try {
-    const devices = await Device.find({});
+    const devices = await Device.find({CID : req.decoded.CID,});
     res.render('device_list', {company : req.decoded 
                                 ,devices});
   } catch (err) {
@@ -97,7 +103,7 @@ router.get('/car_edit/:CN',isNotLoggedIn,async (req, res, next) => {
 //Car List Data Setting for Cars
 router.get('/car_list',isNotLoggedIn, async (req, res, next) => {
   try {
-    const cars = await Car.find({});
+    const cars = await Car.find({CID : req.decoded.CID,});
       console.log(cars);
     res.render('car_list', {company : req.decoded 
                             ,cars});
@@ -126,7 +132,7 @@ router.get('/profile',isNotLoggedIn,DataSet ,async (req, res, next) => {
 //Worker list for Workers
 router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
   try {
-    const workers = await Worker.find({});
+    const workers = await Worker.find({CID : req.decoded.CID,});
     res.render('worker_list', {company : req.decoded
                                 ,workers});
   } catch (err) {
