@@ -5,6 +5,7 @@ const Device = require('../schemas/device');
 const Car = require('../schemas/car');
 const Worker = require('../schemas/worker');
 const History = require('../schemas/history');
+const Process = require('../schemas/process');
 const moment = require('moment');
 //Router or MiddleWare
 const router = express.Router();
@@ -26,6 +27,7 @@ router.get('/login',isLoggedIn,(req,res)=>{
 //회원 가입
 router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
   
+  /* 회원가입 실패 시 토큰 그대로 남기는 부분
      console.log("토큰은 이거입니다22 " + req.decoded2.authNum2);
      const authNum2 = parseInt(req.decoded2.authNum2);
      console.log(authNum2);
@@ -33,17 +35,16 @@ router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
   if (authNum2){
     console.log("성공 ");
     res.render('register',
-    {title:'Register our Website - MK Corp',
     email : req.decoded2}
     );
     console.log(req.decoded2);
   }
   else {
     console.log("실패");
-    res.render('register',
-    {title:'Register our Website - MK Corp'}
-    );
+    res.render('register');
   }
+  */
+  res.render('register');
 });
 //ERROR Page
 router.get('/error',(req,res)=>{
@@ -58,11 +59,7 @@ router.get('/',(req,res,next)=>{
 Route_page('index');
 Route_page('car_join');
 Route_page('device_join');
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 13b31efd8148970abfbb17070fec6c37851ffe50
 //장비 수정 페이지
 router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
   try {
@@ -157,30 +154,42 @@ router.get('/history_list',isNotLoggedIn ,async (req, res, next) => {
    }
 });
 
-router.get('/history_select/:CN', isNotLoggedIn, async (req, res, next) => {
+router.get('/history_CN_select/:CN', isNotLoggedIn, async (req, res, next) => {
     try {
       const carone = await Car.findOne({"CN" : req.params.CN});
       var carid = "" +carone._id;
       const historys = await History.find({"VID" : carid});
       console.log(historys);
-      res.render('history_select', {historys, moment});
+      res.render('history_select_car', {historys, moment});
     } catch (err) {
         console.error(err);
     }
 });
 
-router.get('/history_select/:MD', isNotLoggedIn, async (req, res, next) => {
+router.get('/history_MD_select/:MD', isNotLoggedIn, async (req, res, next) => {
     try {
       const deviceone = await Device.findOne({"MD" : req.params.MD});
-      var deviceid = "" +deviceone._id;
+      var deviceid = "" + deviceone._id;
       const historys = await History.find({"DID" : deviceid});
-      console.log(deviceid)
-      console.log(historys);
-      res.render('history_select', {historys, moment});
+      res.render('history_select_device', {historys, moment});
     } catch (err) {
         console.error(err);
     }
 });
+
+router.get('/history_chart/:_id',isNotLoggedIn ,async (req, res, next) => {
+    try {
+        const historyone = await History.findOne({"_id" : req.params._id});
+        const processone = await Process.find({"HID" : req.params._id});
+        console.log(historyone);
+        console.log(processone);
+        res.render('history_chart', {processone, moment});
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+})
+
 
 module.exports = router;
 
