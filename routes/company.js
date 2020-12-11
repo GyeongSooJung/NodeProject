@@ -16,6 +16,23 @@ router.post('/register',emailcontrol,async (req, res, next) => {
   const EA = req.decoded2.EA2;
   var EC = false;
   
+  const authNum2 = parseInt(req.decoded2.authNum2);
+  
+  if (authNum2){
+    console.log("성공 ");
+    res.render('register',
+    {title:'Register our Website - MK Corp',
+    email : req.decoded2}
+    );
+    console.log(req.decoded2);
+  }
+  else {
+    console.log("실패");
+    res.render('register',
+    {title:'Register our Website - MK Corp'}
+    );
+  }
+  
   console.log("EA :"+EA);
   console.log("EC :"+EC);
   
