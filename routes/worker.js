@@ -19,7 +19,7 @@ router.post('/worker_update',isNotLoggedIn ,async (req, res, next) => {
             for (i = 0; i< EM.length; i++){
               workerone = await Worker.where({"EM" : EM[i]}).update({ "AC" : false }).setOptions({runValidators : true}).exec();
             }
-            return res.redirect('worker_list');
+            return res.redirect('/worker_list');
         }
         else if(!(AC instanceof Object)) {
           for (i =0; i < EM.length; i ++) {
@@ -45,7 +45,7 @@ router.post('/worker_update',isNotLoggedIn ,async (req, res, next) => {
             }
           }
         }
-        res.redirect('worker_list');
+        res.redirect('/worker_list');
     }   catch (err) {
         console.error(err);
         next(err);
@@ -56,7 +56,7 @@ router.post('/worker_update',isNotLoggedIn ,async (req, res, next) => {
 router.get('/worker_delete/:EM',isNotLoggedIn ,async (req, res, next) => {
   try {
     await Worker.remove({ "EM" : req.params.EM });
-    res.redirect('/worker/worker_list');
+    res.redirect('/worker_list');
   } catch (err) {
     console.error(err);
     next(err);

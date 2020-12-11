@@ -130,6 +130,7 @@ router.get('/profile',isNotLoggedIn,DataSet ,async (req, res, next) => {
 router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
   try {
     const workers = await Worker.find({CID : req.decoded.CID,});
+    console.log(workers);
     res.render('worker_list', {company : req.decoded
                                 ,workers});
   } catch (err) {
