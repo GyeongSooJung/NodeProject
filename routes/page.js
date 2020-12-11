@@ -58,6 +58,11 @@ router.get('/',(req,res,next)=>{
 Route_page('index');
 Route_page('car_join');
 Route_page('device_join');
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 13b31efd8148970abfbb17070fec6c37851ffe50
 //장비 수정 페이지
 router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
   try {
