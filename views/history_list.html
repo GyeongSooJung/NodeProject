@@ -70,8 +70,12 @@
 					</tr>
 				</thead>
 				<tbody>
+					
 					{% for history in historys %}
 					<tr onClick="location.href='/history_chart/{{history._id}}'" class="odd gradeX">
+						
+						
+						
 						<td>{{moment(history.ET).format('YYYY-MM-DD')}}</td>
 						<td>{{moment(history.ST).format('hh:mm:ss')}}</td>
 						<td>{{moment(history.ET).format('hh:mm:ss')}}</td>

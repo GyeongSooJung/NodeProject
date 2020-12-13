@@ -148,6 +148,11 @@ router.get('/history_list',isNotLoggedIn ,async (req, res, next) => {
       const cars = await Car.find({"CID" : CID});
       const devices = await Device.find({"CID" : CID});
       const historys = await History.find({"CID" : CID});
+      console.log(historys.DID);
+      const device22 = await Device.find({"_id" : historys.DID});
+      const car22 = await Car.find({"_id" : historys.VID});
+      console.log(device22);
+      console.log(car22);
        res.render('history_list', {cars, devices, historys, moment});
    } catch (err) {
        console.error(err);
