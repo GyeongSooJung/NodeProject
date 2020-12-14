@@ -4,6 +4,7 @@ const secretObj2 = require("../config/jwt");
 const Company = require('../schemas/company');
 
 
+
 exports.isLoggedIn = (req, res, next) => {
   try{
     req.decoded = jwt.verify(req.cookies.token, secretObj.secret);
@@ -51,4 +52,10 @@ exports.DataSet = async(req,res,next)=>{
   }
 };
 
-
+//History Back 막기.
+/*exports.TurnBackErr =(req,res,next) => {
+    res.header('Cache-Control','private, no-store, must-revalidate');
+    res.header('Expires', '-1');
+    res.header('Pragma','no-cache');
+}
+*/

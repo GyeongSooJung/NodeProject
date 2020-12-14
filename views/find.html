@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8" />
+	<title>MK Admin | PassWordFind Page</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+	
+	<!-- ================== BEGIN BASE CSS STYLE ================== -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+	<link href="../assets/css/default/app.min.css" rel="stylesheet" />
+	<!-- ================== END BASE CSS STYLE ================== -->
+	
+	<link href="../assets/img/favicon.png" rel="icon">
+</head>
+<script type="text/javascript">
+ window.history.forward();
+ function noBack(){window.history.forward();}
+</script>
+
+<body class="pace-top">
+    <body onload="noBack();" onpageshow="if(event.persisted) noBack();" onunload="">
+
+	<!-- begin #page-loader -->
+	<div id="page-loader" class="fade show">
+		<span class="spinner"></span>
+	</div>
+	<!-- end #page-loader -->
+	
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade">
+		<!-- begin login -->
+		<div class="login login-v1">
+			<!-- begin login-container -->
+			<div class="login-container">
+				<!-- begin login-header -->
+				<div class="login-header">
+					<div class="brand">
+						<span class="logo"></span> <b>E-mail</b> Certify
+					</div>
+					<div class="icon">
+						<i class="fa fa-lock"></i>
+					</div>
+				</div>
+				<!-- end login-header -->
+				<!-- begin login-body -->
+				<div class="login-body">
+					<!-- begin login-content -->
+					<div class="login-content">
+						        {% if Change %}
+						        	<form action="/find/change" method="post" class="margin-bottom-0" >
+    						        	<input id="CNU" name = 'CNU' type="hidden" class="form-control form-control-lg inverse-mode"
+    						        	value= {{CNU}} />
+    						                <div style="display:flex;" class="row m-b-15" >
+    						                    {% if errmsg %} <span class="text-danger mt-0 mb-2">   *{{errmsg}}</span> {% endif %}
+        						            <div class="col-md-12 mb-2" name = "password">
+        						                <input id="PW1" name = "PW1" type="password"  class="form-control form-control-lg inverse-mode" 
+        						                placeholder="비밀번호 입력" required minlength= 8 maxlength= 16  />
+        						            </div> 
+        						        <div class="col-md-12 mb-2" name = "password">  
+        						            <input id="PW2" name = "PW2" type="password" class="form-control form-control-lg inverse-mode"
+        						            placeholder="비밀번호 재입력" required minlength= 8 maxlength= 16  />
+        						        </div>
+        							    <div class="col-md-6">      
+        								    <button type="submit" class="btn btn-success btn-block btn-lg" name = "PW_change" >보내기</button> 
+        							    </div>
+        						    </div>
+    					        </form>
+						        {% else %}
+						        	<form action="/find/sendmail" method="post" class="margin-bottom-0" >
+						            <div style="display:flex;" class="row m-b-15" >
+						            {% if errmsg %}<span class="text-danger mt-0 mb-2">   *{{errmsg}}</span> {% endif %}
+    						        <div class="col-md-12 mb-2" name = "CNU_CK">
+    						        <input id="CNU" name = "CNU" type="text" class="form-control form-control-lg inverse-mode" 
+    						        {% if CNU %} value={{CNU}} readonly {% else %} placeholder="사업자 등록번호" required {% endif %} />
+    						        </div> 
+    						        <div class="col-md-6 " name = "email">
+    						        <input id="EA" name = "EA" type="text" class="form-control form-control-lg inverse-mode"
+    						        {% if EA %} value={{EA}} readonly {% else %} placeholder="이메일 주소" required {% endif %}/>
+    						        </div>
+    							<div class="col-md-6">
+    								<button type="submit" class="btn btn-success btn-block btn-lg" name = "email_click" >보내기</button> 
+    							</div>
+    						</div>
+    					</form>
+    					
+    					<form action="/find/email_cert" method="post" >
+							<div style="display:flex;" class="row">
+    							<div class="col-md-12 mb-2 mt-0" >
+    								<input id="Enum" name = 'Enum' type="password" class="form-control form-control-lg inverse-mode" placeholder="인증 문자 6자리 입력" required />
+    								<input id="Enum" name = 'authNum' type="hidden" class="form-control form-control-lg inverse-mode" value= {{authNum}} />
+                                    <input id="CNU" name = 'CNU' type="hidden" class="form-control form-control-lg inverse-mode" value= {{CNU}} />    							
+    							</div>
+    							
+    							<div class="col-md-12">
+    								<button type="submit" class="btn btn-success btn-block btn-lg">확인</button> 
+    							</div>
+    						</div>
+						</form>
+		                
+					    </div>
+					</form>
+					{% endif %}
+					<!-- end login-content -->
+				</div>
+				<!-- end login-body -->
+			</div>
+			<!-- end login-container -->
+		</div>
+		<!-- end login -->
+		
+		
+		<!-- end theme-panel -->
+		
+		<!-- begin scroll to top btn -->
+		<a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+		<!-- end scroll to top btn -->
+	</div>
+	<!-- end page container -->
+	
+	<!-- ================== BEGIN BASE JS ================== -->
+	<script src="../assets/js/app.min.js"></script>
+	<script src="../assets/js/theme/default.min.js"></script>
+	<!-- ================== END BASE JS ================== -->
+	 <script>
+	 
+     </script>
+     <script>
+            
+        window.onload = () => {
+            
+            
+            
+            //인증번호 인증이 성공했을 때
+
+            if (new URL(location.href).searchParams.get('pwe')) {
+                alert('비밀번호가 일치하지 않습니다.');
+            }
+            if (new URL(location.href).searchParams.get('false')) {
+                 alert('인증번호가 틀립니다. 다시 시도해 주세요');
+                 opener.parent.location.replace('./find');
+            }
+            if (new URL(location.href).searchParams.get('pwc')) {
+            alert('비밀번호 변경이 완료되었습니다.');
+            opener.parent.location.replace('./login');
+             window.close();
+            }
+        	
+        }
+      </script>
+</body>
+</html>
