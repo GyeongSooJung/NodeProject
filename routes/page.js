@@ -24,6 +24,11 @@ router.get('/login',isLoggedIn,(req,res)=>{
     res.render('login',
     {title:'Login Website - MK Corp'});
 });
+//비밀번호 찾기
+
+router.get('/pwfind',isLoggedIn,(req,res,next)=>{
+    res.render('pwfind');
+});
 //회원 가입
 router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
   
