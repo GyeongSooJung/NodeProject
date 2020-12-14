@@ -23,6 +23,7 @@ router.get('/login',isLoggedIn,(req,res)=>{
     res.render('login',
     {title:'Login Website - MK Corp'});
 });
+
 //회원 가입
 router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
   

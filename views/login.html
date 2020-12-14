@@ -57,7 +57,9 @@
 							</div>
 							<div class="login-buttons">
 								<button type="submit" class="btn btn-success btn-block btn-lg">Sign me in</button> 
-								<li class="form-control-lg inverse-mode">회원 가입 아직 안하셨나요? <a href="register" > 여기</a> 를 누르세요! </li>	
+								<li class="form-control-lg inverse-mode"><a href="register" >회원가입</a>   /  <a href="find" > 비밀번호 찾기</a></li>
+
+		
 							</div>
 						</form>
 		
@@ -91,6 +93,9 @@
       if (new URL(location.href).searchParams.get('again')) {
         alert('다시 로그인 해주세요.');
       }
+            if (new URL(location.href).searchParams.get('pwc')) {
+            alert('비밀번호 변경이 완료되었습니다.');
+            }
     	
     }
       

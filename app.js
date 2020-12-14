@@ -6,6 +6,7 @@ const nunjucks = require('nunjucks');
 const connect = require('./schemas');
 const cookieParser = require('cookie-parser');
 // Middle Ware
+//const {TurnBackErr} = require('./routes/middleware')
 //const { isLoggedIn, isNotLoggedIn } = require('./routes/middleware');
 
 //login with AuthRouter
@@ -18,7 +19,12 @@ const carRouter = require('./routes/car');
 const historyRouter = require('./routes/history');
 const workerRouter = require('./routes/worker');
 const emailRouter = require('./routes/email');
+
+const findRouter = require('./routes/find');
+
+
 const mobileRouter = require('./routes/mobile');
+
 const app = express();
 
 app.set('port', process.env.PORT || 8008);
@@ -40,7 +46,7 @@ app.use('/', pageRouter);
 app.use('/auth', authRouter);
 app.use('/company', CompanyRouter);
 app.use('/profile', ProfileRouter);
-
+app.use('/find',findRouter);
 app.use('/device', deviceRouter);
 app.use('/car', carRouter);
 app.use('/history', historyRouter);
