@@ -190,6 +190,31 @@ router.get('/history_chart/:_id',isNotLoggedIn ,async (req, res, next) => {
     }
 })
 
+/////////////////////////////////////////////////////////////////////////////////
+//Mobile Connect Page
+router.get('/mobile_con', async (req, res, next) => {
+    try {
+        res.render('mobile_con');
+    } catch(err) {
+        console.error(err);
+        next(err);
+    }
+});
+
+//Mobile QR Code Page
+router.post('/QR', async (req, res, next) => {
+  const {CN} = req.body;
+    try {
+        const carone = await Car.findOne({"CN" : CN});
+        const companyone = await Company.findOne({"_id" : carone.CID});
+        const deviceone = await Device.findOne({"CID" : companyone._id});
+        const historys = await History.find({"VID" : carone._id});
+        res.render('QR', {carone, companyone, deviceone, historys, moment});
+    } catch(err) {
+        console.error(err);
+        next(err);
+    }
+});
 
 module.exports = router;
 

@@ -1,0 +1,23 @@
+.carousel-indicators li, .carousel-control-prev-icon, .carousel-control-next-icon {
+    filter: invert(0.6);
+}
+
+.carousel-indicators {
+    position: relative;
+    margin: 1% 0 0 0;
+}
+
+@media (max-width: 768px) {
+    html {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        }
+    body {
+        width: 100%;
+        height: 100%;
+    }
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        display: none;
+    }
+}

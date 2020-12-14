@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="kor">
+<head>
+	<meta charset="utf-8" />
+	<title>MK | Disinfection History</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+	
+	<!-- ================== BEGIN BASE CSS STYLE ================== -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+	<link href="../assets/css/default/app.min.css" rel="stylesheet" />
+	<!-- ================== END BASE CSS STYLE ================== -->
+	
+	<!-- fontawsome 사용 -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" rel="stylesheet" />
+	<!-- favicon -->
+	<link href="../assets/img/favicon.png" rel="icon">
+	
+    <link rel="stylesheet" href="../assets/css/add.css">
+	
+</head>
+<body>
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade page-without-sidebar">
+		<!-- begin #header -->
+		<div id="header" class="header navbar-default mb-0">
+			 <!--begin navbar-header -->
+			<div class="navbar-header">
+				<span class="navbar-brand m-0"><img src="../assets/img/mk_logo4.png"></span>
+			</div>
+			 <!--end header-nav -->
+		</div>
+		<!-- end #header -->
+		
+		<!-- begin #content -->
+		<div id="content" class="content pt-0">
+			<!-- begin carousel -->
+			<div id="carouselcontent" class="carousel slide" data-ride="carousel" data-interval="false">
+				<!-- carousel pagination -->
+				<ol class="carousel-indicators">
+					<li data-target="#carouselcontent" data-slide-to="0" class="active"></li>
+					<li data-target="#carouselcontent" data-slide-to="1"></li>
+					<li data-target="#carouselcontent" data-slide-to="2"></li>
+				</ol>
+				<!-- begin carousel-inner -->
+				<div class="carousel-inner">
+					<!-- begin carousel 1 -->
+					<div class="carousel-item active">
+						<!-- begin row -->
+						<div class="row">
+							<!-- begin col-6 -->
+							<div class="col-xl-12">
+								<!-- begin panel -->
+								<div class="panel panel-inverse mb-2" data-sortable-id="table-basic-7">
+									<!-- begin panel-body -->
+									<div class="panel-body">
+										<!-- begin table-responsive -->
+										<div class="table-responsive">
+											<label for="facility" class="d-flex align-items-center mb-3">
+												<i class="fas fa-2x fa-fw m-r-10 fa-car"></i>
+									            <h4 class="mb-0">시설</h4>									
+											</label>
+											<table id="facility" class="table table-striped m-b-0">
+												<tr>
+													<th>소독기</th><td>{{deviceone.MD}}</td>
+												</tr>
+												<tr>
+													<th>업체명</th><td>{{companyone.CNA}}</td>
+												</tr>
+												<tr>
+													<th>차량번호</th><td>{{carone.CN}}</td>
+												</tr>
+												</tbody>
+											</table>
+										</div>
+										<!-- end table-responsive -->
+									</div>
+									<!-- end panel-body -->
+								</div>
+								<!-- end panel -->
+							</div>
+							<!-- end col-6 -->
+						</div>
+						<!-- end row -->
+						
+						<!-- begin row -->
+						<div class="row">
+							<!-- begin col-6 -->
+							<div class="col-xl-12">
+								<!-- begin panel -->
+								<div class="panel panel-inverse mb-2" data-sortable-id="table-basic-7">
+									<!-- begin panel-body -->
+									<div class="panel-body">
+										<label for="safe" class="d-flex align-items-center mb-3">
+											<i class="fas fa-2x fa-fw m-r-10 fa-medkit"></i>
+								            <h4 class="mb-0">안전성</h4>									
+										</label>
+										<div id="safe" class="text-center text-green">
+											<i class="fas fa-5x fa-fw fa-check-circle"></i>
+											<h4 id="safe_text" class="mt-2">소독 완료!</h4>
+										</div>
+									</div>
+									<!-- end panel-body -->
+								</div>
+								<!-- end panel -->
+							</div>
+							<!-- end col-6 -->
+						</div>
+						<!-- end row -->
+						
+						<!-- begin row -->
+						<div class="row">
+							<!-- begin col-6 -->
+							<div class="col-xl-12">
+								<!-- begin panel -->
+								<div class="panel panel-inverse mb-2" data-sortable-id="table-basic-7">
+									<!-- begin panel-body -->
+									<div class="panel-body text-center">
+										<label for="list" class="d-flex align-items-center mb-3">
+											<i class="fas fa-2x fa-fw m-r-10 fa-calendar"></i>
+								            <h4 class="mb-0">소독 일시</h4>									
+										</label>
+										<div id="list" class="border border-secondary py-2">
+											<h2 class="mb-0 p-5">{{moment(historys.ET).format('YYYY-MM-DD hh:mm:ss')}}</h2>
+										</div>
+										<div class="btn-group btn-block">
+											<a href="#" class="btn btn-default dropdown-toggle border border-secondary rounded-0 bg-secondary text-white" data-toggle="dropdown">
+												누적 기록 보기 &#43;
+											</a>
+											<div class="table-responsive dropdown-menu pull-center my-0 px-2 text-center height-xs border border-secondary">
+												<table class="table table-striped table-bordered table-sm mb-0">
+													<thead>
+														<tr class="bg-silver">
+															<th>소독일</th>
+															<th>소독시간</th>
+															<th>소독여부</th>
+														</tr>
+													</thead>
+													<tbody>
+														{% for history in historys %}
+														<tr>
+															<td>{{moment(history.ET).format('YYYY-MM-DD')}}</td>
+															<td>{{moment(history.ET).format('hh:mm:ss')}}</td>
+															<td>{{history.RC}}</td>
+														</tr>
+														{% endfor %}
+													</tbody>
+												</table>
+											</div>
+										</div>
+										
+									</div>
+									<!-- end panel-body -->
+								</div>
+								<!-- end panel -->
+							</div>
+							<!-- end col-6 -->
+						</div>
+						<!-- end row -->
+					</div>
+					<!-- end carousel 1 -->
+					
+					<!-- begin carousel 2 -->
+					<div class="carousel-item">
+						<!-- begin row -->
+						<div class="row">
+							<!-- begin col-6 -->
+							<div class="col-xl-12">
+								<!-- begin panel -->
+								<div class="panel panel-inverse mb-2" data-sortable-id="table-basic-7">
+									<!-- begin panel-body -->
+									<div class="panel-body">
+										<label for="sterilization" class="d-flex align-items-center mb-3">
+											<i class="fas fa-2x fa-fw m-r-10 fa-fire-extinguisher"></i>
+								            <h4 class="mb-0">살균 목록</h4>									
+										</label>
+										<div id="sterilization" class="text-center text-green">
+			
+										</div>
+									</div>
+									<!-- end panel-body -->
+								</div>
+								<!-- end panel -->
+							</div>
+							<!-- end col-6 -->
+						</div>
+						<!-- end row -->
+						
+						<!-- begin row -->
+						<div class="row">
+							<!-- begin col-6 -->
+							<div class="col-xl-12">
+								<!-- begin panel -->
+								<div class="panel panel-inverse mb-2" data-sortable-id="table-basic-7">
+									<!-- begin panel-body -->
+									<div class="panel-body">
+										<label for="certification" class="d-flex align-items-center mb-3">
+											<i class="fas fa-2x fa-fw m-r-10 fa-file-alt"></i>
+								            <h4 class="mb-0">인증서</h4>									
+										</label>
+										<div id="certification" class="d-flex justify-content-center">
+											<!-- KC인증-->
+											<div class="col-xl-2 col-xs-5 mx-2 pt-2 px-0 border border-secondary d-flex flex-column justify-content-between align-item-center text-center">
+												<h4 class="mb-0">제품인증</h4>
+												<img class="mx-auto my-3 img-responsive" src="../assets/img/KC.gif" alt="KC인증마크">
+			                              		<button class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#KC-image">자세히 &#43;</button>
+			                              		<!-- 클릭 시 나오는 팝업창 -->
+												<div class="modal fade" id="KC-image" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+													<div class="modal-dialog modal-dialog-centered" role="document">
+														<div class="modal-content">
+															<div class="modal-header">
+																<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+																</button>
+															</div>
+															<div class="modal-body">
+																<img class="img-responsive" src="../assets/img/cer_img_kc.PNG">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!-- KTR인증 -->
+											<div class="col-xl-2 col-xs-5 mx-2 pt-2 px-0 border border-secondary d-flex flex-column justify-content-between text-center">
+												<h4 class="mb-0">성능평가</h4>
+												<img class="mx-auto my-3 img-responsive" src="../assets/img/KTR.png" alt="KTR인증마크">
+			                              		<button class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#KC-image">자세히 &#43;</button>
+			                              		<!-- 클릭 시 나오는 팝업창 -->
+												<div class="modal fade" id="KC-image" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+													<div class="modal-dialog modal-dialog-centered" role="document">
+														<div class="modal-content">
+															<div class="modal-header">
+																<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+																</button>
+															</div>
+															<div class="modal-body">
+																<img class="img-responsive" src="../assets/img/cer_img_kc.PNG">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- end panel-body -->
+								</div>
+								<!-- end panel -->
+							</div>
+							<!-- end col-6 -->
+						</div>
+						<!-- end row -->
+					</div>
+					<!-- end carousel 2 -->
+					
+					<!-- begin carousel 3 -->
+					<div class="carousel-item">
+						<!-- begin row -->
+						<div class="row">
+							<!-- begin col-6 -->
+							<div class="col-xl-12">
+								<!-- begin panel -->
+								<div class="panel panel-inverse mb-2" data-sortable-id="table-basic-7">
+									<!-- begin panel-body -->
+									<div class="panel-body">
+										<label for="video" class="d-flex align-items-center mb-3">
+											<i class="fas fa-2x fa-fw m-r-10 fa-video"></i>
+								            <h4 class="mb-0">소독 영상</h4>									
+										</label>
+										<!-- mobile -->
+										<div id="video" class="embed-responsive embed-responsive-16by9 d-sm-none">
+											<iframe class="embed-responsive item" src="https://www.youtube.com/embed/5pg7KAiq-h4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+										</div>
+										 <!--web -->
+										<div class="col-xl-4 mx-auto d-sm-block d-none">
+											<div id="video" class="embed-responsive embed-responsive-16by9">
+												<iframe class="embed-responsive item" src="https://www.youtube.com/embed/5pg7KAiq-h4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+											</div>
+										</div>
+									</div>
+									<!-- end panel-body -->
+								</div>
+								<!-- end panel -->
+							</div>
+							<!-- end col-6 -->
+						</div>
+						<!-- end row -->
+						
+						<!-- begin row -->
+						<div class="row">
+							<!-- begin col-6 -->
+							<div class="col-xl-12">
+								<!-- begin panel -->
+								<div class="panel panel-inverse mb-2" data-sortable-id="table-basic-7">
+									<!-- begin panel-body -->
+									<div class="panel-body">
+										<label for="information" class="d-flex align-items-center mb-3">
+											<h2 class="mb-0 m-r-5 text-info">O3</h2>
+								            <h4 class="mb-0">정보</h4>									
+										</label>
+										<div id="information" class="rounded border border-grey bg-grey">
+											<!-- begin nav-tabs -->
+											<ul class="nav nav-tabs">
+												<li class="nav-item">
+													<a href="#default-tab-1" data-toggle="tab" class="nav-link active">
+														<span class="d-sm-none">정의</span>
+														<span class="d-sm-block d-none">정의</span>
+													</a>
+												</li>
+												<li class="nav-item">
+													<a href="#default-tab-2" data-toggle="tab" class="nav-link">
+														<span class="d-sm-none">특성</span>
+														<span class="d-sm-block d-none">특성</span>
+													</a>
+												</li>
+												<li class="nav-item">
+													<a href="#default-tab-3" data-toggle="tab" class="nav-link">
+														<span class="d-sm-none">살균력</span>
+														<span class="d-sm-block d-none">살균력</span>
+													</a>
+												</li>
+												<li class="nav-item">
+													<a href="#default-tab-4" data-toggle="tab" class="nav-link">
+														<span class="d-sm-none">유해성</span>
+														<span class="d-sm-block d-none">유해성</span>
+													</a>
+												</li>
+											</ul>
+											<!-- end nav-tabs -->
+											<!-- begin tab-content -->
+											<div class="tab-content mb-0">
+												<!-- begin tab-pane -->
+												<div class="tab-pane fade active show" id="default-tab-1">
+													<ul class="fa-ul mb-0">
+														<li>
+															<span class="fa-li"><i class="fas fa-check"></i></span>
+															오존(OZONE)은 그리스어의 OZEIN(냄새)에서 유래된 말
+														</li>
+														<li>
+															<span class="fa-li"><i class="fas fa-check"></i></span>
+															산소분자(O2) 하나에 산소원자(O) 하나가 결합하여 강한 산화력(살균)을 가짐.
+														</li>
+														<li>
+															<span class="fa-li"><i class="fas fa-check"></i></span>
+															수중 용존시 염소, 단백질 구성물(세균류)에 가장 빠르게 반응(살균)하며, 반응 후 분리, 산소로 환원.
+														</li>
+													</ul>
+												</div>
+												<!-- end tab-pane -->
+												<!-- begin tab-pane -->
+												<div class="tab-pane fade" id="default-tab-2">
+													<ul class="fa-ul mb-0">
+														<li>
+															<span class="fa-li"><i class="fas fa-check"></i></span>
+															화학약품이 아닌 산소를 원료로 한 자연살균제.
+														</li>
+														<li>
+															<span class="fa-li"><i class="fas fa-check"></i></span>
+															바이러스의 경우 살균력은 염소의 25배, 속도는 3,000배 고속 상온 살균.
+														</li>
+														<li>
+															<span class="fa-li"><i class="fas fa-check"></i></span>
+															상온 저속 분리 후, 산소로 환원 2차 오염이 없음.
+														</li>
+													</ul>
+												</div>
+												<!-- end tab-pane -->
+												<!-- begin tab-pane -->
+												<div class="tab-pane fade" id="default-tab-3">
+													<img class="img-responsive d-sm-none" src="../assets/img/disinfection_table.png" alt="살균력 표">
+													<div class="col-xl-3 d-sm-block d-none mx-auto" id="default-tab-3">
+														<img class="img-responsive" src="../assets/img/disinfection_table.png" alt="살균력 표">
+													</div>
+												</div>
+												<!-- end tab-pane -->
+												<!-- begin tab-pane -->
+												<div class="tab-pane fade" id="default-tab-4">
+													<img class="img-responsive d-sm-none" src="../assets/img/harmfulness_table.png" alt="유해성 표">
+													<div class="col-xl-4 d-sm-block d-none mx-auto" id="default-tab-4">
+														<img class="img-responsive" src="../assets/img/harmfulness_table.png" alt="유해성 표">
+													</div>
+												</div>
+											</div>
+											<!-- end tab-content -->
+										</div>
+									</div>
+									<!-- end panel-body -->
+								</div>
+								<!-- end panel -->
+							</div>
+							<!-- end col-6 -->
+						</div>
+						<!-- end row -->
+					</div>
+					<!-- end carousel 3 -->
+				</div>
+				<!-- end carousel-inner -->
+			</div>
+			<!-- end carousel -->
+			<a class="carousel-control-prev" href="#carouselcontent" role="button" data-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="sr-only">Previous</span>
+			</a>
+			<a class="carousel-control-next" href="#carouselcontent" role="button" data-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="sr-only">Next</span>
+			</a>
+		</div>
+		<!-- end #content -->
+	</div>
+	
+	<!-- ================== BEGIN BASE JS ================== -->
+	<script src="../assets/js/app.min.js"></script>
+	<script src="../assets/js/theme/default.min.js"></script>
+	<!-- ================== END BASE JS ================== -->
+	
+</body>
+</html>
