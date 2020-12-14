@@ -33,7 +33,6 @@ const CompanySchema = new Schema({
     },//E-mail
     EA :{
         type : String,
-        required : true,
         unique : true
     },
     CA :{
