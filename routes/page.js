@@ -27,7 +27,6 @@ router.get('/login',isLoggedIn,(req,res)=>{
 //회원 가입
 router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
   
-  /* 회원가입 실패 시 토큰 그대로 남기는 부분
      console.log("토큰은 이거입니다22 " + req.decoded2.authNum2);
      const authNum2 = parseInt(req.decoded2.authNum2);
      console.log(authNum2);
@@ -35,7 +34,7 @@ router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
   if (authNum2){
     console.log("성공 ");
     res.render('register',
-    email : req.decoded2}
+    {email : req.decoded2}
     );
     console.log(req.decoded2);
   }
@@ -43,7 +42,7 @@ router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
     console.log("실패");
     res.render('register');
   }
-  */
+  
   res.render('register');
 });
 //ERROR Page
@@ -148,11 +147,6 @@ router.get('/history_list',isNotLoggedIn ,async (req, res, next) => {
       const cars = await Car.find({"CID" : CID});
       const devices = await Device.find({"CID" : CID});
       const historys = await History.find({"CID" : CID});
-      console.log(historys.DID);
-      const device22 = await Device.find({"_id" : historys.DID});
-      const car22 = await Car.find({"_id" : historys.VID});
-      console.log(device22);
-      console.log(car22);
        res.render('history_list', {cars, devices, historys, moment});
    } catch (err) {
        console.error(err);

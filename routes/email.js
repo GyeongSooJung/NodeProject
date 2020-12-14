@@ -15,8 +15,8 @@ const secretObj2 = require("../config/jwt");
 const smtpTransport = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-      user: "사용 email",
-      pass: "사용 구글 앱 비밀번호"
+      user: "gsjung006@gmail.com",
+      pass: "wjd606060##"
   },
   tls: {
       rejectUnauthorized: false

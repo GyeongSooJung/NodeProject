@@ -18,7 +18,7 @@ router.post('/register',emailcontrol,async (req, res, next) => {
   var EC = false;
   
   const authNum2 = parseInt(req.decoded2.authNum2);
-  
+  /*
   if (authNum2){
     console.log("성공 ");
     res.render('register',
@@ -33,6 +33,7 @@ router.post('/register',emailcontrol,async (req, res, next) => {
     {title:'Register our Website - MK Corp'}
     );
   }
+  */
   
   console.log("EA :"+EA);
   console.log("EC :"+EC);
@@ -42,7 +43,7 @@ router.post('/register',emailcontrol,async (req, res, next) => {
   
   console.log("EC :"+EC);
 
-  if(EC) {
+  if(!EC) {
       return res.render('register',{NA,CNU,CNA,PN,MN,ErrMsg : "메일 인증을 받으세요"})
       
   };
@@ -64,7 +65,7 @@ router.post('/register',emailcontrol,async (req, res, next) => {
     //암호화 부분
     const hash = await bcrypt.hash(PW, 12);
 
-    await Company.create({NA, CNU, CNA, PN, MN,
+    await Company.create({NA, CNU, CNA, PN, MN, EA,
     PW : hash
     });
     return res.redirect('/');
