@@ -209,6 +209,7 @@ router.post('/QR', async (req, res, next) => {
         const companyone = await Company.findOne({"_id" : carone.CID});
         const deviceone = await Device.findOne({"CID" : companyone._id});
         const historys = await History.find({"VID" : carone._id});
+        
         res.render('QR', {carone, companyone, deviceone, historys, moment});
     } catch(err) {
         console.error(err);

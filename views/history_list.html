@@ -65,13 +65,12 @@
 					<tr>
 						<th class="text-nowrap">Car Number</th>
 					    <th class="text-nowrap">Disinfection Date</th>
-						<th class="text-nowrap">Start Time</th>
-						<th class="text-nowrap">End Time</th>
+						<th class="text-nowrap">Registration Date</th>
+						<th class="text-nowrap">Consumed Time</th>
 						<th class="text-nowrap">Result</th>
 					</tr>
 				</thead>
 				<tbody>
-					
 					{% for history in historys %}
 					<tr onClick="location.href='/history_chart/{{history._id}}'" class="odd gradeX">
 						<td>
@@ -81,9 +80,9 @@
 								{% endif %}
 							{% endfor %}
 						</td>
-						<td>{{moment(history.ET).format('YYYY-MM-DD')}}</td>
-						<td>{{moment(history.ST).format('hh:mm:ss')}}</td>
-						<td>{{moment(history.ET).format('hh:mm:ss')}}</td>
+						<td>{{moment(history.ET).format('YYYY-MM-DD hh:mm:ss')}}</td>
+						<td>{{moment(history.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
+						<td>{{moment(history.ET).diff(moment(history.ST), 'minutes')+"m"}}</td>
 						<td>{{history.RC}}</td>
 					</tr>
 					{% endfor %}
