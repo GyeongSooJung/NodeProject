@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 	<meta charset="utf-8" />
-	<title>MK Admin | Login Page</title>
+	<title>MK Admin | PassWordFind Page</title>
 	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 	<meta content="" name="description" />
 	<meta content="" name="author" />
@@ -41,29 +41,49 @@
 				<div class="login-body">
 					<!-- begin login-content -->
 					<div class="login-content">
-						<form action="/email/email_send" method="post" class="margin-bottom-0" >
-						    <div style="display:flex;" class="row m-b-15" >
-    							    {% if EA %}
-    						        {% else %}
+						        {% if Change %}
+						        	<form action="/find/change" method="post" class="margin-bottom-0" >
+    						        	<input id="CNU" name = 'CNU' type="hidden" class="form-control form-control-lg inverse-mode"
+    						        	value= {{CNU}} />
+    						                <div style="display:flex;" class="row m-b-15" >
+    						                    {% if errmsg %} <span class="text-danger mt-0 mb-2">   *{{errmsg}}</span> {% endif %}
+        						            <div class="col-md-12 mb-2" name = "password">
+        						                <input id="PW1" name = "PW1" type="password" minlength=  class="form-control form-control-lg inverse-mode" 
+        						                placeholder="비밀번호 입력" required minlength= 8 maxlength= 16  />
+        						            </div> 
+        						        <div class="col-md-12 mb-2" name = "password">  
+        						            <input id="PW2" name = "PW2" type="password" class="form-control form-control-lg inverse-mode"
+        						            placeholder="비밀번호 재입력" required minlength= 8 maxlength= 16  />
+        						        </div>
+        							    <div class="col-md-6">      
+        								    <button type="submit" class="btn btn-success btn-block btn-lg" name = "PW_change" >보내기</button> 
+        							    </div>
+        						    </div>
+    					        </form>
+						        {% else %}
+						        	<form action="/find/sendmail" method="post" class="margin-bottom-0" >
+						            <div style="display:flex;" class="row m-b-15" >
+						            {% if errmsg %}<span class="text-danger mt-0 mb-2">   *{{errmsg}}</span> {% endif %}
     						        <div class="col-md-12 mb-2" name = "CNU_CK">
-    						        <input id="CNU" name = "CNU" type="text" class="form-control form-control-lg inverse-mode"  {% if CNU %} value={{CNU}} select {% else% } placeholder="사업자 등록번호" required {% endif% } />
+    						        <input id="CNU" name = "CNU" type="text" class="form-control form-control-lg inverse-mode" 
+    						        {% if CNU %} value={{CNU}} readonly {% else %} placeholder="사업자 등록번호" required {% endif %} />
     						        </div> 
     						        <div class="col-md-6 " name = "email">
-    						        <input id="EA" name = "EA" type="text" class="form-control form-control-lg inverse-mode" {% if EA %} value={{EA}} select {% else% }placeholder="이메일 주소" required {% endif %}/>
+    						        <input id="EA" name = "EA" type="text" class="form-control form-control-lg inverse-mode"
+    						        {% if EA %} value={{EA}} readonly {% else %} placeholder="이메일 주소" required {% endif %}/>
     						        </div>
-    						        {% endif %}
     							<div class="col-md-6">
     								<button type="submit" class="btn btn-success btn-block btn-lg" name = "email_click" >보내기</button> 
     							</div>
     						</div>
     					</form>
     					
-    					<form action="/email/email_cert" method="post" >
+    					<form action="/find/email_cert" method="post" >
 							<div style="display:flex;" class="row">
     							<div class="col-md-12 mb-2 mt-0" >
     								<input id="Enum" name = 'Enum' type="password" class="form-control form-control-lg inverse-mode" placeholder="인증 문자 6자리 입력" required />
-    								<input type="hidden" name = "authNum" value = "{{authNum}}">
-    								<input type="hidden" name = "reademailaddress" value = "{{reademailaddress}}">
+    								<input id="Enum" name = 'authNum' type="hidden" class="form-control form-control-lg inverse-mode" value= {{authNum}} />
+                                    <input id="CNU" name = 'CNU' type="hidden" class="form-control form-control-lg inverse-mode" value= {{CNU}} />    							
     							</div>
     							
     							<div class="col-md-12">
@@ -71,8 +91,10 @@
     							</div>
     						</div>
 						</form>
-		
-					</div>
+		                
+					    </div>
+					</form>
+					{% endif %}
 					<!-- end login-content -->
 				</div>
 				<!-- end login-body -->
@@ -104,15 +126,19 @@
             
             
             //인증번호 인증이 성공했을 때
-            if (new URL(location.href).searchParams.get('success2')) {
-                alert('인증이 완료되었습니다.');
-                opener.parent.location.replace('./register');
-                window.close();
+
+            if (new URL(location.href).searchParams.get('pwe')) {
+                alert('비밀번호가 일치하지 않습니다.');
             }
             if (new URL(location.href).searchParams.get('false')) {
                  alert('인증번호가 틀립니다. 다시 시도해 주세요');
+                 opener.parent.location.replace('./find');
             }
-          
+            if (new URL(location.href).searchParams.get('pwc')) {
+            alert('비밀번호 변경이 완료되었습니다.');
+            opener.parent.location.replace('./login');
+             window.close();
+            }
         	
         }
       </script>
