@@ -18,7 +18,7 @@ const carRouter = require('./routes/car');
 const historyRouter = require('./routes/history');
 const workerRouter = require('./routes/worker');
 const emailRouter = require('./routes/email');
-
+const mobileRouter = require('./routes/mobile');
 const app = express();
 
 app.set('port', process.env.PORT || 8008);
@@ -46,7 +46,7 @@ app.use('/car', carRouter);
 app.use('/history', historyRouter);
 app.use('/worker', workerRouter);
 app.use('/email', emailRouter);
-
+app.use('/mobile', mobileRouter);
 
 app.use(function(req, res, next) {
     const error = new Error(`${req.method}${req.url} NO Router`);
