@@ -5,7 +5,6 @@ const Device = require('../schemas/device');
 const Car = require('../schemas/car');
 const Worker = require('../schemas/worker');
 const History = require('../schemas/history');
-const Process = require('../schemas/process');
 const moment = require('moment');
 //Router or MiddleWare
 const router = express.Router();
@@ -185,10 +184,10 @@ router.get('/history_MD_select/:MD', isNotLoggedIn, async (req, res, next) => {
 router.get('/history_chart/:_id',isNotLoggedIn ,async (req, res, next) => {
     try {
         const historyone = await History.findOne({"_id" : req.params._id});
-        const processone = await Process.find({"HID" : req.params._id});
+        const history_array = historyone.PD;
         console.log(historyone);
-        console.log(processone);
-        res.render('history_chart', {processone, moment});
+        console.log(history_array);
+        res.render('history_chart', {history_array, moment});
     } catch (err) {
         console.error(err);
         next(err);

@@ -28,7 +28,7 @@ const historySchema = new Schema({
         required: [true, 'ET is required!'],
     },
     PD: {
-        type: String,
+        type: [String],
         required: [true, 'PD is required!'],
     },
     MP: {
