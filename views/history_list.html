@@ -64,7 +64,6 @@
 				<thead>
 					<tr>
 						<th class="text-nowrap">Car Number</th>
-						<th class="text-nowrap">Device Name</th>
 					    <th class="text-nowrap">Disinfection Date</th>
 						<th class="text-nowrap">Start Time</th>
 						<th class="text-nowrap">End Time</th>
@@ -79,13 +78,6 @@
 							{% for car in cars %}
 								{% if (car._id == history.VID) %}
 									{{car.CN}}
-								{% endif %}
-							{% endfor %}
-						</td>
-						<td>
-							{% for device in devices %}
-								{% if (device._id == history.DID) %}
-									{{device.MD}}
 								{% endif %}
 							{% endfor %}
 						</td>
