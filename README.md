@@ -1,11 +1,17 @@
 # mk_dokenly
 MK소독기 서버 서비스 시스템
 
+
+### DB 스키마 및 개발문서
+https://docs.google.com/spreadsheets/d/1XDCxqrZE_kpGdcvnYWkym-wPEX0W4s33HznFVBNgwEE/edit?usp=sharing
+
 ### Git 저장소 위치
 https://github.com/here4you81/mk_dokenly
 
+
 ### 개발서버
 http://52.79.245.187:8008/
+
 
 ### 사용법
 본 README.md 파일을 통해 팀원들과 소통하시기 바랍니다.
