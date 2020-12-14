@@ -107,7 +107,7 @@ router.post('/change',async function(req,res){
     const hash = await bcrypt.hash(PW1, 12);
     await console.log(CNU);
     await Company.update({CNU},{PW : hash, UA : Date.now()});
-    return res.redirect('/login?pwc=true')
+    return res.redirect('/find?pwc=true')
         
     }catch(err){
         console.error(err);

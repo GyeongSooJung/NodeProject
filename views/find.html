@@ -14,7 +14,14 @@
 	
 	<link href="../assets/img/favicon.png" rel="icon">
 </head>
+<script type="text/javascript">
+ window.history.forward();
+ function noBack(){window.history.forward();}
+</script>
+
 <body class="pace-top">
+    <body onload="noBack();" onpageshow="if(event.persisted) noBack();" onunload="">
+
 	<!-- begin #page-loader -->
 	<div id="page-loader" class="fade show">
 		<span class="spinner"></span>
