@@ -3,7 +3,7 @@ const express = require('express');
 const Company = require('../schemas/company');
 //Router or MiddleWare
 const router = express.Router();
-const {isLoggedIn,TurnBackErr} = require('./middleware');
+//const {isLoggedIn,TurnBackErr} = require('./middleware');
 const nodemailer = require('nodemailer');
 
 const bcrypt = require('bcrypt');
@@ -12,9 +12,7 @@ const secretObj2 = require("../config/jwt");
 
 
 
-router.get('/',isLoggedIn,(req,res,next)=>{
-    res.render('find');
-});
+
 
 
 

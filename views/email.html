@@ -43,17 +43,19 @@
 					<div class="login-content">
 						<form action="/email/email_send" method="post" class="margin-bottom-0" >
 						    <div style="display:flex;" class="row m-b-15" >
-    							<div class="col-md-6 " name = "email_send_complete">
-    							    {% if reademailaddress %}
-    								<span class="text-danger">메세지가 전송되었습니다.<br> 유효 시간은 3분 입니다.</span>
-    						        {% else %}
-    						        <input id="EA" name = "EA" type="text" class="form-control form-control-lg inverse-mode" placeholder="이메일 주소" required />
+    							<div class="col-md-6 mb-2 " name = "email_send_complete">
+
+    						        <input id="EA" name = "EA" type="text" class="form-control form-control-lg inverse-mode" placeholder="이메일 주소" required
+    							    {% if reademailaddress %} value ={{reademailaddress}} readonly {% endif %}/>
     						        
-    						        {% endif %}
     							</div>
     							
     							<div class="col-md-6">
-    								<button type="submit" class="btn btn-success btn-block btn-lg" name = "email_click" >보내기</button> 
+    							    {% if authNum %}
+    							    <span class="btn btn-secondary btn-block btn-lg" >전송 완료</span>
+    								{% else %}
+    								<button type="submit"  class="btn btn-success btn-block btn-lg"  name = "email_click" >보내기</button>
+    								{% endif %} 
     							</div>
     						</div>
     					</form>
@@ -62,17 +64,21 @@
 							<div style="display:flex;" class="row m-b-15">
     							<div class="col-md-12" style=" padding-bottom : 20px;">
     								<input id="Enum" name = 'Enum' type="password" class="form-control form-control-lg inverse-mode" placeholder="인증 문자 6자리 입력" required />
-    								<input type="hidden" name = "authNum" value = "{{authNum}}">
+    							{% if authNum %}<input id='authNum' type="hidden" name = "authNum" value = "{{authNum}}">{% endif %}
     								<input type="hidden" name = "reademailaddress" value = "{{reademailaddress}}">
     							</div>
     							
-    							<div class="col-md-12">
+    							<div class="col-md-12 mb-2">
     								<button type="submit" class="btn btn-success btn-block btn-lg">확인</button> 
     							</div>
+									{% if ErrMsg %}
+    								<span class="text-danger">{{ErrMsg}}</span>
+    								{% endif %}    							
     						</div>
 						</form>
-		
+						
 					</div>
+					<span class="text-danger mt-0 mb-2"><div id='demo'></div></span>
 					<!-- end login-content -->
 				</div>
 				<!-- end login-body -->
@@ -98,6 +104,25 @@
 	 
      </script>
      <script>
+        var authNum = document.getElementById("authNum").value;    
+	    var TimeSet = 180
+	    var sec = "";
+	        if(authNum) {
+	                var x = setInterval(function(){
+	                    sec = (TimeSet)%60
+	                    document.getElementById('demo').innerHTML ="남은 시간은 "+ parseInt(TimeSet/60) + "분" + sec + "초입니다.";
+	                    TimeSet--;
+	                    
+	                    if(TimeSet <0){
+	                        clearInterval(x);
+	                        alert('시간이 초과되었습니다.');
+	                        window.open("/email", "_self");
+	                    }
+	                    
+	                },1000)                
+	            }
+                   
+            
             
         window.onload = () => {
             

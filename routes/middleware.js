@@ -28,8 +28,9 @@ exports.isNotLoggedIn = (req, res, next) => {
 
 exports.emailcontrol = (req, res, next) => {
      try{
-       
-      req.decoded2 = jwt.verify(req.cookies.etoken, secretObj2.secret);
+
+      req.decoded.email = req.cookies.email
+      req.decoded.authNum = req.cookies.authNum
       next();   
       
   } 

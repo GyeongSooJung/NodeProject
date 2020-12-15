@@ -23,20 +23,23 @@ router.get('/login',isLoggedIn,(req,res)=>{
     res.render('login',
     {title:'Login Website - MK Corp'});
 });
+router.get('/find',isLoggedIn,(req,res,next)=>{
+    res.render('find');
+});
 
 //회원 가입
 router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
   
-     console.log("토큰은 이거입니다22 " + req.decoded2.authNum2);
-     const authNum2 = parseInt(req.decoded2.authNum2);
-     console.log(authNum2);
+     console.log("토큰은 이거입니다22 " + req.decoded.authNum);
+     const authNum = parseInt(req.decoded.authNum);
+     console.log(authNum);
   
-  if (authNum2){
+  if (authNum){
     console.log("성공 ");
     res.render('register',
-    {email : req.decoded2}
+    {email : req.decoded.email}
     );
-    console.log(req.decoded2);
+    console.log(req.decoded.email);
   }
   else {
     console.log("실패");

@@ -48,26 +48,15 @@ router.post('/email_send', async (req, res, next) => {
                         text: "인증번호는 " + authNum + " 입니다."
                   };
                   
-                   await smtpTransport.sendMail(mailOptions, (error, responses) =>{
-                  if(error){
-                      res.json({msg:'err'});
+                   await smtpTransport.sendMail(mailOptions, (err, res) =>{
+                  if(err){
+                      console.log(err)
                   }else{
-                      res.json({msg:'sucess'});
+                      console.log('success')
                   }
                   smtpTransport.close();
                   });
                   
-                  const etoken = jwt.sign({ EA : reademailaddress },// 토큰의 내용(payload)
-                      secretObj2.secret ,   // 비밀 키
-                      {expiresIn: '1m'});
-                      // 유효 시간은 1분 설정
-                      
-                      
-                      res.cookie("etoken", etoken); // 쿠키에 etoken 등록  
-                     console.log("etoken : " + etoken);
-                      
-                  console.log(authNum);
-                  console.log(reademailaddress);
                       
                   res.render('email', {authNum, reademailaddress});
                   
@@ -90,21 +79,13 @@ router.post('/email_cert', async (req, res, next) => {
       console.log(authNum);
       
       if(Enum === authNum) {
-          
-          const etoken = jwt.sign({ authNum2 : authNum, EA2 : EA },// 토큰의 내용(payload)
-          secretObj2.secret ,   // 비밀 키
-          {expiresIn: '1m'});
-          // 유효 시간은 1분 설정
-          
-          console.log(etoken);
-          res.cookie("etoken", etoken); // 쿠키에 etoken 등록  
+          res.cookie("email", EA);
+          res.cookie('authNum',authNum)
           return res.redirect('/email?success2=true');
       }
       else {
            return res.redirect('/email?false=true');
       }
-      
-      
       
   } catch (err) {
     console.error(err);
