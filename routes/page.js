@@ -186,13 +186,6 @@ router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
       const historys = await History.find({"DID" : deviceone._id});
       res.render('history_list', {cars, devices, historys, moment});
     }
-<<<<<<<<< saved version
-      const historys = await History.find({"DID" : deviceone._id});
-      res.render('history_list', {cars, devices, historys, moment});
-    }
-=========
-    
->>>>>>>>> local version
   } catch (err) {
     console.error(err);
     next(err);
