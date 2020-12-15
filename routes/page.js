@@ -45,6 +45,8 @@ router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
   
   res.render('register');
 });
+
+
 //ERROR Page
 router.get('/error',(req,res)=>{
     res.render('error',
@@ -54,10 +56,28 @@ router.get('/',(req,res,next)=>{
     res.redirect('index');
 });
 
+//메인 페이지
+router.get('/main',isNotLoggedIn , async(req,res,next)=>{
+    const devices = await Device.find({"CID" : req.decoded.CID});
+    const cars = await Car.find({"CID" : req.decoded.CID}); 
+    const workers = await Worker.find({"CID" : req.decoded.CID});
+    const historys = await History.find({"CID" : req.decoded.CID});
+    
+    const history_array = await History.findOne({"CID" : req.decoded.CID}).sort({'_id':-1}).limit(1)
+    console.log(history_array);
+    
+    const recent_history = history_array.PD;
+    console.log("최근 히스토리는 :" +recent_history);
+    
+    res.render('main', {company : req.decoded,devices, cars, workers, historys, recent_history, history_array, moment});
+});
+
+
 // 공통페이지 작성 방법
 Route_page('index');
 Route_page('car_join');
 Route_page('device_join');
+
 
 //장비 수정 페이지
 router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
@@ -139,42 +159,35 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
 });
 
 ///////////////////////////////////////
-//History
-router.get('/history_list',isNotLoggedIn ,async (req, res, next) => {
-   const CID = req.decoded.CID;
-   const CNU = req.decoded.CNU;
-   try {
-      const cars = await Car.find({"CID" : CID});
-      const devices = await Device.find({"CID" : CID});
+// History
+router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
+  const CID = req.decoded.CID;
+  const CNU = req.decoded.CNU;
+
+  try {
+    const cars = await Car.find({"CID" : CID});
+    const devices = await Device.find({"CID" : CID});
+    const CN = req.query.CN;
+    const MD = req.query.MD;
+    
+    if(!CN & !MD) {
       const historys = await History.find({"CID" : CID});
-       res.render('history_list', {cars, devices, historys, moment});
-   } catch (err) {
-       console.error(err);
-       next(err);
-   }
-});
-
-router.get('/history_CN_select/:CN', isNotLoggedIn, async (req, res, next) => {
-    try {
-      const carone = await Car.findOne({"CN" : req.params.CN});
-      var carid = "" +carone._id;
-      const historys = await History.find({"VID" : carid});
-      console.log(historys);
-      res.render('history_select_car', {historys, moment});
-    } catch (err) {
-        console.error(err);
+      res.render('history_list', {cars, devices, historys, moment});
     }
-});
-
-router.get('/history_MD_select/:MD', isNotLoggedIn, async (req, res, next) => {
-    try {
-      const deviceone = await Device.findOne({"MD" : req.params.MD});
-      var deviceid = "" + deviceone._id;
-      const historys = await History.find({"DID" : deviceid});
-      res.render('history_select_device', {historys, moment});
-    } catch (err) {
-        console.error(err);
+    else if(CN) {
+      const carone = await Car.findOne({"CN" : CN});
+      const historys = await History.find({"VID" : carone._id});
+      res.render('history_list', {cars, devices, historys, moment});
     }
+    else if(MD) {
+      const deviceone = await Device.findOne({"MD" : MD});
+      const historys = await History.find({"DID" : deviceone._id});
+      res.render('history_list', {cars, devices, historys, moment});
+    }
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
 });
 
 router.get('/history_chart/:_id',isNotLoggedIn ,async (req, res, next) => {
