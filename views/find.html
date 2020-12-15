@@ -77,7 +77,7 @@
     						        </div> 
     						        <div class="col-md-6 " name = "email">
     						        <input id="EA" name = "EA" type="text" class="form-control form-control-lg inverse-mode"
-    						        {% if EA %} value={{EA}} readonly {% else %} placeholder="이메일 주소" required {% endif %}/>
+    						        {% if EA %} value={{EA}} readonly {% else %} placeholder="이메일 주소" required {% endif %}/>  							
     						        </div>
     							<div class="col-md-6">
     								<button type="submit" class="btn btn-success btn-block btn-lg" name = "email_click" >보내기</button> 
@@ -89,12 +89,14 @@
 							<div style="display:flex;" class="row">
     							<div class="col-md-12 mb-2 mt-0" >
     								<input id="Enum" name = 'Enum' type="password" class="form-control form-control-lg inverse-mode" placeholder="인증 문자 6자리 입력" required />
-    								<input id="Enum" name = 'authNum' type="hidden" class="form-control form-control-lg inverse-mode" value= {{authNum}} />
+    								{% if authNum %}<input id="authNum" name = 'authNum' type="hidden" class="form-control form-control-lg inverse-mode" value= {{authNum}} />    {% endif %}                                 
                                     <input id="CNU" name = 'CNU' type="hidden" class="form-control form-control-lg inverse-mode" value= {{CNU}} />    							
     							</div>
     							
     							<div class="col-md-12">
-    								<button type="submit" class="btn btn-success btn-block btn-lg">확인</button> 
+    								<button type="submit" class="btn btn-success btn-block btn-lg">확인</button>
+    								<li class="form-control-lg inverse-mode"><a href="register" >회원가입</a>   /  <a href="find" > 비밀번호 찾기</a></li>
+    							<span class="text-danger mt-0 mb-2"><div id='demo'></div></<span>
     							</div>
     						</div>
 						</form>
@@ -127,13 +129,31 @@
 	 
      </script>
      <script>
+    var authNum = document.getElementById("authNum").value;    
+    var TimeSet = 180
+    var sec = "";
+        if(authNum) {
+                var x = setInterval(function(){
+                    sec = (TimeSet)%60
+                    document.getElementById('demo').innerHTML ="남은 시간은 "+ parseInt(TimeSet/60) + "분" + sec + "초입니다.";
+                    TimeSet--;
+                    if(TimeSet <0){
+                        clearInterval(x);
+                        alert('시간이 초과되었습니다.');
+                        window.open("/find", "_self");
+                    }
+                    
+                },1000)                
+            }
             
         window.onload = () => {
             
+
             
             
             //인증번호 인증이 성공했을 때
 
+            
             if (new URL(location.href).searchParams.get('pwe')) {
                 alert('비밀번호가 일치하지 않습니다.');
             }
