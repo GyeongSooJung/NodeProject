@@ -75,12 +75,16 @@
     						        <input id="CNU" name = "CNU" type="text" class="form-control form-control-lg inverse-mode" 
     						        {% if CNU %} value={{CNU}} readonly {% else %} placeholder="사업자 등록번호" required {% endif %} />
     						        </div> 
-    						        <div class="col-md-6 " name = "email">
+    						        <div class="col-md-6 mb-2" name = "email">
     						        <input id="EA" name = "EA" type="text" class="form-control form-control-lg inverse-mode"
     						        {% if EA %} value={{EA}} readonly {% else %} placeholder="이메일 주소" required {% endif %}/>  							
     						        </div>
     							<div class="col-md-6">
-    								<button type="submit" class="btn btn-success btn-block btn-lg" name = "email_click" >보내기</button> 
+    							    {% if authNum %}
+    							    <span class="btn btn-secondary btn-block btn-lg" >전송 완료</span>
+    								{% else %}
+    								<button type="submit"  class="btn btn-success btn-block btn-lg"  name = "email_click" >보내기</button>
+    								{% endif %} 
     							</div>
     						</div>
     					</form>
