@@ -13,6 +13,7 @@ router.post('/worker_update',isNotLoggedIn ,async (req, res, next) => {
         var i,j;
         let  workerone;
         console.log("AC: " + AC);
+        console.log("EM: " + EM);
         
         /* EM 이랑 AC 비교 */
         if (!AC) {
@@ -60,6 +61,45 @@ router.get('/worker_delete/:EM',isNotLoggedIn ,async (req, res, next) => {
   } catch (err) {
     console.error(err);
     next(err);
+  }
+});
+
+//작업자 선택삭제
+router.post('/worker_select_delete',isNotLoggedIn ,async (req, res, next) => {
+    try {
+        const {EM, AC} = req.body;
+        var i,j;
+        let  workerone;
+        console.log("AC: " + AC);
+        console.log("EM: " + EM);
+        /* EM 이랑 AC 비교 */
+        
+        if (!AC) {
+            return res.redirect('/worker_list');
+        }
+        
+        else if(!(AC instanceof Object)) {
+          for (i =0; i < EM.length; i ++) {
+            console.log(EM[i]);
+             if (EM[i] == AC) { 
+              await Worker.remove({ "EM" : AC });
+            }
+          }
+        }
+        else{
+          for (i =0; i < EM.length; i ++) {
+            for(j =0; j < AC.length; j ++) {
+              if(EM[i] == AC[j]){
+                await Worker.remove({ "EM" : EM[i] });
+                break;
+              }
+            }
+          }
+        }
+        res.redirect('/worker_list');
+    }   catch (err) {
+        console.error(err);
+        next(err);
   }
 });
 
