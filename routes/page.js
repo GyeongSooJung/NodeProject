@@ -23,23 +23,20 @@ router.get('/login',isLoggedIn,(req,res)=>{
     res.render('login',
     {title:'Login Website - MK Corp'});
 });
-router.get('/find',isLoggedIn,(req,res,next)=>{
-    res.render('find');
-});
 
 //회원 가입
 router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
   
-     console.log("토큰은 이거입니다22 " + req.decoded.authNum);
-     const authNum = parseInt(req.decoded.authNum);
-     console.log(authNum);
+     console.log("토큰은 이거입니다22 " + req.decoded2.authNum2);
+     const authNum2 = parseInt(req.decoded2.authNum2);
+     console.log(authNum2);
   
-  if (authNum){
+  if (authNum2){
     console.log("성공 ");
     res.render('register',
-    {email : req.decoded.email}
+    {email : req.decoded2}
     );
-    console.log(req.decoded.email);
+    console.log(req.decoded2);
   }
   else {
     console.log("실패");
@@ -56,7 +53,7 @@ router.get('/error',(req,res)=>{
     {title:'ERROR 404'});
 });
 router.get('/',(req,res,next)=>{
-    res.redirect('index');
+    res.redirect('main');
 });
 
 //메인 페이지
@@ -177,16 +174,25 @@ router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
       const historys = await History.find({"CID" : CID});
       res.render('history_list', {cars, devices, historys, moment});
     }
+    
     else if(CN) {
       const carone = await Car.findOne({"CN" : CN});
       const historys = await History.find({"VID" : carone._id});
       res.render('history_list', {cars, devices, historys, moment});
     }
+    
     else if(MD) {
       const deviceone = await Device.findOne({"MD" : MD});
       const historys = await History.find({"DID" : deviceone._id});
       res.render('history_list', {cars, devices, historys, moment});
     }
+<<<<<<<<< saved version
+      const historys = await History.find({"DID" : deviceone._id});
+      res.render('history_list', {cars, devices, historys, moment});
+    }
+=========
+    
+>>>>>>>>> local version
   } catch (err) {
     console.error(err);
     next(err);
