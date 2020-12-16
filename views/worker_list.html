@@ -63,8 +63,7 @@
 	        					    {% for worker in workers %}
 	        						<tr>
 	        							<td class="with-btn" nowrap>
-	        									<input id ="ck" type="checkbox" name = "AC" class="neHeros" value={{worker.EM}} {% if worker.AC == true %} checked {% else %} unchecked  {% endif %} onChange="eachCheckedBox(this);"/>
-	        								
+    										<input id ="ck" type="checkbox" name = "AC" class="neHeros" value={{worker.EM}} {% if worker.AC == true %} checked {% else %} unchecked  {% endif %} onChange="eachCheckedBox(this);"/>
 	        							</td>
 	                                    <td width="1%" class="with-img"><img src={{worker.PU}} class="img-rounded height-30" /></td>
 	        							<td>{{worker.WN}}</td>

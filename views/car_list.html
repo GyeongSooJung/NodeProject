@@ -43,29 +43,40 @@
 				<!-- end panel-heading -->
 				<!-- begin panel-body -->
 				<div class="panel-body">
-					<table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle">
-						<thead>
-							<tr>
-								<th>Car Class</th>
-								<th>Car Number</th>
-								<th>VIN Code</th>
-								<th width="1%"></th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for car in cars %}
-							<tr>
-								<td>{{car.CC}}</td>
-								<td>{{car.CN}}</td>
-								<td>{{car.SN}}</td>
-								<td class="with-btn" nowrap>
-									<a href="/car_edit/{{car.CN}}" class="btn btn-sm btn-primary width-60 m-r-2">Edit</a>
-									<a href="/car/car_delete/{{car.CN}}" class="btn btn-sm btn-white width-60">Delete</a>
-								</td>
-							</tr>
-							{% endfor %}
-						</tbody>
-					</table>
+					<form action="/car/car_select_delete" method="post">
+						<table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle">
+							<thead>
+								<tr>
+									<th width="1%">
+										<input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/>
+									</th>
+									<th>Car Class</th>
+									<th>Car Number</th>
+									<th>VIN Code</th>
+									<th width="1%"></th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for car in cars %}
+								<tr>
+	    							<td class="with-btn" nowrap>
+										<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{car.CN}} onChange="eachCheckedBox(this);"/>
+	    							</td>
+									<td>{{car.CC}}</td>
+									<td>{{car.CN}}</td>
+									<td>{{car.SN}}</td>
+									<td class="with-btn" nowrap>
+										<a href="/car_edit/{{car.CN}}" class="btn btn-sm btn-primary width-60 m-r-2">Edit</a>
+										<a href="javascript:delete_check('{{car.CN}}')" class="btn btn-sm btn-white width-60">Delete</a>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+						<div>
+							<input class="btn btn-primary" type='submit' value='선택항목 삭제' onclick="btn()">
+						</div>
+					</form>
 				</div>
 				<!-- end panel-body -->
 			</div>
@@ -77,6 +88,72 @@
 <!-- end #content -->
 	<!-- error script -->
 	<script>
+		function btn() {
+			var answer;
+			answer = confirm("데이터를 삭제하시겠습니까?");
+			if(answer == true){
+				location = '/car/car_select_delete/';
+			}
+			else {
+				location = '/car_list';
+			}
+		}
+	
+	
+		function delete_check(ck) {
+			var answer;
+			var ckc = ck;
+			//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
+			//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
+			answer = confirm("데이터를 삭제하시겠습니까?");
+			//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
+			if(answer == true){
+				location = '/car/car_delete/' + ckc;
+			}
+			else {
+				location = '/car_list';
+			}
+		}
+
+		function allCheckedBox(obj) {
+			
+	   	// @brief 선택한 체크박스의 클래스 명칭을 가져온다.
+	   	const termClass = obj.getAttribute("class");
+	
+	   	// @brief 선택한 클래스명과 같은 클래스의 갯수
+	   	console.log(document.getElementsByClassName(termClass).length);
+	
+	   	Array.prototype.forEach.call(document.getElementsByClassName(termClass), function(element, index, array) {
+	
+	        // @brief 엘리먼트의 값 출력
+	        console.log(element.value);
+	        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 되있는 경우
+	        if(document.getElementsByClassName(termClass)[0].checked == true) {
+	            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 완료 처리 한다.
+	            element.checked = true;
+	        }
+	        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 해제된 경우
+	        else {
+	            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 해제 처리 한다.
+	            element.checked = false;
+	        }
+	   	});
+	    }
+    
+    
+	   function eachCheckedBox(obj) {
+	      // @brief 선택한 체크박스의 상태가 선택해제인 경우
+	      if(obj.checked == false) {
+	            // @brief 선택한 체크박스의 클래스 명칭을 가져온다.
+	            const termClass = obj.getAttribute("class");
+	            // @brief 첫번째 checkbox의 상태가 체크가 되어있는경우
+	            if(document.getElementsByClassName(termClass)[0].checked == true) {
+	                // @brief 첫번째 checkbox의 상태를 체크해제한다.
+	                document.getElementsByClassName(termClass)[0].checked = false;
+	            }
+	        }
+	    }
+	    
 		window.onload = () => {
 			if (new URL(location.href).searchParams.get('length')) {
 				alert('차량 번호 자릿수를 확인해주세요.');
@@ -100,7 +177,6 @@
 <script src="../assets/plugins/datatables.net-colreorder-bs4/js/colReorder.bootstrap4.min.js"></script>
 <script src="../assets/plugins/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
 <script src="../assets/plugins/datatables.net-keytable-bs4/js/keyTable.bootstrap4.min.js"></script>
-<script src="../assets/plugins/datatables.net-rowreorder/js/dataTables.rowReorder.min.js"></script>
 <script src="../assets/plugins/datatables.net-rowreorder-bs4/js/rowReorder.bootstrap4.min.js"></script>
 <script src="../assets/plugins/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
 <script src="../assets/plugins/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>

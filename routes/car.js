@@ -93,4 +93,34 @@ router.get('/car_delete/:CN', async (req, res, next) => {
   }
 });
 
+//차량 선택삭제
+router.post('/car_select_delete',isNotLoggedIn ,async (req, res, next) => {
+    try {
+        const {ck} = req.body;
+        const carone = await Car.findOne({"CN" : ck});
+        console.log("zzzzzzzzz : "+carone);
+        const CNc = carone.CN;
+        var i;
+        console.log("CN: " + ck);
+        
+        for(i=0; i < ck.length; i++){
+            if(ck){
+                if(ck[i] == CNc){
+                    await Car.remove({ "CN" : ck });
+                }
+                else if(!(ck instanceof Object)) {
+                    await Car.remove({ "CN" : ck });
+                }
+            }
+            else if(!ck){
+                return res.redirect('/car_list');
+            }
+        }
+        res.redirect('/car_list');
+    }   catch (err) {
+        console.error(err);
+        next(err);
+  }
+});
+
 module.exports = router;
