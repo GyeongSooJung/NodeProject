@@ -77,7 +77,7 @@ router.get('/main',isNotLoggedIn , async(req,res,next)=>{
 Route_page('index');
 Route_page('car_join');
 Route_page('device_join');
-
+Route_page('index_frontend');
 
 //장비 수정 페이지
 router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
