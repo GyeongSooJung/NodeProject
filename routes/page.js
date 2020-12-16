@@ -58,11 +58,11 @@ router.get('/',(req,res,next)=>{
 
 //메인 페이지
 router.get('/main',isNotLoggedIn , async(req,res,next)=>{
+
     const devices = await Device.find({"CID" : req.decoded.CID});
-    const cars = await Car.find({"CID" : req.decoded.CID}); 
+    const cars = await Car.find({"CID" : req.decoded.CID});
     const workers = await Worker.find({"CID" : req.decoded.CID});
     const historys = await History.find({"CID" : req.decoded.CID});
-
     const history_array = await History.findOne({"CID" : req.decoded.CID}).sort({'_id':-1}).limit(1)
     console.log(history_array);
     

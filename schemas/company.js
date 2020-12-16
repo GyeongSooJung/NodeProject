@@ -30,7 +30,13 @@ const CompanySchema = new Schema({
     PW :{
         type : String,
         required : true,
-    },//E-mail
+    },
+    AH : {
+        type : Boolean,
+        required : true,
+        default : false,
+    },
+    //E-mail
     EA :{
         type : String,
         unique : true
