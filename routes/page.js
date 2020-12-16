@@ -213,12 +213,18 @@ router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
 });
 
 router.get('/history_chart/:_id',isNotLoggedIn ,async (req, res, next) => {
+    const CID = req.decoded.CID;
+    const CNU = req.decoded.CNU;
     try {
         const historyone = await History.findOne({"_id" : req.params._id});
         const history_array = historyone.PD;
-        console.log(historyone);
-        console.log(history_array);
-        res.render('history_chart', {history_array, moment});
+        const companyone = await Company.findOne({"_id" : CID});
+        const carone = await Car.findOne({"_id" : historyone.VID});
+        const deviceone = await Device.findOne({"_id" : historyone.DID});
+        const workerone = await Worker.findOne({"_id" : historyone.WID});
+        console.log(deviceone);
+        console.log(workerone);
+        res.render('history_chart', {historyone, companyone, carone, deviceone, workerone, history_array, moment});
     } catch (err) {
         console.error(err);
         next(err);
