@@ -14,16 +14,8 @@
 {% block content %}
 <!-- begin #content -->
 <div id="content" class="content">
-	<!-- begin breadcrumb -->
-	<ol class="breadcrumb float-xl-right">
-		<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-		<li class="breadcrumb-item"><a href="javascript:;">Tables</a></li>
-		<li class="breadcrumb-item"><a href="javascript:;">Managed Tables</a></li>
-		<li class="breadcrumb-item active">Extension Combination</li>
-	</ol>
-	<!-- end breadcrumb -->
 	<!-- begin page-header -->
-	<h1 class="page-header">Car List <small>차량 목록</small></h1>
+	<h1 class="page-header">차량 목록</h1>
 	<!-- end page-header -->
 	<!-- begin row -->
 	<div class="row">
@@ -32,13 +24,7 @@
 			<div class="panel panel-inverse">
 				<!-- begin panel-heading -->
 				<div class="panel-heading">
-					<h4 class="panel-title">목록</h4>
-					<div class="panel-heading-btn">
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-redo"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-					</div>
+					<h4 class="panel-title">자동차</h4>
 				</div>
 				<!-- end panel-heading -->
 				<!-- begin panel-body -->
@@ -50,9 +36,9 @@
 									<th width="1%">
 										<input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/>
 									</th>
-									<th>Car Class</th>
-									<th>Car Number</th>
-									<th>VIN Code</th>
+									<th>차종</th>
+									<th>차량 번호</th>
+									<th>차대 번호</th>
 									<th width="1%"></th>
 								</tr>
 							</thead>
@@ -66,8 +52,8 @@
 									<td>{{car.CN}}</td>
 									<td>{{car.SN}}</td>
 									<td class="with-btn" nowrap>
-										<a href="/car_edit/{{car.CN}}" class="btn btn-sm btn-primary width-60 m-r-2">Edit</a>
-										<a href="javascript:delete_check('{{car.CN}}')" class="btn btn-sm btn-white width-60">Delete</a>
+										<a href="/car_edit/{{car.CN}}" class="btn btn-sm btn-primary width-60 m-r-2">수정</a>
+										<a href="javascript:delete_check('{{car.CN}}')" class="btn btn-sm btn-white width-60">삭제</a>
 									</td>
 								</tr>
 								{% endfor %}
@@ -162,7 +148,7 @@
 				alert('차량 번호를 확인해주세요.');
 			}
 			if (new URL(location.href).searchParams.get('error')) {
-				alert('차량번호 또는 VIN CODE를 다시 확인해주세요.');
+				alert('차량 번호 또는 차대 번호를 다시 확인해주세요.');
 			}
 		};
 	</script>

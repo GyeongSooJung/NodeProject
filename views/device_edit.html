@@ -2,15 +2,8 @@
 
 {% block content %}
 <div id="content" class="content">
-	<!-- begin breadcrumb -->
-	<ol class="breadcrumb float-xl-right">
-		<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-		<li class="breadcrumb-item"><a href="javascript:;">Tables</a></li>
-		<li class="breadcrumb-item active">Basic Tables</li>
-	</ol>
-	<!-- end breadcrumb -->
 	<!-- begin page-header -->
-	<h1 class="page-header">Device Edit <small>장비 수정</small></h1>
+	<h1 class="page-header">장치 수정</h1>
 	<!-- end page-header -->
 	<!-- begin row -->
 	<div class="row">
@@ -20,13 +13,7 @@
 			<div class="panel panel-inverse" data-sortable-id="table-basic-7">
 				<!-- begin panel-heading -->
 				<div class="panel-heading">
-					<h4 class="panel-title">수정</h4>
-					<div class="panel-heading-btn">
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-redo"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-					</div>
+					<h4 class="panel-title">소독기</h4>
 				</div>
 				<!-- end panel-heading -->
 				<!-- begin panel-body -->
@@ -35,10 +22,10 @@
 						<table class="table table-striped m-b-0">
 							<thead>
 								<tr>
-									<th>Model Name</th>
-									<th>Version</th>
-									<th>Mac Address</th>
-									<th>Nickname</th>
+									<th>모델명</th>
+									<th>버전</th>
+									<th>맥 주소</th>
+									<th>별칭</th>
 									<th width="1%"></th>
 								</tr>
 							</thead>
@@ -49,7 +36,7 @@
 									<td>{{deviceone.MAC}}</td>
 									<td>{{deviceone.NN}}</td>
 									<td class="with-btn" nowrap>
-										<a href="/device_list" class="btn btn-sm btn-primary width-60 m-r-2">Back</a>
+										<a href="/device_list" class="btn btn-sm btn-primary m-r-2 width-80">목록으로</a>
 									</td>
 								</tr>
 							</tbody>
@@ -62,35 +49,35 @@
 					<form id="device-form" action="/device/device_edit/upreg/{{deviceone.MAC}}" method="post" class="form-horizontal" data-parsley-validate="true" name="device-form">
 						
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="MD">Model Name * :</label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="MD">모델명 * :</label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" id="MD" type="text" name = "MD" placeholder="Model Name" data-parsley-required="true" />
+								<input class="form-control" id="MD" type="text" name = "MD" placeholder="모델명" data-parsley-required="true" />
 							</div>
 						</div>
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="VER">Version * :</label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="VER">버전 * :</label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" id="VER" type="text" name = "VER" placeholder="Version" data-parsley-required="true" />
+								<input class="form-control" id="VER" type="text" name = "VER" placeholder="버전" data-parsley-required="true" />
 							</div>
 						</div>
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="MAC">Mac Address * :</label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="MAC">맥 주소 * :</label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" id="MAC" type="text" name = "MAC" placeholder="Mac Address" data-parsley-required="true" />
+								<input class="form-control" id="MAC" type="text" name = "MAC" placeholder="맥 주소" data-parsley-required="true" />
 							</div>
 						</div>
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="NN">Nickname :</label></label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="NN">별칭 :</label></label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" id="NN" type="text" name = "NN" placeholder="Nickname"/>
+								<input class="form-control" id="NN" type="text" name = "NN" placeholder="별칭"/>
 							</div>
 						</div>
 						
 						<div class="form-group row m-b-0">
 							<label class="col-md-4 col-sm-4 col-form-label">&nbsp;</label>
 							<div class="col-md-8 col-sm-8">
-								<button type="submit" class="btn btn-primary">Submit</button>
-								<button type="reset" class="btn btn-primary">Reset</button>
+								<button type="submit" class="btn btn-primary width-80">수정</button>
+								<button type="reset" class="btn btn-primary width-80">초기화</button>
 							</div>
 						</div>
 					</form>

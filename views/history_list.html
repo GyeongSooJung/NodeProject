@@ -14,27 +14,14 @@
 {% block content %}
 <!-- begin #content -->
 <div id="content" class="content">
-	<!-- begin breadcrumb -->
-	<ol class="breadcrumb float-xl-right">
-		<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-		<li class="breadcrumb-item"><a href="javascript:;">Tables</a></li>
-		<li class="breadcrumb-item active">Managed Tables</li>
-	</ol>
-	<!-- end breadcrumb -->
 	<!-- begin page-header -->
-	<h1 class="page-header">Disinfection History <small>소독 이력</small></h1>
+	<h1 class="page-header">소독 이력</h1>
 	<!-- end page-header -->
 	<!-- begin panel -->
 	<div class="panel panel-inverse">
 		<!-- begin panel-heading -->
 		<div class="panel-heading">
 			<h4 class="panel-title">기록</h4>
-			<div class="panel-heading-btn">
-				<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-				<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-redo"></i></a>
-				<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-				<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-			</div>
 		</div>
 		<!-- end panel-heading -->
 		<!-- begin panel-body -->
@@ -72,11 +59,11 @@
 							<th width="1%">
 								<input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/>
 							</th>
-							<th class="text-nowrap">Car Number</th>
-						    <th class="text-nowrap">Disinfection Date</th>
-							<th class="text-nowrap">Registration Date</th>
-							<th class="text-nowrap">Consumed Time</th>
-							<th class="text-nowrap">Result</th>
+							<th class="text-nowrap">차량 번호</th>
+						    <th class="text-nowrap">소독 일시</th>
+							<th class="text-nowrap">등록 일시</th>
+							<th class="text-nowrap">소독 시간</th>
+							<th class="text-nowrap">소독 결과</th>
 							<th width="1%"></th>
 						</tr>
 					</thead>
@@ -98,7 +85,7 @@
 							<td>{{moment(history.ET).diff(moment(history.ST), 'minutes')+"m"}}</td>
 							<td>{{history.RC}}</td>
 	  						<td>
-	  							<a href="javascript:delete_check('{{history._id}}')" class="btn btn-sm btn-white width-60">Delete</a>
+	  							<a href="javascript:delete_check('{{history._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
 	  						</td>
 						</tr>
 						{% endfor %}

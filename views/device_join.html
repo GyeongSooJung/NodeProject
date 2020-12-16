@@ -2,15 +2,8 @@
 
 {% block content %}
 <div id="content" class="content">
-	<!-- begin breadcrumb -->
-	<ol class="breadcrumb float-xl-right">
-		<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-		<li class="breadcrumb-item"><a href="javascript:;">Form Stuff</a></li>
-		<li class="breadcrumb-item active">Form Validation</li>
-	</ol>
-	<!-- end breadcrumb -->
 	<!-- begin page-header -->
-	<h1 class="page-header">Device Join <small>장비 등록</small></h1>
+	<h1 class="page-header">장치 등록</h1>
 	<!-- end page-header -->
 	<!-- begin row -->
 	<div class="row">
@@ -20,13 +13,7 @@
 			<div class="panel panel-inverse" data-sortable-id="form-validation-1">
 				<!-- begin panel-heading -->
 				<div class="panel-heading">
-					<h4 class="panel-title">등록</h4>
-					<div class="panel-heading-btn">
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-redo"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-					</div>
+					<h4 class="panel-title">소독기</h4>
 				</div>
 				<!-- end panel-heading -->
 				<!-- begin panel-body -->
@@ -34,34 +21,34 @@
 					<form id="device-form" action="/device/device_join" method="post" class="form-horizontal" data-parsley-validate="true" name="device-form">
 					
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="MD">Model * :</label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="MD">모델명 * :</label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" type="text" id="MD" name="MD" placeholder="Model Name" data-parsley-required="true" />
+								<input class="form-control" type="text" id="MD" name="MD" placeholder="모델명" data-parsley-required="true" />
 							</div>
 						</div>
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="VER">Version * :</label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="VER">버전 * :</label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" type="Number" id="VER" name="VER" placeholder="Version" data-parsley-required="true" />
+								<input class="form-control" type="Number" id="VER" name="VER" placeholder="버전" data-parsley-required="true" />
 							</div>
 						</div>
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="MAC">Mac_Address * :</label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="MAC">맥 주소 * :</label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" type="String" id="MAC" name="MAC" placeholder="Mac_Address" data-parsley-required="true" />
+								<input class="form-control" type="String" id="MAC" name="MAC" placeholder="맥 주소" data-parsley-required="true" />
 							</div>
 						</div>
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="NN">Nickname :</label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="NN">별칭 :</label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" type="String" id="NN" name="NN" placeholder="Nickname" />
+								<input class="form-control" type="String" id="NN" name="NN" placeholder="원하는대로 설정하세요." />
 							</div>
 						</div>
 						<div class="form-group row m-b-0">
 							<label class="col-md-4 col-sm-4 col-form-label">&nbsp;</label>
 							<div class="col-md-8 col-sm-8">
-								<button type="submit" class="btn btn-primary">Submit</button>
-								<button type="reset" class="btn btn-primary">Reset</button>
+								<button type="submit" class="btn btn-primary width-80">등록</button>
+								<button type="reset" class="btn btn-primary width-80">초기화</button>
 							</div>
 						</div>
 					</form>

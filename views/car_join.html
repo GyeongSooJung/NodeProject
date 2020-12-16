@@ -2,15 +2,8 @@
 
 {% block content %}
 <div id="content" class="content">
-	<!-- begin breadcrumb -->
-	<ol class="breadcrumb float-xl-right">
-		<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-		<li class="breadcrumb-item"><a href="javascript:;">Form Stuff</a></li>
-		<li class="breadcrumb-item active">Form Validation</li>
-	</ol>
-	<!-- end breadcrumb -->
 	<!-- begin page-header -->
-	<h1 class="page-header">Car Join <small>차량 등록</small></h1>
+	<h1 class="page-header">차량 등록</h1>
 	<!-- end page-header -->
 	<!-- begin row -->
 	<div class="row">
@@ -20,41 +13,35 @@
 			<div class="panel panel-inverse" data-sortable-id="form-validation-1">
 				<!-- begin panel-heading -->
 				<div class="panel-heading">
-					<h4 class="panel-title">등록</h4>
-					<div class="panel-heading-btn">
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-redo"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-					</div>
+					<h4 class="panel-title">자동차</h4>
 				</div>
 				<!-- end panel-heading -->
 				<!-- begin panel-body -->
 				<div class="panel-body">
 					<form id="car-form" action="/car/car_join" method="post" class="form-horizontal" data-parsley-validate="true" name="car-form">
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="CC">Car Class * :</label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="CC">차종 * :</label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" type="Number" id="CC" name="CC" placeholder="Version" data-parsley-required="true" />
+								<input class="form-control" type="Number" id="CC" name="CC" placeholder="차종" data-parsley-required="true" />
 							</div>
 						</div>
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="CN">Car Number * :</label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="CN">차량 번호 * :</label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" type="String" id="CN" name="CN" placeholder="Car Number" data-parsley-required="true" />
+								<input class="form-control" type="String" id="CN" name="CN" placeholder="차량 번호" data-parsley-required="true" />
 							</div>
 						</div>
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="SN">Serial Number :</label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="SN">차대 번호 :</label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" type="String" id="SN" name="SN" placeholder="Serial Number"  />
+								<input class="form-control" type="String" id="SN" name="SN" placeholder="차대 번호"  />
 							</div>
 						</div>
 						<div class="form-group row m-b-0">
 							<label class="col-md-4 col-sm-4 col-form-label">&nbsp;</label>
 							<div class="col-md-8 col-sm-8">
-								<button type="submit" class="btn btn-primary">Submit</button>
-								<button type="reset" class="btn btn-primary">Reset</button>
+								<button type="submit" class="btn btn-primary width-80">등록</button>
+								<button type="reset" class="btn btn-primary width-80">초기화</button>
 							</div>
 						</div>
 					</form>
