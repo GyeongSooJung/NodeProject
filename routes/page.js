@@ -148,8 +148,28 @@ router.get('/profile',isNotLoggedIn,DataSet ,async (req, res, next) => {
 //Worker list for Workers
 router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
   try {
+    
+    const workeracem = req.query.workeracem;
+    let workerone
+    console.log(workeracem);
+    
+    if(workeracem){
+      const workerarray = workeracem.split(',');
+      console.log(workerarray[0]);
+      console.log(workerarray[1]);
+      
+      if(workerarray){
+        if(workerarray[0] =="true") {
+          workerone = await Worker.where({"EM" : workerarray[1]}).update({ "AC" : false }).setOptions({runValidators : true}).exec();
+        }else{
+          workerone = await Worker.where({"EM" : workerarray[1]}).update({ "AC" : true }).setOptions({runValidators : true}).exec();
+        }
+      }
+    }
+    
     const workers = await Worker.find({CID : req.decoded.CID,});
-    console.log(workers);
+    
+    
     res.render('worker_list', {company : req.decoded
                                 ,workers});
   } catch (err) {
