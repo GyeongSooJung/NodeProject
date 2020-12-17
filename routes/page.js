@@ -88,6 +88,15 @@ Route_page('car_join');
 Route_page('device_join');
 Route_page('index_frontend');
 
+////////////////////////////////////////////////////////////////////////////////
+//사업자 목록 페이지
+router.get('/company_list', isNotLoggedIn, async (req, res, next) => {
+  const companys = await Company.find({"AH" : false});
+  console.log("zzzzzzzzzzz : "+companys);
+  res.render('company_list', {companys, moment});
+})
+
+////////////////////////////////////////////////////////////////////////////////
 //장비 수정 페이지
 router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
   try {
@@ -111,7 +120,7 @@ router.get('/device_list', isNotLoggedIn,async (req, res, next) => {
   }
 });
 
-/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 //차량 수정 페이지
 router.get('/car_edit/:CN',isNotLoggedIn,async (req, res, next) => {
@@ -138,8 +147,7 @@ router.get('/car_list',isNotLoggedIn, async (req, res, next) => {
   }
 });
 
-////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////
 //Profile DataSetting for Profile(company)
 router.get('/profile',isNotLoggedIn,DataSet ,async (req, res, next) => {
   try {
@@ -151,7 +159,7 @@ router.get('/profile',isNotLoggedIn,DataSet ,async (req, res, next) => {
 
 
 
-////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 //worker
 
 //Worker list for Workers
@@ -187,7 +195,7 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
   }
 });
 
-///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // History
 router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
   const CID = req.decoded.CID;
@@ -240,7 +248,7 @@ router.get('/history_chart/:_id',isNotLoggedIn ,async (req, res, next) => {
     }
 })
 
-/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 //Mobile Connect Page
 router.get('/mobile_con', async (req, res, next) => {
     try {
