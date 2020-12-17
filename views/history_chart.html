@@ -23,38 +23,81 @@
 {% block content %}
 <!-- begin #content -->
 <div id="content" class="content">
-	<!-- begin breadcrumb -->
-	<ol class="breadcrumb float-xl-right">
-		<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-		<li class="breadcrumb-item"><a href="javascript:;">Tables</a></li>
-		<li class="breadcrumb-item active">Managed Tables</li>
-	</ol>
-	<!-- end breadcrumb -->
 	<!-- begin page-header -->
-	<h1 class="page-header">Disinfection History <small>소독 이력</small></h1>
+	<h1 class="page-header">소독 정보</h1>
 	<!-- end page-header -->
 	<!-- begin panel -->
 	<div class="panel panel-inverse">
 		<!-- begin panel-heading -->
 		<div class="panel-heading">
 			<h4 class="panel-title">그래프</h4>
-			<div class="panel-heading-btn">
-				<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-				<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-redo"></i></a>
-				<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-				<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-			</div>
 		</div>
 		<!-- end panel-heading -->
 		<!-- begin panel-body -->
   		<div class="panel-body">
   		  {% if history_array %}
-  			<div id="chartdiv"></div>
+  			<div id="chartdiv" class="height-sm"></div>
   			{% else %}
   			
   			{% endif %}
   			  
 		 </div>
+		<!-- end panel-body -->
+	  <!-- begin panel-body -->
+		<div class="panel-body">
+			<!-- begin table-responsive -->
+			<div class="table-responsive">
+				<table class="table m-b-0 text-center">
+					<thead>
+						<tr class="bg-grey">
+						  <th width="15%">업체명</th>
+							<th width="20%">차량번호</th>
+							<th width="20%">장비모델</th>
+							<th width="20%">작업자</th>
+							<th width="25%">소독일시</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="bg-light">
+							<td>{{companyone.CNA}}</td>
+							<td>{{carone.CN}}</td>
+							<td>{{deviceone.MD}}</td>
+							<td>{{workerone.WN}}</td>
+							<td>{{moment(historyone.ET).format('YYYY-MM-DD hh:mm:ss')}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- end table-responsive -->
+		</div>
+		<!-- end panel-body -->
+	  <!-- begin panel-body -->
+		<div class="panel-body">
+			<!-- begin table-responsive -->
+			<div class="table-responsive">
+				<table class="table m-b-0 text-center">
+					<thead>
+						<tr class="bg-grey">
+						  <th width="15%">소독시간</th>
+							<th width="20%">최고농도</th>
+							<th width="20%">잔존농도</th>
+							<th width="20%">소독결과</th>
+							<th width="25%">등록일시</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="bg-light">
+              <td>{{moment(historyone.ET).diff(moment(historyone.ST), 'minutes')+"m"}}</td>
+              <td>{{historyone.MP}}</td>
+              <td>{{historyone.FP}}</td>
+              <td>{{historyone.RC}}</td>
+              <td>{{moment(historyone.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- end table-responsive -->
+		</div>
 		<!-- end panel-body -->
 	</div>
 	<!-- end panel -->
@@ -131,16 +174,6 @@
   chart.cursor.behavior = "panXY";
   chart.cursor.xAxis = ssAxis;
   chart.cursor.snapToSeries = series;
-  
-  // Create vertical scrollbar and place it before the value axis 이것은 y축 막대바
-  chart.scrollbarY = new am4core.Scrollbar();
-  chart.scrollbarY.parent = chart.leftAxesContainer;
-  chart.scrollbarY.toBack();
-  
-  // Create a horizontal scrollbar with previe and place it underneath the date axis 이것은 x축 막대바
-  chart.scrollbarX = new am4charts.XYChartScrollbar();
-  chart.scrollbarX.series.push(series);
-  chart.scrollbarX.parent = chart.bottomAxesContainer;
   
   ssAxis.start = 0;
   ssAxis.keepSelection = true;

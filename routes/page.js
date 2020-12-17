@@ -56,13 +56,18 @@ router.get('/',(req,res,next)=>{
     res.redirect('main');
 });
 
+router.get('/find', (req,res,next) => {
+  res.render('find');
+})
+
 //메인 페이지
 router.get('/main',isNotLoggedIn , async(req,res,next)=>{
+
     const devices = await Device.find({"CID" : req.decoded.CID});
-    const cars = await Car.find({"CID" : req.decoded.CID}); 
+    const cars = await Car.find({"CID" : req.decoded.CID});
     const workers = await Worker.find({"CID" : req.decoded.CID});
     const historys = await History.find({"CID" : req.decoded.CID});
-    console.log(historys+"fff");
+
     const history_array = await History.findOne({"CID" : req.decoded.CID}).sort({'_id':-1}).limit(1)
     console.log(history_array);
     
@@ -77,7 +82,7 @@ router.get('/main',isNotLoggedIn , async(req,res,next)=>{
 Route_page('index');
 Route_page('car_join');
 Route_page('device_join');
-
+Route_page('index_frontend');
 
 //장비 수정 페이지
 router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
@@ -213,12 +218,18 @@ router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
 });
 
 router.get('/history_chart/:_id',isNotLoggedIn ,async (req, res, next) => {
+    const CID = req.decoded.CID;
+    const CNU = req.decoded.CNU;
     try {
         const historyone = await History.findOne({"_id" : req.params._id});
         const history_array = historyone.PD;
-        console.log(historyone);
-        console.log(history_array);
-        res.render('history_chart', {history_array, moment});
+        const companyone = await Company.findOne({"_id" : CID});
+        const carone = await Car.findOne({"_id" : historyone.VID});
+        const deviceone = await Device.findOne({"_id" : historyone.DID});
+        const workerone = await Worker.findOne({"_id" : historyone.WID});
+        console.log(deviceone);
+        console.log(workerone);
+        res.render('history_chart', {historyone, companyone, carone, deviceone, workerone, history_array, moment});
     } catch (err) {
         console.error(err);
         next(err);

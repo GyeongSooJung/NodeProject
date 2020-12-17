@@ -16,16 +16,8 @@
 {% block content %}
 <!-- begin #content -->
 <div id="content" class="content">
-	<!-- begin breadcrumb -->
-	<ol class="breadcrumb float-xl-right">
-		<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-		<li class="breadcrumb-item"><a href="javascript:;">Tables</a></li>
-		<li class="breadcrumb-item"><a href="javascript:;">Managed Tables</a></li>
-		<li class="breadcrumb-item active">Extension Combination</li>
-	</ol>
-	<!-- end breadcrumb -->
 	<!-- begin page-header -->
-	<h1 class="page-header">Worker List <small>작업자 목록</small></h1>
+	<h1 class="page-header">작업자 목록</h1>
 	<!-- end page-header -->
 	<!-- begin row -->
 	<div class="row">
@@ -34,13 +26,7 @@
 			<div class="panel panel-inverse">
 				<!-- begin panel-heading -->
 				<div class="panel-heading">
-					<h4 class="panel-title">목록</h4>
-					<div class="panel-heading-btn">
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-redo"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-						<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-					</div>
+					<h4 class="panel-title">직원</h4>
 				</div>
 				<!-- end panel-heading -->
 				<!-- begin panel-body -->
@@ -52,9 +38,9 @@
 	        						<tr>
 	        							<th width="1%"><input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/></th>
 	        							<th width="1%" data-orderable="false"></th>
-	        							<th>Name</th>
-	        							<th>Phone Number</th>
-	        							<th>Email</th>
+	        							<th>이름</th>
+	        							<th>전화번호</th>
+	        							<th>이메일</th>
 	        							<th width="1%">승인</th>
 	        							<th width="1%"></th>
 	        						</tr>
@@ -63,8 +49,7 @@
 	        					    {% for worker in workers %}
 	        						<tr>
 	        							<td class="with-btn" nowrap>
-	        									<input id ="ck" type="checkbox" name = "AC" class="neHeros" value={{worker.EM}} {% if worker.AC == true %} checked {% else %} unchecked  {% endif %} onChange="eachCheckedBox(this);"/>
-	        								
+    										<input id ="ck" type="checkbox" name = "AC" class="neHeros" value={{worker.EM}} {% if worker.AC == true %} checked {% else %} unchecked  {% endif %} onChange="eachCheckedBox(this);"/>
 	        							</td>
 	                                    <td width="1%" class="with-img"><img src={{worker.PU}} class="img-rounded height-30" /></td>
 	        							<td>{{worker.WN}}</td>
@@ -77,7 +62,7 @@
 	        								</a>
 	        							</td>
 	        							<td>
-	        								<a class="btn btn-sm btn-white width-60" href="javascript:delete_check('{{worker.EM}}')">Delete</a>
+	        								<a class="btn btn-sm btn-white width-60" href="javascript:delete_check('{{worker.EM}}')">삭제</a>
 	        								<!--<a class="btn btn-sm btn-white width-60" onclick ="confirm({{worker.EM}})">Delete</a>-->
 	        							</td>
 	        						</tr>
@@ -86,12 +71,10 @@
 	        				</table>
 	        				
 					        <div>
-					        	<button style ="margin-right : 10px;" id ="button1" type="submit" class="btn btn-primary">선택자 승인</button>
-					    		<input class="btn btn-primary" type='button' value='선택자 삭제' onclick='return info_chk2(this.form);'>
-					        	
+					        	<button style ="margin-right : 10px;" id ="button1" type="submit" class="btn btn-primary">선택항목 승인</button>
+					    		<input class="btn btn-primary" type='button' value='선택항목 삭제' onclick='return info_chk2(this.form);'>
+						    </div>
 					    </form>
-					    </div>
-					    		
 					</div>
 				</div>
 				<!-- end panel-body -->

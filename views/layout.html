@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-	<title>MK | Admin Page</title>
+	<title>OASIS | Admin Page</title>
 	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 	<meta content="" name="description" />
 	<meta content="" name="author" />
@@ -30,7 +30,7 @@
 		<div id="header" class="header navbar-default">
 			<!-- begin navbar-header -->
 			<div class="navbar-header">
-				<a href="/main" class="navbar-brand"><img src="../assets/img/mk_logo2.png"></a>
+				<a href="/main" class="navbar-brand ml-3"><img src="../assets/img/oasis.jpg"></a>
 				<button type="button" class="navbar-toggle" data-click="sidebar-toggled">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -42,7 +42,7 @@
 				<li class="navbar-form">
 					<form action="" method="POST" name="search">
 						<div class="form-group">
-							<input type="text" class="form-control" placeholder="Enter keyword" />
+							<input type="text" class="form-control" placeholder="검색" />
 							<button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
 						</div>
 					</form>
@@ -53,7 +53,7 @@
 						<span class="label">5</span>
 					</a>
 					<div class="dropdown-menu media-list dropdown-menu-right">
-						<div class="dropdown-header">NOTIFICATIONS (5)</div>
+						<div class="dropdown-header">알림 (5)</div>
 						<a href="javascript:;" class="dropdown-item media">
 							<div class="media-left">
 								<i class="fa fa-bug media-object bg-silver-darker"></i>
@@ -105,7 +105,7 @@
 							</div>
 						</a>
 						<div class="dropdown-footer text-center">
-							<a href="javascript:;">View more</a>
+							<a href="javascript:;">더보기</a>
 						</div>
 					</div>
 				</li>
@@ -115,12 +115,12 @@
 						<span class="d-none d-md-inline">{{company.CNA}}</span> <b class="caret"></b>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right">
-						<a href="/profile" class="dropdown-item">Edit Profile</a>
-						<a href="javascript:;" class="dropdown-item"><span class="badge badge-danger pull-right">2</span> Inbox</a>
-						<a href="javascript:;" class="dropdown-item">Calendar</a>
-						<a href="javascript:;" class="dropdown-item">Setting</a>
+						<a href="/profile" class="dropdown-item">프로필 수정</a>
+						<a href="javascript:;" class="dropdown-item"><span class="badge badge-danger pull-right">2</span> 인박스</a>
+						<a href="javascript:;" class="dropdown-item">캘린더</a>
+						<a href="javascript:;" class="dropdown-item">설정</a>
 						<div class="dropdown-divider"></div>
-						<a href="/auth/logout" class="dropdown-item">Log Out</a>
+						<a href="/auth/logout" class="dropdown-item">로그아웃</a>
 					</div>
 				</li>
 			</ul>
@@ -133,23 +133,35 @@
 			<!-- begin sidebar scrollbar -->
 			<div data-scrollbar="true" data-height="100%">
 				<ul class="nav"><li class="nav-header">Navigation</li>
-					
+					{% if(company_AH == true) %}
+					<li class="has-sub">
+						<a href="javascript:;">
+							<b class="caret"></b>
+							<i class="fas fa-lg fa-fw m-r-10 fa-building"></i>
+							<span> 사업자 </span> 
+						</a>
+						<ul class="sub-menu">
+							<li><a href="/company_list">사업자 목록</a></li>
+						</ul>
+					</li>
+					{% else %}
+					{% endif %}
 					<li class="has-sub">
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-fw m-r-10 fa-microchip"></i>
-							<span> Device </span> 
+							<span> 소독기 </span> 
 						</a>
 						<ul class="sub-menu">
-							<li><a href="/device_join">장비 등록</a></li>
-							<li><a href="/device_list">장비 목록</a></li>
+							<li><a href="/device_join">장치 등록</a></li>
+							<li><a href="/device_list">장치 목록</a></li>
 						</ul>
 					</li>
 					<li class="has-sub">
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-fw m-r-10 fa-car"></i>
-							<span> Car </span> 
+							<span> 자동차 </span> 
 						</a>
 						<ul class="sub-menu">
 							<li><a href="/car_join">차량 등록</a></li>
@@ -160,7 +172,7 @@
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-fw m-r-10 fa-user"></i>
-							<span> Worker </span> 
+							<span> 작업자 </span> 
 						</a>
 						<ul class="sub-menu">
 							<li><a href="/worker_list">작업자 목록</a></li>
@@ -170,7 +182,7 @@
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-fw m-r-10 fa-history"></i>
-							<span> History </span> 
+							<span> 소독 이력 </span> 
 						</a>
 						<ul class="sub-menu">
 							<li><a href="/history_list">소독 이력</a></li>
@@ -180,7 +192,7 @@
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-fw m-r-10 fa-qrcode"></i>
-							<span> QR Code </span> 
+							<span> QR 코드 </span> 
 						</a>
 						<ul class="sub-menu">
 							<li><a href="/mobile_con">QR 접속</a></li>

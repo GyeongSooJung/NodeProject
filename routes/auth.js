@@ -8,14 +8,14 @@ const secretObj = require("../config/jwt");
 const mongoose = require('mongoose');
 
 
-const TokenMake = function(req,res,next){
+const TokenMake = async function(req,res,next){
   // default : HMAC SHA256
   const {CNU, PW} = req.body;
-  Company.findOne({"CNU":parseInt(CNU)}) // CNU에 맞는 데이터 찾아오기
-  .then( Company => {
+  try{
+  const company = await Company.findOne({"CNU":parseInt(CNU)})// CNU에 맞는 데이터 찾아오기
     //bcrypt 암호화된 PW와 입력 PW 비교
-    if(bcrypt.compareSync( PW,Company.PW)){
-       const token = jwt.sign({CNU : Company.CNU, CNA : Company.CNA, CID : Company._id },// 토큰의 내용(payload)
+    if(bcrypt.compareSync( PW,Company.PW) ){
+       const token = jwt.sign({CNU : Company.CNU, CNA : Company.CNA, CID : Company._id, AH : Company.AH },// 토큰의 내용(payload)
         secretObj.secret ,   // 비밀 키
       {expiresIn: '1440m'})  // 유효 시간은 1440분 하루 설정
       res.cookie("token", token); // 쿠키에 token 등록  
@@ -24,7 +24,9 @@ const TokenMake = function(req,res,next){
     else{
       res.redirect('/login?fail=true');
     }
-  })
+  }catch(err){
+     res.redirect('/login?fail=true');
+  }
 }
 
 

@@ -77,5 +77,35 @@ router.get('/device_delete/:MAC', async (req, res, next) => {
     next(err);
   }
 });
+
+//장비 선택삭제
+router.post('/device_select_delete',isNotLoggedIn ,async (req, res, next) => {
+    try {
+        const {ck} = req.body;
+        const deviceone = await Device.findOne({"MAC" : ck});
+        console.log("zzzzzzzzz : "+deviceone);
+        const MACc = deviceone.MAC;
+        var i;
+        console.log("MAC: " + ck);
+        
+        for(i=0; i < ck.length; i++){
+            if(ck){
+                if(ck[i] == MACc){
+                    await Device.remove({ "MAC" : ck });
+                }
+                else if(!(ck instanceof Object)) {
+                    await Device.remove({ "MAC" : ck });
+                }
+            }
+            else if(!ck){
+                return res.redirect('/device_list');
+            }
+        }
+        res.redirect('/device_list');
+    }   catch (err) {
+        console.error(err);
+        next(err);
+  }
+});
     
 module.exports = router;
