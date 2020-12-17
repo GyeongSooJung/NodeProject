@@ -135,7 +135,7 @@
                         			
                                 	<div id="chartdiv"></div>
                 			{% else %}
-                			<div id="chartdiv"></div>
+                				<h3>최근 공정데이터가 없습니다.</h3>
   			                {% endif %}
                 		</div>
                 		<!-- end panel-body -->
@@ -247,6 +247,7 @@ var chart = am4core.create("chartdiv", am4charts.XYChart);
 		  {% endfor %}
 
 // Set input format for the dates
+chart.logo.disabled = true;
 chart.numberFormatter.numberFormat = "#";
 // Create axes
 var ssAxis = chart.xAxes.push(new am4charts.ValueAxis());
@@ -283,16 +284,6 @@ chart.cursor = new am4charts.XYCursor();
 chart.cursor.behavior = "panXY";
 chart.cursor.xAxis = ssAxis;
 chart.cursor.snapToSeries = series;
-
-// Create vertical scrollbar and place it before the value axis 이것은 y축 막대바
-chart.scrollbarY = new am4core.Scrollbar();
-chart.scrollbarY.parent = chart.leftAxesContainer;
-chart.scrollbarY.toBack();
-
-// Create a horizontal scrollbar with previe and place it underneath the date axis 이것은 x축 막대바
-chart.scrollbarX = new am4charts.XYChartScrollbar();
-chart.scrollbarX.series.push(series);
-chart.scrollbarX.parent = chart.bottomAxesContainer;
 
 ssAxis.start = 0;
 ssAxis.keepSelection = true;
