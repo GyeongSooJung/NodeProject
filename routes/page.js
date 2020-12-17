@@ -67,12 +67,7 @@ router.get('/main',isNotLoggedIn , async(req,res,next)=>{
     const cars = await Car.find({"CID" : req.decoded.CID});
     const workers = await Worker.find({"CID" : req.decoded.CID});
     const historys = await History.find({"CID" : req.decoded.CID});
-<<<<<<< HEAD
-
-    const history_array = await History.findOne({"CID" : req.decoded.CID}).sort({'_id':-1}).limit(1)
-=======
     const history_array = await History.findOne({"CID" : req.decoded.CID}).sort({'_id':-1}).limit(1);
->>>>>>> 9ad588779fec9b54379e0d66904637cd4954e73d
     console.log(history_array);
     if (history_array){
       const recent_history = history_array.PD;
