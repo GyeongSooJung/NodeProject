@@ -67,13 +67,18 @@ router.get('/main',isNotLoggedIn , async(req,res,next)=>{
     const cars = await Car.find({"CID" : req.decoded.CID});
     const workers = await Worker.find({"CID" : req.decoded.CID});
     const historys = await History.find({"CID" : req.decoded.CID});
-    const history_array = await History.findOne({"CID" : req.decoded.CID}).sort({'_id':-1}).limit(1)
+    const history_array = await History.findOne({"CID" : req.decoded.CID}).sort({'_id':-1}).limit(1);
     console.log(history_array);
+    if (history_array){
+      const recent_history = history_array.PD;
+      console.log("최근 히스토리는 :" +recent_history);
+      res.render('main', {company : req.decoded,devices, cars, workers, historys, recent_history, history_array, moment});
+    }
+    else{
+      res.render('main', {company : req.decoded,devices, cars, workers, historys,  history_array, moment});
+    }
     
-    const recent_history = history_array.PD;
-    console.log("최근 히스토리는 :" +recent_history);
     
-    res.render('main', {company : req.decoded,devices, cars, workers, historys, recent_history, history_array, moment});
 });
 
 
