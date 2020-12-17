@@ -55,7 +55,7 @@ router.get('/error',(req,res)=>{
 router.get('/',(req,res,next)=>{
     res.redirect('main');
 });
-//////////////////////////////////////////대선이에게 물어보기/////////////////////////////////////////////////
+
 router.get('/find', (req,res,next) => {
   res.render('find');
 })
