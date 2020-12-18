@@ -131,7 +131,7 @@
 		<!-- begin #sidebar -->
 		<div id="sidebar" class="sidebar">
 			<!-- begin sidebar scrollbar -->
-			<div data-scrollbar="true" data-height="100%">
+			<div id="active-menu" data-scrollbar="true" data-height="100%">
 				<ul class="nav"><li class="nav-header">Navigation</li>
 					{% if(company.AH == true) %}
 					<li class="has-sub">
@@ -226,6 +226,14 @@
 	<script src="../assets/js/app.min.js"></script>
 	<script src="../assets/js/theme/default.min.js"></script>
 	<!-- ================== END BASE JS ================== -->
+	
+
+		<script>
+			$(document).ready(function() {
+				$('#active-menu').find('a[href="' + document.location.pathname + '"]').parents('li').addClass('active');
+			});
+		</script>
+	
 	{% block script %}
 	{% endblock %}
 	
