@@ -172,10 +172,21 @@
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-fw m-r-10 fa-user"></i>
-							<span> 작업자 </span> 
+							<span> 작업자 
+								
+								{% if (nclist.length >= 1) %}
+								<span class="label label-theme">NEW</span>
+								{% else %}
+								{% endif %}
+							</span>
 						</a>
 						<ul class="sub-menu">
-							<li><a href="/worker_list">작업자 목록 &nbsp;<span class="label label-theme">NEW</span></a></li>
+							<li><a href="/worker_list">작업자 목록 
+							{% if nclist.length >=1 %}
+							<span class="label label-theme">{{ nclist.length }}</span>
+							{% else %}
+							{% endif %}
+							</a></li>
 						</ul>
 					</li>
 					<li class="has-sub">
