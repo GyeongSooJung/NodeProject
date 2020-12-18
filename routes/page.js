@@ -21,8 +21,11 @@ const Route_page= function(page,req,res){
 // 로그인
 router.get('/login',isLoggedIn,(req,res)=>{
     res.render('login',
-    {title:'Login Website - MK Corp'});
+    {title:'Login Website - OASIS'});
 });
+router.get('/index',isLoggedIn,(req,res)=>{
+  res.render('index')
+})
 
 //회원 가입
 router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
@@ -83,7 +86,6 @@ router.get('/main',isNotLoggedIn , async(req,res,next)=>{
 
 
 // 공통페이지 작성 방법
-Route_page('index');
 Route_page('car_join');
 Route_page('device_join');
 Route_page('index_frontend');
@@ -92,8 +94,7 @@ Route_page('index_frontend');
 //사업자 목록 페이지
 router.get('/company_list', isNotLoggedIn, async (req, res, next) => {
   const companys = await Company.find({"AH" : false});
-  console.log("zzzzzzzzzzz : "+companys);
-  res.render('company_list', {companys, moment});
+  res.render('company_list', {companys, moment, company : req.decoded});
 })
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -209,19 +210,19 @@ router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
     
     if(!CN & !MD) {
       const historys = await History.find({"CID" : CID});
-      res.render('history_list', {cars, devices, historys, moment});
+      res.render('history_list', {company : req.decoded, cars, devices, historys, moment});
     }
     
     else if(CN) {
       const carone = await Car.findOne({"CN" : CN});
       const historys = await History.find({"VID" : carone._id});
-      res.render('history_list', {cars, devices, historys, moment});
+      res.render('history_list', {company : req.decoded, cars, devices, historys, moment});
     }
     
     else if(MD) {
       const deviceone = await Device.findOne({"MD" : MD});
       const historys = await History.find({"DID" : deviceone._id});
-      res.render('history_list', {cars, devices, historys, moment});
+      res.render('history_list', {company : req.decoded, cars, devices, historys, moment});
     }
   } catch (err) {
     console.error(err);
@@ -241,7 +242,7 @@ router.get('/history_chart/:_id',isNotLoggedIn ,async (req, res, next) => {
         const workerone = await Worker.findOne({"_id" : historyone.WID});
         console.log(deviceone);
         console.log(workerone);
-        res.render('history_chart', {historyone, companyone, carone, deviceone, workerone, history_array, moment});
+        res.render('history_chart', {company : req.decoded, historyone, companyone, carone, deviceone, workerone, history_array, moment});
     } catch (err) {
         console.error(err);
         next(err);
