@@ -15,7 +15,7 @@ const {isLoggedIn,isNotLoggedIn,DataSet,emailcontrol} = require('./middleware');
 const Route_page= function(page,req,res){
     let pages = "/"+page;
     router.get(pages,isNotLoggedIn,(req,res)=>{
-       res.render(page,{company : req.decoded}); 
+       res.render(page,{company : req.decoded});
     });
 }
 // 로그인
