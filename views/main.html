@@ -39,7 +39,7 @@
 						<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-microchip"></i></div>
 						<div class="stats-info">
 							<h4>소독기</h4>
-							<p>{{devices.length}}</p>	
+							<p id="p1">{{devices.length}}</p>	
 						</div>
 						<div class="stats-link">
 							<a href="/device_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
@@ -53,7 +53,7 @@
 						<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-car"></i></div>
 						<div class="stats-info">
 							<h4>자동차</h4>
-							<p>{{cars.length}}</p>	
+							<p id="p2">{{cars.length}}</p>	
 						</div>
 						<div class="stats-link">
 							<a href="/car_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
@@ -67,7 +67,7 @@
 						<div class="stats-icon"><i class="fa fa-users"></i></div>
 						<div class="stats-info">
 							<h4>작업자</h4>
-							<p>{{workers.length}}</p>	
+							<p id="p3">{{workers.length}}</p>	
 						</div>
 						<div class="stats-link">
 							<a href="/worker_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
@@ -81,7 +81,7 @@
 						<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-history"></i></div>
 						<div class="stats-info">
 							<h4>소독이력</h4>
-							<p>{{historys.length}}</p>	
+							<p id="p4">{{historys.length}}</p>	
 						</div>
 						<div class="stats-link">
 							<a href="/history_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
@@ -216,6 +216,55 @@
 
 
 {% block script %}
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+
+  const socket = io.connect('http://3.36.38.223:8008', {
+    path: '/socket.io',
+    transports: ['websocket'],
+  })
+  
+
+  
+  socket.on('newworker', function (data) {
+  	var i,j = 0;
+  	var socket_worker_array = [];
+  	console.log(data);
+    // console.log(data[0]._id);
+	// console.log("{{company.CID}}");
+	
+	for(i = 0; i < data.length; i++) {
+		if (data[i].CID == "{{company.CID}}") {
+	// console.log(data[i]._id);
+	// {{company.CID}} 는 지금 접속한 사람의 CID를 나타냄
+		
+			socket_worker_array.push(data[i].CID);
+		}
+	}
+	document.getElementById('p3').innerHTML = socket_worker_array.length;
+    socket.emit('reply', 'HTML 에서 node로 보내는 메세지(작업자 갱신)');
+  });
+  
+  socket.on('newhistory', function (data) {
+  	var i,j = 0;
+  	var socket_worker_array = [];
+  	console.log(data);
+    // console.log(data[0]._id);
+	// console.log("{{company.CID}}");
+	
+	for(i = 0; i < data.length; i++) {
+		if (data[i].CID == "{{company.CID}}") {
+	// console.log(data[i]._id);
+	// {{company.CID}} 는 지금 접속한 사람의 CID를 나타냄
+			socket_worker_array.push(data[i].CID);
+		}
+	}
+	document.getElementById('p4').innerHTML = socket_worker_array.length;
+    socket.emit('reply', 'HTML 에서 node로 보내는 메세지(히스토리 갱신)');
+  });
+  
+</script>
 
 <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>

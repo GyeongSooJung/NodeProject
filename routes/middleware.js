@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const secretObj = require("../config/jwt");
-const secretObj2 = require("../config/jwt");
 const Company = require('../schemas/company');
 
 exports.isLoggedIn = (req, res, next) => {
