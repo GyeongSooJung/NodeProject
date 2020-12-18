@@ -49,7 +49,7 @@ module.exports = (server) => {
       socket.emit('newworker',socket_worker);
       socket.emit('newhistory',socket_history); 
       
-    }, 10000);
+    }, 60000);
     
   });
 };
