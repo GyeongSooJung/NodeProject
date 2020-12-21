@@ -77,11 +77,16 @@ router.get('/main',isNotLoggedIn , async(req,res,next)=>{
     const cars = await Car.find({"CID" : req.decoded.CID});
     const workers = await Worker.find({"CID" : req.decoded.CID});
 
-    const Weeks= await 7*24*60*60*1000
-    const history_weeks = await History.find( { "CID" : req.decoded.CID,"CA": { $gte: (Date.now()-Weeks)} });
-    console.log(history_weeks)
-    console.log(Date.UTC()-Weeks)
-
+    const Days= await 24*60*60*1000
+    const h1 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now() ,$gte: (Date.now()-Days)} });
+    const h2 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days ,$gte: (Date.now()-Days*2)} });
+    const h3 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days*2 ,$gte: (Date.now()-Days*3)} });
+    const h4 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days*3 ,$gte: (Date.now()-Days*4)} });
+    const h5 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days*4,$gte: (Date.now()-Days*5)} });
+    const h6 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days*5,$gte: (Date.now()-Days*6)} });
+    const h7 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days*6,$gte: (Date.now()-Days*7)} });
+    const history_count = await [h1,h2,h3,h4,h5,h6,h7];
+    
     const historys = await History.find({"CID" : req.decoded.CID});
     const history_array = await History.findOne({"CID" : req.decoded.CID}).sort({'_id':-1}).limit(1);
     console.log(history_array);
@@ -89,10 +94,10 @@ router.get('/main',isNotLoggedIn , async(req,res,next)=>{
     if (history_array){
       const recent_history = history_array.PD;
       console.log("최근 히스토리는 :" +recent_history);
-      res.render('main', {company : req.decoded, nclist, devices, cars, workers, historys, recent_history, history_array, moment});
+      res.render('main', {company : req.decoded, nclist, devices, cars, workers, historys, recent_history, history_array, moment,history_count});
     }
     else{
-      res.render('main', {company : req.decoded, nclist, devices, cars, workers, historys,  history_array, moment});
+      res.render('main', {company : req.decoded, nclist, devices, cars, workers, historys,  history_array, moment,history_count});
     }
 });
 
