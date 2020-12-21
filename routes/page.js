@@ -78,7 +78,9 @@ router.get('/main',isNotLoggedIn , async(req,res,next)=>{
     const workers = await Worker.find({"CID" : req.decoded.CID});
 
     const Weeks= await 7*24*60*60*1000
-    const history_weeks = await History.findOne( { "CID" : req.decoded.CID,"CA": { $gt: Date.now()-Weeks} });
+    const history_weeks = await History.find( { "CID" : req.decoded.CID,"CA": { $gte: (Date.now()-Weeks)} });
+    console.log(history_weeks)
+    console.log(Date.UTC()-Weeks)
 
     const historys = await History.find({"CID" : req.decoded.CID});
     const history_array = await History.findOne({"CID" : req.decoded.CID}).sort({'_id':-1}).limit(1);
