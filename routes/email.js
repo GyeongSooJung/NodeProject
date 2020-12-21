@@ -15,8 +15,8 @@ const secretObj2 = require("../config/jwt");
 const smtpTransport = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-      user: "",
-      pass: ""
+      user: "mk.manager2020@gmail.com",
+      pass: "showmethemoney"
   },
   tls: {
       rejectUnauthorized: false
@@ -42,7 +42,7 @@ router.post('/email_send', async (req, res, next) => {
                   let authNum = Math.random().toString().substr(2,6);
                   console.log("authNum: " + authNum);
                   const mailOptions = {
-                    from: "?????@gmail.com",
+                    from: "mk.manager2020@gmail.com",
                     to: reademailaddress,
                         subject: "MK 인증번호 관련 메일 입니다.",
                         text: "인증번호는 " + authNum + " 입니다."
