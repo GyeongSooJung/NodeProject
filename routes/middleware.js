@@ -16,6 +16,7 @@ exports.isLoggedIn = (req, res, next) => {
 exports.isNotLoggedIn = (req, res, next) => {
      try{
       req.decoded = jwt.verify(req.cookies.token, secretObj.secret);
+ 
       next();   
   } 
     catch(err) {
@@ -24,10 +25,9 @@ exports.isNotLoggedIn = (req, res, next) => {
   
 };
 
-exports.emailcontrol = (req, res, next) => {
+exports.emailcontrol = async(req, res, next) => {
      try{
-      req.decoded.email = req.cookies.email
-      req.decoded.authNum = req.cookies.authNum
+      req.decoded = req.cookies;
       next();   
       
   } 

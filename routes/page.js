@@ -32,17 +32,16 @@ router.get('/index',isLoggedIn,(req,res)=>{
 
 //회원 가입
 router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
+      res.cookie("email", null);
+      res.cookie("authNum", null);
+     console.log("토큰은 이거입니다22 " + req.decoded.authNum);
+     const authNum = parseInt(req.decoded.authNum);
+     const email = req.decoded.email;
+     console.log(req.decoded.email);
   
-     console.log("토큰은 이거입니다22 " + req.decoded2.authNum2);
-     const authNum2 = parseInt(req.decoded2.authNum2);
-     console.log(authNum2);
-  
-  if (authNum2){
+  if (authNum){
     console.log("성공 ");
-    res.render('register',
-    {email : req.decoded2}
-    );
-    console.log(req.decoded2);
+    return res.render('register',{email});
   }
   else {
     console.log("실패");
