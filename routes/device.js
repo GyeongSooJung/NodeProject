@@ -3,6 +3,8 @@ const express = require('express');
 const Device = require('../schemas/device');
 var moment = require('moment');
 const {isNotLoggedIn} = require('./middleware');
+const xlsx = require('xlsx');
+const multiparty = require('multiparty');
 const router = express.Router();
 
 //장비 등록
@@ -13,8 +15,10 @@ router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
   const { MD, MAC, VER, NN, CA, UA, UT } = req.body;
     const CID = req.decoded.CID;
     const CNU = req.decoded.CNU;
+    console.log(req.body);
   try {
     const exDevice = await Device.findOne({ "MAC" : MAC });
+    
     if (exDevice) {
       return res.redirect('/device_join?error=exist');
     }
@@ -32,7 +36,55 @@ router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
   }
 });
 
-
+router.post('/device_join_xlsx', isNotLoggedIn,async (req, res, next) => {
+  
+      //Excel 파일 json 파싱
+      const resData = {};
+      const form = new multiparty.Form({
+          autoFiles: true,
+      });
+   
+      form.on('file', (name, file) => {
+          const workbook = xlsx.readFile(file.path);
+          const sheetnames = Object.keys(workbook.Sheets);
+   
+          let i = sheetnames.length;
+   
+          while (i--) {
+              const sheetname = sheetnames[i];
+              resData[sheetname] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetname]);
+          }
+      });
+   
+      form.on('close', () => {
+          res.send(resData);
+      });
+   
+      form.parse(req);
+      
+  const { MD, MAC, VER, NN, CA, UA, UT } = req.body;
+    const CID = req.decoded.CID;
+    const CNU = req.decoded.CNU;
+    console.log(req.body);
+  try {
+    const exDevice = await Device.findOne({ "MAC" : MAC });
+    
+    if (exDevice) {
+      return res.redirect('/device_join?error=exist');
+    }
+    else{
+      const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss'); //한국시간 맞추기 위해 +9시간
+      const UA = "";
+      await Device.create({
+        CID, MD, VER, MAC, NN, CA
+    });
+    return res.redirect('/device_join');
+    }
+  } catch (err) {
+    console.error(err);
+    return next(err);
+  }
+});
 
 //장비 수정
   //DB
