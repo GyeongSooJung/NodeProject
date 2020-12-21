@@ -157,43 +157,18 @@
 						<div class="table-responsive">
 							<table class="table table-valign-middle table-panel mb-0">
 								<thead>
-									<tr>	
-										<th>Source</th>
-										<th>Total</th>
-										<th>Trend</th>
-									</tr>
+
 								</thead>
 								<tbody>
 									<tr>
-										<td><label class="label label-danger">Unique Visitor</label></td>
-										<td>13,203 <span class="text-success"><i class="fa fa-arrow-up"></i></span></td>
-										<td><div style ="height : 30px" id="first week"></div></td>
+										<select onchange="selectDataset(this.options[this.selectedIndex].value);">
+										  	<option value="set1">Data Set #1</option>
+										  	<option value="set2">Data Set #2</option>
+										  	<option value="set3">Data Set #3</option>
+										</select>
+										<div id="first week" style ="height : 300px"></div>
 									</tr>
-									<tr>
-										<td><label class="label label-warning">First Weeks</label></td>
-										<td>28.2%</td>
-										<td><div id="sparkline-bounce-rate"></div></td>
-									</tr>
-									<tr>
-										<td><label class="label label-success">Second Weeks</label></td>
-										<td>1,230,030</td>
-										<td><div id="sparkline-total-page-views"></div></td>
-									</tr>
-									<tr>
-										<td><label class="label label-primary">Third Weeks</label></td>
-										<td>00:03:45</td>
-										<td><div id="sparkline-avg-time-on-site"></div></td>
-									</tr>
-									<tr>
-										<td><label class="label label-default">Forth Weeks</label></td>
-										<td>123</td>
-										<td><div id="sparkline-new-visits"></div></td>
-									</tr>
-									<tr>
-										<td><label class="label label-inverse">Return Visitors</label></td>
-										<td>73.4%</td>
-										<td><div id="sparkline-return-visitors"></div></td>
-									</tr>
+
 								</tbody>
 							</table>
 						</div>
@@ -295,92 +270,81 @@ ssAxis.keepSelection = true;
 
 
 
+/**
+ * ---------------------------------------
+ * This demo was created using amCharts 4.
+ *
+ * For more information visit:
+ * https://www.amcharts.com/
+ *
+ * Documentation is available at:
+ * https://www.amcharts.com/docs/v4/
+ * ---------------------------------------
+ */
 
-bar_func = function(div_name) {
-
-// Themes begin
-am4core.useTheme(am4themes_animated);
-// Themes end
-
-  // Create chart instance
-  var container = am4core.create(div_name, am4core.Container);
-  	container.logo.disabled =true
-  container.fixedWidthGrid = false;
-  container.width = am4core.percent(100);
-  container.height = am4core.percent(100);
-
-  // Color set
-  var colors = new am4core.ColorSet();
-
-  function createColumn(title, data, color) {
-
-    var chart = container.createChild(am4charts.XYChart);
-    chart.width = am4core.percent(100);
-    chart.height = am4core.percent(100);
-chart.paddingRight = 30;
-    chart.data = data;
-
-    chart.titles.template.fontSize = 10;
-    chart.titles.template.textAlign = "left";
-    chart.titles.template.isMeasured = false;
-    chart.titles.create().text = title;
-
-    chart.padding(0, 0, 0, 0);
-
-    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-    dateAxis.renderer.grid.template.disabled = true;
-    dateAxis.renderer.labels.template.disabled = true;
-    dateAxis.cursorTooltipEnabled = false;
-
-    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-    valueAxis.min = 0;
-    valueAxis.renderer.grid.template.disabled = true;
-    valueAxis.renderer.baseGrid.disabled = true;
-    valueAxis.renderer.labels.template.disabled = true;
-    valueAxis.cursorTooltipEnabled = false;
-
-    chart.cursor = new am4charts.XYCursor();
-    chart.cursor.lineY.disabled = true;
-
-    var series = chart.series.push(new am4charts.ColumnSeries());
-    series.tooltipText = "{date}: [bold]{value}";
-    series.dataFields.dateX = "date";
-    series.dataFields.valueY = "value";
-    series.strokeWidth = 0;
-    series.fillOpacity = 1;
-    series.columns.template.propertyFields.fillOpacity = "opacity";
-    series.columns.template.fill = color;
-
-    return chart;
-  }
-
-
-
-  createColumn("",data, colors.getIndex(week));
-
-
-
+var data = {
+  "set1": [{
+    "category": "Research",
+    "value": 450
+  }, {
+    "category": "Marketing",
+    "value": 1200
+  }, {
+    "category": "Distribution",
+    "value": 1850
+  }],
+  "set2": [{
+    "category": "Research",
+    "value": 950
+  }, {
+    "category": "Marketing",
+    "value": 850
+  }, {
+    "category": "Distribution",
+    "value": 1200
+  }],
+  "set3": [{
+    "category": "Research",
+    "value": 300
+  }, {
+    "category": "Marketing",
+    "value": 489
+  }, {
+    "category": "Distribution",
+    "value": 100
+  }],
 }
 
+am4core.useTheme(am4themes_animated);
 
-data = [
-    { "date": new Date(2018, 0, 1, 8, 0, 0), "value": 22 }, 
-    { "date": new Date(2018, 0, 1, 9, 0, 0), "value": 25 }, 
-    { "date": new Date(2018, 0, 1, 10, 0, 0), "value": 40 }, 
-    { "date": new Date(2018, 0, 1, 11, 0, 0), "value": 35 }, 
-    { "date": new Date(2018, 0, 1, 12, 0, 0), "value": 29 }, 
-    { "date": new Date(2018, 0, 1, 13, 0, 0), "value": 1 }, 
-    { "date": new Date(2018, 0, 1, 14, 0, 0), "value": 15 }, 
-    { "date": new Date(2018, 0, 1, 15, 0, 0), "value": 29 }, 
-    { "date": new Date(2018, 0, 1, 16, 0, 0), "value": 33 }
-  ];
-week = 1*5;
-am4core.ready(bar_func('first week',data,week));
+// Create chart instance
+var chart = am4core.create("first week", am4charts.XYChart);
+
+// Add data
+chart.data = data.set1;
+chart.logo.disabled = true;
+// Create axes
+var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "category";
+categoryAxis.renderer.grid.template.location = 0;
+//categoryAxis.renderer.minGridDistance = 30;
+
+var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+// Create series
+var series = chart.series.push(new am4charts.ColumnSeries());
+series.dataFields.valueY = "value";
+series.dataFields.categoryX = "category";
+
+function selectDataset(set) {
+  chart.data = data[set];
+}
+
 
 
  // end am4core.ready()
 </script>
-
+						
 <script src="../assets/plugins/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="../assets/plugins/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="../assets/plugins/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
