@@ -27,7 +27,7 @@
 		<div id="header" class="header navbar-default mb-0">
 			 <!--begin navbar-header -->
 			<div class="navbar-header">
-				<span class="navbar-brand m-0"><img src="../assets/img/mk_logo4.png"></span>
+				<span class="navbar-brand m-0"><img src="../assets/img/oasis.png"></span>
 			</div>
 			 <!--end header-nav -->
 		</div>
@@ -112,10 +112,17 @@
 										<i class="fas fa-2x fa-fw m-r-10 fa-medkit"></i>
 							            <h4 class="mb-0">안전성</h4>									
 									</label>
+									{% if (historyone.RC == 1) %}
 									<div id="safe" class="text-center text-green">
 										<i class="fas fa-5x fa-fw fa-check-circle"></i>
 										<h4 id="safe_text" class="mt-2">소독 완료!</h4>
 									</div>
+									{% else %}
+									<div id="safe" class="text-center text-realred">
+										<i class="fas fa-5x fa-fw fa-times-circle"></i>
+										<h4 id="safe_text" class="mt-2">소독 필요!</h4>
+									</div>
+									{% endif %}
 								</div>
 								<!-- end panel-body -->
 							</div>
@@ -138,7 +145,7 @@
 							            <h4 class="mb-0">소독 일시</h4>									
 									</label>
 									<div id="list" class="border border-secondary py-2">
-										<h2 class="mb-0 p-5">{{moment(historys.ET).format('YYYY-MM-DD hh:mm:ss')}}</h2>
+										<h2 class="mb-0 p-5">{{moment(historyone.ET).format('YYYY-MM-DD hh:mm:ss')}}</h2>
 									</div>
 									<div class="btn-group btn-block">
 										<a href="#" class="btn btn-default dropdown-toggle border border-secondary rounded-0 bg-secondary text-white" data-toggle="dropdown">
@@ -190,8 +197,62 @@
 										<i class="fas fa-2x fa-fw m-r-10 fa-fire-extinguisher"></i>
 							            <h4 class="mb-0">살균 목록</h4>									
 									</label>
-									<div id="sterilization" class="text-center text-green">
-		
+									<div id="sterilization" class="bg-light py-2 text-center d-flex flex-wrap justify-content-center align-content-center">
+										{% set time = moment(historyone.ET).diff(moment(historyone.ST), 'seconds') %}
+										
+										{% if (historyone.MP < 0.1) or (historyone.RC != 1) %}
+										<h4 class="mb-0 text-realred">살균된 바이러스, 균이 없습니다.</h4>
+										{% endif %}
+										{% if (historyone.RC ==1) %}
+											{% if (historyone.MP >= 0.189) %}
+											<div class="mx-2 my-1">
+												<img src="../assets/img/nogerm.png" alt="nogerm" class="mx-auto img-responsive">
+												<b>포도상구균</b>
+											</div>
+											{% endif %}
+											{% if (historyone.MP >= 0.36) %}
+											<div class="mx-2 my-1">
+												<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+												<b>감기</b>
+											</div>
+											{% endif %}
+											{% if (historyone.MP >= 0.35) %}
+											<div class="mx-2 my-1">
+												<img src="../assets/img/nogerm2.png" alt="nogerm2" class="mx-auto img-responsive">
+												<b>대장균</b>
+											</div>
+											{% endif %}
+											{% if (historyone.MP >= 0.3) %}
+											<div class="mx-2 my-1">
+												<img src="../assets/img/nogerm.png" alt="nogerm" class="mx-auto img-responsive">
+												<b>고초균</b>
+											</div>
+											{% endif %}
+											{% if (historyone.MP >= 0.5) and (time >= 1200) %}
+											<div class="mx-2 my-1">
+												<img src="../assets/img/nogerm2.png" alt="nogerm2" class="mx-auto img-responsive">
+												<b>곰팡이균</b>
+											</div>
+											{% endif %}
+											{% if (historyone.MP >= 0.5)%}
+											<div class="mx-2 my-1">
+												<img src="../assets/img/nogerm.png" alt="nogerm" class="mx-auto img-responsive">
+												<b>살모넬라균</b>
+											</div>
+											{% endif %}
+											{% if (historyone.MP >= 0.96) %}
+											<div class="mx-2 my-1">
+												<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+												<b>인플루엔자</b>
+											</div>
+											{% endif %}
+											{% if (historyone.MP >= 1.06) %}
+											<div class="mx-2 my-1">
+												<img src="../assets/img/nogerm2.png" alt="nogerm2" class="mx-auto img-responsive">
+												<b>녹농균</b>
+											</div>
+											{% endif %}
+										{% endif %}
 									</div>
 								</div>
 								<!-- end panel-body -->

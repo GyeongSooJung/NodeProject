@@ -19,7 +19,7 @@ router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
       return res.redirect('/device_join?error=exist');
     }
     else{
-      const CA = moment().format('YYYY-MM-DD hh:mm:ss');
+      const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss'); //한국시간 맞추기 위해 +9시간
       const UA = "";
       await Device.create({
         CID, MD, VER, MAC, NN, CA
@@ -48,7 +48,7 @@ router.post('/device_edit/upreg/:MAC', isNotLoggedIn,async (req, res, next) => {
         return res.redirect('/device_list?error=exist');
       }
       else{
-        const UA =  moment().format();
+        const UA =  moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
         const deviceone = await Device.where({"MAC" : req.params.MAC})
         .updateMany({ "CID" : CID,
                       "MD" : MD,
