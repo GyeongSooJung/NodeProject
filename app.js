@@ -1,10 +1,10 @@
 const express = require('express');
 require('dotenv').config();
 const morgan = require('morgan');
-const path = require('path');
 const nunjucks = require('nunjucks');
 const connect = require('./schemas');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 // Middle Ware
 //const {TurnBackErr} = require('./routes/middleware')
 //const { isLoggedIn, isNotLoggedIn } = require('./routes/middleware');
@@ -21,6 +21,10 @@ const workerRouter = require('./routes/worker');
 const emailRouter = require('./routes/email');
 
 const findRouter = require('./routes/find');
+
+const path = require('path');
+const ColorHash = require('color-hash');
+const webSocket = require('./socket');
 
 
 const mobileRouter = require('./routes/mobile');
@@ -60,6 +64,24 @@ app.use(function(req, res, next) {
     next(error);
 });
 
+const sessionMiddleware = session({
+  resave: false,
+  saveUninitialized: false,
+  secret: process.env.COOKIE_SECRET,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+  },
+});
+
+app.use((req, res, next) => {
+  if (!req.session.color) {
+    const colorHash = new ColorHash();
+    req.session.color = colorHash.hex(req.sessionID);
+  }
+  next();
+});
+
 
 
 app.use(function(err, req, res, next) {
@@ -69,6 +91,8 @@ app.use(function(err, req, res, next) {
     res.render('error');
 });
 
-app.listen(app.get('port'), function() {
+const server = app.listen(app.get('port'), function() {
     console.log(app.get('port'), 'Port is Waiting~');
 })
+
+webSocket(server, app, sessionMiddleware);

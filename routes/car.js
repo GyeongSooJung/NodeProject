@@ -26,7 +26,7 @@ router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
         return res.redirect('/car_join?error=exist');
       }
       else {
-        const CA = moment().format('YYYY-MM-DD hh:mm:ss');
+        const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
         const UA = "";
         await Car.create({
             CID, CC, CN, SN, CA
@@ -64,7 +64,7 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn,async (req, res, next) => {
         return res.redirect('/car_list?error=exist');
       }
       else {
-        const UA =  moment().format();
+        const UA =  moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
         const carone = await Car.where({"CN" : req.params.CN})
           .updateMany({ "CID" : CID,
                         "CC" : CC,

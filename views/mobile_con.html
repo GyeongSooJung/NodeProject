@@ -73,17 +73,12 @@
 	<script src="../assets/js/app.min.js"></script>
 	<script src="../assets/js/theme/default.min.js"></script>
 	<!-- ================== END BASE JS ================== -->
-	 <script>
-    window.onload = () => {
-      if (new URL(location.href).searchParams.get('fail')) {
-        alert('아이디 혹은 비밀번호를 확인해주세요.');
-      }
-      if (new URL(location.href).searchParams.get('again')) {
-        alert('다시 로그인 해주세요.');
-      }
-    	
-    }
-      
-      </script>
+	<script>
+	window.onload = () => {
+		if (new URL(location.href).searchParams.get('exist')) {
+			alert('차량번호를 다시 입력하세요.');
+		}
+	};
+  	</script>
 </body>
 </html>

@@ -37,7 +37,11 @@ const workerSchema = new Schema({
     AC: {
         type: Boolean,
         required: [true, 'AC is required!'],
-    }
+    },
+    NC: {
+        type: Boolean,
+        default : false,
+    },
 },
     {collection : 'worker'}
 );
