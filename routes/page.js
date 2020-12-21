@@ -105,7 +105,7 @@ router.get('/main',isNotLoggedIn , async(req,res,next)=>{
 Route_page('car_join');
 Route_page('device_join');
 
-
+////////////////////////////////////////////////////////////////////////////////
 //사업자 목록 페이지
 router.get('/company_list', isNotLoggedIn, async (req, res, next) => {
   const CID = req.decoded.CID;
@@ -115,7 +115,7 @@ router.get('/company_list', isNotLoggedIn, async (req, res, next) => {
   res.render('company_list', {companys, nclist, moment, company : req.decoded});
 })
 
-
+////////////////////////////////////////////////////////////////////////////////
 //장비 수정 페이지
 router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
   const CID = req.decoded.CID;
@@ -143,8 +143,7 @@ router.get('/device_list', isNotLoggedIn,async (req, res, next) => {
   }
 });
 
-/////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////
 //차량 수정 페이지
 router.get('/car_edit/:CN',isNotLoggedIn,async (req, res, next) => {
   const CID = req.decoded.CID;
@@ -175,7 +174,6 @@ router.get('/car_list',isNotLoggedIn, async (req, res, next) => {
 });
 
 ////////////////////////////////////////////
-
 //Profile DataSetting for Profile(company)
 router.get('/profile',isNotLoggedIn,DataSet ,async (req, res, next) => {
   const CID = req.decoded.CID;
