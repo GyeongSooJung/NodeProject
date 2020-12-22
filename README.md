@@ -10,7 +10,8 @@ https://github.com/here4you81/mk_dokenly
 
 
 ### 개발서버
-http://52.79.245.187:8008/
+http://52.79.245.187:9005/
+http://13.125.32.71:8008/
 #### App을 위한 Cloud9
 http://13.125.32.71:9003/
 id : admin
