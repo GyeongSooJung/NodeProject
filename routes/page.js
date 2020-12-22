@@ -238,7 +238,7 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const nclist = await Worker.find({"CID" : CID, "NC" : false});
-  const workers = await Worker.find({CID : req.decoded.CID,});
+
   
   let workerone;
   let workertwo;
@@ -261,11 +261,14 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
         }
       }
     }
-    res.render('worker_list', {nclist, company : req.decoded, workers});
+    
   } catch (err) {
     console.error(err);
     next(err);
   }
+    const workers = await Worker.find({CID : req.decoded.CID,});
+  
+  res.render('worker_list', {nclist, company : req.decoded, workers});
   
 });
 

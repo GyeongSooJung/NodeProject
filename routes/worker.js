@@ -54,7 +54,7 @@ router.post('/worker_update',isNotLoggedIn ,async (req, res, next) => {
 });
 
 // 작업자 단일 체크박스 수정
-/*
+
 router.post('/worker_select_update',isNotLoggedIn ,async (req, res, next) => {
     try {
       
@@ -110,7 +110,7 @@ router.post('/worker_select_update',isNotLoggedIn ,async (req, res, next) => {
 });
 
 
-*/
+
 
 //작업자 삭제
 router.get('/worker_delete/:EM',isNotLoggedIn ,async (req, res, next) => {
