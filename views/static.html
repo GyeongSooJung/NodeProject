@@ -38,8 +38,8 @@
 					<div class="widget widget-stats bg-blue">
 						<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-microchip"></i></div>
 						<div class="stats-info">
-							<h4>소독기</h4>
-							<p id="p1">{{devices.length}}</p>	
+							<h4>총 등록된 소독기</h4>
+							<p id="p1">{{AllDevice}}</p>	
 						</div>
 						<div class="stats-link">
 							<a href="/device_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
@@ -52,8 +52,8 @@
 					<div class="widget widget-stats bg-info">
 						<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-car"></i></div>
 						<div class="stats-info">
-							<h4>자동차</h4>
-							<p id="p2">{{cars.length}}</p>	
+							<h4>총 등록된 자동차</h4>
+							<p id="p2">{{AllCar}}</p>	
 						</div>
 						<div class="stats-link">
 							<a href="/car_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
@@ -66,11 +66,11 @@
 					<div class="widget widget-stats bg-orange">
 						<div class="stats-icon"><i class="fa fa-users"></i></div>
 						<div class="stats-info">
-							<h4>작업자</h4>
-							<p id="p3">{{workers.length}}</p>	
+							<h4>총 등록된 사업자</h4>
+							<p id="p3">{{AllCompany}}</p>	
 						</div>
 						<div class="stats-link">
-							<a href="/worker_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
+							<a href="/compa_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
 						</div>
 					</div>
 				</div>
@@ -80,8 +80,8 @@
 					<div class="widget widget-stats bg-red">
 						<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-history"></i></div>
 						<div class="stats-info">
-							<h4>소독이력</h4>
-							<p id="p4">{{historys.length}}</p>	
+							<h4>총 소독이력 수</h4>
+							<p id="p4">{{AllHistory}}</p>	
 						</div>
 						<div class="stats-link">
 							<a href="/history_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
@@ -152,7 +152,7 @@
 					<!-- 막대그래프 만들곳 시작점 -->
 					<div class="panel panel-inverse" data-sortable-id="index-6">
 						<div class="panel-heading">
-							<h4 class="panel-title">최근 일주일간 소독 횟수</h4>
+							<h4 class="panel-title"></h4>
 						</div>
 						<div class="table-responsive">
 							<table class="table table-valign-middle table-panel mb-0">
