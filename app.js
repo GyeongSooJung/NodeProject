@@ -11,7 +11,7 @@ const session = require('express-session');
 
 //login with AuthRouter
 const authRouter = require('./routes/auth');
-const ProfileRouter = require('./routes/profile')
+const ProfileRouter = require('./routes/profile');
 const CompanyRouter = require('./routes/company');
 const pageRouter = require('./routes/page');
 const deviceRouter = require('./routes/device');
@@ -19,15 +19,12 @@ const carRouter = require('./routes/car');
 const historyRouter = require('./routes/history');
 const workerRouter = require('./routes/worker');
 const emailRouter = require('./routes/email');
-
+const mobileRouter = require('./routes/mobile/');
 const findRouter = require('./routes/find');
 
 const path = require('path');
 const ColorHash = require('color-hash');
 const webSocket = require('./socket');
-
-
-const mobileRouter = require('./routes/mobile');
 
 const app = express();
 
