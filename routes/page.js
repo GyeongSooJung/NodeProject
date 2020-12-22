@@ -104,6 +104,7 @@ router.get('/main',isNotLoggedIn , async(req,res,next)=>{
 // 공통페이지 작성 방법
 Route_page('car_join');
 Route_page('device_join');
+Route_page('static');
 
 ////////////////////////////////////////////////////////////////////////////////
 //사업자 목록 페이지
@@ -325,6 +326,9 @@ router.get('/mobile_con', async (req, res, next) => {
         next(err);
     }
 });
+
+
+
 
 module.exports = router;
 
