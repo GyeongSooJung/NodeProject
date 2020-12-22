@@ -66,6 +66,15 @@ router.get('/find', (req,res,next) => {
   res.render('find');
 });
 
+router.get('/static',isNotLoggedIn,async(req,res,nex)=>{
+  const AllCompany = await Company.countDocuments({});
+  const AllHistory = await History.countDocuments({});
+  const AllCar = await Car.countDocuments({});
+  const AllDevice = await Device.countDocuments({});
+  res.render('static',{company : req.decoded
+  ,AllDevice,AllCar,AllHistory,AllCompany})
+  
+})
 //메인 페이지
 router.get('/main',isNotLoggedIn , async(req,res,next)=>{
   
@@ -104,7 +113,7 @@ router.get('/main',isNotLoggedIn , async(req,res,next)=>{
 // 공통페이지 작성 방법
 Route_page('car_join');
 Route_page('device_join');
-Route_page('static');
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //사업자 목록 페이지
@@ -229,7 +238,7 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const nclist = await Worker.find({"CID" : CID, "NC" : false});
-  const workers = await Worker.find({CID : req.decoded.CID,});
+
   
   let workerone;
   let workertwo;
@@ -252,11 +261,14 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
         }
       }
     }
-    res.render('worker_list', {nclist, company : req.decoded, workers});
+    
   } catch (err) {
     console.error(err);
     next(err);
   }
+    const workers = await Worker.find({CID : req.decoded.CID,});
+  
+  res.render('worker_list', {nclist, company : req.decoded, workers});
   
 });
 
