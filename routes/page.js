@@ -108,11 +108,43 @@ Route_page('device_join');
 ////////////////////////////////////////////////////////////////////////////////
 //사업자 목록 페이지
 router.get('/company_list', isNotLoggedIn, async (req, res, next) => {
+  
   const CID = req.decoded.CID;
   const nclist = await Worker.find({"CID" : CID, "NC" : false});
-  
   const companys = await Company.find({"AH" : false});
-  res.render('company_list', {companys, nclist, moment, company : req.decoded});
+  
+  const DEVICE = req.query.DEVICE;
+  const CAR = req.query.CAR;
+  const WORKER = req.query.WORKER;
+  const HISTORY = req.query.HISTORY;
+  
+  console.log("DEVICE : "+ DEVICE);
+  console.log("CAR : " + CAR);
+  console.log("WORKER : " + WORKER);
+  console.log("HISTORY : " + HISTORY);
+  
+  if(DEVICE) {
+    const devices = await Device.find({"CID" : DEVICE});
+    res.render('company_list', {company : req.decoded, nclist,devices,moment});
+    console.log("devices : "+ devices);
+  }
+  else if(CAR) {
+    const cars = await Car.find({"CID" : CAR});
+    res.render('company_list', {company : req.decoded, nclist,cars,moment});
+  }
+  else if(WORKER) {
+    const workers = await Worker.find({"CID" : WORKER});
+    res.render('company_list', {company : req.decoded, nclist,workers,moment});
+  }
+  else if(HISTORY) {
+    const historys = await History.find({"CID" : HISTORY});
+    res.render('company_list', {company : req.decoded, nclist,historys,moment});
+  }
+  else {
+    res.render('company_list', {companys, nclist, moment, company : req.decoded});
+    
+  }
+  
 })
 
 ////////////////////////////////////////////////////////////////////////////////
