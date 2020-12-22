@@ -133,11 +133,11 @@ router.get('/company_list', isNotLoggedIn, async (req, res, next) => {
     res.render('company_list', {company : req.decoded, nclist,cars,moment});
   }
   else if(WORKER) {
-    const workers = await WORKER.find({"CID" : WORKER});
+    const workers = await Worker.find({"CID" : WORKER});
     res.render('company_list', {company : req.decoded, nclist,workers,moment});
   }
   else if(HISTORY) {
-    const historys = await HISTORY.find({"CID" : HISTORY});
+    const historys = await History.find({"CID" : HISTORY});
     res.render('company_list', {company : req.decoded, nclist,historys,moment});
   }
   else {

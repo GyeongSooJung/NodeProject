@@ -30,7 +30,11 @@
 
 					
 					{% if devices %}
-					
+					<center>
+			            <div class="btn-group m-b-5 mx-3">
+			               <a href="/company_list" class="btn btn-primary text-white px-4">Back</a>
+			            </div>
+			        </center>
 						<thead>
 							<tr>
 								<th width="1%">
@@ -63,6 +67,11 @@
 						
 					{% elif cars %}
 					
+					<center>
+			            <div class="btn-group m-b-5 mx-3">
+			               <a href="/company_list" class="btn btn-primary text-white px-4">Back</a>
+			            </div>
+			        </center>
 							<thead>
 								<tr>
 									<th width="1%">
@@ -92,6 +101,11 @@
 					
 					{% elif workers %}
 					
+					<center>
+			            <div class="btn-group m-b-5 mx-3">
+			               <a href="/company_list" class="btn btn-primary text-white px-4">Back</a>
+			            </div>
+			        </center>					
         					<thead>
         						<tr>
         							<th width="1%"><input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/></th>
@@ -127,6 +141,11 @@
     						{% endfor %}
     						
     				{% elif historys %}
+					<center>
+			            <div class="btn-group m-b-5 mx-3">
+			               <a href="/company_list" class="btn btn-primary text-white px-4">Back</a>
+			            </div>
+			        </center>    				
 						<thead>
 							<tr>
 								<th width="1%">
@@ -163,8 +182,7 @@
 						</tr>
 						{% endfor %}
 					
-					{% else %}
-					
+					{% else %}				
 						<thead>
 							<tr>
 								<th class="text-nowrap">상호명</th>
