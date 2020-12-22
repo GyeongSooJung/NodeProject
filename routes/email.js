@@ -44,8 +44,29 @@ router.post('/email_send', async (req, res, next) => {
                   const mailOptions = {
                     from: "mk.manager2020@gmail.com",
                     to: reademailaddress,
-                        subject: "MK 인증번호 관련 메일 입니다.",
-                        text: "인증번호는 " + authNum + " 입니다."
+                    subject: "OASIS 인증번호 관련 메일 입니다.",
+                    text: "인증번호는 " + authNum + " 입니다.",
+                    html: "<div style='font-family: 'Apple SD Gothic Neo', 'sans-serif' !important; width: 540px; height: 600px; border-top: 4px solid #348fe2; margin: 100px auto; padding: 30px 0; box-sizing: border-box;'>"+
+                          "  <h1 style='margin: 0; padding: 0 5px; font-size: 28px; font-weight: 400;'>"+
+                          "		<span style='font-size: 15px; margin: 0 0 10px 3px;'>MK_</span><br />"+
+                          "		<span style='color: #348fe2;'>임시 비밀번호</span> 안내입니다."+
+                          "	</h1>"+
+                          "	<p style='font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;'>"+
+                          "		안녕하세요.<br />"+
+                          "		요청하신 임시 비밀번호가 생성되었습니다.<br />"+
+                          "		아래 <b style='color: #348fe2;'>'생성 확인'</b> 버튼을 클릭한 뒤, 인증해주세요.<br />"+
+                          "		감사합니다."+
+                          "	</p>"+
+                          
+                          "	<p style='font-size: 16px; margin: 40px 5px 20px; line-height: 28px;'>"+
+                          "		임시 비밀번호: <br />"+
+                          "		<span style='font-size: 24px;'>"+authNum+"</span>"+
+                          "	</p>"+
+                          "	<a style='color: #FFF; text-decoration: none; text-align: center;' href='#' target='_blank'><p style='display: inline-block; width: 210px; height: 45px; margin: 30px 5px 40px; background: #348fe2; line-height: 45px; vertical-align: middle; font-size: 16px;'>생성 확인</p></a>"+
+                          
+                          "	<div style='border-top: 1px solid #DDD; padding: 5px;'>"+
+                          "	</div>"+
+                          "</div>",
                   };
                   
                    await smtpTransport.sendMail(mailOptions, (err, res) =>{
