@@ -34,7 +34,11 @@ const CompanySchema = new Schema({
         type: String,
         required: true,
     },
-    AH: {
+    ADR: {//Adress
+        type: String,
+        required: true,
+    },
+    AH: {//Authorization
         type: Boolean,
         required: true,
         default: false,
