@@ -66,15 +66,22 @@ router.get('/find', (req,res,next) => {
   res.render('find');
 });
 
-router.get('/static',isNotLoggedIn,async(req,res,nex)=>{
+router.get('/device_static',isNotLoggedIn,async(req,res,nex)=>{
   const AllCompany = await Company.countDocuments({});
   const AllHistory = await History.countDocuments({});
   const AllCar = await Car.countDocuments({});
   const AllDevice = await Device.countDocuments({});
-  res.render('static',{company : req.decoded
-  ,AllDevice,AllCar,AllHistory,AllCompany})
-  
+  res.render('device_static',{company : req.decoded, AllDevice, AllCar, AllHistory, AllCompany});
 })
+
+router.get('/history_static',isNotLoggedIn,async(req,res,nex)=>{
+  const AllCompany = await Company.countDocuments({});
+  const AllHistory = await History.countDocuments({});
+  const AllCar = await Car.countDocuments({});
+  const AllDevice = await Device.countDocuments({});
+  res.render('history_static',{company : req.decoded, AllDevice, AllCar, AllHistory, AllCompany});
+})
+
 //메인 페이지
 router.get('/main',isNotLoggedIn , async(req,res,next)=>{
   
