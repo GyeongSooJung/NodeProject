@@ -55,31 +55,14 @@ router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
     form.on('file', (name, file) => {
         const workbook = xlsx.readFile(file.path);
         const sheetnames = Object.keys(workbook.Sheets);
-        let i = sheetnames.length;
+        resData[sheetnames[0]] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetnames[0]]); 
         
-        const array = [];
-        var j = 0;
- 
-        while (i--) {
-            const sheetname = sheetnames[i];
-            resData[sheetname] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetname]);
-        }
-        const excel = JSON.stringify(resData);
-        
-        JSON.parse(excel, (key,value) => {
-          array.push(value);
-        });
-        
-        for(j = 0; j < array.length ; j++) {
-          const MD = array[j];
-          const VER = array[j+1];
-          const MAC = array[j+2];
-          const NN = array[j+3];
-          console.log("123123" + j);
-          j += 4;
-          Device.create({ CID, MD, VER, MAC, NN, CA});
-        }
-    });
+         for(var j = 0; j < resData.Sheet1.length;  j++) {
+          resData[sheetnames[0]][j].CID = CID;
+          resData[sheetnames[0]][j].CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');;
+         Device.insertMany(resData.Sheet1[j]);
+       }
+   });
  
     form.on('close', () => {
       res.redirect('/device_join');
