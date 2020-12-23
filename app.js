@@ -21,6 +21,7 @@ const workerRouter = require('./routes/worker');
 const emailRouter = require('./routes/email');
 const mobileRouter = require('./routes/mobile/');
 const findRouter = require('./routes/find');
+const adressRouter = require('./routes/adress');
 
 const path = require('path');
 const ColorHash = require('color-hash');
@@ -54,7 +55,7 @@ app.use('/history', historyRouter);
 app.use('/worker', workerRouter);
 app.use('/email', emailRouter);
 app.use('/mobile', mobileRouter);
-
+app.use('/adress',adressRouter);
 app.use(function(req, res, next) {
     const error = new Error(`${req.method}${req.url} NO Router`);
     error.status = 404;

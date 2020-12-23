@@ -29,7 +29,12 @@ router.get('/login',isLoggedIn,(req,res)=>{
 router.get('/index',isLoggedIn,(req,res)=>{
   res.render('index')
 })
-
+router.get('/adress',(req,res)=>{
+    res.render('adress_api');
+});
+router.get('/adress_pop',(req,res)=>{
+    res.render('adress_pop');
+});
 //회원 가입
 router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
       res.cookie("email", null);
