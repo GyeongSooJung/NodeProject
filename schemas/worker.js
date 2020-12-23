@@ -11,7 +11,7 @@ const workerSchema = new Schema({
         type: String,
         required: [true, 'WN is required!'],
     },
-    PN: { // Phone Name
+    PN: { // Phone Number
         type: String,
         unique: true,
     },
@@ -33,7 +33,7 @@ const workerSchema = new Schema({
     UA: { // Updated At
         type: Date,
     },
-    AU: { // Auth
+    AU: { // Auth, 0: MK 관리자, 1: 사업주, 2: 직업
         type: Number,
         required: [true, 'AU is required!'],
     },
