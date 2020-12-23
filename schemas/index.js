@@ -5,7 +5,6 @@ const connect = () => {
         mongoose.set('debug', true);
     }
     mongoose.connect('mongodb://54.254.0.80:9003/MK', {
-        // 13.125.32.71:27017
         dbName: 'MK',
     }, (error) => {
         if(error) {
