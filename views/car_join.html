@@ -14,6 +14,12 @@
 				<!-- begin panel-heading -->
 				<div class="panel-heading">
 					<h4 class="panel-title">자동차</h4>
+					<p class="m-0">첨부파일 : </p>
+					<span class="text-green font-weight-bold d-flex align-items-center">
+						<a class="text-green" href="../assets/upload/차량 등록 양식.xlsx" download>
+							<i class="far fa-lg fa-file-excel ml-2 mr-1"></i> 차량 등록 양식.xlsx
+						</a>
+					</span>
 				</div>
 				<!-- end panel-heading -->
 				<!-- begin panel-body -->
@@ -28,7 +34,7 @@
 						<div class="form-group row m-b-15">
 							<label class="col-md-4 col-sm-4 col-form-label" for="CN">차량 번호 * :</label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" type="String" id="CN" name="CN" placeholder="차량 번호" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다."/>
+								<input class="form-control" type="String" id="CN" name="CN" placeholder="차량 번호" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." data-parsley-trim-value="true" />
 							</div>
 						</div>
 						<div class="form-group row m-b-15">
@@ -42,6 +48,17 @@
 							<div class="col-md-8 col-sm-8">
 								<button type="submit" class="btn btn-primary width-80">등록</button>
 								<button type="reset" class="btn btn-primary width-80">초기화</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<!-- Excel 파일 업로드 -->
+				<div class="panel-body bg-grey pb-0">
+					<form id="car-xlsx-form" action="/car/car_join_xlsx" method="post" enctype="multipart/form-data" class="form-horizontal"name="car-xlsx-form">
+						<div class="form-group row m-b-15">
+							<label class="col-md-4 col-sm-4 col-form-label text-green" for="file"><b># Excel 파일로 등록</b> :</label>
+							<div class="col-md-8 col-sm-8">
+								<input type="file" id="file" name="xlsx" /><button type="submit" class="btn btn-primary width-80">등록</button>
 							</div>
 						</div>
 					</form>

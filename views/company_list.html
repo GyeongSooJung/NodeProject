@@ -192,7 +192,7 @@
 								<th class="text-nowrap">대표 전화번호</th>
 								<th class="text-nowrap">대표 이메일</th>
 								<th class="text-nowrap">가입 일자</th>
-								<th class="text-nowrap">장비/차량/작업자/소독이력</th>
+								<th width="1%" class="text-nowrap">장비/차량/작업자/소독이력</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -206,11 +206,11 @@
 							<td>{{company.MN}}</td>
 							<td>{{company.EA}}</td>
 							<td>{{moment(company.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
-							<td style ="width : 1px;">
-							<a href="/company_list/?DEVICE={{company._id}}"><button style ="width : 23%;" type="button" class="btn btn-primary m-r-1 m-b-1 py-2"><i class="fas fa-lg fa-fw fa-microchip p-0"></i></button></a>
-							<a href="/company_list/?CAR={{company._id}}"><button onClick="location.href='/company_device/{{company._id}}" style ="width : 23%;" type="button" class="btn btn-info m-r-1 m-b-1"><i class="fas fa-lg fa-fw  fa-car"></i></button></a>
-							<a href="/company_list/?WORKER={{company._id}}"><button onClick="location.href='/company_device/{{company._id}}" style ="width : 23%;" type="button" class="btn btn-warning m-r-1 m-b-1"><i class="fas fa-lg fa-fw  fa-user"></i></button></a>
-							<a href="/company_list/?HISTORY={{company._id}}"><button onClick="location.href='/company_device/{{company._id}}" style ="width : 23%;" type="button" class="btn btn-danger m-r-1 m-b-1"><i class="fas fa-lg fa-fw  fa-history"></i></button></a>
+							<td class="d-flex flex-nowrap justify-content-around">
+								<a href="/company_list/?DEVICE={{company._id}}"><button type="button" class="btn btn-primary px-2"><i class="fas fa-lg fa-fw fa-microchip"></i></button></a>
+								<a href="/company_list/?CAR={{company._id}}"><button type="button" onClick="location.href='/company_device/{{company._id}}" class="btn btn-info px-2"><i class="fas fa-lg fa-fw fa-car"></i></button></a>
+								<a href="/company_list/?WORKER={{company._id}}"><button type="button" onClick="location.href='/company_device/{{company._id}}" class="btn btn-warning px-2"><i class="fas fa-lg fa-fw fa-user"></i></button></a>
+								<a href="/company_list/?HISTORY={{company._id}}"><button type="button" onClick="location.href='/company_device/{{company._id}}" class="btn btn-danger px-2"><i class="fas fa-lg fa-fw fa-history"></i></button></a>
 							</td>
 						</tr>
 						{% endfor %}

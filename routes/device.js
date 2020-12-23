@@ -3,16 +3,11 @@ const express = require('express');
 const Device = require('../schemas/device');
 var moment = require('moment');
 const {isNotLoggedIn} = require('./middleware');
-const fs = require('fs');
-const multer = require('multer');
 const multiparty = require('multiparty');
 const xlsx = require('xlsx');
-const excelToJson = require('convert-excel-to-json');
 const router = express.Router();
 
 //장비 등록
-  //페이지 호출
-
   //DB에 등록
 router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
   const { MD, MAC, VER, NN, CA, UA, UT } = req.body;
@@ -47,45 +42,50 @@ router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
   const UA = "";
   
   const resData = {};
- 
-    const form = new multiparty.Form({
+    try {
+      const form = new multiparty.Form({
         autoFiles: true,
-    });
- 
-    form.on('file', (name, file) => {
-        const workbook = xlsx.readFile(file.path);
-        const sheetnames = Object.keys(workbook.Sheets);
-        let i = sheetnames.length;
-        
-        const array = [];
-        var j = 0;
- 
-        while (i--) {
-            const sheetname = sheetnames[i];
-            resData[sheetname] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetname]);
-        }
-        const excel = JSON.stringify(resData);
-        
-        JSON.parse(excel, (key,value) => {
-          array.push(value);
-        });
-        
-        for(j = 0; j < array.length ; j++) {
-          const MD = array[j];
-          const VER = array[j+1];
-          const MAC = array[j+2];
-          const NN = array[j+3];
-          console.log("123123" + j);
-          j += 4;
-          Device.create({ CID, MD, VER, MAC, NN, CA});
-        }
-    });
- 
-    form.on('close', () => {
-      res.redirect('/device_join');
-    });
- 
-    form.parse(req);
+      });
+   
+      form.on('file', (name, file) => {
+          const workbook = xlsx.readFile(file.path);
+          const sheetnames = Object.keys(workbook.Sheets);
+          let i = sheetnames.length;
+          
+          const array = [];
+          var j = 0;
+   
+          while (i--) {
+              const sheetname = sheetnames[i];
+              resData[sheetname] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetname]);
+          }
+          const excel = JSON.stringify(resData);
+          
+          JSON.parse(excel, (key,value) => {
+            array.push(value);
+          });
+          
+          for(j = 0; j < array.length ; j++) {
+            const MD = array[j];
+            const VER = array[j+1];
+            const MAC = array[j+2];
+            const NN = array[j+3];
+            console.log("123123" + j);
+            j += 4;
+            Device.create({ CID, MD, VER, MAC, NN, CA});
+          }
+      });
+   
+      form.on('close', () => {
+        res.redirect('/device_join');
+      });
+   
+      form.parse(req);
+      
+    } catch(err) {
+      console.error(err);
+      next(err);
+    }
 });
 
 //장비 수정
