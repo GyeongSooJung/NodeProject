@@ -1,49 +1,50 @@
 const mongoose = require('mongoose');
 
 // schema
-const {Schema} = mongoose;
+const { Schema } = mongoose;
 const workerSchema = new Schema({
-    CID: {
+    CID: { // Company ID
         type: String,
         required: [true, 'CID is required'],
     },
-    WN: {
+    WN: { // Worker Name
         type: String,
         required: [true, 'WN is required!'],
     },
-    PN: {
+    PN: { // Phone Name
         type: String,
         unique: true,
     },
-    EM: {
+    GID:{   // Google Account ID
+      type: String,
+    },
+    EM: { // Email
         type: String,
         unique: true,
         required: [true, 'EM is required!'],
     },
-    PU: {
+    PU: { // Photo URL
         type: String,
     },
-    CA: {
+    CA: { // Created At
         type: Date,
         required: [true, 'CA is required!'],
     },
-    UA: {
+    UA: { // Updated At
         type: Date,
     },
-    AU: {
+    AU: { // Auth
         type: Number,
         required: [true, 'AU is required!'],
     },
-    AC: {
+    AC: { // Activated
         type: Boolean,
         required: [true, 'AC is required!'],
     },
-    NC: {
+    NC: { // Noticed
         type: Boolean,
-        default : false,
+        default: false,
     },
-},
-    {collection : 'worker'}
-);
+}, { collection: 'worker' });
 
-module.exports = mongoose.model('worker', workerSchema,'worker');
+module.exports = mongoose.model('worker', workerSchema, 'worker');

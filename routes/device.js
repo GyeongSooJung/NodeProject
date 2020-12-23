@@ -46,42 +46,32 @@ router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
       const form = new multiparty.Form({
         autoFiles: true,
       });
-   
+ 
       form.on('file', (name, file) => {
           const workbook = xlsx.readFile(file.path);
           const sheetnames = Object.keys(workbook.Sheets);
-          let i = sheetnames.length;
-          
-          const array = [];
-          var j = 0;
-   
-          while (i--) {
-              const sheetname = sheetnames[i];
-              resData[sheetname] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetname]);
-          }
-          const excel = JSON.stringify(resData);
-          
-          JSON.parse(excel, (key,value) => {
-            array.push(value);
-          });
-          
-          for(j = 0; j < array.length ; j++) {
-            const MD = array[j];
-            const VER = array[j+1];
-            const MAC = array[j+2];
-            const NN = array[j+3];
-            console.log("123123" + j);
-            j += 4;
-            Device.create({ CID, MD, VER, MAC, NN, CA});
-          }
+          resData[sheetnames[0]] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetnames[0]]); 
+          console.log(resData);
+           for(var j = 0; j < resData.Sheet1.length;  j++) {
+            resData[sheetnames[0]][j].CID = CID;
+            resData[sheetnames[0]][j].CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');;
+           Device.insertMany({
+            "CID": resData.Sheet1[j].CID,
+            "MD" : resData.Sheet1[j].모델명,
+            "VER": resData.Sheet1[j].버전,
+            "MAC": resData.Sheet1[j].맥주소,
+            "NN" : resData.Sheet1[j].별칭,
+            "CA" : resData.Sheet1[j].CA
+           });
+         }
       });
    
-      form.on('close', () => {
-        res.redirect('/device_join');
-      });
-   
-      form.parse(req);
-      
+    form.on('close', () => {
+      res.redirect('/device_join');
+    });
+ 
+    form.parse(req);
+    
     } catch(err) {
       console.error(err);
       next(err);

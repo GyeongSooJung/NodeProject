@@ -53,32 +53,23 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
       const form = new multiparty.Form({
           autoFiles: true,
       });
-   
+
       form.on('file', (name, file) => {
           const workbook = xlsx.readFile(file.path);
           const sheetnames = Object.keys(workbook.Sheets);
-          let i = sheetnames.length;
-          
-          const array = [];
-          var j = 0;
-   
-          while (i--) {
-              const sheetname = sheetnames[i];
-              resData[sheetname] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetname]);
-          }
-          const excel = JSON.stringify(resData);
-          
-          JSON.parse(excel, (key,value) => {
-            array.push(value);
-          });
-          
-          for(j = 0; j < array.length ; j++) {
-            const CC = array[j];
-            const CN = array[j+1];
-            const SN = array[j+2];
-            j += 3;
-            Car.create({ CID, CC, CN, SN, CA});
-          }
+          resData[sheetnames[0]] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetnames[0]]); 
+          console.log(resData);
+           for(var j = 0; j < resData.Sheet1.length;  j++) {
+            resData[sheetnames[0]][j].CID = CID;
+            resData[sheetnames[0]][j].CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');;
+           Car.insertMany({
+            "CID": resData.Sheet1[j].CID,
+            "CC" : resData.Sheet1[j].차종,
+            "CN": resData.Sheet1[j].차량번호,
+            "SN": resData.Sheet1[j].차대번호,
+            "CA" : resData.Sheet1[j].CA
+           });
+         }
       });
    
       form.on('close', () => {
