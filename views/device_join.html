@@ -12,8 +12,14 @@
 			<!-- begin panel -->
 			<div class="panel panel-inverse" data-sortable-id="form-validation-1">
 				<!-- begin panel-heading -->
-				<div class="panel-heading">
+				<div class="panel-heading d-flex justify-content-between">
 					<h4 class="panel-title">소독기</h4>
+					<p class="m-0">첨부파일 : </p>
+						<span class="text-green font-weight-bold d-flex align-items-center">
+							<a class="text-green" href="../assets/upload/장치 등록 양식.xlsx" download>
+								<i class="far fa-lg fa-file-excel ml-2 mr-1"></i> 장치 등록 양식.xlsx
+							</a>
+						</span>
 				</div>
 				<!-- end panel-heading -->
 				<!-- begin panel-body -->
@@ -53,8 +59,9 @@
 						</div>
 					</form>
 				</div>
+				<!-- Excel 파일 업로드 -->
 				<div class="panel-body bg-grey pb-0">
-					<form id="device-form" action="/device/device_join_xlsx" method="post" enctype="multipart/form-data" class="form-horizontal"name="device-form">
+					<form id="device-xlsx-form" action="/device/device_join_xlsx" method="post" enctype="multipart/form-data" class="form-horizontal"name="device-xlsx-form">
 						<div class="form-group row m-b-15">
 							<label class="col-md-4 col-sm-4 col-form-label text-green" for="file"><b># Excel 파일로 등록</b> :</label>
 							<div class="col-md-8 col-sm-8">
