@@ -4,7 +4,7 @@ const Company = require('../../schemas/company');
 const UNKOWN = "UNKOWN";
 const NO_SUCH_DATA = "NO_SUCH_DATA";
 
-// Worker 관련
+/// Worker 관련
 exports.findWorker = async(req, res) => {
     const EM = req.body.email;
     const worker = await Worker.findOne({ EM });
@@ -14,6 +14,7 @@ exports.findWorker = async(req, res) => {
     });
 };
 
+// 로그인 시도
 exports.signIn = async(req, res) => {
     const { type, id, email } = req.body;
 
@@ -22,6 +23,7 @@ exports.signIn = async(req, res) => {
         if (worker != null) {
             return res.json({
                 result: true,
+                data: JSON.stringify(worker),
             });
         }
         else {
@@ -38,7 +40,48 @@ exports.signIn = async(req, res) => {
 
 };
 
+// 회원 가입
+exports.signUp = async(req, res) => {
+    try {
+        const { CID, WN, PN, GID, EM, PU } = req.body;
 
+        var result = await Worker.create({ CID, WN, PN, GID, EM, PU });
+        console.log(result);
+
+        res.json({
+            result: true,
+        });
+    }
+    catch (exception) {
+        res.json({
+            result: false,
+            error: UNKOWN,
+        });
+    }
+};
+
+exports.withdrawal = async(req, res) => {
+    try {
+        const { _id, EM } = req.body;
+
+        var result = await Worker.remove({ _id, EM });
+        console.log(result);
+
+        res.json({
+            result: true,
+        });
+    }
+    catch (exception) {
+        res.json({
+            result: false,
+            error: UNKOWN,
+        });
+    }
+
+
+}
+
+// 회사 검색
 exports.fineCompanies = async(req, res) => {
     try {
         const { CNU, CNA } = req.body;
