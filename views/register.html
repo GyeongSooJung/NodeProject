@@ -81,6 +81,21 @@
 								<input type="text" class="form-control" name = "CNA" placeholder="상 호 (업체명)" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." {% if CNA %} value = {{CNA}} {% endif %}/>
 							</div>
 						</div>
+						<label class="control-label">사업자 업종 선택 <span class="text-danger"> *{{ErrMsg}}</span></label>
+						<div class="row m-b-15" >
+							<div class="col-md-12">
+								<select class="form-control" name="CK" id="CK" required>
+									<option value ="">업종을 선택해주세요.</option>
+									  <option value="1">렌터카</option>
+									  <option value="2">카센터</option>
+									  <option value="3">출장 정비</option>
+									  <option value="4">출장 세차</option>
+									  <option value="5">택시 운수업</option>
+									  <option value="6">버스 운수업</option>
+									  <option value="7">타이어 샵</option>									  
+								</select>
+							</div>
+						</div>
 						<label class="control-label">사업자 등록 번호 <span class="text-danger"> *{{ErrMsg}}</span></label>
 						<div class="row m-b-15" >
 							<div class="col-md-12">
@@ -89,9 +104,7 @@
 								<input type="digits" class="form-control" name = "CNU3"  placeholder="5자리" maxlength=5 style="width :20%; display: inline-block;;"  {% if CNU %} data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." value = {{CNU3}} {% endif %} /> 
 							</div>
 						</div>
-										<tr>
 						<label class="control-label">회사 주소<span class="text-danger"> *</span> </label>
-				</tr>
 				<div class="row m-b-15">
 					<div class="col-md-12">
 					<input type="text"  class="form-control" id="roadAddrPart1" style = "width : 65%; display: inline-block;"  readOnly  {% if roadAddrPart1!='undefined' %}value ="{{ roadAddrPart1 }}" data-parsley-required="true" {% endif %} >
