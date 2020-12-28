@@ -30,30 +30,28 @@ router.get('/index',isLoggedIn,(req,res)=>{
   res.render('index')
 })
 router.get('/adress',(req,res)=>{
-    res.render('adress_api');
-});
-router.get('/adress_pop',(req,res)=>{
     res.render('adress_pop');
 });
+
 //회원 가입
 router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
       res.cookie("email", null);
       res.cookie("authNum", null);
-     console.log("토큰은 이거입니다22 " + req.decoded.authNum);
+     const roadAddrPart1 = String(req.cookies.ADR.roadAddrPart1);
+     const roadAddrPart2 = String(req.cookies.ADR.roadAddrPart2);
+     const addrDetail = String(req.cookies.ADR.addrDetail);
+     console.log("where is the places " + roadAddrPart1);
      const authNum = parseInt(req.decoded.authNum);
      const email = req.decoded.email;
      console.log(req.decoded.email);
   
   if (authNum){
-    console.log("성공 ");
-    return res.render('register',{email});
+    return res.render('register',{email,roadAddrPart1,roadAddrPart2,addrDetail});
   }
   else {
-    console.log("실패");
-    res.render('register');
+   return res.render('register',{roadAddrPart1,roadAddrPart2,addrDetail});
   }
   
-  res.render('register');
 });
 
 
