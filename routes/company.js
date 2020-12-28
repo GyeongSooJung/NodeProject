@@ -95,11 +95,6 @@ function getCRNresultFromXml(dataString) {
 }
 
 
-//Server API Key : U01TX0FVVEgyMDIwMTIyMzEzMDkzMTExMDU4NTY= 
-//Meosun API Key : U01TX0FVVEgyMDIwMTIyMzEzMDkzMTExMDU4NTU= 
-function getADR(){
-  
-}
 
 
 

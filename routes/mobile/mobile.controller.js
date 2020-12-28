@@ -6,8 +6,8 @@ const NO_SUCH_DATA = "NO_SUCH_DATA";
 
 // Worker 관련
 exports.findWorker = async(req, res) => {
-    const email = req.body.email;
-    const worker = await Worker.findOne({ "EM": email });
+    const EM = req.body.email;
+    const worker = await Worker.findOne({ EM });
     console.log(worker);
     res.json({
         result: (worker != null) ? true : false,
@@ -45,18 +45,18 @@ exports.fineCompanies = async(req, res) => {
         var companies;
         if (CNU != null) {
             companies = await Company.find({ CNU }, {
-                _id: 0,
                 NA: 1,
                 CNU: 1,
-                CNA: 1
+                CNA: 1,
+                PN: 1,
             });
         }
         else if (CNA != null) {
             companies = await Company.find({ CNA }, {
-                _id: 0,
                 NA: 1,
                 CNU: 1,
-                CNA: 1
+                CNA: 1,
+                PN: 1,
             });
         }
 

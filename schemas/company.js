@@ -21,12 +21,12 @@ const CompanySchema = new Schema({
 
     }, //Company_PhoneNumber
     PN: {
-        type: Number,
+        type: String,
         required: true,
         unique: true
     }, //Company Mobile Number
     MN: {
-        type: Number,
+        type: String,
         required: true,
         unique: true
     }, // PassWord
@@ -34,11 +34,7 @@ const CompanySchema = new Schema({
         type: String,
         required: true,
     },
-    ADR: {//Adress
-        type: String,
-        required: true,
-    },
-    AH: {//Authorization
+    AH: {
         type: Boolean,
         required: true,
         default: false,
