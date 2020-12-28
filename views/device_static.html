@@ -319,84 +319,84 @@
 
 <!-- Chart code -->
 <script>
-am4core.ready(function() {
-
-// Themes begin
-am4core.useTheme(am4themes_animated);
-// Themes end
-
-// Create chart instance
-var chart = am4core.create("chartdiv", am4charts.PieChart);
-
-	chart.data = [{
-	  "CK": "렌터카",
-	  "count": {{companycount[0]}}
-	}, {
-	  "CK": "카센터",
-	  "count": {{companycount[1]}}
-	}, {
-	  "CK": "출장정비",
-	  "count": {{companycount[2]}}
-	}, {
-	  "CK": "출장세차",
-	  "count": {{companycount[3]}}
-	}, {
-	  "CK": "택시운수업",
-	  "count": {{companycount[4]}}
-	}, {
-	  "CK": "버스운수업",
-	  "count": {{companycount[5]}}
-	}, {
-	  "CK": "타이어샵",
-	  "count": {{companycount[6]}}
-	}
-	];
-	// {% for company in companys %}
-	// 	chart.data.push({
-	// 		// CK: {{company.CK}},
-	// 		count: {{company.MN}}
-	// 	});
-	// {% endfor %}
-
-
-// Chart logo remove
-chart.logo.disabled = true;
-
-// Add and configure Series
-var pieSeries = chart.series.push(new am4charts.PieSeries());
-pieSeries.dataFields.value = "count";
-pieSeries.dataFields.category = "CK";
-pieSeries.ticks.template.disabled = true;
-pieSeries.alignLabels = false;
-pieSeries.labels.template.text = "{value.percent.formatNumber('#.0')}%";
-pieSeries.labels.template.radius = am4core.percent(-40);
-pieSeries.labels.template.fill = am4core.color("white");
-pieSeries.labels.template.adapter.add("radius", function(radius, target) {
-  if (target.dataItem && (target.dataItem.values.value.percent < 10)) {
-    return 0;
-  }
-  return radius;
-});
-
-pieSeries.labels.template.adapter.add("fill", function(color, target) {
-  if (target.dataItem && (target.dataItem.values.value.percent < 10)) {
-    return am4core.color("#000");
-  }
-  return color;
-});
-pieSeries.slices.template.stroke = am4core.color("#fff");
-pieSeries.slices.template.strokeOpacity = 1;
-
-// This creates initial animation
-pieSeries.hiddenState.properties.opacity = 1;
-pieSeries.hiddenState.properties.endAngle = -90;
-pieSeries.hiddenState.properties.startAngle = -90;
-
-chart.legend = new am4charts.Legend();
-chart.hiddenState.properties.radius = am4core.percent(0);
-
-
-}); // end am4core.ready()
+	am4core.ready(function() {
+	
+	// Themes begin
+	am4core.useTheme(am4themes_animated);
+	// Themes end
+	
+	// Create chart instance
+	var chart = am4core.create("chartdiv", am4charts.PieChart);
+	
+		chart.data = [{
+		  "CK": "렌터카",
+		  "count": {{companycount[0]}}
+		}, {
+		  "CK": "카센터",
+		  "count": {{companycount[1]}}
+		}, {
+		  "CK": "출장정비",
+		  "count": {{companycount[2]}}
+		}, {
+		  "CK": "출장세차",
+		  "count": {{companycount[3]}}
+		}, {
+		  "CK": "택시운수업",
+		  "count": {{companycount[4]}}
+		}, {
+		  "CK": "버스운수업",
+		  "count": {{companycount[5]}}
+		}, {
+		  "CK": "타이어샵",
+		  "count": {{companycount[6]}}
+		}
+		];
+		// {% for company in companys %}
+		// 	chart.data.push({
+		// 		// CK: {{company.CK}},
+		// 		count: {{company.MN}}
+		// 	});
+		// {% endfor %}
+	
+	
+	// Chart logo remove
+	chart.logo.disabled = true;
+	
+	// Add and configure Series
+	var pieSeries = chart.series.push(new am4charts.PieSeries());
+	pieSeries.dataFields.value = "count";
+	pieSeries.dataFields.category = "CK";
+	pieSeries.ticks.template.disabled = true;
+	pieSeries.alignLabels = false;
+	pieSeries.labels.template.text = "{value.percent.formatNumber('#.0')}%";
+	pieSeries.labels.template.radius = am4core.percent(-40);
+	pieSeries.labels.template.fill = am4core.color("white");
+	pieSeries.labels.template.adapter.add("radius", function(radius, target) {
+	  if (target.dataItem && (target.dataItem.values.value.percent < 10)) {
+	    return 0;
+	  }
+	  return radius;
+	});
+	
+	pieSeries.labels.template.adapter.add("fill", function(color, target) {
+	  if (target.dataItem && (target.dataItem.values.value.percent < 10)) {
+	    return am4core.color("#000");
+	  }
+	  return color;
+	});
+	pieSeries.slices.template.stroke = am4core.color("#fff");
+	pieSeries.slices.template.strokeOpacity = 1;
+	
+	// This creates initial animation
+	pieSeries.hiddenState.properties.opacity = 1;
+	pieSeries.hiddenState.properties.endAngle = -90;
+	pieSeries.hiddenState.properties.startAngle = -90;
+	
+	chart.legend = new am4charts.Legend();
+	chart.hiddenState.properties.radius = am4core.percent(0);
+	
+	
+	}); // end am4core.ready()
 </script>
 
 <!-----------------------------------------------------------
@@ -405,65 +405,65 @@ chart.hiddenState.properties.radius = am4core.percent(0);
 <script src="../assets/js/d3.v3.min.js"></script>
 <script src="../assets/js/topojson.v0.min.js"></script>
 <script>
-// SVG 영역 생성
-var width = 500, height = 500;
-var svg = d3.select("#map")
-.append("svg")
-.attr({"width":width, "height":height});
-
-// 파일 읽기
-d3.json("../assets/ne_10m_admin_1_states_provinces/korea-topo.json", function(err, map) {
-// 그리기 위한 오브젝트 획득
-var geo = map.objects["korea-geo"];
-var map_o = topojson.object(map, geo);
-// 축척 지정
-var projection = d3.geo.mercator() // projection - 투영법, 메르카토르 투영법 사용
-.center([127, 35.5])
-.scale(3500)
-.translate([width / 2, height / 2]);
-// 패스 작성
-var path = d3.geo.path()
-.projection(projection);
-
-// SVG에 추가
-svg.append("path")
-.datum(map_o)
-.attr("d", path);
-
-// 색 설정
-svg.selectAll("path").attr("fill", "grey");
-
-// 경계선
-var mesh = topojson.mesh(
-map, geo,
-function(a, b) {
-return a !== b;
-});
-
-svg.append("path")
-.datum(mesh)
-.attr("d", path)
-.attr("class", "boundary");
-// 지역 이름 표시
-svg.selectAll(".place-label")
-.data(map_o.geometries)
-.enter()
-.append("text")
-.attr("class", function(d) {
-return "place-label";
-})
-.attr("transform", function(d) {
-console.log(d);
-return "translate(" + path.centroid(d) + ")";
-})
-.text(function(d) {
-var s = d.properties.name_local;
-if (!s) return;
-//if (s == "서울특별시") return s;
-//else return;
-return s;
-});
-});
+	// SVG 영역 생성
+	var width = 500, height = 500;
+	var svg = d3.select("#map")
+	.append("svg")
+	.attr({"width":width, "height":height});
+	
+	// 파일 읽기
+	d3.json("../assets/ne_10m_admin_1_states_provinces/korea-topo.json", function(err, map) {
+	// 그리기 위한 오브젝트 획득
+	var geo = map.objects["korea-geo"];
+	var map_o = topojson.object(map, geo);
+	// 축척 지정
+	var projection = d3.geo.mercator() // projection - 투영법, 메르카토르 투영법 사용
+	.center([127, 35.5])
+	.scale(3500)
+	.translate([width / 2, height / 2]);
+	// 패스 작성
+	var path = d3.geo.path()
+	.projection(projection);
+	
+	// SVG에 추가
+	svg.append("path")
+	.datum(map_o)
+	.attr("d", path);
+	
+	// 색 설정
+	svg.selectAll("path").attr("fill", "grey");
+	
+	// 경계선
+	var mesh = topojson.mesh(
+	map, geo,
+	function(a, b) {
+	return a !== b;
+	});
+	
+	svg.append("path")
+	.datum(mesh)
+	.attr("d", path)
+	.attr("class", "boundary");
+	// 지역 이름 표시
+	svg.selectAll(".place-label")
+	.data(map_o.geometries)
+	.enter()
+	.append("text")
+	.attr("class", function(d) {
+	return "place-label";
+	})
+	.attr("transform", function(d) {
+	console.log(d);
+	return "translate(" + path.centroid(d) + ")";
+	})
+	.text(function(d) {
+	var s = d.properties.name_local;
+	if (!s) return;
+	//if (s == "서울특별시") return s;
+	//else return;
+	return s;
+	});
+	});
 </script>
 
 <!-- Chart2 code -->
