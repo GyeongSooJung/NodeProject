@@ -17,8 +17,8 @@ const Route_page= function(page,req,res){
     let pages = "/"+page;
     router.get(pages,isNotLoggedIn, async (req,res)=>{
       const CID = req.decoded.CID;
-      const nclist = await Worker.find({"CID" : CID, "NC" : false});
-       res.render(page,{company : req.decoded, nclist});
+      const aclist = await Worker.find({"CID" : CID, "AC" : false});
+       res.render(page,{company : req.decoded, aclist});
     });
 }
 // 로그인
@@ -67,19 +67,33 @@ router.get('/find', (req,res,next) => {
 });
 
 router.get('/device_static',isNotLoggedIn,async(req,res,nex)=>{
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({"CID" : CID, "AC" : false});
+  
   const AllCompany = await Company.countDocuments({});
   const AllHistory = await History.countDocuments({});
   const AllCar = await Car.countDocuments({});
   const AllDevice = await Device.countDocuments({});
-  res.render('device_static',{company : req.decoded, AllDevice, AllCar, AllHistory, AllCompany});
+  
+  const companys = await Company.find({"AH" : {$ne: "true"}});
+  console.log(companys);
+  const company1 = await Company.find({"CK" : "렌터카"});
+  console.log(company1);
+  const company2 = await Company.find({"CK" : "카센터"});
+  console.log(company2);
+  
+  res.render('device_static',{company : req.decoded, companys, aclist, AllDevice, AllCar, AllHistory, AllCompany});
 })
 
 router.get('/history_static',isNotLoggedIn,async(req,res,nex)=>{
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({"CID" : CID, "AC" : false});
+  
   const AllCompany = await Company.countDocuments({});
   const AllHistory = await History.countDocuments({});
   const AllCar = await Car.countDocuments({});
   const AllDevice = await Device.countDocuments({});
-  res.render('history_static',{company : req.decoded, AllDevice, AllCar, AllHistory, AllCompany});
+  res.render('history_static',{company : req.decoded, aclist, AllDevice, AllCar, AllHistory, AllCompany});
 })
 
 //메인 페이지
@@ -87,7 +101,7 @@ router.get('/main',isNotLoggedIn , async(req,res,next)=>{
   
     const CID = req.decoded.CID;
     
-    const nclist = await Worker.find({"CID" : CID, "NC" : false});
+    const aclist = await Worker.find({"CID" : CID, "AC" : false});
     const devices = await Device.find({"CID" : req.decoded.CID});
     const cars = await Car.find({"CID" : req.decoded.CID});
     const workers = await Worker.find({"CID" : req.decoded.CID});
@@ -105,14 +119,14 @@ router.get('/main',isNotLoggedIn , async(req,res,next)=>{
     const historys = await History.find({"CID" : req.decoded.CID});
     const history_array = await History.findOne({"CID" : req.decoded.CID}).sort({'_id':-1}).limit(1);
     console.log(history_array);
-            console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" + nclist);
+            console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" + aclist);
     if (history_array){
       const recent_history = history_array.PD;
       console.log("최근 히스토리는 :" +recent_history);
-      res.render('main', {company : req.decoded, nclist, devices, cars, workers, historys, recent_history, history_array, moment,history_count});
+      res.render('main', {company : req.decoded, aclist, devices, cars, workers, historys, recent_history, history_array, moment,history_count});
     }
     else{
-      res.render('main', {company : req.decoded, nclist, devices, cars, workers, historys,  history_array, moment,history_count});
+      res.render('main', {company : req.decoded, aclist, devices, cars, workers, historys,  history_array, moment,history_count});
     }
 });
 
@@ -127,7 +141,7 @@ Route_page('device_join');
 router.get('/company_list', isNotLoggedIn, async (req, res, next) => {
   
   const CID = req.decoded.CID;
-  const nclist = await Worker.find({"CID" : CID, "NC" : false});
+  const aclist = await Worker.find({"CID" : CID, "AC" : false});
   const companys = await Company.find({"AH" : false});
   
   const DEVICE = req.query.DEVICE;
@@ -142,23 +156,23 @@ router.get('/company_list', isNotLoggedIn, async (req, res, next) => {
   
   if(DEVICE) {
     const devices = await Device.find({"CID" : DEVICE});
-    res.render('company_list', {company : req.decoded, nclist,devices,moment});
+    res.render('company_list', {company : req.decoded, aclist,devices,moment});
     console.log("devices : "+ devices);
   }
   else if(CAR) {
     const cars = await Car.find({"CID" : CAR});
-    res.render('company_list', {company : req.decoded, nclist,cars,moment});
+    res.render('company_list', {company : req.decoded, aclist,cars,moment});
   }
   else if(WORKER) {
     const workers = await Worker.find({"CID" : WORKER});
-    res.render('company_list', {company : req.decoded, nclist,workers,moment});
+    res.render('company_list', {company : req.decoded, aclist,workers,moment});
   }
   else if(HISTORY) {
     const historys = await History.find({"CID" : HISTORY});
-    res.render('company_list', {company : req.decoded, nclist,historys,moment});
+    res.render('company_list', {company : req.decoded, aclist,historys,moment});
   }
   else {
-    res.render('company_list', {companys, nclist, moment, company : req.decoded});
+    res.render('company_list', {companys, aclist, moment, company : req.decoded});
     
   }
   
@@ -168,11 +182,11 @@ router.get('/company_list', isNotLoggedIn, async (req, res, next) => {
 //장비 수정 페이지
 router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
   const CID = req.decoded.CID;
-  const nclist = await Worker.find({"CID" : CID, "NC" : false});
+  const aclist = await Worker.find({"CID" : CID, "AC" : false});
 
   try {
     const deviceone = await Device.findOne({MAC : req.params.MAC});
-    res.render('device_edit', {company : req.decoded, nclist, deviceone});
+    res.render('device_edit', {company : req.decoded, aclist, deviceone});
   } catch (err) {
     console.error(err);
     next(err);
@@ -181,11 +195,11 @@ router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
 //Device List Data Setting for Devices
 router.get('/device_list', isNotLoggedIn,async (req, res, next) => {
   const CID = req.decoded.CID;
-  const nclist = await Worker.find({"CID" : CID, "NC" : false});
+  const aclist = await Worker.find({"CID" : CID, "AC" : false});
   
   try {
     const devices = await Device.find({CID : req.decoded.CID,});
-    res.render('device_list', {company : req.decoded, nclist, devices});
+    res.render('device_list', {company : req.decoded, aclist, devices});
   } catch (err) {
     console.error(err);
     next(err);
@@ -196,11 +210,11 @@ router.get('/device_list', isNotLoggedIn,async (req, res, next) => {
 //차량 수정 페이지
 router.get('/car_edit/:CN',isNotLoggedIn,async (req, res, next) => {
   const CID = req.decoded.CID;
-  const nclist = await Worker.find({"CID" : CID, "NC" : false});
+  const aclist = await Worker.find({"CID" : CID, "AC" : false});
   
   try {
     const carone = await Car.findOne({CN : req.params.CN});
-    res.render('car_edit', {company : req.decoded, nclist, carone});
+    res.render('car_edit', {company : req.decoded, aclist, carone});
   } catch (err) {
     console.error(err);
     next(err);
@@ -210,12 +224,12 @@ router.get('/car_edit/:CN',isNotLoggedIn,async (req, res, next) => {
 //Car List Data Setting for Cars
 router.get('/car_list',isNotLoggedIn, async (req, res, next) => {
   const CID = req.decoded.CID;
-  const nclist = await Worker.find({"CID" : CID, "NC" : false});
+  const aclist = await Worker.find({"CID" : CID, "AC" : false});
   
   try {
     const cars = await Car.find({CID : req.decoded.CID,});
       console.log(cars);
-    res.render('car_list', {company : req.decoded, nclist, cars});
+    res.render('car_list', {company : req.decoded, aclist, cars});
   } catch (err) {
     console.error(err);
     next(err);
@@ -226,10 +240,10 @@ router.get('/car_list',isNotLoggedIn, async (req, res, next) => {
 //Profile DataSetting for Profile(company)
 router.get('/profile',isNotLoggedIn,DataSet ,async (req, res, next) => {
   const CID = req.decoded.CID;
-  const nclist = await Worker.find({"CID" : CID, "NC" : false});
+  const aclist = await Worker.find({"CID" : CID, "AC" : false});
   
   try {
-    res.render('profile', {company : req.decoded, nclist});
+    res.render('profile', {company : req.decoded, aclist});
   } catch (err) {
     console.error(err);
   }
@@ -244,13 +258,9 @@ router.get('/profile',isNotLoggedIn,DataSet ,async (req, res, next) => {
 router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
-  const nclist = await Worker.find({"CID" : CID, "NC" : false});
+  const aclist = await Worker.find({"CID" : CID, "AC" : false});
 
-  
   let workerone;
-  let workertwo;
-  
-  workertwo = await Worker.where({"NC" : false }).updateMany({ "NC" : true }).setOptions({runValidators : true}).exec();
   
   try {
     const workeracem = req.query.workeracem;
@@ -275,7 +285,7 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
   }
     const workers = await Worker.find({CID : req.decoded.CID,});
   
-  res.render('worker_list', {nclist, company : req.decoded, workers});
+  res.render('worker_list', {aclist, company : req.decoded, workers});
   
 });
 
@@ -284,7 +294,7 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
 router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
-  const nclist = await Worker.find({"CID" : CID, "NC" : false});
+  const aclist = await Worker.find({"CID" : CID, "AC" : false});
 
   try {
     const cars = await Car.find({"CID" : CID});
@@ -294,19 +304,19 @@ router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
     
     if(!CN & !MD) {
       const historys = await History.find({"CID" : CID});
-      res.render('history_list', {company : req.decoded, nclist, cars, devices, historys, moment});
+      res.render('history_list', {company : req.decoded, aclist, cars, devices, historys, moment});
     }
     
     else if(CN) {
       const carone = await Car.findOne({"CN" : CN});
       const historys = await History.find({"VID" : carone._id});
-      res.render('history_list', {company : req.decoded, nclist, cars, devices, historys, moment});
+      res.render('history_list', {company : req.decoded, aclist, cars, devices, historys, moment});
     }
     
     else if(MD) {
       const deviceone = await Device.findOne({"MD" : MD});
       const historys = await History.find({"DID" : deviceone._id});
-      res.render('history_list', {company : req.decoded, nclist, cars, devices, historys, moment});
+      res.render('history_list', {company : req.decoded, aclist, cars, devices, historys, moment});
     }
   } catch (err) {
     console.error(err);
@@ -317,7 +327,7 @@ router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
 router.get('/history_chart/:_id',isNotLoggedIn ,async (req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
-  const nclist = await Worker.find({"CID" : CID, "NC" : false});
+  const aclist = await Worker.find({"CID" : CID, "AC" : false});
     
     try {
         const historyone = await History.findOne({"_id" : req.params._id});
@@ -328,7 +338,7 @@ router.get('/history_chart/:_id',isNotLoggedIn ,async (req, res, next) => {
         const workerone = await Worker.findOne({"_id" : historyone.WID});
         console.log(deviceone);
         console.log(workerone);
-        res.render('history_chart', {company : req.decoded, nclist, historyone, companyone, carone, deviceone, workerone, history_array, moment});
+        res.render('history_chart', {company : req.decoded, aclist, historyone, companyone, carone, deviceone, workerone, history_array, moment});
     } catch (err) {
         console.error(err);
         next(err);

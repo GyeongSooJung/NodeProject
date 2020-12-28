@@ -20,6 +20,14 @@ const CompanySchema = new Schema({
         required: true
 
     }, //Company_PhoneNumber
+    CK: {
+        type: String,
+        required: true
+    }, //Company_Kinds
+    ADR: {
+        type: String,
+        required: true
+    }, //Company_Address
     PN: {
         type: String,
         required: true,
