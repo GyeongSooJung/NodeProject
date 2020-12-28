@@ -115,7 +115,7 @@
                 		<!-- end panel-heading -->
                 		<!-- begin panel-body -->
                 		<div class="panel-body">
-                        	<div id="chartdiv" class="height-sm"></div>
+                        	<div id="chartdiv" class="height-md"></div>
                 		</div>
                 		<!-- end panel-body -->
                 	</div>
@@ -137,7 +137,8 @@
                 		<!-- end panel-heading -->
                 		<!-- begin panel-body -->
                 		<div class="panel-body">
-                        	<!--<div id="map" class="height-sm"></div>-->
+                        	<div id="map" class="height-md"></div>
+                        	<!--<object type="image/svg+xml" data="../assets/southKoreaHigh.svg" class="object"></object>-->
                 		</div>
                 		<!-- end panel-body -->
                 	</div>
@@ -147,6 +148,82 @@
 					<!-- end panel -->
 				</div>
 				<!-- end col-6 -->
+			</div>
+			<!-- end row -->
+			<!-- begin row -->
+			<div class="row">
+				<!-- begin col-8 -->
+				<div class="col-xl-8">
+				    <!-- begin panel -->
+	            	<div class="panel panel-inverse">
+	            		<!-- begin panel-heading -->
+	            		<div class="panel-heading">
+	            			<h4 class="panel-title">UV 램프 교체 현황</h4>
+	            		</div>
+	            		<!-- begin panel-body -->
+                		<div class="panel-body">
+                        	<div id="chartdiv2" class="height-sm"></div>
+                		</div>
+                		<!-- end panel-body -->
+	            	</div>
+	            	<!-- end panel -->
+				</div>
+				<!-- end col-8 -->
+				<!-- begin col-4 -->
+				<div class="col-xl-4">
+				    <!-- begin panel -->
+	            	<div class="panel panel-inverse">
+	            		<!-- begin panel-heading -->
+	            		<div class="panel-heading">
+	            			<h4 class="panel-title">UV 램프 - 다음 달 예상 교체 물량</h4>
+	            		</div>
+	            		<!-- begin panel-body -->
+                		<div class="panel-body">
+                        	<div id="chartdiv2" class="height-sm"></div>
+                		</div>
+                		<!-- end panel-body -->
+	            	</div>
+	            	<!-- end panel -->
+				</div>
+				<!-- end col-4 -->
+			</div>
+			<!-- end row -->
+			<!-- begin row -->
+			<div class="row">
+				<!-- begin col-8 -->
+				<div class="col-xl-8">
+				    <!-- begin panel -->
+	            	<div class="panel panel-inverse">
+	            		<!-- begin panel-heading -->
+	            		<div class="panel-heading">
+	            			<h4 class="panel-title">센서 교체 현황</h4>
+	            		</div>
+	            		<!-- begin panel-body -->
+                		<div class="panel-body">
+                        	<div id="chartdiv3" class="height-sm"></div>
+                		</div>
+                		<!-- end panel-body -->
+	            	</div>
+	            	<!-- end panel -->
+				</div>
+				<!-- end col-8 -->
+				<!-- begin col-4 -->
+				<div class="col-xl-4">
+				    <!-- begin panel -->
+	            	<div class="panel panel-inverse">
+	            		<!-- begin panel-heading -->
+	            		<div class="panel-heading">
+	            			<h4 class="panel-title">센서 - 다음 달 예상 교체 물량</h4>
+	            		</div>
+	            		<!-- begin panel-body -->
+                		<div class="panel-body">
+                        	<div id="chartdiv2" class="height-sm"></div>
+                		</div>
+                		<!-- end panel-body -->
+	            	</div>
+	            	<!-- end panel -->
+				</div>
+				<!-- end col-4 -->
 			</div>
 			<!-- end row -->
 		</div>
@@ -224,12 +301,35 @@ am4core.useTheme(am4themes_animated);
 // Create chart instance
 var chart = am4core.create("chartdiv", am4charts.PieChart);
 
-	{% for company in companys %}
-		chart.data.push({
-			CK: {{company.CK}},
-			count: {{company.MN}}
-		});
-	{% endfor %}
+	chart.data = [{
+	  "CK": "렌터카",
+	  "count": {{companycount[0]}}
+	}, {
+	  "CK": "카센터",
+	  "count": {{companycount[1]}}
+	}, {
+	  "CK": "출장정비",
+	  "count": {{companycount[2]}}
+	}, {
+	  "CK": "출장세차",
+	  "count": {{companycount[3]}}
+	}, {
+	  "CK": "택시운수업",
+	  "count": {{companycount[4]}}
+	}, {
+	  "CK": "버스운수업",
+	  "count": {{companycount[5]}}
+	}, {
+	  "CK": "타이어샵",
+	  "count": {{companycount[6]}}
+	}
+	];
+	// {% for company in companys %}
+	// 	chart.data.push({
+	// 		// CK: {{company.CK}},
+	// 		count: {{company.MN}}
+	// 	});
+	// {% endfor %}
 
 
 // Chart logo remove
@@ -239,6 +339,24 @@ chart.logo.disabled = true;
 var pieSeries = chart.series.push(new am4charts.PieSeries());
 pieSeries.dataFields.value = "count";
 pieSeries.dataFields.category = "CK";
+pieSeries.ticks.template.disabled = true;
+pieSeries.alignLabels = false;
+pieSeries.labels.template.text = "{value.percent.formatNumber('#.0')}%";
+pieSeries.labels.template.radius = am4core.percent(-40);
+pieSeries.labels.template.fill = am4core.color("white");
+pieSeries.labels.template.adapter.add("radius", function(radius, target) {
+  if (target.dataItem && (target.dataItem.values.value.percent < 10)) {
+    return 0;
+  }
+  return radius;
+});
+
+pieSeries.labels.template.adapter.add("fill", function(color, target) {
+  if (target.dataItem && (target.dataItem.values.value.percent < 10)) {
+    return am4core.color("#000");
+  }
+  return color;
+});
 pieSeries.slices.template.stroke = am4core.color("#fff");
 pieSeries.slices.template.strokeOpacity = 1;
 
@@ -247,17 +365,21 @@ pieSeries.hiddenState.properties.opacity = 1;
 pieSeries.hiddenState.properties.endAngle = -90;
 pieSeries.hiddenState.properties.startAngle = -90;
 
+chart.legend = new am4charts.Legend();
 chart.hiddenState.properties.radius = am4core.percent(0);
 
 
 }); // end am4core.ready()
 </script>
 
+<!-----------------------------------------------------------
+--------------------------- 지도 ----------------------------
+------------------------------------------------------------->
 <script src="../assets/js/d3.v3.min.js"></script>
 <script src="../assets/js/topojson.v0.min.js"></script>
 <script>
 // SVG 영역 생성
-var width = 1024, height = 1024;
+var width = 500, height = 500;
 var svg = d3.select("#map")
 .append("svg")
 .attr({"width":width, "height":height});
@@ -269,8 +391,8 @@ var geo = map.objects["korea-geo"];
 var map_o = topojson.object(map, geo);
 // 축척 지정
 var projection = d3.geo.mercator() // projection - 투영법, 메르카토르 투영법 사용
-.center([129, 35])
-.scale(6500)
+.center([127, 35.5])
+.scale(3500)
 .translate([width / 2, height / 2]);
 // 패스 작성
 var path = d3.geo.path()
@@ -315,6 +437,141 @@ if (!s) return;
 return s;
 });
 });
+</script>
+
+<!-- Chart2 code -->
+<script>
+am4core.ready(function() {
+
+// Themes begin
+am4core.useTheme(am4themes_animated);
+// Themes end
+
+// Create chart instance
+var chart = am4core.create("chartdiv2", am4charts.XYChart);
+
+// Add data
+	{% set month = 1 %}
+	{% for company in companys %}
+		chart.data.push({
+			count: 1,
+			month: {{month}}
+		});
+	{% set month = month + 1 %}
+	{% endfor %}
+
+  // Set input format for the dates
+  chart.logo.disabled = true;
+  chart.numberFormatter.numberFormat = "#";
+  
+  // Create axes
+  var monthAxis = chart.xAxes.push(new am4charts.ValueAxis());
+  var countAxis = chart.yAxes.push(new am4charts.ValueAxis());
+  
+  // Create series
+  var series = chart.series.push(new am4charts.LineSeries());
+  series.dataFields.valueY = "count";
+  series.dataFields.valueX = "month";
+  series.tooltipText = "{count}"
+  series.strokeWidth = 2;
+  series.minBulletDistance = 15;
+  
+  // Drop-shaped tooltips 이것은 마우스를 올렸을 때 말풍선이 나오는 것이여
+  series.tooltip.background.cornerRadius = 20;
+  series.tooltip.background.strokeOpacity = 0;
+  series.tooltip.pointerOrientation = "vertical";
+  series.tooltip.label.minWidth = 40;
+  series.tooltip.label.minHeight = 40;
+  series.tooltip.label.textAlign = "middle";
+  series.tooltip.label.textValign = "middle";
+  
+  // Make bullets grow on hover 이것은 각 점들의 크기
+  var bullet = series.bullets.push(new am4charts.CircleBullet());
+  bullet.circle.strokeWidth = 2;
+  bullet.circle.radius = 4;
+  bullet.circle.fill = am4core.color("#fff");
+  
+  var bullethover = bullet.states.create("hover");
+  bullethover.properties.scale = 1.3;
+  
+  // Make a panning cursor 이것은 마우스 올렸을 때 점선이여
+  chart.cursor = new am4charts.XYCursor();
+  chart.cursor.behavior = "panXY";
+  chart.cursor.xAxis = monthAxis;
+  chart.cursor.snapToSeries = series;
+  
+  monthAxis.start = 0;
+  monthAxis.keepSelection = true;
+  
+  
+  }); // end am4core.ready()
+</script>
+
+<!-- Chart3 code -->
+<script>
+am4core.ready(function() {
+
+// Themes begin
+am4core.useTheme(am4themes_animated);
+// Themes end
+
+// Create chart instance
+var chart = am4core.create("chartdiv3", am4charts.XYChart);
+
+// Add data
+chart.data = [{
+  "date": "2012-07-27",
+  "value": 13
+}, {
+  "date": "2012-07-28",
+  "value": 11
+}];
+
+  // Set input format for the dates
+  chart.logo.disabled = true;
+  chart.numberFormatter.numberFormat = "#";
+  
+  // Create axes
+  var monthAxis = chart.xAxes.push(new am4charts.ValueAxis());
+  var countAxis = chart.yAxes.push(new am4charts.ValueAxis());
+  
+  // Create series
+  var series = chart.series.push(new am4charts.LineSeries());
+  series.dataFields.valueY = "count";
+  series.dataFields.valueX = "month";
+  series.tooltipText = "{count}"
+  series.strokeWidth = 2;
+  series.minBulletDistance = 15;
+  
+  // Drop-shaped tooltips 이것은 마우스를 올렸을 때 말풍선이 나오는 것이여
+  series.tooltip.background.cornerRadius = 20;
+  series.tooltip.background.strokeOpacity = 0;
+  series.tooltip.pointerOrientation = "vertical";
+  series.tooltip.label.minWidth = 40;
+  series.tooltip.label.minHeight = 40;
+  series.tooltip.label.textAlign = "middle";
+  series.tooltip.label.textValign = "middle";
+  
+  // Make bullets grow on hover 이것은 각 점들의 크기
+  var bullet = series.bullets.push(new am4charts.CircleBullet());
+  bullet.circle.strokeWidth = 2;
+  bullet.circle.radius = 4;
+  bullet.circle.fill = am4core.color("#fff");
+  
+  var bullethover = bullet.states.create("hover");
+  bullethover.properties.scale = 1.3;
+  
+  // Make a panning cursor 이것은 마우스 올렸을 때 점선이여
+  chart.cursor = new am4charts.XYCursor();
+  chart.cursor.behavior = "panXY";
+  chart.cursor.xAxis = monthAxis;
+  chart.cursor.snapToSeries = series;
+  
+  monthAxis.start = 0;
+  monthAxis.keepSelection = true;
+  
+  
+  }); // end am4core.ready()
 </script>
 						
 <script src="../assets/plugins/datatables.net/js/jquery.dataTables.min.js"></script>

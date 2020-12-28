@@ -26,6 +26,7 @@ const deviceSchema = new Schema({
     CA: {
         type: Date,
         required: [true, 'CA is required!'],
+        default: Date.now
     },
     UA: {
         type: Date,

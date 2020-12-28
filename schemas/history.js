@@ -46,6 +46,7 @@ const historySchema = new Schema({
     CA: {
         type: Date,
         required: [true, 'CA is required!'],
+        default: Date.now
     },
 },
     {collection : 'history'}
