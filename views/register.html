@@ -90,16 +90,16 @@
 							</div>
 						</div>
 										<tr>
-						<label class="control-label">회사 주소 Company<span class="text-danger"> *</span> </label>
+						<label class="control-label">회사 주소<span class="text-danger"> *</span> </label>
 				</tr>
 				<div class="row m-b-15">
 					<div class="col-md-12">
-					<input type="text"  class="form-control" id="roadAddrPart1" style = "width : 65%; display: inline-block;" {% if roadAddrPart1 %} readOnly value ="{{ roadAddrPart1 }}" data-parsley-required="true" {% endif %} >
+					<input type="text"  class="form-control" id="roadAddrPart1" style = "width : 65%; display: inline-block;" {% if roadAddrPart1!='undefined' %} readOnly value ="{{ roadAddrPart1 }}" data-parsley-required="true" {% endif %} >
 					<input type="button" class="btn btn-primary mb-1" style = 'width : 30%; display: inline-block;' value="주소검색" onclick="goPopup();">
 					<tr>
 						<td>
-							<input type="text" class="form-control" id="addrDetail" style="width:48% ; display: inline-block;"{% if addrDetail %} readOnly value="{{addrDetail}}" {% endif %}>
-							<input type="text" class="form-control" id="roadAddrPart2"  style="width:47% ; display: inline-block;" {% if roadAddrPart2 %} readOnly value="{{roadAddrPart2}}"{% endif %}>
+							<input type="text" class="form-control" id="addrDetail" style="width:48% ; display: inline-block;"{% if addrDetail!='undefined' %} readOnly value="{{addrDetail}}" {% endif %}>
+							<input type="text" class="form-control" id="roadAddrPart2"  style="width:47% ; display: inline-block;" {% if roadAddrPart2!='undefined' %} readOnly value="{{roadAddrPart2}}"{% endif %}>
 						</td>
 					</tr>
 					</div>
