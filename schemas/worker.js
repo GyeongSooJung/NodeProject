@@ -35,11 +35,11 @@ const workerSchema = new Schema({
     },
     AU: { // Auth, 0: MK 관리자, 1: 사업주, 2: 직업
         type: Number,
-        required: [true, 'AU is required!'],
+        default:2,
     },
     AC: { // Activated
         type: Boolean,
-        required: [true, 'AC is required!'],
+        default: false,
     },
 }, { collection: 'worker' });
 
