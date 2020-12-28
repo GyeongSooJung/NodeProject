@@ -42,6 +42,7 @@ exports.signIn = async(req, res) => {
 exports.fineCompanies = async(req, res) => {
     try {
         const { CNU, CNA } = req.body;
+
         var companies;
         if (CNU != null) {
             companies = await Company.find({ CNU }, {
@@ -49,14 +50,16 @@ exports.fineCompanies = async(req, res) => {
                 CNU: 1,
                 CNA: 1,
                 PN: 1,
+                MN: 1,
             });
         }
         else if (CNA != null) {
-            companies = await Company.find({ CNA }, {
+            companies = await Company.find({ CNA: { $regex: CNA, $options: "$i" } }, {
                 NA: 1,
                 CNU: 1,
                 CNA: 1,
                 PN: 1,
+                MN: 1,
             });
         }
 
@@ -68,6 +71,7 @@ exports.fineCompanies = async(req, res) => {
             });
         }
         else {
+
             res.json({
                 result: false,
                 error: NO_SUCH_DATA,
