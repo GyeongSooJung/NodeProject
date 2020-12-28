@@ -43,7 +43,7 @@
   			  
 		 </div>
 		<!-- end panel-body -->
-	  <!-- begin panel-body -->
+	  	<!-- begin panel-body -->
 		<div class="panel-body">
 			<!-- begin table-responsive -->
 			<div class="table-responsive">
@@ -87,11 +87,11 @@
 					</thead>
 					<tbody>
 						<tr class="bg-light">
-              <td>{{moment(historyone.ET).diff(moment(historyone.ST), 'minutes')+"m"}}</td>
-              <td>{{historyone.MP}}</td>
-              <td>{{historyone.FP}}</td>
-              <td>{{historyone.RC}}</td>
-              <td>{{moment(historyone.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
+			              <td>{{moment(historyone.ET).diff(moment(historyone.ST), 'minutes')+"m"}}</td>
+			              <td>{{historyone.MP}}</td>
+			              <td>{{historyone.FP}}</td>
+			              <td>{{historyone.RC}}</td>
+			              <td>{{moment(historyone.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -123,18 +123,18 @@
   var chart = am4core.create("chartdiv", am4charts.XYChart);
   
   //이것은 차트에 mongodb 연동하는 부분
-        {% set ss = 1 %}
-  
-			  {% for item in history_array %}
-			  
-			  chart.data.push({
-                ss: {{ss}},
-                ppm: {{item}}
-              });
-                
-        {% set ss = ss + 1 %}
-			  
-			  {% endfor %}
+    {% set ss = 1 %}
+
+	  {% for item in history_array %}
+	  
+	  chart.data.push({
+        ss: {{ss}},
+        ppm: {{item}}
+      });
+            
+    {% set ss = ss + 1 %}
+		  
+	  {% endfor %}
   
   // Set input format for the dates
   chart.logo.disabled = true;
