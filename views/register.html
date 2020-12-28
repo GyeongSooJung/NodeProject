@@ -57,7 +57,7 @@
 				{% block script %}
 				<div class="register-content" >
 					<form  action = '/company/register' method="post" class="margin-bottom-0"  data-parsley-validate="true">
-						<h5>이메일 인증</h5>
+						<h5>이메일 인증 <span class="text-danger"> *{{EAMsg}}</span></h5>
 						<div class="row m-b-15">
 							{% if email %}
 							<div class="col-md-12" id = "EmailEC">
@@ -89,6 +89,21 @@
 								<input type="digits" class="form-control" name = "CNU3"  placeholder="5자리" maxlength=5 style="width :20%; display: inline-block;;"  {% if CNU %} data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." value = {{CNU3}} {% endif %} /> 
 							</div>
 						</div>
+										<tr>
+						<label class="control-label">회사 주소<span class="text-danger"> *</span> </label>
+				</tr>
+				<div class="row m-b-15">
+					<div class="col-md-12">
+					<input type="text"  class="form-control" id="roadAddrPart1" style = "width : 65%; display: inline-block;" {% if roadAddrPart1 %} readOnly value ="{{ roadAddrPart1 }}" data-parsley-required="true" {% endif %} >
+					<input type="button" class="btn btn-primary mb-1" style = 'width : 30%; display: inline-block;' value="주소검색" onclick="goPopup();">
+					<tr>
+						<td>
+							<input type="text" class="form-control" id="addrDetail" style="width:48% ; display: inline-block;"{% if addrDetail %} readOnly value="{{addrDetail}}" {% endif %}>
+							<input type="text" class="form-control" id="roadAddrPart2"  style="width:47% ; display: inline-block;" {% if roadAddrPart2 %} readOnly value="{{roadAddrPart2}}"{% endif %}>
+						</td>
+					</tr>
+					</div>
+				</div>				
 						<label class="control-label">업체 전화번호 <span class="text-danger">*</span></label>
 						<div class="row m-b-15">
 							<div class="col-md-12">
@@ -138,7 +153,7 @@
 						</div>
 						<hr />
 						<p class="text-center mb-0">
-							&copy; Color Admin All Right Reserved 2020
+							&copy; OASIS 오존 소독기 Register.
 						</p>
 					</form>
 				</div>
@@ -157,11 +172,26 @@
 	<!-- end page container -->
 	
 	<!--이메일 인증 후 새로고침 시 감지하고 URL 리로드-->
-	<script type="text/javascript"> 
-		
-	
+<script language="javascript">
+//document.domain = "abc.go.kr";
 
-	</script>
+function goPopup(){
+	// 호출된 페이지(jusopopup.jsp)에서 실제 주소검색URL(https://www.juso.go.kr/addrlink/addrLinkUrl.do)를 호출하게 됩니다.
+    var pop = window.open("/adress","pop","width=570,height=420, scrollbars=yes, resizable=yes"); 
+    
+	// 모바일 웹인 경우, 호출된 페이지(jusopopup.jsp)에서 실제 주소검색URL(https://www.juso.go.kr/addrlink/addrMobileLinkUrl.do)를 호출하게 됩니다.
+    //var pop = window.open("/popup/jusoPopup.jsp","pop","scrollbars=yes, resizable=yes"); 
+}
+/** API 서비스 제공항목 확대 (2017.02) **/
+function jusoCallBack(roadFullAddr,roadAddrPart1,addrDetail,roadAddrPart2,engAddr, jibunAddr, zipNo, admCd, rnMgtSn, bdMgtSn
+						, detBdNmList, bdNm, bdKdcd, siNm, sggNm, emdNm, liNm, rn, udrtYn, buldMnnm, buldSlno, mtYn, lnbrMnnm, lnbrSlno, emdNo){
+	// 팝업페이지에서 주소입력한 정보를 받아서, 현 페이지에 정보를 등록합니다.
+	document.form.roadAddrPart1.value = roadAddrPart1;
+	document.form.roadAddrPart2.value = roadAddrPart2;
+	document.form.addrDetail.value = addrDetail;
+	document.form.zipNo.value = zipNo;
+}
+</script>
 
 	<!-- ================== BEGIN BASE JS ================== -->
 	<script src="../assets/js/app.min.js"></script>

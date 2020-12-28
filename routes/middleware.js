@@ -38,6 +38,20 @@ exports.emailcontrol = async(req, res, next) => {
   
 };
 
+exports.AdressAdd = async(req, res, next) => {
+     try{
+      req.decoded = req.cookies;
+      next();   
+      
+  } 
+    catch(err) {
+        console.log("토큰은 이거입니다 " +req.decoded);
+        res.render('register',{ErrMsg2 : "이메일 주소를 인증받으세요"}) ;//이메일에 대한 정보가 없을 때 에러메세지 출력
+  }
+  
+};
+
+
 exports.DataSet = async(req,res,next)=>{
   try{
      const CID = await req.decoded.CID;
