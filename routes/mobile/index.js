@@ -8,6 +8,7 @@ router.post("/worker/signup", controller.signUp);
 router.post("/worker/withdrawal", controller.withdrawal);
 
 router.post("/company/find", controller.fineCompanies);
+router.post("/company/findByID", controller.findCompanyByID);
 
 router.post("/", controller.root);
 

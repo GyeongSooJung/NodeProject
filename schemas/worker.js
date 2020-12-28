@@ -28,8 +28,7 @@ const workerSchema = new Schema({
     },
     CA: { // Created At
         type: Date,
-        required: [true, 'CA is required!'],
-        default: Date.now
+        default: Date.now(),
     },
     UA: { // Updated At
         type: Date,
