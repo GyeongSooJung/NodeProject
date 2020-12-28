@@ -11,7 +11,7 @@ const {emailcontrol} = require('./middleware');
 //Register for Client
 router.post('/register',emailcontrol,async (req, res, next) => {
   //req. Body for Insert Data.
-  const {NA, CNU1,CNU2,CNU3, CNA, PN, MN, PW, PW2} = req.body;
+  const {NA, CNU1,CNU2,CNU3, CNA, PN, MN, PW, PW2, CK} = req.body;
   const ADR = req.body.roadAddrPart1+req.body.roadAddrPart2+req.body.addrDetail;
   res.cookie('ADR',null)
   //email
@@ -28,28 +28,28 @@ router.post('/register',emailcontrol,async (req, res, next) => {
   console.log("EC :"+EC);
 
   if(!EC) {
-      return res.render('register',{NA,CNU,CNA,PN,MN,ADR,EAMsg : "메일 인증을 받으세요"})
+      return res.render('register',{NA,CNU,CNA,PN,MN,ADR,CK,EAMsg : "메일 인증을 받으세요"})
       
   };
     const CNU_CK  = await postCRN(CNU);
   if(CNU_CK == false){
-    return  res.render('register',{NA,CNA,PN,MN, CNU,ADR ,ErrMsg : "잘못된 사업자 등록번호 입니다!"});
+    return  res.render('register',{NA,CNA,PN,MN, CNU,ADR,CK ,ErrMsg : "잘못된 사업자 등록번호 입니다!"});
   } 
   else{
   try {
     const exCNU = await Company.findOne({"CNU" : parseInt(CNU)});
     if (exCNU) {
-     return  res.render('register',{NA,CNA,PN,MN, CNU1, CNU2, CNU3,ADR ,ErrMsg : "가입된 사업자입니다."});
+     return  res.render('register',{NA,CNA,PN,MN, CNU1, CNU2, CNU3,ADR,CK ,ErrMsg : "가입된 사업자입니다."});
     }
       if(PW ===! PW2 ){
-      return res.render('register',{NA,CNU1, CNU2, CNU3,CNA,PN,MN,ADR,message : "비밀번호가 다릅니다."});
+      return res.render('register',{NA,CNU1, CNU2, CNU3,CNA,PN,MN,ADR,CK,message : "비밀번호가 다릅니다."});
     }
 
     //중복값 생성시 에러 반환
     //암호화 부분
     const hash = await bcrypt.hash(PW, 12);
 
-    await Company.create({NA, CNU, CNA, PN, MN, EA,ADR,
+    await Company.create({NA, CNU, CNA, PN, MN, EA,ADR,CK,
     PW : hash
     });
     return res.redirect('/');
