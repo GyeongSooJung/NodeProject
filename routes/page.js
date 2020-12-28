@@ -267,10 +267,11 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
   
   try {
     const workeracem = req.query.workeracem;
+    const workerauem = req.query.workerauem;
     
     if(workeracem){
       const workerarray = workeracem.split(',');
-      console.log(workerarray[0]);
+      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+workerarray[0]);
       console.log(workerarray[1]);
       
       if(workerarray){
@@ -280,7 +281,20 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
           workerone = await Worker.where({"EM" : workerarray[1]}).update({ "AC" : true }).setOptions({runValidators : true}).exec();
         }
       }
+    }else if(workerauem){
+      const workerarray = workerauem.split(',');
+      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+workerarray[0]);
+      console.log(workerarray[1]);
+      
+      if(workerarray){
+        if(workerarray[0] == 1) {
+          workerone = await Worker.where({"EM" : workerarray[1]}).update({ "AU" : 2 }).setOptions({runValidators : true}).exec();
+        }else{
+          workerone = await Worker.where({"EM" : workerarray[1]}).update({ "AU" : 1 }).setOptions({runValidators : true}).exec();
+        }
+      }
     }
+    else {}
     
   } catch (err) {
     console.error(err);

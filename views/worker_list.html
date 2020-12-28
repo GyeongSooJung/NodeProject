@@ -41,6 +41,7 @@
 	        							<th>이름</th>
 	        							<th>전화번호</th>
 	        							<th>이메일</th>
+	        							<th width="10%">사업주권한</th>
 	        							<th width="1%">승인</th>
 	        							<th width="1%"></th>
 	        						</tr>
@@ -49,13 +50,18 @@
 	        					    {% for worker in workers %}
 	        						<tr>
 	        							<td class="with-btn" nowrap>
-    										<input id ="ck" type="checkbox" name = "AC" class="neHeros" value={{worker.EM}} {% if worker.AC == true %} checked {% else %} unchecked  {% endif %} onChange="eachCheckedBox(this);"/>
+    										<input id ="ck" type="checkbox" name = "AC" class="neHeros" value={{worker.EM}} unchecked onChange="eachCheckedBox(this);"/>
 	        							</td>
 	                                    <td width="1%" class="with-img"><img src={{worker.PU}} class="img-rounded height-30" /></td>
 	        							<td>{{worker.WN}}</td>
 	        							<td>{{worker.PN}}</td>
 	        							<td>{{worker.EM}}</td>
 	        							    <input type="hidden" name="EM" value="{{worker.EM}}">
+	        							<td class="with-btn" nowrap>
+	        								<a href="/worker_list/?workerauem={{worker.AU}},{{worker.EM}}" class="btn btn-sm width-60 m-r-2 edit-btn">
+	            								<input id ="ckone" type="checkbox" data-render="switchery" data-theme="black" name="ckone"  {% if worker.AU == 1 %} checked {% else %} unchecked  {% endif %} />
+	        								</a>
+	        							</td>
 	        							<td class="with-btn" nowrap>
 	        								<a href="/worker_list/?workeracem={{worker.AC}},{{worker.EM}}" class="btn btn-sm width-60 m-r-2 edit-btn">
 	            								<input id ="ckone" type="checkbox" data-render="switchery" data-theme="default" name="ckone"  {% if worker.AC == true %} checked {% else %} unchecked  {% endif %} />
@@ -71,6 +77,7 @@
 	        				</table>
 	        				
 					        <div>
+					        	<input style ="margin-right : 10px;" class="btn btn-primary" type='button' value='선택항목 사업주권한' onclick='return info_chk3(this.form);'>
 					        	<button style ="margin-right : 10px;" id ="button1" type="submit" class="btn btn-primary">선택항목 승인</button>
 					    		<input class="btn btn-primary" type='button' value='선택항목 삭제' onclick='return info_chk2(this.form);'>
 						    </div>
@@ -88,6 +95,13 @@
 	<!-- error script -->
 	<script>
 		
+		
+		function info_chk3(frm)
+		{
+			
+				frm.action='/worker/worker_select_manager/'; frm.submit(); return true;
+			
+		}
 	
 		function info_chk2(frm)
 		{

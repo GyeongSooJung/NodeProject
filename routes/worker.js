@@ -109,7 +109,61 @@ router.post('/worker_select_update',isNotLoggedIn ,async (req, res, next) => {
   }
 });
 
+//작업자 체크박스 사업주 권한 부여
 
+router.post('/worker_select_manager',isNotLoggedIn ,async (req, res, next) => {
+    try {
+      
+    const workerac = req.body.AU;
+    const workerem = req.body.EM;
+    console.log(workerac);
+    console.log(workerem);
+      
+        const {EM, AC} = req.body;
+        var i,j;
+        let  workerone;
+        console.log("AC: " + AC);
+        console.log("EM: " + EM);
+        
+        if (!AC) {
+            for (i = 0; i< EM.length; i++){
+              workerone = await Worker.where({"EM" : EM[i]}).update({ "AU" : 2 }).setOptions({runValidators : true}).exec();
+            }
+            return res.redirect('/worker_list');
+        }
+        else if(!(AC instanceof Object)) {
+          for (i =0; i < EM.length; i ++) {
+            console.log(EM[i]);
+             if (EM[i] == AC) {
+              workerone = await Worker.where({"EM" : EM[i]}).update({ "AU" : 1 }).setOptions({runValidators : true}).exec();
+            }
+            else {
+              workerone = await Worker.where({"EM" : EM[i]}).update({ "AU" : 2 }).setOptions({runValidators : true}).exec();
+            }
+          }
+        }
+        else{
+          for (i =0; i < EM.length; i ++) {
+            for(j =0; j < AC.length; j ++) {
+              if(EM[i] == AC[j]){
+                workerone = await Worker.where({"EM" : EM[i]}).update({ "AU" : 1 }).setOptions({runValidators : true}).exec();
+                break;
+              }
+              else {
+                workerone = await Worker.where({"EM" : EM[i]}).update({ "AU" : 2 }).setOptions({runValidators : true}).exec();
+              }
+            }
+          }
+        }
+        
+        
+        
+        res.redirect('/worker_list');
+    }   catch (err) {
+        console.error(err);
+        next(err);
+  }
+});
 
 
 //작업자 삭제

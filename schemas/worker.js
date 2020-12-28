@@ -11,7 +11,7 @@ const workerSchema = new Schema({
         type: String,
         required: [true, 'WN is required!'],
     },
-    PN: { // Phone Name
+    PN: { // Phone Number
         type: String,
         unique: true,
     },
@@ -28,18 +28,19 @@ const workerSchema = new Schema({
     },
     CA: { // Created At
         type: Date,
-        required: [true, 'CA is required!'],
+        default: Date.now(),
     },
     UA: { // Updated At
         type: Date,
+        default: Date.now(),
     },
-    AU: { // Auth
+    AU: { // Auth, 0: MK 관리자, 1: 사업주, 2: 직업
         type: Number,
-        required: [true, 'AU is required!'],
+        default:2,
     },
     AC: { // Activated
         type: Boolean,
-        required: [true, 'AC is required!'],
+        default: false,
     },
 }, { collection: 'worker' });
 
