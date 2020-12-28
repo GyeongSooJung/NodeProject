@@ -37,9 +37,11 @@ router.get('/adress',(req,res)=>{
 router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
       res.cookie("email", null);
       res.cookie("authNum", null);
-     const roadAddrPart1 = String(req.cookies.ADR.roadAddrPart1);
-     const roadAddrPart2 = String(req.cookies.ADR.roadAddrPart2);
-     const addrDetail = String(req.cookies.ADR.addrDetail);
+      res.cookie('ADR',null);
+      console.log(req.cookies)
+     const roadAddrPart1 = String(req.decoded.ADR.roadAddrPart1);
+     const roadAddrPart2 = String(req.decoded.ADR.roadAddrPart2);
+     const addrDetail = String(req.decoded.ADR.addrDetail);
      console.log("where is the places " + roadAddrPart1);
      const authNum = parseInt(req.decoded.authNum);
      const email = req.decoded.email;
