@@ -185,7 +185,7 @@
 							<i class="fas fa-lg fa-fw m-r-10 fa-user"></i>
 							<span> 작업자 
 								
-								{% if (nclist.length >= 1) %}
+								{% if (aclist.length >= 1) %}
 								<span class="label label-theme">NEW</span>
 								{% else %}
 								{% endif %}
@@ -193,8 +193,8 @@
 						</a>
 						<ul class="sub-menu">
 							<li><a href="/worker_list">작업자 목록 
-							{% if nclist.length >=1 %}
-							<span class="label label-theme">{{ nclist.length }}</span>
+							{% if aclist.length >=1 %}
+							<span class="label label-theme">{{ aclist.length }}</span>
 							{% else %}
 							{% endif %}
 							</a></li>

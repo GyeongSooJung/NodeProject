@@ -41,10 +41,6 @@ const workerSchema = new Schema({
         type: Boolean,
         required: [true, 'AC is required!'],
     },
-    NC: { // Noticed
-        type: Boolean,
-        default: false,
-    },
 }, { collection: 'worker' });
 
 module.exports = mongoose.model('worker', workerSchema, 'worker');
