@@ -30,30 +30,28 @@ router.get('/index',isLoggedIn,(req,res)=>{
   res.render('index')
 })
 router.get('/adress',(req,res)=>{
-    res.render('adress_api');
-});
-router.get('/adress_pop',(req,res)=>{
     res.render('adress_pop');
 });
+
 //회원 가입
 router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
       res.cookie("email", null);
       res.cookie("authNum", null);
-     console.log("토큰은 이거입니다22 " + req.decoded.authNum);
+     const roadAddrPart1 = String(req.cookies.ADR.roadAddrPart1);
+     const roadAddrPart2 = String(req.cookies.ADR.roadAddrPart2);
+     const addrDetail = String(req.cookies.ADR.addrDetail);
+     console.log("where is the places " + roadAddrPart1);
      const authNum = parseInt(req.decoded.authNum);
      const email = req.decoded.email;
      console.log(req.decoded.email);
   
   if (authNum){
-    console.log("성공 ");
-    return res.render('register',{email});
+    return res.render('register',{email,roadAddrPart1,roadAddrPart2,addrDetail});
   }
   else {
-    console.log("실패");
-    res.render('register');
+   return res.render('register',{roadAddrPart1,roadAddrPart2,addrDetail});
   }
   
-  res.render('register');
 });
 
 
@@ -274,10 +272,11 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
   
   try {
     const workeracem = req.query.workeracem;
+    const workerauem = req.query.workerauem;
     
     if(workeracem){
       const workerarray = workeracem.split(',');
-      console.log(workerarray[0]);
+      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+workerarray[0]);
       console.log(workerarray[1]);
       
       if(workerarray){
@@ -287,7 +286,20 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
           workerone = await Worker.where({"EM" : workerarray[1]}).update({ "AC" : true }).setOptions({runValidators : true}).exec();
         }
       }
+    }else if(workerauem){
+      const workerarray = workerauem.split(',');
+      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+workerarray[0]);
+      console.log(workerarray[1]);
+      
+      if(workerarray){
+        if(workerarray[0] == 1) {
+          workerone = await Worker.where({"EM" : workerarray[1]}).update({ "AU" : 2 }).setOptions({runValidators : true}).exec();
+        }else{
+          workerone = await Worker.where({"EM" : workerarray[1]}).update({ "AU" : 1 }).setOptions({runValidators : true}).exec();
+        }
+      }
     }
+    else {}
     
   } catch (err) {
     console.error(err);
