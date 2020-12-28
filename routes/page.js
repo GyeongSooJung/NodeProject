@@ -37,9 +37,11 @@ router.get('/adress',(req,res)=>{
 router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
       res.cookie("email", null);
       res.cookie("authNum", null);
-     const roadAddrPart1 = String(req.cookies.ADR.roadAddrPart1);
-     const roadAddrPart2 = String(req.cookies.ADR.roadAddrPart2);
-     const addrDetail = String(req.cookies.ADR.addrDetail);
+      res.cookie('ADR',null);
+      console.log(req.cookies)
+     const roadAddrPart1 = String(req.decoded.ADR.roadAddrPart1);
+     const roadAddrPart2 = String(req.decoded.ADR.roadAddrPart2);
+     const addrDetail = String(req.decoded.ADR.addrDetail);
      console.log("where is the places " + roadAddrPart1);
      const authNum = parseInt(req.decoded.authNum);
      const email = req.decoded.email;
@@ -78,14 +80,19 @@ router.get('/device_static',isNotLoggedIn,async(req,res,nex)=>{
   const AllCar = await Car.countDocuments({});
   const AllDevice = await Device.countDocuments({});
   
-  const companys = await Company.find({"AH" : {$ne: "true"}});
-  console.log(companys);
-  const company1 = await Company.find({"CK" : "렌터카"});
-  console.log(company1);
-  const company2 = await Company.find({"CK" : "카센터"});
-  console.log(company2);
+  // const companys = await Company.find({"AH" : {$ne: "true"}});
+  // console.log(companys);
+  const company1 = await Company.count({"CK" : "렌터카"});
+  const company2 = await Company.count({"CK" : "카센터"});
+  const company3 = await Company.count({"CK" : "출장정비"});
+  const company4 = await Company.count({"CK" : "출장세차"});
+  const company5 = await Company.count({"CK" : "택시운수업"});
+  const company6 = await Company.count({"CK" : "버스운수업"});
+  const company7 = await Company.count({"CK" : "타이어샵"});
+  const companycount = [company1,company2,company3,company4,company5,company6,company7];
+  console.log(companycount[0]);
   
-  res.render('device_static',{company : req.decoded, companys, aclist, AllDevice, AllCar, AllHistory, AllCompany});
+  res.render('device_static',{company : req.decoded, companycount, aclist, AllDevice, AllCar, AllHistory, AllCompany});
 })
 
 router.get('/history_static',isNotLoggedIn,async(req,res,nex)=>{
