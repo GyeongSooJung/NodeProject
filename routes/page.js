@@ -408,4 +408,18 @@ router.post('/ajax/post',isNotLoggedIn ,async function(req, res){
 //                                  A/S                                       //
 //----------------------------------------------------------------------------//
 
+//A/S 처리
+router.get('/repair', isNotLoggedIn, async (req, res, next) => {
+  const CID = req.decoded.CID;
+  const CNU = req.decoded.CNU;
+  const aclist = await Worker.find({"CID" : CID, "AC" : false});
+  
+  try {
+    res.render('repair', {company : req.decoded, aclist});
+  } catch(err) {
+    console.error(err);
+    next(err);
+  }
+})
+
 module.exports = router;
