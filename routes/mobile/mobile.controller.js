@@ -21,6 +21,7 @@ exports.signIn = async(req, res) => {
     if (type == "GOOGLE") {
         var worker = await Worker.findOne({ "GID": id, "EM": email });
         if (worker != null) {
+            await Worker.where({ _id: worker._id }).update({ "UA": Date.now() });
             return res.json({
                 result: true,
                 data: JSON.stringify(worker),
@@ -60,6 +61,7 @@ exports.signUp = async(req, res) => {
     }
 };
 
+// 회원 탈퇴
 exports.withdrawal = async(req, res) => {
     try {
         const { _id, EM } = req.body;
@@ -77,11 +79,39 @@ exports.withdrawal = async(req, res) => {
             error: UNKOWN,
         });
     }
-
-
-}
+};
 
 // 회사 검색
+exports.findCompanyByID = async(req, res) => {
+    try {
+        const { _id } = req.body;
+
+        var company = await Company.findOne({ _id });
+        if (company != null) {
+            return res.json({
+                result: true,
+                data: JSON.stringify(company),
+            });
+        }
+        else {
+
+            res.json({
+                result: false,
+                error: NO_SUCH_DATA,
+            });
+        }
+    }
+    catch (exception) {
+        res.json({
+            result: false,
+            error: UNKOWN,
+        });
+    }
+};
+
+
+
+// 회사들 검색
 exports.fineCompanies = async(req, res) => {
     try {
         const { CNU, CNA } = req.body;
