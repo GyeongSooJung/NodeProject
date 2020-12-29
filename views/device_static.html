@@ -361,118 +361,66 @@
 <script src="https://d3js.org/topojson.v0.min.js"></script>
 
 <script>
-	// var width 500, height = 500;
-	// var svg = d3.select("#map").append("svg")
-	// 	.attr({"width" : width, "height" : height});
+		/////////////////////////////////////////////////////////////
 		
-	// var projection = d3.geo.mercator()
-	// 	.center([127, 35.5])
-	// 	.scale(3500)
-	// 	.translate([width/2, height/2]);
-		
-	// var path = d3.geo.path()
-	// 	.projection(projection);
-		
-	// var quantize = d3.scale.quantize()
-	// 	.domain([0 1000])
-	// 	.range(d3.range(9).map(function(i) {return "p" + i;}));
-		
-	// var popByName = d3.map();
+	// // SVG 영역 생성
+	// var width = 500, height = 500;
+	// var svg = d3.select("#map")
+	// 	.append("svg")
+	// 	.attr({"width":width, "height":height});
 	
-	// queue()
-	// 	.defer(d3.json, "../assets/ne_10m_admin_1_states_provinces/korea-topo.json")
-	// 	.defer(d3.csv, "../assets/population.csv", function(d) {
-	// 		popByName.set(d.name, + d.population);
-	// 	})
-	// 	.await(ready);
+	// // 파일 읽기
+	// d3.json("../assets/ne_10m_admin_1_states_provinces/korea-topo.json", function(err, map) {
+	// 	// 그리기 위한 오브젝트 획득
+	// 	var geo = map.objects["korea-geo"];
+	// 	var map_o = topojson.object(map, geo);
+	// 	// 축척 지정
+	// 	var projection = d3.geo.mercator() // projection - 투영법, 메르카토르 투영법 사용
+	// 		.center([127, 35.5])
+	// 		.scale(3500)
+	// 		.translate([width / 2, height / 2]);
+	// 	// 패스 작성
+	// 	var path = d3.geo.path()
+	// 		.projection(projection);
 		
-	// function ready(err, data) {
-	// 	var features = topojson.feature(data, data.objects["korea-geo"]).features;
+	// 	// SVG에 추가
+	// 	svg.append("path")
+	// 		.datum(map_o)
+	// 		.attr("d", path);
 		
-	// 	features.forEach(function(d) {
-	// 		d.properties.population = popByName.get(d.properties.name);
-	// 		d.properties.density = d.properties.population / path.area(d);
-	// 		d.properties.quatized = quantize(d.properties.density);
+	// 	// 색 설정
+	// 	svg.selectAll("path").attr("fill", "grey");
+		
+	// 	// 경계선
+	// 	var mesh = topojson.mesh(map, geo, function(a, b) {
+	// 		return a !== b;
 	// 	});
 		
-	// 		svg.selectAll("path")
- //         .data(features)
- //       .enter().append("path")
- //         .attr("class", function(d) { return "municipality " + d.properties.quantized; })
- //         .attr("d", path)
- //         .attr("id", function(d) { return d.properties.name; })
- //       .append("title")
- //       .text(function(d) { return d.properties.name + ": " + d.properties.population/10000 + "만 명" });
+	// 	svg.append("path")
+	// 		.datum(mesh)
+	// 		.attr("d", path)
+	// 		.attr("class", "boundary");
+	// 	// 지역 이름 표시
+	// 	svg.selectAll(".place-label")
+	// 		.data(map_o.geometries)
+	// 		.enter()
+	// 		.append("text")
+	// 		.attr("class", function(d) {
+	// 			return "place-label";
+	// 		})
+	// 		.attr("transform", function(d) {
+	// 			console.log(d);
+	// 			return "translate(" + path.centroid(d) + ")";
+	// 		})
+	// 		.text(function(d) {
+	// 			var s = d.properties.name_local;
+	// 			if (!s) return;
+	// 			//if (s == "서울특별시") return s;
+	// 			//else return;
+	// 			return s;
+	// 		});
+	// });
 
- //     svg.selectAll("text")
- //         .data(features.filter(function(d) { return d.properties.name.endsWith("시"); }))
- //       .enter().append("text")
- //         .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
- //         .attr("dy", ".35em")
- //         .attr("class", "region-label")
- //         .text(function(d) { return d.properties.name; });
- //   }
-	// }
-	
-		///////////////////////////////////////////////////////////////
-		
-	// SVG 영역 생성
-	var width = 500, height = 500;
-	var svg = d3.select("#map")
-		.append("svg")
-		.attr({"width":width, "height":height});
-	
-	// 파일 읽기
-	d3.json("../assets/ne_10m_admin_1_states_provinces/korea-topo.json", function(err, map) {
-		// 그리기 위한 오브젝트 획득
-		var geo = map.objects["korea-geo"];
-		var map_o = topojson.object(map, geo);
-		// 축척 지정
-		var projection = d3.geo.mercator() // projection - 투영법, 메르카토르 투영법 사용
-			.center([127, 35.5])
-			.scale(3500)
-			.translate([width / 2, height / 2]);
-		// 패스 작성
-		var path = d3.geo.path()
-			.projection(projection);
-		
-		// SVG에 추가
-		svg.append("path")
-			.datum(map_o)
-			.attr("d", path);
-		
-		// 색 설정
-		svg.selectAll("path").attr("fill", "grey");
-		
-		// 경계선
-		var mesh = topojson.mesh(map, geo, function(a, b) {
-			return a !== b;
-		});
-		
-		svg.append("path")
-			.datum(mesh)
-			.attr("d", path)
-			.attr("class", "boundary");
-		// 지역 이름 표시
-		svg.selectAll(".place-label")
-			.data(map_o.geometries)
-			.enter()
-			.append("text")
-			.attr("class", function(d) {
-				return "place-label";
-			})
-			.attr("transform", function(d) {
-				console.log(d);
-				return "translate(" + path.centroid(d) + ")";
-			})
-			.text(function(d) {
-				var s = d.properties.name_local;
-				if (!s) return;
-				//if (s == "서울특별시") return s;
-				//else return;
-				return s;
-			});
-	});
 </script>
 
 <!-- Chart2 code -->

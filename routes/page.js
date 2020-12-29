@@ -194,7 +194,6 @@ router.get('/device_static',isNotLoggedIn,async(req,res,nex)=>{
   const AllDevice = await Device.countDocuments({});
   
   // const companys = await Company.find({"AH" : {$ne: "true"}});
-  // console.log(companys);
   const company1 = await Company.count({"CK" : "렌터카"});
   const company2 = await Company.count({"CK" : "카센터"});
   const company3 = await Company.count({"CK" : "출장정비"});
