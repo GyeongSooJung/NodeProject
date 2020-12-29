@@ -11,6 +11,7 @@ const router = express.Router();
 
 //Mobile QR Code Page
 router.post('/QR', async (req, res, next) => {
+  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
   const {CN} = req.body;
   const exCN = await Car.findOne({"CN" : CN});
     try {

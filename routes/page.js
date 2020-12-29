@@ -297,6 +297,40 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
   res.render('worker_list', {aclist, company : req.decoded, workers});
 });
 
+//작업자 인증 ajax
+router.post('/ajax/post',isNotLoggedIn ,async function(req, res){
+ 
+    var au_true = req.body.au_true;
+    var au_false = req.body.au_false;
+    var ac_true = req.body.ac_true;
+    var ac_false = req.body.ac_false;
+    
+
+    
+    const CID = req.decoded.CID;
+    const CNU = req.decoded.CNU;
+
+    let workerone;
+    
+    if(au_true) {
+      workerone = await Worker.where({"EM" : au_true }).update({ "AU" : 1 }).setOptions({runValidators : true}).exec();
+    }
+    else if(au_false) {
+      workerone = await Worker.where({"EM" : au_false }).update({ "AU" : 2 }).setOptions({runValidators : true}).exec();
+    }
+    else if(ac_true) {
+      workerone = await Worker.where({"EM" : ac_true }).update({ "AC" : true }).setOptions({runValidators : true}).exec();
+    }
+    else if(ac_false) {
+      workerone = await Worker.where({"EM" : ac_false }).update({ "AC" : false }).setOptions({runValidators : true}).exec();
+    }
+    
+    const workers = await Worker.find({CID : req.decoded.CID,});
+ 
+    res.render('worker_list', {company : req.decoded, workers});
+ 
+});
+
 //----------------------------------------------------------------------------//
 //                                  소독이력                                  //
 //----------------------------------------------------------------------------//
@@ -362,46 +396,14 @@ router.get('/history_chart/:_id',isNotLoggedIn ,async (req, res, next) => {
 //----------------------------------------------------------------------------//
 
 //Mobile Connect Page
-
-
-
-
-//작업자 인증 ajax
-
-
-router.post('/ajax/post',isNotLoggedIn ,async function(req, res){
- 
-    var au_true = req.body.au_true;
-    var au_false = req.body.au_false;
-    var ac_true = req.body.ac_true;
-    var ac_false = req.body.ac_false;
-    
-
-    
-    const CID = req.decoded.CID;
-    const CNU = req.decoded.CNU;
-
-    let workerone;
-    
-    if(au_true) {
-      workerone = await Worker.where({"EM" : au_true }).update({ "AU" : 1 }).setOptions({runValidators : true}).exec();
+router.get('/mobile_con', async (req, res, next) => {
+    try {
+        res.render('mobile_con');
+    } catch(err) {
+        console.error(err);
+        next(err);
     }
-    else if(au_false) {
-      workerone = await Worker.where({"EM" : au_false }).update({ "AU" : 2 }).setOptions({runValidators : true}).exec();
-    }
-    else if(ac_true) {
-      workerone = await Worker.where({"EM" : ac_true }).update({ "AC" : true }).setOptions({runValidators : true}).exec();
-    }
-    else if(ac_false) {
-      workerone = await Worker.where({"EM" : ac_false }).update({ "AC" : false }).setOptions({runValidators : true}).exec();
-    }
-    
-    const workers = await Worker.find({CID : req.decoded.CID,});
- 
-    res.render('worker_list', {company : req.decoded, workers});
- 
 });
-
 
 //----------------------------------------------------------------------------//
 //                                  A/S                                       //

@@ -19,7 +19,7 @@ const carRouter = require('./routes/car');
 const historyRouter = require('./routes/history');
 const workerRouter = require('./routes/worker');
 const emailRouter = require('./routes/email');
-const mobileRouter = require('./routes/mobile/');
+const mobileRouter = require('./routes/mobile');
 const findRouter = require('./routes/find');
 const adressRouter = require('./routes/adress');
 
