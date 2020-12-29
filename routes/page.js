@@ -10,7 +10,9 @@ const moment = require('moment');
 const router = express.Router();
 const {isLoggedIn, isNotLoggedIn, DataSet, emailcontrol} = require('./middleware');
 
-
+//----------------------------------------------------------------------------//
+//                                  기본라우터                                //
+//----------------------------------------------------------------------------//
 
 //홈페이지 연결 및 추가 방법 + cookie 연결 사용방법 : company.CNA or company.CNU
 const Route_page= function(page,req,res){
@@ -21,6 +23,20 @@ const Route_page= function(page,req,res){
        res.render(page,{company : req.decoded, aclist});
     });
 }
+
+//기본 페이지 설정
+router.get('/',(req,res,next)=>{
+    res.redirect('main');
+});
+
+// 공통페이지 작성 방법
+Route_page('car_join');
+Route_page('device_join');
+
+//----------------------------------------------------------------------------//
+//                                  회원정보                                  //
+//----------------------------------------------------------------------------//
+
 // 로그인
 router.get('/login',isLoggedIn,(req,res)=>{
     res.render('login',
@@ -53,9 +69,28 @@ router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
   else {
    return res.render('register',{roadAddrPart1,roadAddrPart2,addrDetail});
   }
-  
 });
 
+//회원정보 수정
+router.get('/profile',isNotLoggedIn,DataSet ,async (req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({"CID" : CID, "AC" : false});
+  
+  try {
+    res.render('profile', {company : req.decoded, aclist});
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+//비밀번호 찾기
+router.get('/find', (req,res,next) => {
+  res.render('find');
+});
+
+//----------------------------------------------------------------------------//
+//                                  에러                                      //
+//----------------------------------------------------------------------------//
 
 //ERROR Page
 router.get('/error',(req,res)=>{
@@ -63,48 +98,9 @@ router.get('/error',(req,res)=>{
     {title:'ERROR 404'});
 });
 
-router.get('/',(req,res,next)=>{
-    res.redirect('main');
-});
-
-router.get('/find', (req,res,next) => {
-  res.render('find');
-});
-
-router.get('/device_static',isNotLoggedIn,async(req,res,nex)=>{
-  const CID = req.decoded.CID;
-  const aclist = await Worker.find({"CID" : CID, "AC" : false});
-  
-  const AllCompany = await Company.countDocuments({});
-  const AllHistory = await History.countDocuments({});
-  const AllCar = await Car.countDocuments({});
-  const AllDevice = await Device.countDocuments({});
-  
-  // const companys = await Company.find({"AH" : {$ne: "true"}});
-  // console.log(companys);
-  const company1 = await Company.count({"CK" : "렌터카"});
-  const company2 = await Company.count({"CK" : "카센터"});
-  const company3 = await Company.count({"CK" : "출장정비"});
-  const company4 = await Company.count({"CK" : "출장세차"});
-  const company5 = await Company.count({"CK" : "택시운수업"});
-  const company6 = await Company.count({"CK" : "버스운수업"});
-  const company7 = await Company.count({"CK" : "타이어샵"});
-  const companycount = [company1,company2,company3,company4,company5,company6,company7];
-  console.log(companycount[0]);
-  
-  res.render('device_static',{company : req.decoded, companycount, aclist, AllDevice, AllCar, AllHistory, AllCompany});
-})
-
-router.get('/history_static',isNotLoggedIn,async(req,res,nex)=>{
-  const CID = req.decoded.CID;
-  const aclist = await Worker.find({"CID" : CID, "AC" : false});
-  
-  const AllCompany = await Company.countDocuments({});
-  const AllHistory = await History.countDocuments({});
-  const AllCar = await Car.countDocuments({});
-  const AllDevice = await Device.countDocuments({});
-  res.render('history_static',{company : req.decoded, aclist, AllDevice, AllCar, AllHistory, AllCompany});
-})
+//----------------------------------------------------------------------------//
+//                                  메인                                      //
+//----------------------------------------------------------------------------//
 
 //메인 페이지
 router.get('/main',isNotLoggedIn , async(req,res,next)=>{
@@ -140,14 +136,11 @@ router.get('/main',isNotLoggedIn , async(req,res,next)=>{
     }
 });
 
+//----------------------------------------------------------------------------//
+//                                  사업자                                    //
+//----------------------------------------------------------------------------//
 
-// 공통페이지 작성 방법
-Route_page('car_join');
-Route_page('device_join');
-
-
-////////////////////////////////////////////////////////////////////////////////
-//사업자 목록 페이지
+//사업자 목록
 router.get('/company_list', isNotLoggedIn, async (req, res, next) => {
   
   const CID = req.decoded.CID;
@@ -183,13 +176,55 @@ router.get('/company_list', isNotLoggedIn, async (req, res, next) => {
   }
   else {
     res.render('company_list', {companys, aclist, moment, company : req.decoded});
-    
   }
-  
 })
 
-////////////////////////////////////////////////////////////////////////////////
-//장비 수정 페이지
+//----------------------------------------------------------------------------//
+//                                  통계                                      //
+//----------------------------------------------------------------------------//
+
+//제품 통계
+router.get('/device_static',isNotLoggedIn,async(req,res,nex)=>{
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({"CID" : CID, "AC" : false});
+  
+  const AllCompany = await Company.countDocuments({});
+  const AllHistory = await History.countDocuments({});
+  const AllCar = await Car.countDocuments({});
+  const AllDevice = await Device.countDocuments({});
+  
+  // const companys = await Company.find({"AH" : {$ne: "true"}});
+  // console.log(companys);
+  const company1 = await Company.count({"CK" : "렌터카"});
+  const company2 = await Company.count({"CK" : "카센터"});
+  const company3 = await Company.count({"CK" : "출장정비"});
+  const company4 = await Company.count({"CK" : "출장세차"});
+  const company5 = await Company.count({"CK" : "택시운수업"});
+  const company6 = await Company.count({"CK" : "버스운수업"});
+  const company7 = await Company.count({"CK" : "타이어샵"});
+  const companycount = [company1,company2,company3,company4,company5,company6,company7];
+  console.log(companycount[0]);
+  
+  res.render('device_static',{company : req.decoded, companycount, aclist, AllDevice, AllCar, AllHistory, AllCompany});
+})
+
+//소독 통계
+router.get('/history_static',isNotLoggedIn,async(req,res,nex)=>{
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({"CID" : CID, "AC" : false});
+  
+  const AllCompany = await Company.countDocuments({});
+  const AllHistory = await History.countDocuments({});
+  const AllCar = await Car.countDocuments({});
+  const AllDevice = await Device.countDocuments({});
+  res.render('history_static',{company : req.decoded, aclist, AllDevice, AllCar, AllHistory, AllCompany});
+})
+
+//----------------------------------------------------------------------------//
+//                                  장비                                      //
+//----------------------------------------------------------------------------//
+
+//장비 수정
 router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({"CID" : CID, "AC" : false});
@@ -202,7 +237,7 @@ router.get('/device_edit/:MAC',isNotLoggedIn ,async (req, res, next) => {
     next(err);
   }
 });
-//Device List Data Setting for Devices
+//장비 목록
 router.get('/device_list', isNotLoggedIn,async (req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({"CID" : CID, "AC" : false});
@@ -216,8 +251,11 @@ router.get('/device_list', isNotLoggedIn,async (req, res, next) => {
   }
 });
 
-////////////////////////////////////////////////////////////////////////////////
-//차량 수정 페이지
+//----------------------------------------------------------------------------//
+//                                  자동차                                    //
+//----------------------------------------------------------------------------//
+
+//차량 수정
 router.get('/car_edit/:CN',isNotLoggedIn,async (req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({"CID" : CID, "AC" : false});
@@ -231,7 +269,7 @@ router.get('/car_edit/:CN',isNotLoggedIn,async (req, res, next) => {
   }
 });
 
-//Car List Data Setting for Cars
+//차량 목록
 router.get('/car_list',isNotLoggedIn, async (req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({"CID" : CID, "AC" : false});
@@ -246,25 +284,11 @@ router.get('/car_list',isNotLoggedIn, async (req, res, next) => {
   }
 });
 
-////////////////////////////////////////////
-//Profile DataSetting for Profile(company)
-router.get('/profile',isNotLoggedIn,DataSet ,async (req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await Worker.find({"CID" : CID, "AC" : false});
-  
-  try {
-    res.render('profile', {company : req.decoded, aclist});
-  } catch (err) {
-    console.error(err);
-  }
-});
+//----------------------------------------------------------------------------//
+//                                  작업자                                    //
+//----------------------------------------------------------------------------//
 
-
-
-////////////////////////////////////
-//worker
-
-//Worker list for Workers
+//작업자 목록
 router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
@@ -310,11 +334,13 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
     const workers = await Worker.find({CID : req.decoded.CID,});
   
   res.render('worker_list', {aclist, company : req.decoded, workers});
-  
 });
 
-///////////////////////////////////////
-// History
+//----------------------------------------------------------------------------//
+//                                  소독이력                                  //
+//----------------------------------------------------------------------------//
+
+// 소독 목록
 router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
@@ -348,6 +374,7 @@ router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
   }
 });
 
+//소독 그래프
 router.get('/history_chart/:_id',isNotLoggedIn ,async (req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
@@ -369,7 +396,10 @@ router.get('/history_chart/:_id',isNotLoggedIn ,async (req, res, next) => {
     }
 })
 
-/////////////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------------//
+//                                  QR코드                                    //
+//----------------------------------------------------------------------------//
+
 //Mobile Connect Page
 router.get('/mobile_con', async (req, res, next) => {
     try {
@@ -380,8 +410,8 @@ router.get('/mobile_con', async (req, res, next) => {
     }
 });
 
-
-
+//----------------------------------------------------------------------------//
+//                                  A/S                                       //
+//----------------------------------------------------------------------------//
 
 module.exports = router;
-

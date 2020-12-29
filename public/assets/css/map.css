@@ -5,14 +5,11 @@
 	.boundary {
 		fill: none;
 		stroke: darkgrey;
-		/*stroke-dasharray: 2, 2;*/
+		stroke-dasharray: 2, 2;
 		stroke-linejoin: round;
 	}
 	.place-label {
 		fill: none;
 		/*font-size: 10px;*/
 		/*fill: white;*/
-	}
-	.states path {
-		fill: black;
 	}
