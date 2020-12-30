@@ -49,7 +49,7 @@
 							<label class="col-md-4 col-sm-4 col-form-label" for="CC">차종 * :</label>
 							<div class="col-md-8 col-sm-8">
 								<select class="form-control text-secondary" id="CC" name = "CC" placeholder="차종" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
-									<option value="">차종</option>
+									<option value="">차종을 선택하세요</option>
 									<option value="1">경차</option>
 									<option value="2">소형</option>
 									<option value="3">중형</option>
@@ -62,13 +62,13 @@
 						<div class="form-group row m-b-15">
 							<label class="col-md-4 col-sm-4 col-form-label" for="CN">차량 번호 * :</label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" id="CN" type="text" name = "CN" placeholder="차량 번호" data-parsley-required="true" />
+								<input class="form-control" id="CN" type="text" name = "CN" placeholder="띄어쓰기 없이 차량번호를 입력하세요 (12가1234)" data-parsley-required="true" />
 							</div>
 						</div>
 						<div class="form-group row m-b-15">
 							<label class="col-md-4 col-sm-4 col-form-label" for="SN">차대 번호</label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" id="SN" type="text" name = "SN" placeholder="차대 번호" />
+								<input class="form-control" id="SN" type="text" name = "SN" placeholder="차대 번호를 입력하세요" />
 							</div>
 						</div>
 						
@@ -82,13 +82,13 @@
 					</form>
 				</div>
 				<!-- error script -->
-					<script>
-						window.onload = () => {
-							if (new URL(location.href).searchParams.get('error')) {
-								alert('이미 존재하는 MAC 입니다.');
-							}
-						};
-					</script>
+				<script>
+					window.onload = () => {
+						if (new URL(location.href).searchParams.get('error')) {
+							alert('이미 존재하는 MAC 입니다.');
+						}
+					};
+				</script>
 			</div>
 			
 			<!-- end panel -->

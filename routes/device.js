@@ -16,9 +16,13 @@ router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
     console.log(req.body);
   try {
     const exDevice = await Device.findOne({ "MAC" : MAC });
+    const check = /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/;
     
     if (exDevice) {
       return res.redirect('/device_join?error=exist');
+    }
+    else if(check.test(MAC) == false) {
+      return res.redirect('/device_join?type=true');
     }
     else{
       const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss'); //한국시간 맞추기 위해 +9시간
@@ -88,23 +92,18 @@ router.post('/device_edit/upreg/:MAC', isNotLoggedIn,async (req, res, next) => {
     try {
       const exDevice = await Device.find({ "MAC" :  MAC });
       console.log(exDevice);
-      
-      if (exDevice[0]) {
-        return res.redirect('/device_list?error=exist');
-      }
-      else{
-        const UA =  moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
-        const deviceone = await Device.where({"MAC" : req.params.MAC})
-        .updateMany({ "CID" : CID,
-                      "MD" : MD,
-                      "VER" : VER,
-                      "NN" : NN,
-                      "MAC" : MAC,
-                      "UA" : UA,
-          }).setOptions({runValidators : true})
-          .exec();
-          console.log(deviceone);
-      }
+
+      const UA =  moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+      const deviceone = await Device.where({"MAC" : req.params.MAC})
+      .updateMany({ "CID" : CID,
+                    "MD" : MD,
+                    "VER" : VER,
+                    "NN" : NN,
+                    "MAC" : MAC,
+                    "UA" : UA,
+        }).setOptions({runValidators : true})
+        .exec();
+        console.log(deviceone);
     } catch (error) {
     console.error(error);
     return next(error);
