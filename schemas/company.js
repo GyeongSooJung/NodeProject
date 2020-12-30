@@ -23,7 +23,8 @@ const CompanySchema = new Schema({
     CK: {
         type: String,
         required: true
-    }, //Company_Kinds 1 : 렌터카,  2 : 카센터, 3 :  출장정비, 4 : 출장세차,  5 : 택시운수업, 6 : 버스운수업,  7 : 타이어샵
+    }, //Company_Kinds 
+    //1 : 렌터카,  2 : 카센터, 3 :  출장정비, 4 : 출장세차,  5 : 택시운수업, 6 : 버스운수업,  7 : 타이어샵
     ADR: {
         type: String,
         required: true

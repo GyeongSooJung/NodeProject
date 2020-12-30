@@ -16,9 +16,13 @@ router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
     console.log(req.body);
   try {
     const exDevice = await Device.findOne({ "MAC" : MAC });
+    const check = /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/;
     
     if (exDevice) {
       return res.redirect('/device_join?error=exist');
+    }
+    else if(check.test(MAC) == false) {
+      return res.redirect('/device_join?type=true');
     }
     else{
       const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss'); //한국시간 맞추기 위해 +9시간
@@ -88,23 +92,18 @@ router.post('/device_edit/upreg/:MAC', isNotLoggedIn,async (req, res, next) => {
     try {
       const exDevice = await Device.find({ "MAC" :  MAC });
       console.log(exDevice);
-      
-      if (exDevice[0]) {
-        return res.redirect('/device_list?error=exist');
-      }
-      else{
-        const UA =  moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
-        const deviceone = await Device.where({"MAC" : req.params.MAC})
-        .updateMany({ "CID" : CID,
-                      "MD" : MD,
-                      "VER" : VER,
-                      "NN" : NN,
-                      "MAC" : MAC,
-                      "UA" : UA,
-          }).setOptions({runValidators : true})
-          .exec();
-          console.log(deviceone);
-      }
+
+      const UA =  moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+      const deviceone = await Device.where({"MAC" : req.params.MAC})
+      .updateMany({ "CID" : CID,
+                    "MD" : MD,
+                    "VER" : VER,
+                    "NN" : NN,
+                    "MAC" : MAC,
+                    "UA" : UA,
+        }).setOptions({runValidators : true})
+        .exec();
+        console.log(deviceone);
     } catch (error) {
     console.error(error);
     return next(error);
@@ -127,26 +126,29 @@ router.get('/device_delete/:MAC', async (req, res, next) => {
 router.post('/device_select_delete',isNotLoggedIn ,async (req, res, next) => {
     try {
         const {ck} = req.body;
-        const deviceone = await Device.findOne({"MAC" : ck});
-        console.log("zzzzzzzzz : "+deviceone);
-        const MACc = deviceone.MAC;
-        var i;
-        console.log("MAC: " + ck);
         
-        for(i=0; i < ck.length; i++){
-            if(ck){
-                if(ck[i] == MACc){
-                    await Device.remove({ "MAC" : ck });
-                }
-                else if(!(ck instanceof Object)) {
-                    await Device.remove({ "MAC" : ck });
-                }
-            }
-            else if(!ck){
-                return res.redirect('/device_list');
-            }
+        if(!ck) {
+          return res.redirect('/device_list');
         }
-        res.redirect('/device_list');
+        else {
+          const deviceone = await Device.findOne({"MAC" : ck});
+          console.log("zzzzzzzzz : "+deviceone);
+          const MACc = deviceone.MAC;
+          var i;
+          console.log("MAC: " + ck);
+          
+          for(i=0; i < ck.length; i++){
+              if(ck){
+                  if(ck[i] == MACc){
+                      await Device.remove({ "MAC" : ck });
+                  }
+                  else if(!(ck instanceof Object)) {
+                      await Device.remove({ "MAC" : ck });
+                  }
+              }
+          }
+          res.redirect('/device_list');
+        }
     }   catch (err) {
         console.error(err);
         next(err);
