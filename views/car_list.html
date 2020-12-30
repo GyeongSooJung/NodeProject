@@ -60,7 +60,7 @@
 							</tbody>
 						</table>
 						<div>
-							<input class="btn btn-primary" type='submit' value='선택항목 삭제' onclick="btn()">
+							<input class="btn btn-primary" type='button' value='선택항목 삭제' onclick="return btn(this.form);">
 						</div>
 					</form>
 				</div>
@@ -74,11 +74,11 @@
 <!-- end #content -->
 	<!-- error script -->
 	<script>
-		function btn() {
+		function btn(frm) {
 			var answer;
 			answer = confirm("데이터를 삭제하시겠습니까?");
 			if(answer == true){
-				location = '/car/car_select_delete/';
+				frm.action='/car/car_select_delete/'; frm.submit(); return true;
 			}
 			else {
 				location = '/car_list';
