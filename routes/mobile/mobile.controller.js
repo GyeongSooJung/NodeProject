@@ -1,8 +1,11 @@
+const bcrypt = require('bcrypt');
+
 const Worker = require('../../schemas/worker');
 const Company = require('../../schemas/company');
 
 const UNKOWN = "UNKOWN";
 const NO_SUCH_DATA = "NO_SUCH_DATA";
+const FAIL = "FAIL";
 
 /// Worker 관련
 exports.findWorker = async(req, res) => {
@@ -61,6 +64,27 @@ exports.signUp = async(req, res) => {
     }
 };
 
+// 회원 정보 수정
+exports.updateWorkerInfo = async(req, res) => {
+    try {
+        const { _id, WN, PN, AU } = req.body;
+
+        var result = await Worker.where({ _id }).update({ WN, PN, AU, UA: Date.now() });
+        console.log(result);
+
+        res.json({
+            result: true,
+        });
+
+    }
+    catch (exception) {
+        res.json({
+            result: false,
+            error: UNKOWN,
+        });
+    }
+};
+
 // 회원 탈퇴
 exports.withdrawal = async(req, res) => {
     try {
@@ -80,6 +104,8 @@ exports.withdrawal = async(req, res) => {
         });
     }
 };
+
+/// 회사 정보 관련
 
 // 회사 검색
 exports.findCompanyByID = async(req, res) => {
@@ -108,7 +134,6 @@ exports.findCompanyByID = async(req, res) => {
         });
     }
 };
-
 
 
 // 회사들 검색
@@ -150,6 +175,38 @@ exports.fineCompanies = async(req, res) => {
                 error: NO_SUCH_DATA,
             });
         }
+    }
+    catch (exception) {
+        res.json({
+            result: false,
+            error: UNKOWN,
+        });
+    }
+};
+
+// 회사(사업주) 비밀번호 확인
+exports.confirmConpanyPW = async(req, res) => {
+    try {
+        const { CNU, PW } = req.body;
+
+        console.log("hello" + CNU);
+        var company = await Company.findOne({ _id: CNU });
+        console.log(company);
+        if (company != null) {
+            if (bcrypt.compareSync(PW, company.PW)) {
+                return res.json({
+                    result: true,
+                });
+            }
+
+        }
+
+        return res.json({
+            result: false,
+            error: FAIL,
+        });
+
+
     }
     catch (exception) {
         res.json({
