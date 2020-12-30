@@ -11,6 +11,7 @@
 <link href="../assets/plugins/datatables.net-select-bs4/css/select.bootstrap4.min.css" rel="stylesheet" />
 <link href="../assets/plugins/switchery/switchery.min.css" rel="stylesheet" />
 <link href="../assets/plugins/abpetkov-powerange/dist/powerange.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.chart/latest/tui-chart.min.css">
 <link href="../assets/css/map.css" rel="stylesheet" />
 {% endblock %}
 
@@ -118,9 +119,8 @@
                 		<!-- end panel-heading -->
                 		<!-- begin panel-body -->
                 		<div class="panel-body">
-                        	<div id="map" class="height-md"></div>
-                        	<div id="map2"></div>
-                        	<!--<object type="image/svg+xml" data="../assets/southKoreaHigh.svg" class="object"></object>-->
+                        	<div id="mapchart" class="height-md"></div>
+                        	<!--<object type="image/svg+xml" data="../assets/southKoreaHigh.svg" class="object" width="1024" height="1024"></object>-->
                 		</div>
                 		<!-- end panel-body -->
                 	</div>
@@ -212,62 +212,11 @@
 		<!-- end #content -->
 		
 <!-- end #content -->
-	<!-- error script -->
-		
-	{% endblock %}
+<!-- error script -->
+{% endblock %}
 
 
 {% block script %}
-
-<script src="/socket.io/socket.io.js"></script>
-<script>
-
-  const socket = io.connect('http://52.79.245.187:8008', {
-    path: '/socket.io',
-    transports: ['websocket'],
-  })
-  
-
-  
-  socket.on('newworker', function (data) {
-  	var i,j = 0;
-  	var socket_worker_array = [];
-  	console.log(data);
-    // console.log(data[0]._id);
-	// console.log("{{company.CID}}");
-	
-	for(i = 0; i < data.length; i++) {
-		if (data[i].CID == "{{company.CID}}") {
-	// console.log(data[i]._id);
-	// {{company.CID}} 는 지금 접속한 사람의 CID를 나타냄
-		
-			socket_worker_array.push(data[i].CID);
-		}
-	}
-	document.getElementById('p3').innerHTML = socket_worker_array.length;
-    socket.emit('reply', 'HTML 에서 node로 보내는 메세지(작업자 갱신)');
-  });
-  
-  socket.on('newhistory', function (data) {
-  	var i,j = 0;
-  	var socket_worker_array = [];
-  	console.log(data);
-    // console.log(data[0]._id);
-	// console.log("{{company.CID}}");
-	
-	for(i = 0; i < data.length; i++) {
-		if (data[i].CID == "{{company.CID}}") {
-	// console.log(data[i]._id);
-	// {{company.CID}} 는 지금 접속한 사람의 CID를 나타냄
-			socket_worker_array.push(data[i].CID);
-		}
-	}
-	document.getElementById('p4').innerHTML = socket_worker_array.length;
-    socket.emit('reply', 'HTML 에서 node로 보내는 메세지(히스토리 갱신)');
-  });
-  
-</script>
-
 <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
@@ -306,13 +255,6 @@
 		  "count": {{companycount[6]}}
 		}
 		];
-		// {% for company in companys %}
-		// 	chart.data.push({
-		// 		// CK: {{company.CK}},
-		// 		count: {{company.MN}}
-		// 	});
-		// {% endfor %}
-	
 	
 	// Chart logo remove
 	chart.logo.disabled = true;
@@ -357,70 +299,108 @@
 <!-----------------------------------------------------------
 --------------------------- 지도 ----------------------------
 ------------------------------------------------------------->
-<script src="https://d3js.org/d3.v3.min.js"></script>
-<script src="https://d3js.org/topojson.v0.min.js"></script>
+
+<script type='text/javascript' src='https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.min.js'></script>
+<script type='text/javascript' src='https://uicdn.toast.com/tui.chart/latest/raphael.js'></script>
+<script src="https://uicdn.toast.com/tui.chart/latest/tui-chart.min.js"></script>
+<script src="../assets/js/koreamap.js"></script>
 
 <script>
-		/////////////////////////////////////////////////////////////
-		
-	// // SVG 영역 생성
-	// var width = 500, height = 500;
-	// var svg = d3.select("#map")
-	// 	.append("svg")
-	// 	.attr({"width":width, "height":height});
+	var container = document.getElementById('mapchart');
+	var data = {
+	    series: [
+	        {
+	            code: 'KR-SU',
+	            data: 105
+	        },
+	        {
+	            code: 'KR-BS',
+	            data: 147
+	        },
+	        {
+	            code: 'KR-DG',
+	            data: 141
+	        },
+	        {
+	            code: 'KR-IC',
+	            data: 121
+	        },
+	        {
+	            code: 'KR-GJ',
+	            data: 138
+	        },
+	        {
+	            code: 'KR-DJ',
+	            data: 130
+	        },
+	        {
+	            code: 'KR-US',
+	            data: 141
+	        },
+	        {
+	            code: 'KR-GG',
+	            data: 116
+	        },
+	        {
+	            code: 'KR-GW',
+	            data: 113
+	        },
+	        {
+	            code: 'KR-NC',
+	            data: 117
+	        },
+	        {
+	            code: 'KR-SC',
+	            data: 119
+	        },
+	        {
+	            code: 'KR-NJ',
+	            data: 128
+	        },
+	        {
+	            code: 'KR-SJ',
+	            data: 136
+	        },
+	        {
+	            code: 'KR-NG',
+	            data: 142
+	        },
+	        {
+	            code: 'KR-SG',
+	            data: 142
+	        },
+	        {
+	            code: 'KR-JJ',
+	            data: 155
+	        },
+	        {
+	            code: 'KR-SE',
+	            data: 118
+	        }
+	    ]
+	};
+	var options = {
+		chart: {
+	        width: 400,
+	        height: 480
+	    },
+	    map: 'south-korea',
+	    legend: {
+	        align: 'right'
+	    },
+	    tooltip: {
+	        suffix: '개'
+	    },
+	};
+	var theme = {
+	    series: {
+	        startColor: '#ffefef',
+	        endColor: '#ac4142',
+	        overColor: '#75b5aa'
+	    }
+	};
 	
-	// // 파일 읽기
-	// d3.json("../assets/ne_10m_admin_1_states_provinces/korea-topo.json", function(err, map) {
-	// 	// 그리기 위한 오브젝트 획득
-	// 	var geo = map.objects["korea-geo"];
-	// 	var map_o = topojson.object(map, geo);
-	// 	// 축척 지정
-	// 	var projection = d3.geo.mercator() // projection - 투영법, 메르카토르 투영법 사용
-	// 		.center([127, 35.5])
-	// 		.scale(3500)
-	// 		.translate([width / 2, height / 2]);
-	// 	// 패스 작성
-	// 	var path = d3.geo.path()
-	// 		.projection(projection);
-		
-	// 	// SVG에 추가
-	// 	svg.append("path")
-	// 		.datum(map_o)
-	// 		.attr("d", path);
-		
-	// 	// 색 설정
-	// 	svg.selectAll("path").attr("fill", "grey");
-		
-	// 	// 경계선
-	// 	var mesh = topojson.mesh(map, geo, function(a, b) {
-	// 		return a !== b;
-	// 	});
-		
-	// 	svg.append("path")
-	// 		.datum(mesh)
-	// 		.attr("d", path)
-	// 		.attr("class", "boundary");
-	// 	// 지역 이름 표시
-	// 	svg.selectAll(".place-label")
-	// 		.data(map_o.geometries)
-	// 		.enter()
-	// 		.append("text")
-	// 		.attr("class", function(d) {
-	// 			return "place-label";
-	// 		})
-	// 		.attr("transform", function(d) {
-	// 			console.log(d);
-	// 			return "translate(" + path.centroid(d) + ")";
-	// 		})
-	// 		.text(function(d) {
-	// 			var s = d.properties.name_local;
-	// 			if (!s) return;
-	// 			//if (s == "서울특별시") return s;
-	// 			//else return;
-	// 			return s;
-	// 		});
-	// });
-
+	tui.chart.mapChart(container, data, options);
 </script>
 
 <!-- Chart2 code -->

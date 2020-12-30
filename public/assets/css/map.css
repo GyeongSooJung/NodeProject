@@ -2,14 +2,12 @@
 		width: 100%;
 		height: 500px;
 	}
-	.boundary {
-		fill: none;
-		stroke: darkgrey;
-		stroke-dasharray: 2, 2;
-		stroke-linejoin: round;
+	.tui-chart {
+		margin: 0 auto;
+		width: 100%;
+		height: 100%;
 	}
-	.place-label {
-		fill: none;
-		/*font-size: 10px;*/
-		/*fill: white;*/
+	/*.tui-chart-tooltip-area,*/
+	.tui-chart-zoom-area {
+		display: none;
 	}
