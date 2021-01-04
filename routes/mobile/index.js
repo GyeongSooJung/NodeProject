@@ -1,3 +1,4 @@
+console.log("우헤해ㅔ");
 const router = require("express").Router();
 const controller = require("./mobile.controller");
 
@@ -13,5 +14,6 @@ router.post("/company/find/id", controller.findCompanyByID);
 router.post("/company/confirm/pw",controller.confirmConpanyPW);
 
 router.post("/", controller.root);
+router.get("/", controller.root);
 
 module.exports = router;
