@@ -204,11 +204,11 @@
 	<!-- ================== END BASE JS ================== -->
 	
 
-		<script>
-			$(document).ready(function() {
-				$('#active-menu').find('a[href="' + document.location.pathname + '"]').parents('li').addClass('active');
-			});
-		</script>
+	<script>
+		$(document).ready(function() {
+			$('#active-menu').find('a[href="' + document.location.pathname + '"]').parents('li').addClass('active');
+		});
+	</script>
 	
 	{% block script %}
 	{% endblock %}
