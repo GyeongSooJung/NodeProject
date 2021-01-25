@@ -1,3 +1,5 @@
+console.log("우헤해ㅔ");
+
 const bcrypt = require('bcrypt');
 
 const Worker = require('../../schemas/worker');
@@ -6,6 +8,7 @@ const Company = require('../../schemas/company');
 const UNKOWN = "UNKOWN";
 const NO_SUCH_DATA = "NO_SUCH_DATA";
 const FAIL = "FAIL";
+
 
 /// Worker 관련
 exports.findWorker = async(req, res) => {

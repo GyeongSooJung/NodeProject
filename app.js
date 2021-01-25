@@ -19,9 +19,10 @@ const carRouter = require('./routes/car');
 const historyRouter = require('./routes/history');
 const workerRouter = require('./routes/worker');
 const emailRouter = require('./routes/email');
-const mobileRouter = require('./routes/mobile');
+const mobileRouter = require('./routes/mobile/'); // mobile 뒤에 슬래쉬 삭제 금지
 const findRouter = require('./routes/find');
 const adressRouter = require('./routes/adress');
+const qrcodeRouter = require('./routes/qrcode');
 
 const path = require('path');
 const ColorHash = require('color-hash');
@@ -32,8 +33,8 @@ const app = express();
 app.set('port', process.env.PORT || 80);
 app.set('view engine', 'html');
 nunjucks.configure('views', {
-    express: app,
-    watch: true,
+  express: app,
+  watch: true,
 });
 connect();
 
@@ -48,18 +49,19 @@ app.use('/', pageRouter);
 app.use('/auth', authRouter);
 app.use('/company', CompanyRouter);
 app.use('/profile', ProfileRouter);
-app.use('/find',findRouter);
+app.use('/find', findRouter);
 app.use('/device', deviceRouter);
 app.use('/car', carRouter);
 app.use('/history', historyRouter);
 app.use('/worker', workerRouter);
 app.use('/email', emailRouter);
 app.use('/mobile', mobileRouter);
-app.use('/adress',adressRouter);
+app.use('/adress', adressRouter);
+app.use('/qrcode', qrcodeRouter);
 app.use(function(req, res, next) {
-    const error = new Error(`${req.method}${req.url} NO Router`);
-    error.status = 404;
-    next(error);
+  const error = new Error(`${req.method}${req.url} NO Router`);
+  error.status = 404;
+  next(error);
 });
 
 const sessionMiddleware = session({
@@ -83,14 +85,14 @@ app.use((req, res, next) => {
 
 
 app.use(function(err, req, res, next) {
-    res.locals.message = err.message;
-    res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
-    res.status(err.status || 500);
-    res.render('error');
+  res.locals.message = err.message;
+  res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
+  res.status(err.status || 500);
+  res.render('error');
 });
 
 const server = app.listen(app.get('port'), function() {
-    console.log(app.get('port'), 'Port is Waiting~');
+  console.log(app.get('port'), 'Port is Waiting~');
 })
 
 webSocket(server, app, sessionMiddleware);

@@ -32,7 +32,7 @@
 					{% if devices %}
 					<center>
 			            <div class="btn-group m-b-5 mx-3">
-			               <a href="/company_list" class="btn btn-primary text-white px-4">Back</a>
+			               <a href="/company_list" class="btn btn-primary text-white px-4">목록으로</a>
 			            </div>
 			        </center>
 						<thead>
@@ -69,7 +69,7 @@
 					
 					<center>
 			            <div class="btn-group m-b-5 mx-3">
-			               <a href="/company_list" class="btn btn-primary text-white px-4">Back</a>
+			               <a href="/company_list" class="btn btn-primary text-white px-4">목록으로</a>
 			            </div>
 			        </center>
 							<thead>
@@ -103,7 +103,7 @@
 					
 					<center>
 			            <div class="btn-group m-b-5 mx-3">
-			               <a href="/company_list" class="btn btn-primary text-white px-4">Back</a>
+			               <a href="/company_list" class="btn btn-primary text-white px-4">목록으로</a>
 			            </div>
 			        </center>					
         					<thead>
@@ -143,7 +143,7 @@
     				{% elif historys %}
 					<center>
 			            <div class="btn-group m-b-5 mx-3">
-			               <a href="/company_list" class="btn btn-primary text-white px-4">Back</a>
+			               <a href="/company_list" class="btn btn-primary text-white px-4">목록으로</a>
 			            </div>
 			        </center>    				
 						<thead>
@@ -226,6 +226,48 @@
 	<!-- end panel -->
 </div>
 <!-- end #content -->
+
+<script>
+	function allCheckedBox(obj) {
+		
+	   	// @brief 선택한 체크박스의 클래스 명칭을 가져온다.
+	   	const termClass = obj.getAttribute("class");
+	
+	   	// @brief 선택한 클래스명과 같은 클래스의 갯수
+	   	console.log(document.getElementsByClassName(termClass).length);
+	
+	   	Array.prototype.forEach.call(document.getElementsByClassName(termClass), function(element, index, array) {
+	
+	        // @brief 엘리먼트의 값 출력
+	        console.log(element.value);
+	        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 되있는 경우
+	        if(document.getElementsByClassName(termClass)[0].checked == true) {
+	            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 완료 처리 한다.
+	            element.checked = true;
+	        }
+	        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 해제된 경우
+	        else {
+	            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 해제 처리 한다.
+	            element.checked = false;
+	        }
+	   	});
+    }
+
+
+   function eachCheckedBox(obj) {
+      // @brief 선택한 체크박스의 상태가 선택해제인 경우
+      if(obj.checked == false) {
+            // @brief 선택한 체크박스의 클래스 명칭을 가져온다.
+            const termClass = obj.getAttribute("class");
+            // @brief 첫번째 checkbox의 상태가 체크가 되어있는경우
+            if(document.getElementsByClassName(termClass)[0].checked == true) {
+                // @brief 첫번째 checkbox의 상태를 체크해제한다.
+                document.getElementsByClassName(termClass)[0].checked = false;
+            }
+        }
+    }
+</script>
+
 {% endblock %}
 
 {% block script %}
