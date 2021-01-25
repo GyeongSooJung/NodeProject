@@ -41,7 +41,7 @@
 						<div class="form-group row m-b-15">
 							<label class="col-md-4 col-sm-4 col-form-label" for="MAC">맥 주소 * :</label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" type="String" id="MAC" name="MAC" placeholder="맥 주소를 형식대로 입력하세요 (11:22:33:44:55:66)" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다."/>
+								<input class="form-control" type="String" id="MAC" name="MAC" onKeypress ="this.value = setComma(this.value)" placeholder="맥 주소를 형식대로 입력하세요 (11:22:33:44:55:66)" minlength=17 maxlength=17 data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다."/>
 							</div>
 						</div>
 						<div class="form-group row m-b-15">
@@ -72,6 +72,19 @@
 				</div>
 					<!-- error script -->
 					<script>
+						function setComma(str){
+							//var MAC =document.getElementById('MAC')
+						if((Number(str.length) % 3) ==2){
+							if(Number(str.length) == 17){
+								return str
+							}
+							return str+":"
+							
+						}
+						
+							return str;
+						}
+						
 						window.onload = () => {
 							if (new URL(location.href).searchParams.get('error')) {
 								alert('이미 존재하는 MAC 입니다.');
@@ -79,7 +92,7 @@
 							if (new URL(location.href).searchParams.get('type')) {
 								alert('MAC 주소를 정확히 입력해주세요.');
 							}
-						};
+						}
 					</script>
 				<!-- end panel-body -->
 			</div>
@@ -89,7 +102,10 @@
 	<!-- end row -->
 </div>
 {% endblock %}
+<script>
 
+
+</script>
 {% block script %}
 <script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
 <script src="../assets/plugins/highlight.js/highlight.min.js"></script>
