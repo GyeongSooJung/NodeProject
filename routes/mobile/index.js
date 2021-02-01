@@ -13,6 +13,8 @@ router.post("/company/find", controller.fineCompanies);
 router.post("/company/find/id", controller.findCompanyByID);
 router.post("/company/confirm/pw",controller.confirmConpanyPW);
 
+router.post("/car/find",controller.findCarByComID);
+
 router.post("/", controller.root);
 router.get("/", controller.root);
 

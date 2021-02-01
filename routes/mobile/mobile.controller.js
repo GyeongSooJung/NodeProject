@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 
 const Worker = require('../../schemas/worker');
 const Company = require('../../schemas/company');
+const Car = require('../../schemas/car');
 
 const UNKOWN = "UNKOWN";
 const NO_SUCH_DATA = "NO_SUCH_DATA";
@@ -192,9 +193,8 @@ exports.confirmConpanyPW = async(req, res) => {
     try {
         const { CNU, PW } = req.body;
 
-        console.log("hello" + CNU);
         var company = await Company.findOne({ _id: CNU });
-        console.log(company);
+
         if (company != null) {
             if (bcrypt.compareSync(PW, company.PW)) {
                 return res.json({
@@ -210,6 +210,36 @@ exports.confirmConpanyPW = async(req, res) => {
         });
 
 
+    }
+    catch (exception) {
+        res.json({
+            result: false,
+            error: UNKOWN,
+        });
+    }
+};
+
+/// 차량 정보 관련
+
+// 회사(사업주) 소유의 차량 조회
+exports.findCarByComID = async(req, res) => {
+    try {
+        const { CID } = req.body;
+
+        var cars = await Car.find({ CID });
+        if (cars != null) {
+            return res.json({
+                result: true,
+                dataList: cars,
+            });
+        }
+        else {
+
+            res.json({
+                result: false,
+                error: NO_SUCH_DATA,
+            });
+        }
     }
     catch (exception) {
         res.json({
