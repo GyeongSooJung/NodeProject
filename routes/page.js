@@ -50,18 +50,23 @@ router.get('/adress',(req,res)=>{
 });
 
 //회원 가입
-router.get('/register',isLoggedIn,emailcontrol,(req,res)=>{
-      res.cookie("email", null);
-      res.cookie("authNum", null);
-      res.cookie('ADR',null);
+router.get('/register',isLoggedIn,emailcontrol,async(req,res)=>{
+      await  res.cookie("email", null);
+      await  res.cookie("authNum", null);
+      await  res.cookie('ADR',null);
       console.log(req.cookies)
-     const roadAddrPart1 = String(req.decoded.ADR.roadAddrPart1);
-     const roadAddrPart2 = String(req.decoded.ADR.roadAddrPart2);
-     const addrDetail = String(req.decoded.ADR.addrDetail);
+      var roadAddrPart1 = null
+      var roadAddrPart2 = null
+      var addrDetail = null
+      if(await req.decoded.ADR){
+      roadAddrPart1 = String(req.decoded.ADR.roadAddrPart1);
+      roadAddrPart2 = String(req.decoded.ADR.roadAddrPart2);
+      addrDetail = String(req.decoded.ADR.addrDetail);
      console.log("where is the places " + roadAddrPart1);
+      }
      const authNum = parseInt(req.decoded.authNum);
      const email = req.decoded.email;
-     console.log(req.decoded.email);
+     //console.log(req.decoded.email);
   
   if (authNum){
     return res.render('register',{email,roadAddrPart1,roadAddrPart2,addrDetail});

@@ -99,9 +99,10 @@
 						<label class="control-label">사업자 등록 번호 <span class="text-danger"> *{{ErrMsg}}</span></label>
 						<div class="row m-b-15" >
 							<div class="col-md-12">
-								<input type="digits" class="form-control" name = "CNU1"  placeholder="3자리" maxlength=3 style="width : 15%; display: inline-block;" {% if CNU %}  data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." value = {{CNU1}} {% endif %} /> -
+							<!--	<input type="digits" class="form-control" name = "CNU1"  placeholder="3자리" maxlength=3 style="width : 15%; display: inline-block;" {% if CNU %}  data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." value = {{CNU1}} {% endif %} /> -
 								<input type="digits" class="form-control" name = "CNU2"  placeholder="2자리" maxlength=2  style="width : 15%; display: inline-block;"  {% if CNU %} data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." value = {{CNU2}} {% endif %} /> -
-								<input type="digits" class="form-control" name = "CNU3"  placeholder="5자리" maxlength=5 style="width :20%; display: inline-block;;"  {% if CNU %} data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." value = {{CNU3}} {% endif %} /> 
+								<input type="digits" class="form-control" name = "CNU3"  placeholder="5자리" maxlength=5 style="width :20%; display: inline-block;;"  {% if CNU %} data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." value = {{CNU3}} {% endif %} />  -->
+								<input type="digits" class="form-control" name = "CNU"  placeholder="333-22-55555(사업자등록번호)" onKeyPress = 'this.value=SetColone(this.value)' maxlength=12 style="width :80%; display: inline-block;;"  {% if CNU %} data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." value = {{CNU3}} {% endif %} />
 							</div>
 						</div>
 						<label class="control-label">회사 주소<span class="text-danger"> *</span> </label>
@@ -187,6 +188,14 @@
 	<!--이메일 인증 후 새로고침 시 감지하고 URL 리로드-->
 <script language="javascript">
 //document.domain = "abc.go.kr";
+function SetColone(str){
+	
+	if(Number(str.length) ==3 | Number(str.length)==6){
+		return str+"-"
+	}
+	return str
+}
+
 
 function goPopup(){
 	// 호출된 페이지(jusopopup.jsp)에서 실제 주소검색URL(https://www.juso.go.kr/addrlink/addrLinkUrl.do)를 호출하게 됩니다.
