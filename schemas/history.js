@@ -19,10 +19,6 @@ const historySchema = new Schema({
         type: String,
         required: [true, 'VID is required!'],
     },
-    ST: {
-        type: Date,
-        default: Date.now(),
-    },
     ET: {
         type: Date,
         required: [true, 'ET is required!'],

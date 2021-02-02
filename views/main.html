@@ -112,7 +112,6 @@
                         						<th class="text-nowrap">차량번호</th>
                         					    <th class="text-nowrap">소독일시</th>
                         						<th class="text-nowrap">등록일시</th>
-                        						<th class="text-nowrap">소독시간</th>
                         						<th class="text-nowrap">소독결과</th>
                         					</tr>
                         				</thead>
@@ -127,7 +126,6 @@
                         						</td>
                         						<td>{{moment(history_array.ET).format('YYYY-MM-DD hh:mm:ss')}}</td>
                         						<td>{{moment(history_array.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
-                        						<td>{{moment(history_array.ET).diff(moment(history_array.ST), 'minutes')+" 분"}}</td>
                         						<td>{{history_array.RC}}</td>
                         					</tr>
                         				</tbody>

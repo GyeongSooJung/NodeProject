@@ -154,7 +154,6 @@
 								<th class="text-nowrap">차량 번호</th>
 							    <th class="text-nowrap">소독 일시</th>
 								<th class="text-nowrap">등록 일시</th>
-								<th class="text-nowrap">소독 시간</th>
 								<th class="text-nowrap">소독 결과</th>
 								<th width="1%"></th>
 							</tr>
@@ -174,7 +173,6 @@
 							</td>
 							<td>{{moment(history.ET).format('YYYY-MM-DD hh:mm:ss')}}</td>
 							<td>{{moment(history.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
-							<td>{{moment(history.ET).diff(moment(history.ST), 'minutes')+"m"}}</td>
 							<td>{{history.RC}}</td>
 	  						<td>
 	  							<a href="javascript:delete_check('{{history._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
