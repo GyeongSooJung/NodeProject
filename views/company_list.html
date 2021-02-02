@@ -49,7 +49,7 @@
 						</thead>
 						<tbody>					
 					
-						{% for device in devices %}
+						{% for device in devices.reverse() %}
 						<tr>
 							<td class="with-btn" nowrap>
 								<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{device.MAC}} onChange="eachCheckedBox(this);"/>
@@ -84,7 +84,7 @@
 								</tr>
 							</thead>
 							<tbody>					
-						{% for car in cars %}
+						{% for car in cars.reverse() %}
 							<tr>
     							<td class="with-btn" nowrap>
 									<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{car.CN}} onChange="eachCheckedBox(this);"/>
@@ -118,7 +118,7 @@
         						</tr>
         					</thead>
         					<tbody>					
-						{% for worker in workers %}
+						{% for worker in workers.reverse() %}
     						<tr>
     							<td class="with-btn" nowrap>
 									<input id ="ck" type="checkbox" name = "AC" class="neHeros" value={{worker.EM}} {% if worker.AC == true %} checked {% else %} unchecked  {% endif %} onChange="eachCheckedBox(this);"/>
@@ -197,7 +197,7 @@
 						</thead>
 						<tbody>
 							
-						{% for company in companys %}
+						{% for company in companys.reverse() %}
 						<tr class="odd gradeX">
 							<td>{{company.CNA}}</td>
 							<td>{{company.CNU}}</td>

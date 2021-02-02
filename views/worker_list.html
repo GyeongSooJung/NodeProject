@@ -47,7 +47,7 @@
 	        						</tr>
 	        					</thead>
 	        					<tbody>
-	        					    {% for worker in workers %}
+	        					    {% for worker in workers.reverse() %}
 	        						<tr>
 	        							<td class="with-btn" nowrap>
     										<input id ="ck" type="checkbox" name = "AC" class="neHeros" value={{worker.EM}} unchecked onChange="eachCheckedBox(this);"/>

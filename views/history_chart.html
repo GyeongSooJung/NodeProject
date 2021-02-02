@@ -80,14 +80,14 @@
 						<tr class="bg-grey">
 						  <th width="15%">소독시간</th>
 							<th width="20%">최고농도</th>
-							<th width="20%">잔존농도</th>
+							<th width="20%">최종농도</th>
 							<th width="20%">소독결과</th>
 							<th width="25%">등록일시</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr class="bg-light">
-			              <td>{{moment(historyone.ET).diff(moment(historyone.ST), 'minutes')+"m"}}</td>
+			              <td>{{moment(historyone.ET).diff(moment(historyone.ST), 'seconds')+"m"}}</td>
 			              <td>{{historyone.MP}}</td>
 			              <td>{{historyone.FP}}</td>
 			              <td>{{historyone.RC}}</td>
