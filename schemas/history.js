@@ -21,7 +21,7 @@ const historySchema = new Schema({
     },
     ST: {
         type: Date,
-        required: [true, 'ST is required!'],
+        default: Date.now(),
     },
     ET: {
         type: Date,
@@ -29,15 +29,14 @@ const historySchema = new Schema({
     },
     PD: {
         type: [String],
-        required: [true, 'PD is required!'],
     },
     MP: {
         type: Number,
-        required: [true, 'MP is required!'],
+        default: 0.0,
     },
     FP: {
         type: Number,
-        required: [true, 'FP is required!'],
+        default: 0.0,
     },
     RC: {
         type: Number,

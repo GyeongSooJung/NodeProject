@@ -15,6 +15,8 @@ router.post("/company/confirm/pw",controller.confirmConpanyPW);
 
 router.post("/car/find",controller.findCarByComID);
 
+router.post("/history/create",controller.createHistory);
+
 router.post("/", controller.root);
 router.get("/", controller.root);
 

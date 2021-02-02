@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const Worker = require('../../schemas/worker');
 const Company = require('../../schemas/company');
 const Car = require('../../schemas/car');
+const History = require('../../schemas/history');
 
 const UNKOWN = "UNKOWN";
 const NO_SUCH_DATA = "NO_SUCH_DATA";
@@ -242,6 +243,28 @@ exports.findCarByComID = async(req, res) => {
         }
     }
     catch (exception) {
+        res.json({
+            result: false,
+            error: UNKOWN,
+        });
+    }
+};
+
+/// 소독 공정 관련
+exports.createHistory = async(req, res) => {
+    try {
+        console.log(req.body);
+        const { WID, DID, CID, VID, ET, PD, RC } = req.body;
+
+        var result = await History.create({ WID, DID, CID, VID, ET, PD, RC });
+        console.log(result);
+
+        res.json({
+            result: true,
+        });
+    }
+    catch (exception) {
+        console.log(exception);
         res.json({
             result: false,
             error: UNKOWN,
