@@ -65,6 +65,8 @@
 								<!--<button onclick="insertTr()"  class="btn btn-primary btn-block btn-lg">인증하기</button>-->
 							</div>
 							
+							<input type="hidden" name="EA" value="{{email}}">
+							
 							{% else %}
 							<div class="col-md-12" id = "EmailEC">
 								<!--<button onclick="insertTr()"  class="btn btn-primary btn-block btn-lg">인증하기</button>-->
@@ -73,6 +75,19 @@
 							</div>
 							{% endif %}
 						</div>
+						<label class="control-label">회사 주소<span class="text-danger"> *</span> </label>
+							<div class="row m-b-15">
+								<div class="col-md-12">
+								<input type="text"  class="form-control" name="roadAddrPart1" style = "width : 65%; display: inline-block;"  readOnly  {% if roadAddrPart1!='undefined' %}value ="{{ roadAddrPart1 }}" data-parsley-required="true" {% endif %} >
+								<input type="button" class="btn btn-primary mb-1" style = 'width : 30%; display: inline-block;' value="주소검색" onclick="goPopup();">
+								<tr>
+									<td>
+										<input type="text" class="form-control" name="addrDetail" style="width:48% ; display: inline-block;"  readOnly {% if addrDetail!='undefined' %}value="{{addrDetail}}" {% endif %}>
+										<input type="text" class="form-control" name="roadAddrPart2"  style="width:47% ; display: inline-block;"  readOnly {% if roadAddrPart2!='undefined' %} value="{{roadAddrPart2}}"{% endif %}>
+									</td>
+								</tr>
+								</div>
+							</div>	
 						<h5>사업자 정보</h5>
 						<hr class=" bg-white-transparent-2 m-t-0 m-b-10" />
 						<label class="control-label">상 호 (업체명) <span class="text-danger">*</span></label>
@@ -102,23 +117,12 @@
 							<!--	<input type="digits" class="form-control" name = "CNU1"  placeholder="3자리" maxlength=3 style="width : 15%; display: inline-block;" {% if CNU %}  data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." value = {{CNU1}} {% endif %} /> -
 								<input type="digits" class="form-control" name = "CNU2"  placeholder="2자리" maxlength=2  style="width : 15%; display: inline-block;"  {% if CNU %} data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." value = {{CNU2}} {% endif %} /> -
 								<input type="digits" class="form-control" name = "CNU3"  placeholder="5자리" maxlength=5 style="width :20%; display: inline-block;;"  {% if CNU %} data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." value = {{CNU3}} {% endif %} />  -->
-								<input type="digits" class="form-control" name = "CNU"  placeholder="333-22-55555(사업자등록번호)" onKeyPress = 'this.value=SetColone(this.value)' maxlength=12 style="width :80%; display: inline-block;;"  {% if CNU %} data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." value = {{CNU3}} {% endif %} />
+								<input type="digits" class="form-control" name = "CNU"  placeholder="3332255555(사업자등록번호)"  maxlength=12 style="width :80%; display: inline-block;;"  {% if CNU %} data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." value = {{CNU3}} {% endif %} />
+							<!--onKeyPress = 'this.value=SetColone(this.value)'-->
 							</div>
 						</div>
-						<label class="control-label">회사 주소<span class="text-danger"> *</span> </label>
-				<div class="row m-b-15">
-					<div class="col-md-12">
-					<input type="text"  class="form-control" id="roadAddrPart1" style = "width : 65%; display: inline-block;"  readOnly  {% if roadAddrPart1!='undefined' %}value ="{{ roadAddrPart1 }}" data-parsley-required="true" {% endif %} >
-					<input type="button" class="btn btn-primary mb-1" style = 'width : 30%; display: inline-block;' value="주소검색" onclick="goPopup();">
-					<tr>
-						<td>
-							<input type="text" class="form-control" id="addrDetail" style="width:48% ; display: inline-block;"  readOnly {% if addrDetail!='undefined' %}value="{{addrDetail}}" {% endif %}>
-							<input type="text" class="form-control" id="roadAddrPart2"  style="width:47% ; display: inline-block;"  readOnly {% if roadAddrPart2!='undefined' %} value="{{roadAddrPart2}}"{% endif %}>
-						</td>
-					</tr>
-					</div>
-				</div>				
-						<label class="control-label">업체 전화번호 <span class="text-danger">*</span></label>
+									
+						<label class="control-label">업체 전화번호 <span class="text-danger">* {{PNMsg}}</span></label>
 						<div class="row m-b-15">
 							<div class="col-md-12">
 								<input type="text" class="form-control" name = "PN" placeholder="업체 전화번호(숫자만 입력)" {% if PN %} value = {{PN}} {% endif %} data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." />
@@ -188,13 +192,13 @@
 	<!--이메일 인증 후 새로고침 시 감지하고 URL 리로드-->
 <script language="javascript">
 //document.domain = "abc.go.kr";
-function SetColone(str){
+// function SetColone(str){
 	
-	if(Number(str.length) ==3 | Number(str.length)==6){
-		return str+"-"
-	}
-	return str
-}
+// 	if(Number(str.length) ==3 | Number(str.length)==6){
+// 		return str+"-"
+// 	}
+// 	return str
+// }
 
 
 function goPopup(){

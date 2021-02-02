@@ -35,11 +35,14 @@ router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
         await Car.create({
             CID, CC, CN, SN, CA
         });
-        return res.redirect('/car_join');
         
-        const companyone = await Company.where({"CN" : req.params.CN})
+        const companyone = await Company.where({"CNU" : CNU})
           .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
           .exec();
+          
+        return res.redirect('/car_join');
+        
+        
       }
     } catch (err) {
       console.error(err);
@@ -78,12 +81,10 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
             "CA" : resData.Sheet1[j].CA
            });
            
-           
-           
          }
       });
       
-       const companyone = await Company.where({"CN" : req.params.CN})
+        const companyone = await Company.where({"CNU" : CNU})
           .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
           .exec();
    
@@ -133,7 +134,7 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn,async (req, res, next) => {
           .exec();
           console.log(carone);
           
-        const companyone = await Company.where({"CN" : req.params.CN})
+        const companyone = await Company.where({"CNU" : CNU})
           .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
           .exec();
       }
@@ -147,12 +148,13 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn,async (req, res, next) => {
 //차량 삭제
 router.get('/car_delete/:CN', async (req, res, next) => {
   const { CC, CN, SN } = req.body;
+  const CNU = req.decoded.CNU;
   const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
   try {
     await Car.remove({ "CN" : req.params.CN });
     res.redirect('/car_list');
     
-    const companyone = await Company.where({"CN" : req.params.CN})
+  const companyone = await Company.where({"CNU" : CNU})
     .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
     .exec();
   } catch (err) {
@@ -164,6 +166,7 @@ router.get('/car_delete/:CN', async (req, res, next) => {
 //차량 선택삭제
 router.post('/car_select_delete',isNotLoggedIn ,async (req, res, next) => {
     const { CC, CN, SN } = req.body;
+      const CNU = req.decoded.CNU;
     const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
     try {
         const {ck} = req.body;
@@ -189,9 +192,9 @@ router.post('/car_select_delete',isNotLoggedIn ,async (req, res, next) => {
               }
           }
           
-        const companyone = await Company.where({"CN" : req.params.CN})
-          .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
-          .exec();
+      const companyone = await Company.where({"CNU" : CNU})
+        .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
+        .exec();
           res.redirect('/car_list');
         }
     }   catch (err) {
