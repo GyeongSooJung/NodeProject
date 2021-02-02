@@ -43,7 +43,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								{% for car in cars %}
+								{% for car in cars.reverse() %}
 								<tr>
 	    							<td class="with-btn" nowrap>
 										<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{car.CN}} onChange="eachCheckedBox(this);"/>

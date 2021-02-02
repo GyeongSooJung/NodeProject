@@ -44,7 +44,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								{% for device in devices %}
+								{% for device in devices.reverse() %}
 								<tr>
 	    							<td class="with-btn" nowrap>
 										<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{device.MAC}} onChange="eachCheckedBox(this);"/>

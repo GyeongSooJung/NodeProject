@@ -68,7 +68,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						{% for history in historys %}
+						{% for history in historys.reverse() %}
 						<tr onClick="location.href='/history_chart/{{history._id}}'" class="odd gradeX">
 	  						<td onclick='event.cancelBubble=true;' class="with-btn" nowrap>
 	 							<input id="ck" type="checkbox" name = "_id" class="neHeros" value={{history._id}} onChange="eachCheckedBox(this);"/>
