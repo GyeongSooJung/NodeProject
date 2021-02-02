@@ -17,7 +17,7 @@ const deviceSchema = new Schema({
         required: [true, 'MAC is required!'],
     },
     VER: {
-        type: Number,
+        type: String,
         required: [true, 'VER is required!'],
     },
     NN: {

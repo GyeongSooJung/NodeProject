@@ -6,6 +6,8 @@ const xml2js = require('xml2js') // xml 파싱 모듈
 const Company = require('../schemas/company');
 const axios = require('axios');
 const {emailcontrol} = require('./middleware');
+var moment = require('moment');
+
 
 
 //Register for Client
@@ -18,6 +20,7 @@ router.post('/register',emailcontrol,async (req, res, next) => {
   const CNU = CNU1+CNU2+CNU3;
   const EA = req.decoded.EA2;
   var EC = false;
+  const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
   
   console.log("EA :"+EA);
   console.log("EC :"+EC);
@@ -49,7 +52,7 @@ router.post('/register',emailcontrol,async (req, res, next) => {
     //암호화 부분
     const hash = await bcrypt.hash(PW, 12);
 
-    await Company.create({NA, CNU, CNA, PN, MN, EA,ADR,CK,
+    await Company.create({NA, CNU, CNA, PN, MN, EA,ADR,CK,CUA,
     PW : hash
     });
     return res.redirect('/');
