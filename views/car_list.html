@@ -48,7 +48,19 @@
 	    							<td class="with-btn" nowrap>
 										<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{car.CN}} onChange="eachCheckedBox(this);"/>
 	    							</td>
-									<td>{{car.CC}}</td>
+	    							{% if car.CC == 1 %}
+									<td>경차</td>
+									{% elif car.CC == 2 %}
+									<td>소형</td>
+									{% elif car.CC == 3 %}
+									<td>중형</td>
+									{% elif car.CC == 4 %}
+									<td>대형</td>
+									{% elif car.CC == 5 %}
+									<td>승합</td>
+									{% elif car.CC == 6 %}
+									<td>상용</td>
+									{% endif %}
 									<td>{{car.CN}}</td>
 									<td>{{car.SN}}</td>
 									<td class="with-btn" nowrap>
