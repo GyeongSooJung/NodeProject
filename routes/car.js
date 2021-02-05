@@ -35,7 +35,7 @@ router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
         const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
         const UA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
         await Car.create({
-            CID, CC, CN, SN, CA
+            CID, CC, CN, SN, CA, UA
         });
         
         const companyone = await Company.where({"CNU" : CNU})
@@ -151,7 +151,7 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn,async (req, res, next) => {
 });
 
 //차량 삭제
-router.get('/car_delete/:CN', async (req, res, next) => {
+router.get('/car_delete/:CN',isNotLoggedIn, async (req, res, next) => {
   const { CC, CN, SN } = req.body;
   const CNU = req.decoded.CNU;
   const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');

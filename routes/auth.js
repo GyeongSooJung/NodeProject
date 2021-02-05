@@ -1,11 +1,20 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const router = express.Router();
-const Company = require('../schemas/company');
 //const cookies = require('cookie-Parser');
 const jwt = require("jsonwebtoken");
 const secretObj = require("../config/jwt");
 const mongoose = require('mongoose');
+
+//schemas
+const Company = require('../schemas/company');
+const Device = require('../schemas/device');
+const Car = require('../schemas/car');
+const Worker = require('../schemas/worker');
+const History = require('../schemas/history');
+
+//middleware
+const {isLoggedIn, isNotLoggedIn, DataSet, emailcontrol} = require('./middleware');
 
 
 const TokenMake = async function(req,res,next){
@@ -46,4 +55,26 @@ router.get("/logout",async function(req,res,next){
     console.error(err);
   }
 });
+
+//withdrawal시 Browser Cookie 삭제 하고 소독이력을 제외한 company에 관련된 내용들 삭제
+router.get("/withdrawal",isNotLoggedIn, async function(req,res,next){
+  const CID = req.decoded.CID;
+  const CNU = req.decoded.CNU;
+  
+  try{
+    await Company.remove({"_id": CID});
+    await Car.remove({"CID" : CID});
+    await Device.remove({"CID" : CID});
+    await Worker.remove({"CID" : CID});
+    
+
+  await res.cookie("token", req.cookies,{expiresIn:0});
+  
+  res.redirect("/");
+
+  }catch(err){
+    console.error(err);
+  }
+});
+
 module.exports = router;
