@@ -16,6 +16,13 @@ router.post("/company/confirm/pw",controller.confirmConpanyPW);
 router.post("/car/find",controller.findCarByComID);
 
 router.post("/history/create",controller.createHistory);
+router.post("/history/find",controller.findHistories);
+router.post("/history/findOne",controller.findHistory);
+
+router.post("/device/register",controller.registerDevice);
+router.post("/device/find",controller.findDevices);
+router.post("/device/update",controller.updateDevice);
+router.post("/device/delete",controller.deleteDevice);
 
 router.post("/", controller.root);
 router.get("/", controller.root);
