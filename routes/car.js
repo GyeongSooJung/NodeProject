@@ -5,6 +5,7 @@ const {isNotLoggedIn} = require('./middleware');
 const multiparty = require('multiparty');
 const xlsx = require('xlsx');
 const router = express.Router();
+const Company = require('../schemas/company');
 
 //자동차 등록
     //DB에 등록
@@ -29,11 +30,19 @@ router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
       }
       else {
         const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+        const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
         const UA = "";
         await Car.create({
             CID, CC, CN, SN, CA
         });
+        
+        const companyone = await Company.where({"CNU" : CNU})
+          .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
+          .exec();
+          
         return res.redirect('/car_join');
+        
+        
       }
     } catch (err) {
       console.error(err);
@@ -43,10 +52,12 @@ router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
 
 //Excel로 DB에 등록
 router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
+  const { CC, CN, SN } = req.body;
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss'); //한국시간 맞추기 위해 +9시간
   const UA = "";
+  const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
   
   const resData = {};
     try {
@@ -69,8 +80,13 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
             "SN": resData.Sheet1[j].차대번호,
             "CA" : resData.Sheet1[j].CA
            });
+           
          }
       });
+      
+        const companyone = await Company.where({"CNU" : CNU})
+          .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
+          .exec();
    
       form.on('close', () => {
         res.redirect('/car_join');
@@ -90,6 +106,7 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn,async (req, res, next) => {
     const { CC, CN, SN } = req.body;
     const CID = req.decoded.CID;
     const CNU = req.decoded.CNU;
+    const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
     
     try {
       const exCar = await Car.find({ "CN" :  CN });
@@ -116,6 +133,10 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn,async (req, res, next) => {
           }).setOptions({runValidators : true})
           .exec();
           console.log(carone);
+          
+        const companyone = await Company.where({"CNU" : CNU})
+          .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
+          .exec();
       }
     } catch (error) {
     console.error(error);
@@ -126,9 +147,16 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn,async (req, res, next) => {
 
 //차량 삭제
 router.get('/car_delete/:CN', async (req, res, next) => {
+  const { CC, CN, SN } = req.body;
+  const CNU = req.decoded.CNU;
+  const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
   try {
     await Car.remove({ "CN" : req.params.CN });
     res.redirect('/car_list');
+    
+  const companyone = await Company.where({"CNU" : CNU})
+    .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
+    .exec();
   } catch (err) {
     console.error(err);
     next(err);
@@ -137,6 +165,9 @@ router.get('/car_delete/:CN', async (req, res, next) => {
 
 //차량 선택삭제
 router.post('/car_select_delete',isNotLoggedIn ,async (req, res, next) => {
+    const { CC, CN, SN } = req.body;
+      const CNU = req.decoded.CNU;
+    const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
     try {
         const {ck} = req.body;
         
@@ -160,6 +191,10 @@ router.post('/car_select_delete',isNotLoggedIn ,async (req, res, next) => {
                   }
               }
           }
+          
+      const companyone = await Company.where({"CNU" : CNU})
+        .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
+        .exec();
           res.redirect('/car_list');
         }
     }   catch (err) {

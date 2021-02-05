@@ -60,6 +60,9 @@ const CompanySchema = new Schema({
     UA: {
         type: Date
     },
+    CUA: {
+        type: Date
+    },
 }, { collection: 'Company' });
 
 module.exports = mongoose.model('Company', CompanySchema, 'Company');

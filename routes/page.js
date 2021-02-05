@@ -51,9 +51,9 @@ router.get('/adress',(req,res)=>{
 
 //회원 가입
 router.get('/register',isLoggedIn,emailcontrol,async(req,res)=>{
-      await  res.cookie("email", null);
-      await  res.cookie("authNum", null);
       await  res.cookie('ADR',null);
+      console.log("사업자 이름"+req.body.CNA);
+      console.log('cokigahglkhqlghaklshdgkla')
       console.log(req.cookies)
       var roadAddrPart1 = null
       var roadAddrPart2 = null
@@ -66,6 +66,8 @@ router.get('/register',isLoggedIn,emailcontrol,async(req,res)=>{
       }
      const authNum = parseInt(req.decoded.authNum);
      const email = req.decoded.email;
+     console.log("email = " +email);
+     console.log("authNum = " +authNum);
      //console.log(req.decoded.email);
   
   if (authNum){
@@ -112,33 +114,36 @@ router.get('/main',isNotLoggedIn , async(req,res,next)=>{
   
     const CID = req.decoded.CID;
     
-    const aclist = await Worker.find({"CID" : CID, "AC" : false});
-    const devices = await Device.find({"CID" : req.decoded.CID});
-    const cars = await Car.find({"CID" : req.decoded.CID});
-    const workers = await Worker.find({"CID" : req.decoded.CID});
-
-    const Days= await 24*60*60*1000
-    const h1 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now() ,$gte: (Date.now()-Days)} });
-    const h2 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days ,$gte: (Date.now()-Days*2)} });
-    const h3 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days*2 ,$gte: (Date.now()-Days*3)} });
-    const h4 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days*3 ,$gte: (Date.now()-Days*4)} });
-    const h5 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days*4,$gte: (Date.now()-Days*5)} });
-    const h6 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days*5,$gte: (Date.now()-Days*6)} });
-    const h7 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days*6,$gte: (Date.now()-Days*7)} });
-    const history_count = await [h1,h2,h3,h4,h5,h6,h7];
     
-    const historys = await History.find({"CID" : req.decoded.CID});
-    const history_array = await History.findOne({"CID" : req.decoded.CID}).sort({'_id':-1}).limit(1);
-    console.log(history_array);
-            console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" + aclist);
-    if (history_array){
-      const recent_history = history_array.PD;
-      console.log("최근 히스토리는 :" +recent_history);
-      res.render('main', {company : req.decoded, aclist, devices, cars, workers, historys, recent_history, history_array, moment,history_count});
-    }
-    else{
-      res.render('main', {company : req.decoded, aclist, devices, cars, workers, historys,  history_array, moment,history_count});
-    }
+        const aclist = await Worker.find({"CID" : CID, "AC" : false});
+        const devices = await Device.find({"CID" : req.decoded.CID});
+        const cars = await Car.find({"CID" : req.decoded.CID});
+        const workers = await Worker.find({"CID" : req.decoded.CID});
+    
+        const Days= await 24*60*60*1000
+        const h1 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now() ,$gte: (Date.now()-Days)} });
+        const h2 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days ,$gte: (Date.now()-Days*2)} });
+        const h3 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days*2 ,$gte: (Date.now()-Days*3)} });
+        const h4 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days*3 ,$gte: (Date.now()-Days*4)} });
+        const h5 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days*4,$gte: (Date.now()-Days*5)} });
+        const h6 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days*5,$gte: (Date.now()-Days*6)} });
+        const h7 = await History.countDocuments( { "CID" : req.decoded.CID,"CA": { $lte : Date.now()-Days*6,$gte: (Date.now()-Days*7)} });
+        const history_count = await [h1,h2,h3,h4,h5,h6,h7];
+        
+        const historys = await History.find({"CID" : req.decoded.CID});
+        const history_array = await History.findOne({"CID" : req.decoded.CID}).sort({'_id':-1}).limit(1);
+        console.log(history_array);
+                console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" + aclist);
+        if (history_array){
+          const recent_history = history_array.PD;
+          console.log("최근 히스토리는 :" +recent_history);
+          res.render('main', {company : req.decoded, aclist, devices, cars, workers, historys, recent_history, history_array, moment,history_count});
+        }
+        else{
+          res.render('main', {company : req.decoded, aclist, devices, cars, workers, historys,  history_array, moment,history_count});
+        }
+    
+    
 });
 
 //----------------------------------------------------------------------------//

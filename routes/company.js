@@ -6,21 +6,26 @@ const xml2js = require('xml2js') // xml 파싱 모듈
 const Company = require('../schemas/company');
 const axios = require('axios');
 const {emailcontrol} = require('./middleware');
+var moment = require('moment');
+
 
 
 //Register for Client
 router.post('/register',emailcontrol,async (req, res, next) => {
   //req. Body for Insert Data.
-  const {NA, CNU1,CNU2,CNU3, CNA, PN, MN, PW, PW2, CK} = req.body;
+  const {NA, CNU, CNA, PN, MN, PW, PW2, CK, EA} = req.body;
+  console.log("주소상세"+req.body.addrDtail);
   const ADR = req.body.roadAddrPart1+req.body.roadAddrPart2+req.body.addrDetail;
   res.cookie('ADR',null)
   //email
-  const CNU = CNU1+CNU2+CNU3;
-  const EA = req.decoded.EA2;
   var EC = false;
-  
+  const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+  const UA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+  const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+  console.log(CNU);
   console.log("EA :"+EA);
   console.log("EC :"+EC);
+  console.log("addr = "+req.body.addrDetail);
   
   //이메일이 존재하면 EC를 true로 변경
   if(EA) {EC = true;}
@@ -37,21 +42,30 @@ router.post('/register',emailcontrol,async (req, res, next) => {
   } 
   else{
   try {
+    const exPN = await Company.findOne({"PN" : PN});
+    if(exPN) {
+      return  res.render('register',{NA,CNA,PN,MN, CNU,ADR,CK ,PNMsg : "가입된 전화번호입니다."});
+    }
+    
+    
     const exCNU = await Company.findOne({"CNU" : parseInt(CNU)});
+    console.log(exCNU);
     if (exCNU) {
-     return  res.render('register',{NA,CNA,PN,MN, CNU1, CNU2, CNU3,ADR,CK ,ErrMsg : "가입된 사업자입니다."});
+     return  res.render('register',{NA,CNA,PN,MN, CNU,ADR,CK ,ErrMsg : "가입된 사업자입니다."});
     }
       if(PW ===! PW2 ){
-      return res.render('register',{NA,CNU1, CNU2, CNU3,CNA,PN,MN,ADR,CK,message : "비밀번호가 다릅니다."});
+      return res.render('register',{NA,CNU,CNA,PN,MN,ADR,CK,message : "비밀번호가 다릅니다."});
     }
 
     //중복값 생성시 에러 반환
     //암호화 부분
     const hash = await bcrypt.hash(PW, 12);
 
-    await Company.create({NA, CNU, CNA, PN, MN, EA,ADR,CK,
+    await Company.create({NA, CNU, CNA, PN, MN, EA,ADR,CK,CUA,UA,CA,
     PW : hash
     });
+    res.cookie('email',null);
+    res.cookie('authNum',null);
     return res.redirect('/');
   } catch (error) {
     console.error(error);
@@ -72,11 +86,12 @@ async function postCRN(crn){
         const result  = await axios.post(postUrl,xmlRaw.replace(/\{CRN\}/, crn),
         { headers: { 'Content-Type': 'text/xml' } })
        let CRNumber = await getCRNresultFromXml(result.data);
-       if(CRNumber ==='사업을 하지 않고 있습니다.'){
-         CRNumber = false;
+       console.log(CRNumber);
+       if(CRNumber ==='부가가치세 일반과세자 입니다.'){
+         CRNumber = true;
          
        }else{
-         CRNumber = true;
+         CRNumber = false;
        }
         console.log(CRNumber)
         return(CRNumber);
