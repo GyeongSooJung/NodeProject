@@ -47,23 +47,28 @@
 								<th width="1%"></th>
 							</tr>
 						</thead>
-						<tbody>					
-					
-						{% for device in devices.reverse() %}
-						<tr>
-							<td class="with-btn" nowrap>
-								<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{device.MAC}} onChange="eachCheckedBox(this);"/>
-							</td>
-							<td>{{device.MD}}</td>
-							<td>{{device.VER}}</td>
-							<td>{{device.MAC}}</td>
-							<td>{{device.NN}}</td>
-							<td class="with-btn" nowrap>
-								<a href="/device_edit/{{device.MAC}}" class="btn btn-sm btn-primary width-60 m-r-2 edit-btn">수정</a>
-								<a href="javascript:delete_check('{{device.MAC}}')" class="btn btn-sm btn-white width-60">삭제</a>
-							</td>
-						</tr>
-						{% endfor %}
+						<tbody>
+	    					{% if (totalNum == 0) %}
+							<tr>
+								<td colspan="7" class="text-center">No Data</td>
+							</tr>
+							{% else %}	
+								{% for device in devices %}
+								<tr>
+									<td class="with-btn" nowrap>
+										<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{device.MAC}} onChange="eachCheckedBox(this);"/>
+									</td>
+									<td>{{device.MD}}</td>
+									<td>{{device.VER}}</td>
+									<td>{{device.MAC}}</td>
+									<td>{{device.NN}}</td>
+									<td class="with-btn" nowrap>
+										<a href="/device_edit/{{device.MAC}}" class="btn btn-sm btn-primary width-60 m-r-2 edit-btn">수정</a>
+										<a href="javascript:delete_check('{{device.MAC}}')" class="btn btn-sm btn-white width-60">삭제</a>
+									</td>
+								</tr>
+								{% endfor %}
+							{% endif %}
 						
 					{% elif cars %}
 					
@@ -83,21 +88,27 @@
 									<th width="1%"></th>
 								</tr>
 							</thead>
-							<tbody>					
-						{% for car in cars.reverse() %}
-							<tr>
-    							<td class="with-btn" nowrap>
-									<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{car.CN}} onChange="eachCheckedBox(this);"/>
-    							</td>
-								<td>{{car.CC}}</td>
-								<td>{{car.CN}}</td>
-								<td>{{car.SN}}</td>
-								<td class="with-btn" nowrap>
-									<a href="/car_edit/{{car.CN}}" class="btn btn-sm btn-primary width-60 m-r-2">수정</a>
-									<a href="javascript:delete_check('{{car.CN}}')" class="btn btn-sm btn-white width-60">삭제</a>
-								</td>
-							</tr>
-							{% endfor %}
+							<tbody>		
+		    					{% if (totalNum == 0) %}
+								<tr>
+									<td colspan="7" class="text-center">No Data</td>
+								</tr>
+								{% else %}	
+									{% for car in cars %}
+									<tr>
+		    							<td class="with-btn" nowrap>
+											<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{car.CN}} onChange="eachCheckedBox(this);"/>
+		    							</td>
+										<td>{{car.CC}}</td>
+										<td>{{car.CN}}</td>
+										<td>{{car.SN}}</td>
+										<td class="with-btn" nowrap>
+											<a href="/car_edit/{{car.CN}}" class="btn btn-sm btn-primary width-60 m-r-2">수정</a>
+											<a href="javascript:delete_check('{{car.CN}}')" class="btn btn-sm btn-white width-60">삭제</a>
+										</td>
+									</tr>
+									{% endfor %}
+								{% endif %}
 					
 					{% elif workers %}
 					
@@ -113,32 +124,38 @@
         							<th>이름</th>
         							<th>전화번호</th>
         							<th>이메일</th>
-        							<th width="1%">승인</th>
+        							<th width="10%">승인</th>
         							<th width="1%"></th>
         						</tr>
         					</thead>
-        					<tbody>					
-						{% for worker in workers.reverse() %}
-    						<tr>
-    							<td class="with-btn" nowrap>
-									<input id ="ck" type="checkbox" name = "AC" class="neHeros" value={{worker.EM}} {% if worker.AC == true %} checked {% else %} unchecked  {% endif %} onChange="eachCheckedBox(this);"/>
-    							</td>
-                                <td width="1%" class="with-img"><img src={{worker.PU}} class="img-rounded height-30" /></td>
-    							<td>{{worker.WN}}</td>
-    							<td>{{worker.PN}}</td>
-    							<td>{{worker.EM}}</td>
-    							    <input type="hidden" name="EM" value="{{worker.EM}}">
-    							<td class="with-btn" nowrap>
-    								<a href="/worker_list/?workeracem={{worker.AC}},{{worker.EM}}" class="btn btn-sm width-60 m-r-2 edit-btn">
-        								<input id ="ckone" type="checkbox" data-render="switchery" data-theme="default" name="ckone"  {% if worker.AC == true %} checked {% else %} unchecked  {% endif %} />
-    								</a>
-    							</td>
-    							<td>
-    								<a class="btn btn-sm btn-white width-60" href="javascript:delete_check('{{worker.EM}}')">삭제</a>
-    								<!--<a class="btn btn-sm btn-white width-60" onclick ="confirm({{worker.EM}})">Delete</a>-->
-    							</td>
-    						</tr>
-    						{% endfor %}
+        					<tbody>
+		    					{% if (totalNum == 0) %}
+								<tr>
+									<td colspan="7" class="text-center">No Data</td>
+								</tr>
+								{% else %}		
+									{% for worker in workers %}
+		    						<tr>
+		    							<td class="with-btn" nowrap>
+											<input id ="ck" type="checkbox" name = "AC" class="neHeros" value={{worker.EM}} {% if worker.AC == true %} checked {% else %} unchecked  {% endif %} onChange="eachCheckedBox(this);"/>
+		    							</td>
+		                                <td width="1%" class="with-img"><img src={{worker.PU}} class="img-rounded height-30" /></td>
+		    							<td>{{worker.WN}}</td>
+		    							<td>{{worker.PN}}</td>
+		    							<td>{{worker.EM}}</td>
+		    							    <input type="hidden" name="EM" value="{{worker.EM}}">
+		    							<td class="with-btn" nowrap>
+		    								<a href="/worker_list/?workeracem={{worker.AC}},{{worker.EM}}" class="btn btn-sm width-60 m-r-2 edit-btn">
+		        								<input id ="ckone" type="checkbox" data-render="switchery" data-theme="default" name="ckone"  {% if worker.AC == true %} checked {% else %} unchecked  {% endif %} />
+		    								</a>
+		    							</td>
+		    							<td>
+		    								<a class="btn btn-sm btn-white width-60" href="javascript:delete_check('{{worker.EM}}')">삭제</a>
+		    								<!--<a class="btn btn-sm btn-white width-60" onclick ="confirm({{worker.EM}})">Delete</a>-->
+		    							</td>
+		    						</tr>
+		    						{% endfor %}
+		    					{% endif %}
     						
     				{% elif historys %}
 					<center>
@@ -153,32 +170,40 @@
 								</th>
 								<th class="text-nowrap">차량 번호</th>
 							    <th class="text-nowrap">소독 일시</th>
+							    <th class="text-nowrap">소독 시간</th>
 								<th class="text-nowrap">등록 일시</th>
 								<th class="text-nowrap">소독 결과</th>
 								<th width="1%"></th>
 							</tr>
 						</thead>
-						<tbody>    						
-    					{% for history in historys %}
-						<tr onClick="location.href='/history_chart/{{history._id}}'" class="odd gradeX">
-	  						<td onclick='event.cancelBubble=true;' class="with-btn" nowrap>
-	 							<input id="ck" type="checkbox" name = "_id" class="neHeros" value={{history._id}} onChange="eachCheckedBox(this);"/>
-	  						</td>
-							<td>
-								{% for car in cars %}
-									{% if (car._id == history.VID) %}
-										{{car.CN}}
-									{% endif %}
+						<tbody>
+	    					{% if (totalNum == 0) %}
+							<tr>
+								<td colspan="7" class="text-center">No Data</td>
+							</tr>
+							{% else %}				
+		    					{% for history in historys %}
+								<tr onClick="location.href='/history_chart/{{history._id}}'" class="odd gradeX">
+			  						<td onclick='event.cancelBubble=true;' class="with-btn" nowrap>
+			 							<input id="ck" type="checkbox" name = "_id" class="neHeros" value={{history._id}} onChange="eachCheckedBox(this);"/>
+			  						</td>
+									<td>
+										{% for car in cars %}
+											{% if (car._id == history.VID) %}
+												{{car.CN}}
+											{% endif %}
+										{% endfor %}
+									</td>
+									<td>{{moment(history.ET).format('YYYY-MM-DD hh:mm:ss')}}</td>
+									<td>{{history.PD.length}}+"s"</td>
+									<td>{{moment(history.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
+									<td>{{history.RC}}</td>
+			  						<td>
+			  							<a href="javascript:delete_check('{{history._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
+			  						</td>
+								</tr>
 								{% endfor %}
-							</td>
-							<td>{{moment(history.ET).format('YYYY-MM-DD hh:mm:ss')}}</td>
-							<td>{{moment(history.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
-							<td>{{history.RC}}</td>
-	  						<td>
-	  							<a href="javascript:delete_check('{{history._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
-	  						</td>
-						</tr>
-						{% endfor %}
+							{% endif %}
 					
 					{% else %}				
 						<thead>
@@ -194,30 +219,45 @@
 							</tr>
 						</thead>
 						<tbody>
-							
-						{% for company in companys.reverse() %}
-						<tr class="odd gradeX">
-							<td>{{company.CNA}}</td>
-							<td>{{company.CNU}}</td>
-							<td>{{company.NA}}</td>
-							<td>{{company.PN}}</td>
-							<td>{{company.MN}}</td>
-							<td>{{company.EA}}</td>
-							<td>{{moment(company.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
-							<td class="d-flex flex-nowrap justify-content-around">
-								<a href="/company_list/?DEVICE={{company._id}}"><button type="button" class="btn btn-primary px-2"><i class="fas fa-lg fa-fw fa-microchip"></i></button></a>
-								<a href="/company_list/?CAR={{company._id}}"><button type="button" onClick="location.href='/company_device/{{company._id}}" class="btn btn-info px-2"><i class="fas fa-lg fa-fw fa-car"></i></button></a>
-								<a href="/company_list/?WORKER={{company._id}}"><button type="button" onClick="location.href='/company_device/{{company._id}}" class="btn btn-warning px-2"><i class="fas fa-lg fa-fw fa-user"></i></button></a>
-								<a href="/company_list/?HISTORY={{company._id}}"><button type="button" onClick="location.href='/company_device/{{company._id}}" class="btn btn-danger px-2"><i class="fas fa-lg fa-fw fa-history"></i></button></a>
-							</td>
+						{% if (totalNum == 0) %}
+						<tr>
+							<td colspan="7" class="text-center">No Data</td>
 						</tr>
-						{% endfor %}
+						{% else %}
+							{% for company in companys %}
+							<tr class="odd gradeX">
+								<td>{{company.CNA}}</td>
+								<td>{{company.CNU}}</td>
+								<td>{{company.NA}}</td>
+								<td>{{company.PN}}</td>
+								<td>{{company.MN}}</td>
+								<td>{{company.EA}}</td>
+								<td>{{moment(company.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
+								<td class="d-flex flex-nowrap justify-content-around">
+									<a href="/company_list/?DEVICE={{company._id}}"><button type="button" class="btn btn-primary mx-1 px-2"><i class="fas fa-lg fa-fw fa-microchip"></i></button></a>
+									<a href="/company_list/?CAR={{company._id}}"><button type="button" onClick="location.href='/company_device/{{company._id}}" class="btn btn-info mx-1 px-2"><i class="fas fa-lg fa-fw fa-car"></i></button></a>
+									<a href="/company_list/?WORKER={{company._id}}"><button type="button" onClick="location.href='/company_device/{{company._id}}" class="btn btn-warning mx-1 px-2"><i class="fas fa-lg fa-fw fa-user"></i></button></a>
+									<a href="/company_list/?HISTORY={{company._id}}"><button type="button" onClick="location.href='/company_device/{{company._id}}" class="btn btn-danger mx-1 px-2"><i class="fas fa-lg fa-fw fa-history"></i></button></a>
+								</td>
+							</tr>
+							{% endfor %}
+						{% endif %}
 					
 					{% endif %}
-						
-
 				</tbody>
 			</table>
+			<div class="d-flex justify-content-end align-item-center">
+				<a href="javascript:pageDoubleBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
+				<a href="javascript:pageBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
+				{% if (totalNum==0) %}
+				{% else %}
+					{% for i in range(startPage, endPage) %}
+					<a href="/company_list/?DEVICE={{companyone._id}}&CAR={{companyone._id}}&WORKER={{companyone._id}}&HISTORY={{companyone._id}}&page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
+					{% endfor %}
+				{% endif %}
+				<a href="javascript:pageBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
+				<a href="javascript:pageDoubleBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
+			</div>
 		</div>
 		<!-- end panel-body -->
 	</div>
@@ -226,6 +266,24 @@
 <!-- end #content -->
 
 <script>
+	function pageBtn(dir) {
+		if(dir == 'left') {
+			location = '/company_list/?DEVICE={{companyone._id}}&CAR={{companyone._id}}&WORKER={{companyone._id}}&HISTORY={{companyone._id}}&page={{currentPage-1}}';
+		}
+		if(dir == 'right') {
+			location = '/company_list/?DEVICE={{companyone._id}}&CAR={{companyone._id}}&WORKER={{companyone._id}}&HISTORY={{companyone._id}}&page={{currentPage+1}}';
+		}
+	}
+	
+	function pageDoubleBtn(dir) {
+		if(dir == 'left') {
+			location = '/company_list/?DEVICE={{companyone._id}}&CAR={{companyone._id}}&WORKER={{companyone._id}}&HISTORY={{companyone._id}}&page={{startPage-1}}';
+		}
+		if(dir == 'right') {
+			location = '/company_list/?DEVICE={{companyone._id}}&CAR={{companyone._id}}&WORKER={{companyone._id}}&HISTORY={{companyone._id}}&page={{endPage+1}}';
+		}
+	}
+
 	function allCheckedBox(obj) {
 		
 	   	// @brief 선택한 체크박스의 클래스 명칭을 가져온다.
@@ -273,5 +331,5 @@
 <script src="../assets/plugins/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="../assets/plugins/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="../assets/plugins/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
-<script src="../assets/js/demo/table-manage-default.demo.js"></script>
+<!--<script src="../assets/js/demo/table-manage-default.demo.js"></script>-->
 {% endblock %}

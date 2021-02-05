@@ -260,43 +260,28 @@
 	                                    <div class="d-flex justify-content-between align-content-center">
                                     		<hr width="30%"><p class="mt-2 text-gray-500">바이러스</p><hr width="30%">
                                     	</div>
-	                                    <div class="py-1 text-center d-flex flex-wrap justify-content-center align-content-center">
-	                                    	<div class="tip mx-2 my-1">
-												<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
-												<b>인플루엔자</b>
-												<div class="balloon py-1 text-left text-white">
-													<p class="mb-0 pl-2">바이러스</p>
-													<hr width="90%" class="my-0 bg-white">
-													<p class="mb-0 pl-2">유행성 감기</p>
+		                                    <div class="py-1 text-center d-flex flex-wrap justify-content-center align-content-center">
+		                                    	<div class="mx-2 my-1" data-toggle="modal" data-target="#cold">
+													<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+													<b>감기 바이러스</b>
 												</div>
-											</div>
-	                                    </div>
+		                                    </div>
 	                                    {% endif %}
 	                                    
 	                                    {% if (time >= 10) %}
 	                                    <div class="d-flex justify-content-between align-content-center">
                                     		<hr width="30%"><p class="mt-2 text-gray-500">박테리아</p><hr width="30%">
                                     	</div>
-	                                    <div class="py-1 text-center d-flex flex-wrap justify-content-center align-content-center">
-		                                    <div class="tip mx-2 my-1">
-												<img src="../assets/img/nogerm.png" alt="nogerm" class="mx-auto img-responsive">
-												<b>포도상구균</b>
-												<div class="balloon py-1 text-left text-white">
-													<p class="mb-0 pl-2">박테리아</p>
-													<hr width="90%" class="my-0 bg-white">
-													<p class="mb-0 pl-2">인체 무해</p>
+		                                    <div class="py-1 text-center d-flex flex-wrap justify-content-center align-content-center">
+			                                    <div class="mx-2 my-1" data-toggle="modal" data-target="#podo">
+													<img src="../assets/img/nogerm.png" alt="nogerm" class="mx-auto img-responsive">
+													<b>포도상구균</b>
 												</div>
-											</div>
-											<div class="tip mx-2 my-1">
-												<img src="../assets/img/nogerm2.png" alt="nogerm2" class="mx-auto img-responsive">
-												<b>대장균</b>
-												<div class="balloon py-1 text-left text-white">
-													<p class="mb-0 pl-2">박테리아</p>
-													<hr width="90%" class="my-0 bg-white">
-													<p class="mb-0 pl-2">인체 무해</p>
+												<div class="mx-2 my-1" data-toggle="modal" data-target="#daejang">
+													<img src="../assets/img/nogerm2.png" alt="nogerm2" class="mx-auto img-responsive">
+													<b>대장균</b>
 												</div>
-											</div>
-                                        </div>
+	                                        </div>
 	                                    {% endif %}
 	                                    
 	                               	{% else %}
@@ -304,6 +289,69 @@
 	                               	
 	                               	{% endif %}
                                 </div>
+									<!-- Begin Modal -->
+									<div class="modal fade" id="cold" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+									  <div class="modal-dialog modal-dialog-centered" role="document">
+									    <div class="modal-content">
+									      <div class="modal-header">
+									        <h5 class="modal-title" id="exampleModalLongTitle">감기 바이러스<span class="small text-gray-500"> / Virus</span></h5>
+									        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									          <span aria-hidden="true">&times;</span>
+									        </button>
+									      </div>
+									      <div class="modal-body">
+									      	<p>주로 감염된 사람의 재채기나 기침을 통해 나온 비말 속에 섞여 공기 중으로 나옴.</p>
+									      	<p>이 비말을 접촉한 사람의 입이나 코를 통해 감기 바이러스가 몸 안으로 들어옴.</p>
+									      </div>
+									      <div class="modal-footer py-1">
+									        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									      </div>
+									    </div>
+									  </div>
+									</div>
+									<!-- End Modal -->
+									<!-- Begin Modal -->
+									<div class="modal fade" id="podo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+									  <div class="modal-dialog modal-dialog-centered" role="document">
+									    <div class="modal-content">
+									      <div class="modal-header">
+									        <h5 class="modal-title" id="exampleModalLongTitle">포도상구균<span class="small text-gray-500"> / Bacteria</span></h5>
+									        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									          <span aria-hidden="true">&times;</span>
+									        </button>
+									      </div>
+									      <div class="modal-body">
+									      	<p>토양미생물이 대부분으로 인체에 무해.</p>
+									      	<p>인간이나 여러 생물의 점막 혹은 피부에 서식함.</p>
+									      </div>
+									      <div class="modal-footer py-1">
+									        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									      </div>
+									    </div>
+									  </div>
+									</div>
+									<!-- End Modal -->
+									<!-- Begin Modal -->
+									<div class="modal fade" id="daejang" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+									  <div class="modal-dialog modal-dialog-centered" role="document">
+									    <div class="modal-content">
+									      <div class="modal-header">
+									        <h5 class="modal-title" id="exampleModalLongTitle">대장균<span class="small text-gray-500"> / Bacteria</span></h5>
+									        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									          <span aria-hidden="true">&times;</span>
+									        </button>
+									      </div>
+									      <div class="modal-body">
+									      	<p>대장에 분포하는 세균 종 가운데 하나로 대부분 인체에 무해함.</p>
+									      	<p>단, 면연력이 낮으면 대장균의 종류에 따라 질환이 생길 수 있음.</p>
+									      </div>
+									      <div class="modal-footer py-1">
+									        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									      </div>
+									    </div>
+									  </div>
+									</div>
+									<!-- End Modal -->
                             </div>
                             <!-- end panel -->
 					    </div>

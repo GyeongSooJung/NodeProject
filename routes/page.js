@@ -158,7 +158,8 @@ router.get('/company_list', isNotLoggedIn, async (req, res, next) => {
   
   const CID = req.decoded.CID;
   const aclist = await Worker.find({"CID" : CID, "AC" : false});
-  const companys = await Company.find({"AH" : false});
+  
+  let page = req.query.page;
   
   const DEVICE = req.query.DEVICE;
   const CAR = req.query.CAR;
@@ -171,24 +172,47 @@ router.get('/company_list', isNotLoggedIn, async (req, res, next) => {
   console.log("HISTORY : " + HISTORY);
   
   if(DEVICE) {
-    const devices = await Device.find({"CID" : DEVICE});
-    res.render('company_list', {company : req.decoded, aclist,devices,moment});
-    console.log("devices : "+ devices);
+    const companyone = await Company.findOne({"_id" : DEVICE});
+    
+    const totalNum = await Device.countDocuments({"CID" : DEVICE});
+    let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
+    const devices = await Device.find({"CID" : DEVICE}).sort({CA:-1}).skip(skipPost).limit(postNum);
+    
+    res.render('company_list', {companyone, company : req.decoded, aclist, devices, moment, totalNum, currentPage, totalPage, startPage, endPage});
   }
   else if(CAR) {
-    const cars = await Car.find({"CID" : CAR});
-    res.render('company_list', {company : req.decoded, aclist,cars,moment});
+    const companyone = await Company.findOne({"_id" : CAR});
+    
+    const totalNum = await Car.countDocuments({"CID" : CAR});
+    let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
+    const cars = await Car.find({"CID" : CAR}).sort({CA:-1}).skip(skipPost).limit(postNum);
+    
+    res.render('company_list', {companyone, company : req.decoded, aclist, cars, moment, totalNum, currentPage, totalPage, startPage, endPage});
   }
   else if(WORKER) {
-    const workers = await Worker.find({"CID" : WORKER});
-    res.render('company_list', {company : req.decoded, aclist,workers,moment});
+    const companyone = await Company.findOne({"_id" : WORKER});
+    
+    const totalNum = await Worker.countDocuments({"CID" : WORKER});
+    let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
+    const workers = await Worker.find({"CID" : WORKER}).sort({CA:-1}).skip(skipPost).limit(postNum);
+    
+    res.render('company_list', {companyone, company : req.decoded, aclist, workers, moment, totalNum, currentPage, totalPage, startPage, endPage});
   }
   else if(HISTORY) {
-    const historys = await History.find({"CID" : HISTORY});
-    res.render('company_list', {company : req.decoded, aclist,historys,moment});
+    const companyone = await Company.findOne({"_id" : HISTORY});
+    
+    const totalNum = await History.countDocuments({"CID" : HISTORY});
+    let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
+    const historys = await History.find({"CID" : HISTORY}).sort({CA:-1}).skip(skipPost).limit(postNum);
+    
+    res.render('company_list', {companyone, company : req.decoded, aclist, historys, moment, totalNum, currentPage, totalPage, startPage, endPage});
   }
   else {
-    res.render('company_list', {companys, aclist, moment, company : req.decoded});
+    const totalNum = await Company.countDocuments({"AH" : false});
+    let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
+    const companys = await Company.find({"AH" : false}).sort({CA:-1}).skip(skipPost).limit(postNum);
+    
+    res.render('company_list', {companys, aclist, moment, company : req.decoded, totalNum, currentPage, totalPage, startPage, endPage});
   }
 })
 
@@ -254,9 +278,14 @@ router.get('/device_list', isNotLoggedIn,async (req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({"CID" : CID, "AC" : false});
   
+  let page = req.query.page;
+  
   try {
-    const devices = await Device.find({CID : req.decoded.CID,});
-    res.render('device_list', {company : req.decoded, aclist, devices});
+    const totalNum = await Device.countDocuments({"CID" : CID});
+    let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
+    const devices = await Device.find({"CID" : CID}).sort({CA:-1}).skip(skipPost).limit(postNum);
+    
+    res.render('device_list', {company : req.decoded, aclist, devices, totalNum, currentPage, totalPage, startPage, endPage});
   } catch (err) {
     console.error(err);
     next(err);
@@ -286,14 +315,19 @@ router.get('/car_list',isNotLoggedIn, async (req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({"CID" : CID, "AC" : false});
   
+  let page = req.query.page;
+  
   console.log("현재 시간은???"+moment.tz.guess(true));
   console.log(Intl.DateTimeFormat().resolvedOptions().timeZone);
   
   
   try {
-    const cars = await Car.find({CID : req.decoded.CID,});
-      console.log(cars);
-    res.render('car_list', {company : req.decoded, aclist, cars,moment,moment2});
+    const totalNum = await Car.countDocuments({"CID" : CID});
+    let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
+    const cars = await Car.find({"CID" : CID}).sort({CA:-1}).skip(skipPost).limit(postNum);
+    console.log(cars);
+      
+    res.render('car_list', {company : req.decoded, aclist, cars, moment, moment2, totalNum, currentPage, totalPage, startPage, endPage});
   } catch (err) {
     console.error(err);
     next(err);
@@ -309,9 +343,14 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const aclist = await Worker.find({"CID" : CID, "AC" : false});
-    const workers = await Worker.find({CID : req.decoded.CID,});
   
-  res.render('worker_list', {aclist, company : req.decoded, workers});
+  let page = req.query.page;
+  
+  const totalNum = await Worker.countDocuments({"CID" : CID});
+  let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
+  const workers = await Worker.find({CID : CID,}).sort({CA:-1}).skip(skipPost).limit(postNum);
+  
+  res.render('worker_list', {aclist, company : req.decoded, workers, totalNum, currentPage, totalPage, startPage, endPage});
 });
 
 //작업자 인증 ajax
@@ -369,9 +408,7 @@ router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
     if(!CN & !MD) {
 
       const totalNum = await History.countDocuments({"CID" : CID});
-      
       let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
-      
       const historylist = await History.find({"CID" : CID}).sort({CA:-1}).skip(skipPost).limit(postNum);
       
       res.render('history_list', {company : req.decoded, aclist, cars, devices, historylist, moment, totalNum, currentPage, totalPage, startPage, endPage});
@@ -381,9 +418,7 @@ router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
       const carone = await Car.findOne({"CN" : CN});
       
       const totalNum = await History.countDocuments({"VID" : carone._id});
-      
       let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
-      
       const historylist = await History.find({"VID" : carone._id}).sort({CA:-1}).skip(skipPost).limit(postNum);
       
       res.render('history_list', {company : req.decoded, aclist, cars, carone, devices, historylist, moment, totalNum, currentPage, totalPage, startPage, endPage});
@@ -393,9 +428,7 @@ router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
       const deviceone = await Device.findOne({"MD" : MD});
       
       const totalNum = await History.countDocuments({"DID" : deviceone._id});
-      
       let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
-      
       const historylist = await History.find({"DID" : deviceone._id}).sort({CA:-1}).skip(skipPost).limit(postNum);
       
       res.render('history_list', {company : req.decoded, aclist, cars, devices, deviceone, historylist, moment, totalNum, currentPage, totalPage, startPage, endPage});
