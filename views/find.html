@@ -133,6 +133,22 @@
 	 
      </script>
      <script>
+                 
+        window.onload = () => {
+            
+
+            
+            
+            //인증번호 인증이 성공했을 때
+
+            
+            if (new URL(location.href).searchParams.get('false')) {
+                 alert('인증번호가 틀립니다. 다시 시도해 주세요');
+            }
+          
+        	
+        }
+        
     var authNum = document.getElementById("authNum").value;    
     var TimeSet = 180
     var sec = "";
@@ -149,25 +165,7 @@
                     
                 },1000)                
             }
-            
-        window.onload = () => {
-            
 
-            
-            
-            //인증번호 인증이 성공했을 때
-
-            
-            if (new URL(location.href).searchParams.get('pwe')) {
-                alert('비밀번호가 일치하지 않습니다.');
-            }
-            if (new URL(location.href).searchParams.get('false')) {
-                 alert('인증번호가 틀립니다. 다시 시도해 주세요');
-                 opener.parent.location.replace('./find');
-            }
-
-        	
-        }
       </script>
 </body>
 </html>

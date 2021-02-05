@@ -39,6 +39,8 @@
 									<th>차종</th>
 									<th>차량 번호</th>
 									<th>차대 번호</th>
+									<th>등록 일자</th>
+									<th>수정 일자</th>
 									<th width="1%"></th>
 								</tr>
 							</thead>
@@ -68,6 +70,11 @@
 									<td>{{car.SN}}</td>
 									{% else %} <td> </td>
 									{% endif %}
+									
+									{% set toDt = moment.utc(car.CA).toDate() %}
+									
+									<td>{{moment(car.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
+									<td>{{moment(car.UA).format('YYYY-MM-DD hh:mm:ss')}}</td>
 									<td class="with-btn" nowrap>
 										<a href="/car_edit/{{car.CN}}" class="btn btn-sm btn-primary width-60 m-r-2">수정</a>
 										<a href="javascript:delete_check('{{car.CN}}')" class="btn btn-sm btn-white width-60">삭제</a>

@@ -9,6 +9,7 @@ const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const secretObj2 = require("../config/jwt");
+const cookieParser = require("cookie-parser");
 
 const smtpTransport = nodemailer.createTransport({
   service: "Gmail",
@@ -98,8 +99,12 @@ router.post('/email_cert', async (req, res, next) => {
       console.log(authNum);
       
       if(Enum === authNum) {
-          res.cookie("email", EA);
-          res.cookie('authNum',authNum)
+          res.cookie("email", EA,{
+            maxAge: 180000
+          });
+          res.cookie('authNum',authNum,{
+            maxAge: 180000
+          });
           return res.redirect('/email?success2=true');
       }
       else {

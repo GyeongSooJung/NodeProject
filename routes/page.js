@@ -9,6 +9,7 @@ const moment = require('moment');
 //Router or MiddleWare
 const router = express.Router();
 const {isLoggedIn, isNotLoggedIn, DataSet, emailcontrol} = require('./middleware');
+const moment2 = require('moment-timezone');
 
 //----------------------------------------------------------------------------//
 //                                  기본라우터                                //
@@ -51,10 +52,12 @@ router.get('/adress',(req,res)=>{
 
 //회원 가입
 router.get('/register',isLoggedIn,emailcontrol,async(req,res)=>{
+      const current_time = req.body.current_time;
       await  res.cookie('ADR',null);
       console.log("사업자 이름"+req.body.CNA);
       console.log('cokigahglkhqlghaklshdgkla')
       console.log(req.cookies)
+      
       var roadAddrPart1 = null
       var roadAddrPart2 = null
       var addrDetail = null
@@ -68,7 +71,6 @@ router.get('/register',isLoggedIn,emailcontrol,async(req,res)=>{
      const email = req.decoded.email;
      console.log("email = " +email);
      console.log("authNum = " +authNum);
-     //console.log(req.decoded.email);
   
   if (authNum){
     return res.render('register',{email,roadAddrPart1,roadAddrPart2,addrDetail});
@@ -271,7 +273,7 @@ router.get('/car_edit/:CN',isNotLoggedIn,async (req, res, next) => {
   
   try {
     const carone = await Car.findOne({CN : req.params.CN});
-    res.render('car_edit', {company : req.decoded, aclist, carone});
+    res.render('car_edit', {company : req.decoded, aclist, carone,moment,moment2});
   } catch (err) {
     console.error(err);
     next(err);
@@ -283,10 +285,14 @@ router.get('/car_list',isNotLoggedIn, async (req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({"CID" : CID, "AC" : false});
   
+  console.log("현재 시간은???"+moment.tz.guess(true));
+  console.log(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  
+  
   try {
     const cars = await Car.find({CID : req.decoded.CID,});
       console.log(cars);
-    res.render('car_list', {company : req.decoded, aclist, cars});
+    res.render('car_list', {company : req.decoded, aclist, cars,moment,moment2});
   } catch (err) {
     console.error(err);
     next(err);

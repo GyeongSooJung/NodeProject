@@ -10,9 +10,12 @@ const Company = require('../schemas/company');
 //자동차 등록
     //DB에 등록
 router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
-  const { CC, CN, SN } = req.body;
+  const { CC, CN, SN} = req.body;
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
+  const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+  console.log(CA);
+  
   
   try {
       const exCar = await Car.find({ "CN" :  CN });
@@ -29,9 +32,8 @@ router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
         return res.redirect('/car_join?error=exist');
       }
       else {
-        const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
         const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
-        const UA = "";
+        const UA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
         await Car.create({
             CID, CC, CN, SN, CA
         });
@@ -39,7 +41,6 @@ router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
         const companyone = await Company.where({"CNU" : CNU})
           .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
           .exec();
-          
         return res.redirect('/car_join');
         
         
@@ -55,9 +56,12 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
   const { CC, CN, SN } = req.body;
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
-  const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss'); //한국시간 맞추기 위해 +9시간
-  const UA = "";
+  const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+  const UA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
   const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+  
+  console.log(CA);
+  
   
   const resData = {};
     try {
@@ -72,20 +76,21 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
           console.log(resData);
            for(var j = 0; j < resData.Sheet1.length;  j++) {
             resData[sheetnames[0]][j].CID = CID;
-            resData[sheetnames[0]][j].CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');;
+            resData[sheetnames[0]][j].CA = CA; //차후에 변경 
            Car.insertMany({
             "CID": resData.Sheet1[j].CID,
             "CC" : resData.Sheet1[j].차종,
             "CN": resData.Sheet1[j].차량번호,
             "SN": resData.Sheet1[j].차대번호,
-            "CA" : resData.Sheet1[j].CA
+            "CA" : resData.Sheet1[j].CA,
+            "UA" : resData.Sheet1[j].CA
            });
            
          }
       });
       
         const companyone = await Company.where({"CNU" : CNU})
-          .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
+          .updateMany({ "CUA" : CA }).setOptions({runValidators : true})
           .exec();
    
       form.on('close', () => {
@@ -123,7 +128,7 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn,async (req, res, next) => {
         return res.redirect('/car_list?error=exist');
       }
       else {
-        const UA =  moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+        const UA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
         const carone = await Car.where({"CN" : req.params.CN})
           .updateMany({ "CID" : CID,
                         "CC" : CC,

@@ -17,7 +17,7 @@ router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
   try {
     const exDevice = await Device.findOne({ "MAC" : MAC });
     const check = /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/;
-    
+
     if (exDevice) {
       return res.redirect('/device_join?error=exist');
     }
@@ -26,7 +26,7 @@ router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
     }
     else{
       const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss'); //한국시간 맞추기 위해 +9시간
-      const UA = "";
+      const UA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
       await Device.create({
         CID, MD, VER, MAC, NN, CA
     });
@@ -43,22 +43,22 @@ router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss'); //한국시간 맞추기 위해 +9시간
-  const UA = "";
-  
+  const UA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+
   const resData = {};
     try {
       const form = new multiparty.Form({
         autoFiles: true,
       });
- 
+
       form.on('file', (name, file) => {
           const workbook = xlsx.readFile(file.path);
           const sheetnames = Object.keys(workbook.Sheets);
-          resData[sheetnames[0]] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetnames[0]]); 
+          resData[sheetnames[0]] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetnames[0]]);
           console.log(resData);
            for(var j = 0; j < resData.Sheet1.length;  j++) {
             resData[sheetnames[0]][j].CID = CID;
-            resData[sheetnames[0]][j].CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');;
+            resData[sheetnames[0]][j].CA = "";
            Device.insertMany({
             "CID": resData.Sheet1[j].CID,
             "MD" : resData.Sheet1[j].모델명,
@@ -69,13 +69,13 @@ router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
            });
          }
       });
-   
+
     form.on('close', () => {
       res.redirect('/device_join');
     });
- 
+
     form.parse(req);
-    
+
     } catch(err) {
       console.error(err);
       next(err);
@@ -88,7 +88,7 @@ router.post('/device_edit/upreg/:MAC', isNotLoggedIn,async (req, res, next) => {
     const { MD, VER, NN, MAC } = req.body;
     const CID = req.decoded.CID;
     const CNU = req.decoded.CNU;
-    
+
     try {
       const exDevice = await Device.find({ "MAC" :  MAC });
       console.log(exDevice);
@@ -126,7 +126,7 @@ router.get('/device_delete/:MAC', async (req, res, next) => {
 router.post('/device_select_delete',isNotLoggedIn ,async (req, res, next) => {
     try {
         const {ck} = req.body;
-        
+
         if(!ck) {
           return res.redirect('/device_list');
         }
@@ -136,7 +136,7 @@ router.post('/device_select_delete',isNotLoggedIn ,async (req, res, next) => {
           const MACc = deviceone.MAC;
           var i;
           console.log("MAC: " + ck);
-          
+
           for(i=0; i < ck.length; i++){
               if(ck){
                   if(ck[i] == MACc){
@@ -154,5 +154,5 @@ router.post('/device_select_delete',isNotLoggedIn ,async (req, res, next) => {
         next(err);
   }
 });
-    
+
 module.exports = router;

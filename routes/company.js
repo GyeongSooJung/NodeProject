@@ -12,6 +12,8 @@ var moment = require('moment');
 
 //Register for Client
 router.post('/register',emailcontrol,async (req, res, next) => {
+  const Ctime = req.body.Ctime;
+  console.log("현재 시간은? " +Ctime);
   //req. Body for Insert Data.
   const {NA, CNU, CNA, PN, MN, PW, PW2, CK, EA} = req.body;
   console.log("주소상세"+req.body.addrDtail);

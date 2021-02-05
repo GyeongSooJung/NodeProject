@@ -58,10 +58,12 @@ const CompanySchema = new Schema({
         default: Date.now
     }, //UpDate Date
     UA: {
-        type: Date
+        type: Date,
+        default: Date.now
     },
     CUA: {
-        type: Date
+        type: Date,
+        default: Date.now
     },
 }, { collection: 'Company' });
 

@@ -6,6 +6,7 @@ const Worker = require('../../schemas/worker');
 const Company = require('../../schemas/company');
 const Car = require('../../schemas/car');
 const History = require('../../schemas/history');
+var moment = require('moment');
 
 const UNKOWN = "UNKOWN";
 const NO_SUCH_DATA = "NO_SUCH_DATA";
@@ -29,7 +30,7 @@ exports.signIn = async(req, res) => {
     if (type == "GOOGLE") {
         var worker = await Worker.findOne({ "GID": id, "EM": email });
         if (worker != null) {
-            await Worker.where({ _id: worker._id }).update({ "UA": Date.now() });
+            await Worker.where({ _id: worker._id }).update({ "UA": moment().add('9','h').format('YYYY-MM-DD hh:mm:ss') });
             return res.json({
                 result: true,
                 data: JSON.stringify(worker),
@@ -74,7 +75,7 @@ exports.updateWorkerInfo = async(req, res) => {
     try {
         const { _id, WN, PN, AU } = req.body;
 
-        var result = await Worker.where({ _id }).update({ WN, PN, AU, UA: Date.now() });
+        var result = await Worker.where({ _id }).update({ WN, PN, AU, UA: moment().add('9','h').format('YYYY-MM-DD hh:mm:ss') });
         console.log(result);
 
         res.json({
