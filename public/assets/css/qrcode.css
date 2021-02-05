@@ -1,11 +1,34 @@
-@media (max-width: 768px) {
-    html {
-        width: 100%;
-        height: 100%;
-        position: fixed;
-        }
-    body {
-        width: 100%;
-        height: 100%;
-    }
+/*@media (max-width: 768px) {*/
+/*    html {*/
+/*        width: 100%;*/
+/*        height: 100%;*/
+/*        position: fixed;*/
+/*        }*/
+/*    body {*/
+/*        width: 100%;*/
+/*        height: 100%;*/
+/*    }*/
+/*}*/
+.tip {
+    position:relative;
+}
+.balloon {
+    display: none;
+    position: absolute;
+    top: -54px;
+    left: 0px;
+    width: 100px;
+    height: 46px;
+    background: #ff6781;
+    border-radius: 10px;
+}
+.balloon:after {
+    border-top: 10px solid #ff6781;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 0px solid transparent;
+    content: "";
+    position: absolute;
+    top: 44px;
+    left: 20px;
 }

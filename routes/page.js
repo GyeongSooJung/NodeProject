@@ -9,6 +9,7 @@ const moment = require('moment');
 //Router or MiddleWare
 const router = express.Router();
 const {isLoggedIn, isNotLoggedIn, DataSet, emailcontrol} = require('./middleware');
+const { pagination } = require('./modulebox');
 const moment2 = require('moment-timezone');
 
 //----------------------------------------------------------------------------//
@@ -363,21 +364,41 @@ router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
     const CN = req.query.CN;
     const MD = req.query.MD;
     
+    let page = req.query.page;
+    
     if(!CN & !MD) {
-      const historys = await History.find({"CID" : CID});
-      res.render('history_list', {company : req.decoded, aclist, cars, devices, historys, moment});
+
+      const totalNum = await History.countDocuments({"CID" : CID});
+      
+      let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
+      
+      const historylist = await History.find({"CID" : CID}).sort({CA:-1}).skip(skipPost).limit(postNum);
+      
+      res.render('history_list', {company : req.decoded, aclist, cars, devices, historylist, moment, totalNum, currentPage, totalPage, startPage, endPage});
     }
     
     else if(CN) {
       const carone = await Car.findOne({"CN" : CN});
-      const historys = await History.find({"VID" : carone._id});
-      res.render('history_list', {company : req.decoded, aclist, cars, devices, historys, moment});
+      
+      const totalNum = await History.countDocuments({"VID" : carone._id});
+      
+      let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
+      
+      const historylist = await History.find({"VID" : carone._id}).sort({CA:-1}).skip(skipPost).limit(postNum);
+      
+      res.render('history_list', {company : req.decoded, aclist, cars, carone, devices, historylist, moment, totalNum, currentPage, totalPage, startPage, endPage});
     }
     
     else if(MD) {
       const deviceone = await Device.findOne({"MD" : MD});
-      const historys = await History.find({"DID" : deviceone._id});
-      res.render('history_list', {company : req.decoded, aclist, cars, devices, historys, moment});
+      
+      const totalNum = await History.countDocuments({"DID" : deviceone._id});
+      
+      let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
+      
+      const historylist = await History.find({"DID" : deviceone._id}).sort({CA:-1}).skip(skipPost).limit(postNum);
+      
+      res.render('history_list', {company : req.decoded, aclist, cars, devices, deviceone, historylist, moment, totalNum, currentPage, totalPage, startPage, endPage});
     }
   } catch (err) {
     console.error(err);
