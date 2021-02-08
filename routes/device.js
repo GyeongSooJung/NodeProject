@@ -7,19 +7,20 @@ const multiparty = require('multiparty');
 const xlsx = require('xlsx');
 const router = express.Router();
 
+
 //장비 등록
   //DB에 등록
 router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
   const { MD, MAC, VER, NN, CA, UA, UT } = req.body;
     const CID = req.decoded.CID;
     const CNU = req.decoded.CNU;
-    console.log(req.body);
+    
   try {
     const exDevice = await Device.findOne({ "MAC" : MAC });
     const check = /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/;
 
     if (exDevice) {
-      return res.redirect('/device_join?error=exist');
+      return res.redirect('/device_join?error=true');
     }
     else if(check.test(MAC) == false) {
       return res.redirect('/device_join?type=true');
@@ -51,27 +52,45 @@ router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
         autoFiles: true,
       });
 
-      form.on('file', (name, file) => {
+      form.on('file', async (name, file) => {
+        
           const workbook = xlsx.readFile(file.path);
           const sheetnames = Object.keys(workbook.Sheets);
           resData[sheetnames[0]] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetnames[0]]);
           console.log(resData);
            for(var j = 0; j < resData.Sheet1.length;  j++) {
-            resData[sheetnames[0]][j].CID = CID;
-            resData[sheetnames[0]][j].CA = "";
-           Device.insertMany({
-            "CID": resData.Sheet1[j].CID,
-            "MD" : resData.Sheet1[j].모델명,
-            "VER": resData.Sheet1[j].버전,
-            "MAC": resData.Sheet1[j].맥주소,
-            "NN" : resData.Sheet1[j].별칭,
-            "CA" : resData.Sheet1[j].CA
-           });
+             
+            const exDevice = await Device.findOne({ "MAC" : resData.Sheet1[j].맥주소 });
+            const check = /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/;
+             
+             if (exDevice) {
+                return res.redirect('/device_join?error=true');
+              } 
+             
+            if(check.test(resData.Sheet1[j].맥주소) == false) {
+              return res.redirect('/device_join?type=true');
+            }
+            
+
+             
+              resData[sheetnames[0]][j].CID = CID;
+              resData[sheetnames[0]][j].CA = CA;
+              
+              
+             Device.insertMany({
+              "CID": resData.Sheet1[j].CID,
+              "MD" : resData.Sheet1[j].모델명,
+              "VER": resData.Sheet1[j].버전,
+              "MAC": resData.Sheet1[j].맥주소,
+              "NN" : resData.Sheet1[j].별칭,
+              "CA" : resData.Sheet1[j].CA
+             });
          }
+         
+      res.redirect('/device_list');
       });
 
     form.on('close', () => {
-      res.redirect('/device_join');
     });
 
     form.parse(req);

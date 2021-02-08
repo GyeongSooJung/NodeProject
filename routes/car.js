@@ -7,6 +7,9 @@ const xlsx = require('xlsx');
 const router = express.Router();
 const Company = require('../schemas/company');
 
+let CARcheck;
+global.CARcheck = CARcheck;
+
 //자동차 등록
     //DB에 등록
 router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
@@ -41,7 +44,7 @@ router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
         const companyone = await Company.where({"CNU" : CNU})
           .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
           .exec();
-        return res.redirect('/car_join');
+        return res.redirect('/car_list');
         
         
       }
@@ -51,6 +54,21 @@ router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
   }
 });
 
+const CNcheck = function(data,req,res){
+    
+}
+const SNcheck = async (res,req,data) => {
+    const Ckdb = await Car.findOne({"SN": data});
+    console.log(Ckdb);
+    if (Ckdb) {
+      return false;
+    }else
+    {
+      return true;
+    }
+}
+
+
 //Excel로 DB에 등록
 router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
   const { CC, CN, SN } = req.body;
@@ -59,42 +77,81 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
   const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
   const UA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
   const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+  var CNlist = []
+ 
   
-  console.log(CA);
   
   
   const resData = {};
-    try {
+  
+  
+  try {
       const form = new multiparty.Form({
           autoFiles: true,
       });
 
-      form.on('file', (name, file) => {
+      form.on('file', async (name, file, CARcheck) => {
           const workbook = xlsx.readFile(file.path);
           const sheetnames = Object.keys(workbook.Sheets);
           resData[sheetnames[0]] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetnames[0]]); 
-          console.log(resData);
+          
+          
+          
+          
            for(var j = 0; j < resData.Sheet1.length;  j++) {
-            resData[sheetnames[0]][j].CID = CID;
-            resData[sheetnames[0]][j].CA = CA; //차후에 변경 
-           Car.insertMany({
-            "CID": resData.Sheet1[j].CID,
-            "CC" : resData.Sheet1[j].차종,
-            "CN": resData.Sheet1[j].차량번호,
-            "SN": resData.Sheet1[j].차대번호,
-            "CA" : resData.Sheet1[j].CA,
-            "UA" : resData.Sheet1[j].CA
-           });
-           
+             
+             
+             const carone = await Car.findOne({"CN": resData.Sheet1[j].차량번호});
+             const carone2 = await Car.findOne({"SN": resData.Sheet1[j].차대번호});
+             
+             const check = /^[0-9]{2,3}[하,허,호]{1}[0-9]{4}/gi;
+             
+             console.log("33333333"+carone);
+             console.log("33333333"+carone2);
+             console.log(resData.Sheet1[j].차량번호);
+             
+              if (carone || carone2) {
+              //  CARcheck = 1;
+                return res.redirect('/car_join?excelCN=true');
+              }
+                              
+                              // 엑셀 파일이 잘 되어있는지 확인
+              if (7 > resData.Sheet1[j].차량번호 || 8 < resData.Sheet1[j].차량번호) {
+                  return res.redirect('/car_join?length=true');
+                }
+              if (check.test(resData.Sheet1[j].차량번호) == false) 
+                {
+                 return res.redirect('/car_join?type=true');
+                }
+              if (!(resData.Sheet1[j].차종 == 1 || resData.Sheet1[j].차종 == 2 || resData.Sheet1[j].차종 == 3 || resData.Sheet1[j].차종 == 4 || resData.Sheet1[j].차종 == 5 || resData.Sheet1[j].차종 == 6 )) {
+                  
+                  return res.redirect('/car_join?excel=true');
+                }
+              else {
+                resData[sheetnames[0]][j].CID = CID;
+                resData[sheetnames[0]][j].CA = CA; //차후에 변경 
+                Car.insertMany({
+                "CID": resData.Sheet1[j].CID,
+                "CC" : resData.Sheet1[j].차종,
+                "CN": resData.Sheet1[j].차량번호,
+                "SN": resData.Sheet1[j].차대번호,
+                "CA" : resData.Sheet1[j].CA,
+                "UA" : resData.Sheet1[j].CA
+                });
+              }
+                      
          }
+         res.redirect('/car_list');
       });
+      
       
         const companyone = await Company.where({"CNU" : CNU})
           .updateMany({ "CUA" : CA }).setOptions({runValidators : true})
           .exec();
-   
+          
+          
+          
       form.on('close', () => {
-        res.redirect('/car_join');
       });
    
       form.parse(req);
@@ -102,8 +159,14 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
     } catch(err) {
       console.error(err);
       next(err);
+      return res.redirect('/car_join?excel=true');
     }
 });
+
+
+
+
+
 
 //차량 수정
   //DB

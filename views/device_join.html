@@ -90,8 +90,15 @@
 							if (new URL(location.href).searchParams.get('error')) {
 								alert('이미 존재하는 MAC 입니다.');
 							}
+						
 							if (new URL(location.href).searchParams.get('type')) {
 								alert('MAC 주소를 정확히 입력해주세요.');
+							}
+							if (new URL(location.href).searchParams.get('excel')) {
+								alert('파일이 잘못되었습니다. 형식 또는 양식을 확인해주세요');
+							}
+							if (new URL(location.href).searchParams.get('excelMAC')) {
+								alert('이미 존재하는 MAC 입니다.');
 							}
 						}
 					</script>
