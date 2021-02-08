@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="kor">
+<head>
+	<meta charset="utf-8" />
+	<title>MK | Disinfection History</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+	
+	<!-- ================== BEGIN BASE CSS STYLE ================== -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+	<link href="../assets/css/default/app.min.css" rel="stylesheet" />
+	<!-- ================== END BASE CSS STYLE ================== -->
+	
+	<!-- fontawsome 사용 -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" rel="stylesheet" />
+	<!-- favicon -->
+	<link href="../assets/img/favicon.png" rel="icon">
+	
+    <link rel="stylesheet" href="../assets/css/qrcode.css">
+	
+</head>
+<body>
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade page-without-sidebar">
+		<!-- begin #header -->
+		<div id="header" class="header navbar-default mb-0">
+			 <!--begin navbar-header -->
+			<div class="navbar-header">
+				<span class="navbar-brand m-0"><img src="../assets/img/oasis.png"></span>
+			</div>
+			 <!--end header-nav -->
+		</div>
+		<!-- end #header -->
+		
+		<!-- begin #content -->
+		<div id="content" class="content pt-0">
+			<!-- begin ? -->
+			<div class="">
+				<!-- begin ?? -->
+				<div class="">
+					<!-- begin row -->
+					<div class="row">
+					    <div class="col-xl-12">
+					        <!-- begin panel -->
+		                    <div class="panel panel-inverse text-center text-white" id="status">
+		                        <div class="py-3 mt-3">
+		                        	<h1 class="mb-1" id="status_title"></h1>
+		                            <h4 class="mb-1">최근 소독 일시 : {{moment(historyone.ET).format('YYYY-MM-DD')}}</h4>
+		                            <h4 class="mb-0">최근 소독 일시로부터 {{term}}일 경과</h4>
+		                        </div>
+                            </div>
+                            <!-- end panel -->
+                            
+                            <!-- begin panel -->
+		                    <div class="panel panel-inverse">
+		                        <div class="py-3 mt-2">
+		                        	<h4 class="mb-0 pl-4">현재 오존 농도</h4>
+		                        	<small class="pl-4 text-gray-500">* 소독여부와는 무관할 수 있음</small>
+		                        	<div id="chartdiv"></div>
+		                        </div>
+                            </div>
+                            
+                            <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+							<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+							<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+							
+                            <script>
+                            am4core.ready(function() {
+
+								// Themes begin
+								am4core.useTheme(am4themes_animated);
+								// Themes end
+								
+								var chartMin = 0;
+								var chartMax = 2;
+								
+								
+								
+								var data = {
+								  score: {{historyone.FP}},
+								  gradingData: [
+								    {
+								      title: "안전",
+								      color: "#0f9747",
+								      lowScore: -0.1,
+								      highScore: 0.5
+								    },
+								    {
+								      title: "주의",
+								      color: "#fdae19",
+								      lowScore: 0.5,
+								      highScore: 1.0
+								    },
+								    {
+								      title: "위험",
+								      color: "#ee1f25",
+								      lowScore: 1.0,
+								      highScore: 2.0
+								    }
+								  ]
+								};
+								
+								/**
+								Grading Lookup
+								 */
+								function lookUpGrade(lookupScore, grades) {
+								  // Only change code below this line
+								  for (var i = 0; i < grades.length; i++) {
+								    if (
+								      grades[i].lowScore < lookupScore &&
+								      grades[i].highScore >= lookupScore
+								    ) {
+								      return grades[i];
+								    }
+								  }
+								  return null;
+								}
+								
+								// create chart
+								var chart = am4core.create("chartdiv", am4charts.GaugeChart);
+								chart.hiddenState.properties.opacity = 0;
+								chart.fontSize = 11;
+								chart.innerRadius = am4core.percent(80);
+								chart.resizable = true;
+								chart.logo.disabled = true;
+								
+								/**
+								 * Normal axis
+								 */
+								
+								var axis = chart.xAxes.push(new am4charts.ValueAxis());
+								axis.min = chartMin;
+								axis.max = chartMax;
+								axis.strictMinMax = true;
+								axis.renderer.radius = am4core.percent(80);
+								axis.renderer.inside = true;
+								axis.renderer.line.strokeOpacity = 0.1;
+								axis.renderer.ticks.template.disabled = false;
+								axis.renderer.ticks.template.strokeOpacity = 1;
+								axis.renderer.ticks.template.strokeWidth = 0.3;
+								axis.renderer.ticks.template.length = 2;
+								axis.renderer.grid.template.disabled = true;
+								axis.renderer.labels.template.radius = am4core.percent(15);
+								axis.renderer.labels.template.fontSize = "0.5em";
+								
+								/**
+								 * Axis for ranges
+								 */
+								
+								var axis2 = chart.xAxes.push(new am4charts.ValueAxis());
+								axis2.min = chartMin;
+								axis2.max = chartMax;
+								axis2.strictMinMax = true;
+								axis2.renderer.labels.template.disabled = true;
+								axis2.renderer.ticks.template.disabled = true;
+								axis2.renderer.grid.template.disabled = false;
+								axis2.renderer.grid.template.opacity = 0.5;
+								axis2.renderer.labels.template.bent = true;
+								axis2.renderer.labels.template.fill = am4core.color("#000");
+								axis2.renderer.labels.template.fontWeight = "bold";
+								axis2.renderer.labels.template.fillOpacity = 0.3;
+								
+								
+								
+								/**
+								Ranges
+								*/
+								
+								for (let grading of data.gradingData) {
+								  var range = axis2.axisRanges.create();
+								  range.axisFill.fill = am4core.color(grading.color);
+								  range.axisFill.fillOpacity = 0.8;
+								  range.axisFill.zIndex = -1;
+								  range.value = grading.lowScore > chartMin ? grading.lowScore : chartMin;
+								  range.endValue = grading.highScore < chartMax ? grading.highScore : chartMax;
+								  range.grid.strokeOpacity = 0;
+								  range.stroke = am4core.color(grading.color).lighten(-0.1);
+								  range.label.inside = true;
+								  range.label.text = grading.title.toUpperCase();
+								  range.label.inside = true;
+								  range.label.location = 0.5;
+								  range.label.inside = true;
+								  range.label.radius = am4core.percent(10);
+								  range.label.paddingBottom = -5; // ~half font size
+								  range.label.fontSize = "0.9em";
+								}
+								
+								var matchingGrade = lookUpGrade(data.score, data.gradingData);
+								
+								/**
+								 * Label 1
+								 */
+								
+								var label = chart.radarContainer.createChild(am4core.Label);
+								label.isMeasured = false;
+								label.fontSize = "2em";
+								label.x = am4core.percent(50);
+								label.paddingBottom = 20;
+								label.horizontalCenter = "middle";
+								label.verticalCenter = "bottom";
+								//label.dataItem = data;
+								label.text = data.score.toFixed(1);
+								//label.text = "{score}";
+								label.fill = am4core.color(matchingGrade.color);
+								
+								/**
+								 * Label 2
+								 */
+								
+								var label2 = chart.radarContainer.createChild(am4core.Label);
+								label2.isMeasured = false;
+								label2.fontSize = "1.7em";
+								label2.horizontalCenter = "middle";
+								label2.verticalCenter = "bottom";
+								label2.text = matchingGrade.title.toUpperCase();
+								label2.fill = am4core.color(matchingGrade.color);
+								
+								
+								/**
+								 * Hand
+								 */
+								
+								var hand = chart.hands.push(new am4charts.ClockHand());
+								hand.axis = axis2;
+								hand.innerRadius = am4core.percent(55);
+								hand.startWidth = 8;
+								hand.pin.disabled = true;
+								hand.value = data.score;
+								hand.fill = am4core.color("#444");
+								hand.stroke = am4core.color("#000");
+								
+								hand.events.on("positionchanged", function(){
+								  label.text = axis2.positionToValue(hand.currentPosition).toFixed(1);
+								  var value2 = axis.positionToValue(hand.currentPosition);
+								  var matchingGrade = lookUpGrade(axis.positionToValue(hand.currentPosition), data.gradingData);
+								  label2.text = matchingGrade.title.toUpperCase();
+								  label2.fill = am4core.color(matchingGrade.color);
+								  label2.stroke = am4core.color(matchingGrade.color);  
+								  label.fill = am4core.color(matchingGrade.color);
+								})
+								
+							});
+                            </script>
+                            <!-- end panel -->
+                            
+                            <!-- begin panel -->
+                            <div class="panel panel-inverse">
+                                <div class="py-3 mt-2">
+                                    <h4 class="mb-0 text-center">살균 목록</h4>
+                                    {% if (term <= 2) %}
+                                    
+	                                    {% set time = historyone.PD.length %}
+	                                    
+	                                    {% if (time < 5) %}
+	                                    <p>소독 시간이 부족합니다.</p>
+	                                    {% endif %}
+	                                    
+	                                    {% if (time >= 5) %}
+	                                    <div class="d-flex justify-content-between align-content-center">
+                                    		<hr width="30%"><p class="mt-2 text-gray-500">바이러스</p><hr width="30%">
+                                    	</div>
+		                                    <div class="py-1 text-center d-flex flex-wrap justify-content-center align-content-center">
+		                                    	<div class="mx-2 my-1" data-toggle="modal" data-target="#cold">
+													<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+													<b>감기 바이러스</b>
+												</div>
+		                                    </div>
+	                                    {% endif %}
+	                                    
+	                                    {% if (time >= 10) %}
+	                                    <div class="d-flex justify-content-between align-content-center">
+                                    		<hr width="30%"><p class="mt-2 text-gray-500">박테리아</p><hr width="30%">
+                                    	</div>
+		                                    <div class="py-1 text-center d-flex flex-wrap justify-content-center align-content-center">
+			                                    <div class="mx-2 my-1" data-toggle="modal" data-target="#podo">
+													<img src="../assets/img/nogerm.png" alt="nogerm" class="mx-auto img-responsive">
+													<b>포도상구균</b>
+												</div>
+												<div class="mx-2 my-1" data-toggle="modal" data-target="#daejang">
+													<img src="../assets/img/nogerm2.png" alt="nogerm2" class="mx-auto img-responsive">
+													<b>대장균</b>
+												</div>
+	                                        </div>
+	                                    {% endif %}
+	                                    
+	                               	{% else %}
+                               		<h3 class="mt-2 mb-0 text-center text-realred">소독이 필요합니다!</h3>
+	                               	
+	                               	{% endif %}
+                                </div>
+									<!-- Begin Modal -->
+									<div class="modal fade" id="cold" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+									  <div class="modal-dialog modal-dialog-centered" role="document">
+									    <div class="modal-content">
+									      <div class="modal-header">
+									        <h5 class="modal-title" id="exampleModalLongTitle">감기 바이러스<span class="small text-gray-500"> / Virus</span></h5>
+									        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									          <span aria-hidden="true">&times;</span>
+									        </button>
+									      </div>
+									      <div class="modal-body">
+									      	<p>주로 감염된 사람의 재채기나 기침을 통해 나온 비말 속에 섞여 공기 중으로 나옴.</p>
+									      	<p>이 비말을 접촉한 사람의 입이나 코를 통해 감기 바이러스가 몸 안으로 들어옴.</p>
+									      </div>
+									      <div class="modal-footer py-1">
+									        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									      </div>
+									    </div>
+									  </div>
+									</div>
+									<!-- End Modal -->
+									<!-- Begin Modal -->
+									<div class="modal fade" id="podo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+									  <div class="modal-dialog modal-dialog-centered" role="document">
+									    <div class="modal-content">
+									      <div class="modal-header">
+									        <h5 class="modal-title" id="exampleModalLongTitle">포도상구균<span class="small text-gray-500"> / Bacteria</span></h5>
+									        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									          <span aria-hidden="true">&times;</span>
+									        </button>
+									      </div>
+									      <div class="modal-body">
+									      	<p>토양미생물이 대부분으로 인체에 무해.</p>
+									      	<p>인간이나 여러 생물의 점막 혹은 피부에 서식함.</p>
+									      </div>
+									      <div class="modal-footer py-1">
+									        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									      </div>
+									    </div>
+									  </div>
+									</div>
+									<!-- End Modal -->
+									<!-- Begin Modal -->
+									<div class="modal fade" id="daejang" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+									  <div class="modal-dialog modal-dialog-centered" role="document">
+									    <div class="modal-content">
+									      <div class="modal-header">
+									        <h5 class="modal-title" id="exampleModalLongTitle">대장균<span class="small text-gray-500"> / Bacteria</span></h5>
+									        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									          <span aria-hidden="true">&times;</span>
+									        </button>
+									      </div>
+									      <div class="modal-body">
+									      	<p>대장에 분포하는 세균 종 가운데 하나로 대부분 인체에 무해함.</p>
+									      	<p>단, 면연력이 낮으면 대장균의 종류에 따라 질환이 생길 수 있음.</p>
+									      </div>
+									      <div class="modal-footer py-1">
+									        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									      </div>
+									    </div>
+									  </div>
+									</div>
+									<!-- End Modal -->
+                            </div>
+                            <!-- end panel -->
+					    </div>
+					</div>
+					<!-- end row -->
+				</div>
+				<!-- end ?? -->
+			</div>
+			<!-- end ? -->
+		</div>
+		<!-- end #content -->
+	</div>
+	
+	<script>
+		const statusbg = document.getElementById("status");
+		const st = document.getElementById("status_title");
+		console.log(statusbg);
+		
+		if ({{term}} <= 2) {
+			statusbg.style.backgroundColor = "green";
+			st.innerHTML = "안전"
+		}
+		else if ({{term}} < 5) {
+			statusbg.style.backgroundColor = "orange";
+			st.innerHTML = "주의"
+		}
+		else {
+			statusbg.style.backgroundColor = "red";
+			st.innerHTML = "경고"
+		}
+	</script>
+
+	<!-- ================== BEGIN BASE JS ================== -->
+	<script src="../assets/js/app.min.js"></script>
+	<script src="../assets/js/theme/default.min.js"></script>
+	<!-- ================== END BASE JS ================== -->
+	<script src="../assets/js/qrcode.js"></script>
+	
+</body>
+</html>

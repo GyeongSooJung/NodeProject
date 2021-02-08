@@ -47,36 +47,54 @@
 	        						</tr>
 	        					</thead>
 	        					<tbody>
-	        					    {% for worker in workers.reverse() %}
-	        						<tr>
-	        							<td class="with-btn" nowrap>
-    										<input id ="ck" type="checkbox" name = "AC" class="neHeros" value={{worker.EM}} unchecked onChange="eachCheckedBox(this);"/>
-	        							</td>
-	                                    <td width="1%" class="with-img"><img src={{worker.PU}} class="img-rounded height-30" /></td>
-	        							<td>{{worker.WN}}</td>
-	        							<td>{{worker.PN}}</td>
-	        							<td>{{worker.EM}}</td>
-	        							    <input type="hidden" name="EM" value="{{worker.EM}}">
-	        							<td class="with-btn" nowrap>
-	        								<input class ="ck_au" type="checkbox" data-render="switchery" data-theme="black" name="ckone" value ="{{worker.EM}}"  {% if worker.AU == 1 %} checked {% else %} unchecked  {% endif %} />
-	        								
-	        							</td>
-	        							<td class="with-btn" nowrap>
-	        								<input class ="ck_ac" type="checkbox" data-render="switchery" data-theme="default" name="ckone" value ="{{worker.EM}}"  {% if worker.AC == 1 %} checked {% else %} unchecked  {% endif %} />
-	        								
-	        							</td>
-	        							<td>
-	        								<a class="btn btn-sm btn-white width-60" href="javascript:delete_check('{{worker.EM}}')">삭제</a>
-	        								<!--<a class="btn btn-sm btn-white width-60" onclick ="confirm({{worker.EM}})">Delete</a>-->
-	        							</td>
-	        						</tr>
-	        						{% endfor %}
+									{% if (totalNum == 0) %}
+									<tr>
+										<td colspan="7" class="text-center">No Data</td>
+									</tr>
+									{% else %}
+		        					    {% for worker in workers.reverse() %}
+		        						<tr>
+		        							<td class="with-btn" nowrap>
+	    										<input id ="ck" type="checkbox" name = "AC" class="neHeros" value={{worker.EM}} unchecked onChange="eachCheckedBox(this);"/>
+		        							</td>
+		                                    <td width="1%" class="with-img"><img src={{worker.PU}} class="img-rounded height-30" /></td>
+		        							<td>{{worker.WN}}</td>
+		        							<td>{{worker.PN}}</td>
+		        							<td>{{worker.EM}}</td>
+		        							    <input type="hidden" name="EM" value="{{worker.EM}}">
+		        							<td class="with-btn" nowrap>
+		        								<input class ="ck_au" type="checkbox" data-render="switchery" data-theme="black" name="ckone" value ="{{worker.EM}}"  {% if worker.AU == 1 %} checked {% else %} unchecked  {% endif %} />
+		        								
+		        							</td>
+		        							<td class="with-btn" nowrap>
+		        								<input class ="ck_ac" type="checkbox" data-render="switchery" data-theme="default" name="ckone" value ="{{worker.EM}}"  {% if worker.AC == 1 %} checked {% else %} unchecked  {% endif %} />
+		        								
+		        							</td>
+		        							<td>
+		        								<a class="btn btn-sm btn-white width-60" href="javascript:delete_check('{{worker.EM}}')">삭제</a>
+		        								<!--<a class="btn btn-sm btn-white width-60" onclick ="confirm({{worker.EM}})">Delete</a>-->
+		        							</td>
+		        						</tr>
+		        						{% endfor %}
+		        					{% endif %}
 	        					</tbody>
 	        				</table>
-	        				
-					        <div>
-					    		<input class="btn btn-primary" type='button' value='선택항목 삭제' onclick='return info_chk2(this.form);'>
-						    </div>
+							<div class="d-flex justify-content-between align-item-center">
+								<input class="btn btn-primary" type='button' value='선택항목 삭제' onclick="return info_chk2(this.form);">
+								
+								<div class="d-flex justify-content-around align-item-center">
+									<a href="javascript:pageDoubleBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
+									<a href="javascript:pageBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
+									{% if (totalNum==0) %}
+									{% else %}
+										{% for i in range(startPage, endPage) %}
+										<a href="/worker_list/?page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
+										{% endfor %}
+									{% endif %}
+									<a href="javascript:pageBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
+									<a href="javascript:pageDoubleBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
+								</div>
+							</div>
 					    </form>
 					    
 					</div>
@@ -89,11 +107,26 @@
 	<!-- end row -->
 </div>
 <!-- end #content -->
-	<!-- error script -->
 	
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>	
 	<script>
+		function pageBtn(dir) {
+			if(dir == 'left') {
+				location = '/worker_list/?page={{currentPage-1}}';
+			}
+			if(dir == 'right') {
+				location = '/worker_list/?page={{currentPage+1}}';
+			}
+		}
 		
+		function pageDoubleBtn(dir) {
+			if(dir == 'left') {
+				location = '/worker_list/?page={{startPage-1}}';
+			}
+			if(dir == 'right') {
+				location = '/worker_list/?page={{endPage+1}}';
+			}
+		}
 	
 		function info_chk2(frm)
 		{
@@ -284,7 +317,7 @@
 <script src="../assets/plugins/pdfmake/build/pdfmake.min.js"></script>
 <script src="../assets/plugins/pdfmake/build/vfs_fonts.js"></script>
 <script src="../assets/plugins/jszip/dist/jszip.min.js"></script>
-<script src="../assets/js/demo/table-manage-combine.demo.js"></script>
+<!--<script src="../assets/js/demo/table-manage-combine.demo.js"></script>-->
 <script src="../assets/plugins/switchery/switchery.min.js"></script>
 <script src="../assets/plugins/abpetkov-powerange/dist/powerange.min.js"></script>
 <script src="../assets/js/demo/form-slider-switcher.demo.js"></script>

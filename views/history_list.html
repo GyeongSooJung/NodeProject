@@ -68,31 +68,50 @@
 						</tr>
 					</thead>
 					<tbody>
-						{% for history in historys.reverse() %}
-						<tr onClick="location.href='/history_chart/{{history._id}}'" class="odd gradeX">
-	  						<td onclick='event.cancelBubble=true;' class="with-btn" nowrap>
-	 							<input id="ck" type="checkbox" name = "_id" class="neHeros" value={{history._id}} onChange="eachCheckedBox(this);"/>
-	  						</td>
-							<td>
-								{% for car in cars %}
-									{% if (car._id == history.VID) %}
-										{{car.CN}}
-									{% endif %}
-								{% endfor %}
-							</td>
-							<td>{{moment(history.ET).format('YYYY-MM-DD hh:mm:ss')}}</td>
-							<td>{{moment(history.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
-							<td>{{moment(history.ST).diff(moment(history.ET), 'minutes')+"m"}}</td>
-							<td>{{history.RC}}</td>
-	  						<td>
-	  							<a href="javascript:delete_check('{{history._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
-	  						</td>
+						{% if (totalNum == 0) %}
+						<tr>
+							<td colspan="7" class="text-center">No Data</td>
 						</tr>
-						{% endfor %}
+						{% else %}
+							{% for history in historylist %}
+								<tr onClick="location.href='/history_chart/{{history._id}}'" class="odd gradeX">
+			  						<td onclick='event.cancelBubble=true;' class="with-btn" nowrap>
+			 							<input id="ck" type="checkbox" name = "_id" class="neHeros" value={{history._id}} onChange="eachCheckedBox(this);"/>
+			  						</td>
+									<td>
+										{% for car in cars %}
+											{% if (car._id == history.VID) %}
+												{{car.CN}}
+											{% endif %}
+										{% endfor %}
+									</td>
+									<td>{{moment(history.ET).format('YYYY-MM-DD hh:mm:ss')}}</td>
+									<td>{{moment(history.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
+									<td>{{history.PD.length+"s"}}</td>
+									<td>{{history.RC}}</td>
+			  						<td>
+			  							<a href="javascript:delete_check('{{history._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
+			  						</td>
+								</tr>
+							{% endfor %}
+						{% endif %}
 					</tbody>
 				</table>
-				<div>
+				<div class="d-flex justify-content-between align-item-center">
 					<input class="btn btn-primary" type='button' value='선택항목 삭제' onclick="return btn(this.form);">
+					
+					<div class="d-flex justify-content-around align-item-center">
+						<a href="javascript:pageDoubleBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
+						<a href="javascript:pageBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
+						{% if (totalNum==0) %}
+						{% else %}
+							{% for i in range(startPage, endPage) %}
+							<a href="/history_list/?CN={{carone.CN}}&MD={{deviceone.MD}}&page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
+							{% endfor %}
+						{% endif %}
+						<a href="javascript:pageBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
+						<a href="javascript:pageDoubleBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
+					</div>
 				</div>
 			</form>
 		</div>
@@ -103,6 +122,24 @@
 <!-- end #content -->
 
 	<script>
+		function pageBtn(dir) {
+			if(dir == 'left') {
+				location = '/history_list/?CN={{carone.CN}}&MD={{deviceone.MD}}&page={{currentPage-1}}';
+			}
+			if(dir == 'right') {
+				location = '/history_list/?CN={{carone.CN}}&MD={{deviceone.MD}}&page={{currentPage+1}}';
+			}
+		}
+		
+		function pageDoubleBtn(dir) {
+			if(dir == 'left') {
+				location = '/history_list/?CN={{carone.CN}}&MD={{deviceone.MD}}&page={{startPage-1}}';
+			}
+			if(dir == 'right') {
+				location = '/history_list/?CN={{carone.CN}}&MD={{deviceone.MD}}&page={{endPage+1}}';
+			}
+		}
+		
 		function btn(frm) {
 			var answer;
 			answer = confirm("데이터를 삭제하시겠습니까?");
@@ -178,5 +215,5 @@
 <script src="../assets/plugins/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="../assets/plugins/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="../assets/plugins/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
-<script src="../assets/js/demo/table-manage-default.demo.js"></script>
+<!--<script src="../assets/js/demo/table-manage-default.demo.js"></script>-->
 {% endblock %}
