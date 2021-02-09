@@ -3,7 +3,7 @@ exports.pagination = async(page, totalNum) => {
     let currentPage = page ? parseInt(page) : 0; // 현재 페이지(page가 없을 경우 page = 0)
     
     const postNum = 10; // 한 페이지에 들어갈 포스트 수
-    const pageNum = 2; // 한번에 표시할 페이지 수
+    const pageNum = 5; // 한번에 표시할 페이지 수
     
     const totalPage = Math.ceil(totalNum/postNum); // 전체 페이지 수(올림처리)
     

@@ -29,6 +29,12 @@
 				<!-- end panel-heading -->
 				<!-- begin panel-body -->
 				<div class="panel-body">
+					
+	                <div style ="margin:15px;" class="row">
+		            	<div class="col-xl-8" style="text-align: right;">검색 : </div>
+						<div  class="col-xl-4" style="text-align: right;"><input type="text" id="keyword" class="form-control"  /></div>
+					</div>
+					
 					<form action="/car/car_select_delete" method="post">
 						<table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle">
 							<thead>
@@ -36,6 +42,7 @@
 									<th width="1%">
 										<input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/>
 									</th>
+									<th></th>
 									<th>차종</th>
 									<th>차량 번호</th>
 									<th>차대 번호</th>
@@ -50,11 +57,14 @@
 									<td colspan="7" class="text-center">No Data</td>
 								</tr>
 								{% else %}
+								{% set count = 0 %}
 									{% for car in cars.reverse() %}
 									<tr>
 		    							<td class="with-btn" nowrap>
 											<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{car.CN}} onChange="eachCheckedBox(this);"/>
 		    							</td>
+		    							<td style ="font-weight: bold; width : 1%;">{{totalNum - count - (currentPage*10)}} </td>
+			  							{% set totalNum = totalNum - 1 %}
 		    							{% if car.CC == 1 %}
 										<td>경차</td>
 										{% elif car.CC == 2 %}
@@ -115,6 +125,23 @@
 	<!-- end row -->
 </div>
 <!-- end #content -->
+
+	<!--검색기능-->
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>	
+	<script>
+	
+
+		$(document).ready(function() {
+	            $("#keyword").keyup(function() {
+	                var k = $(this).val();
+	                $("#data-table-combine > tbody > tr").hide();
+	                var temp = $("#data-table-combine > tbody > tr > td:contains('" + k + "')");
+	
+	                $(temp).parent().show();
+	            })
+	        })
+    </script>
+
 	<script>
 		function pageBtn(dir) {
 			if(dir == 'left') {

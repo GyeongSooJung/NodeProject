@@ -410,8 +410,12 @@ router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
       const totalNum = await History.countDocuments({"CID" : CID});
       let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
       const historylist = await History.find({"CID" : CID}).sort({CA:-1}).skip(skipPost).limit(postNum);
+      const totalNumlist = [];
+      for (var i = 0; i < totalNum.length; i++) {
+        totalNumlist[i] = i+1;
+      }
       
-      res.render('history_list', {company : req.decoded, aclist, cars, devices, historylist, moment, totalNum, currentPage, totalPage, startPage, endPage});
+      res.render('history_list', {company : req.decoded, aclist, cars, devices, historylist, moment, totalNum, currentPage, totalPage, startPage, endPage,totalNumlist});
     }
     
     else if(CN) {
@@ -426,6 +430,7 @@ router.get('/history_list', isNotLoggedIn, async (req, res, next) => {
     
     else if(MD) {
       const deviceone = await Device.findOne({"MD" : MD});
+      console.log(deviceone);
       
       const totalNum = await History.countDocuments({"DID" : deviceone._id});
       let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
