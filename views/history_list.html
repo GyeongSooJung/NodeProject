@@ -88,7 +88,11 @@
 									</td>
 									<td>{{moment(history.ET).format('YYYY-MM-DD hh:mm:ss')}}</td>
 									<td>{{moment(history.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
-									<td>{{history.PD.length+"s"}}</td>
+									{% if (history.PD.length//60)==0  %}
+									<td>{{history.PD.length%60+"s"}}</td>
+									{% else %}
+									<td>{{history.PD.length//60+"m "+history.PD.length%60+"s"}}</td>
+									{% endif %}
 									<td>{{history.RC}}</td>
 									<td>{{history.WNM}}</td>
 			  						<td>

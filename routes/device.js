@@ -18,6 +18,8 @@ router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
   try {
     const exDevice = await Device.findOne({ "MAC" : MAC });
     const check = /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/;
+    console.log(check);
+    console.log(MAC);
 
     if (exDevice) {
       return res.redirect('/device_join?error=true');
@@ -60,16 +62,17 @@ router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
           console.log(resData);
            for(var j = 0; j < resData.Sheet1.length;  j++) {
              
+             console.log("############################"+resData.Sheet1[j].맥주소);
             const exDevice = await Device.findOne({ "MAC" : resData.Sheet1[j].맥주소 });
             const check = /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/;
              
              if (exDevice) {
                 return res.redirect('/device_join?error=true');
               } 
-             
-            if(check.test(resData.Sheet1[j].맥주소) == false) {
+             else if(check.test(resData.Sheet1[j].맥주소) == false) {
               return res.redirect('/device_join?type=true');
             }
+            
             
 
              
