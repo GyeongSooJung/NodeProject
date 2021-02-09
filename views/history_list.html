@@ -93,11 +93,11 @@
 			  						<td style ="font-weight: bold; width : 1%;">{{totalNum - count - (currentPage*10)}} </td>
 			  						{% set totalNum = totalNum - 1 %}
 									<td>
-										{% if history.CNM %}
+									     	{% if history.CNM %}
 											  <a href="/history_list/?CN={{history.CNM}}" class="dropdown-item">{{history.CNM}}</a>
 											{% else %}
 											  	N/A
-											  	{% endif %}
+											{% endif %}
 									</td>
 									
 									<td>
@@ -105,7 +105,7 @@
 											  	{{history.DNM}}
 											{% else %}
 											  	N/A
-											  	{% endif %}
+											{% endif %}
 									</td>
 									
 									<td>{{moment(history.ET).format('YYYY-MM-DD hh:mm:ss')}}</td>

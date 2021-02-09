@@ -59,7 +59,6 @@ router.post('/sendmail', async (req, res, next) => {
                   "	<p style='font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;'>"+
                   "		안녕하세요.<br />"+
                   "		요청하신 임시 비밀번호가 생성되었습니다.<br />"+
-                  "		아래 <b style='color: #348fe2;'>'생성 확인'</b> 버튼을 클릭한 뒤, 인증해주세요.<br />"+
                   "		감사합니다."+
                   "	</p>"+
                   
@@ -67,8 +66,6 @@ router.post('/sendmail', async (req, res, next) => {
                   "		임시 비밀번호: <br />"+
                   "		<span style='font-size: 24px;'>"+authNum+"</span>"+
                   "	</p>"+
-                  "	<a style='color: #FFF; text-decoration: none; text-align: center;' href='#' target='_blank'><p style='display: inline-block; width: 210px; height: 45px; margin: 30px 5px 40px; background: #348fe2; line-height: 45px; vertical-align: middle; font-size: 16px;'>생성 확인</p></a>"+
-                  
                   "	<div style='border-top: 1px solid #DDD; padding: 5px;'>"+
                   "	</div>"+
                   "</div>",
