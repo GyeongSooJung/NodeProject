@@ -37,7 +37,7 @@ router.post('/QR', async (req, res, next) => {
           const et = moment(historyone.ET).add('9', 'h').format('YYYY-MM-DD hh:mm:ss'); // 최근 소독이력 포맷맞춰서
           const term = await moment(timenow).diff(et, 'days'); // 현재 일자 - 최근 소독이력
           
-          res.render('QR55', {carone, companyone, deviceone, historyone, history_array, term, moment});
+          res.render('QR', {carone, companyone, deviceone, historyone, history_array, term, moment});
         }
       }
       else {
