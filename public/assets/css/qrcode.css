@@ -9,6 +9,13 @@
 /*        height: 100%;*/
 /*    }*/
 /*}*/
+#qrtext {
+    height: 440px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #header {
     position: fixed;
     z-index: 1;
@@ -17,14 +24,6 @@
 #status {
     font-size: 4em;
 }
-
-/*#chartdiv {*/
-/*    margin-left: -5%;*/
-/*}*/
-
-/*#chartdiv2 {*/
-/*    margin-left: -7%;*/
-/*}*/
 
 #status_c {
     font-size: 1.2em;
