@@ -27,17 +27,19 @@ router.post('/QR', async (req, res, next) => {
         const historyone = await History.findOne({"VID" : carone._id}).sort({"ET":-1}).limit(1); // 가장 최근 소독이력
         console.log("히스톨"+historyone);
         
-        if (!historyone) {
-          res.render('QR2', {companyone, carone});
-        }
-        else {
+        if ((historyone) && (historyone.RC==1)) {
           const history_array = await historyone.PD;
           console.log("히스토리 아이디"+historyone._id);
           
           const et = moment(historyone.ET).add('9', 'h').format('YYYY-MM-DD hh:mm:ss'); // 최근 소독이력 포맷맞춰서
           const term = await moment(timenow).diff(et, 'days'); // 현재 일자 - 최근 소독이력
           
+          console.log("성공실패"+historyone.RC);
+          
           res.render('QR', {carone, companyone, deviceone, historyone, history_array, term, moment});
+        }
+        else {
+          res.render('QR2', {companyone, carone});
         }
       }
       else {
