@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="kor">
+<head>
+	<meta charset="utf-8" />
+	<title>MK | Disinfection History</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+	
+	<!-- ================== BEGIN BASE CSS STYLE ================== -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+	<link href="../assets/css/default/app.min.css" rel="stylesheet" />
+	<!-- ================== END BASE CSS STYLE ================== -->
+	
+	<!-- fontawsome 사용 -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" rel="stylesheet" />
+	<!-- favicon -->
+	<link href="../assets/img/favicon.png" rel="icon">
+	
+    <link rel="stylesheet" href="../assets/css/qrcode.css">
+	
+</head>
+<body>
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade page-without-sidebar">
+		<!-- begin #header -->
+		<div id="header" class="header navbar-default bg-blue">
+			 <!--begin navbar-header -->
+			<div class="navbar-header">
+				<span class="navbar-brand m-0"><img src="../assets/img/oasis.png"></span>
+			</div>
+			 <!--end header-nav -->
+		</div>
+		<!-- end #header -->
+		
+		<!-- begin #content -->
+		<div id="content" class="content pt-0 mt-5 bg-white">
+			<!-- begin row -->
+			<div class="row">
+			    <div class="col-xl-12">
+    		        <!-- begin panel -->
+    		        <div class="panel panel-inverse">
+                        <div class="py-3 mt-2 text-center">
+                        	<h1 class="mb-2">{{companyone.CNA}}</h1>
+                            <h4 class="mb-1">{{carone.CN}}</h4>
+                        </div>
+                        
+                        <div id="chartdiv" class="height-sm" data-toggle="modal" data-target="#graphpop"></div>
+                        <!-- Begin Modal -->
+                        <div class="modal fade" id="graphpop" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">소독 공정 리포트</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table id="facility" class="table table-striped m-b-0">
+                                            <tr>
+                                                <th>차량번호</th><td>{{carone.CN}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"><div id="chartdiv2" class="height-sm"></div></td>
+                                            </tr>
+                                            <tr>
+                                                <th>작업자</th><td>{{historyone.WNM}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>소독결과</th>
+                                                {% if (historyone.RC==1) %}
+                                                    <td>성공</td>
+                                                {% else %}
+                                                    <td>실패</td>
+                                                {% endif %}
+                                            </tr>
+                                            <tr>
+                                                <th>소독일시</th><td>{{moment(historyone.ET).add('9', 'h').format('YYYY-MM-DD hh:mm:ss')}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>소요시간</th>
+                                                {% if (historyone.PD.length//60)==0  %}
+                                                    <td>{{historyone.PD.length%60+"s"}}</td>
+                                                {% else %}
+                                                    <td>{{historyone.PD.length//60+"m "+historyone.PD.length%60+"s"}}</td>
+                                                {% endif %}
+                                            </tr>
+                                            <tr>
+                                                <th>최고농도</th><td>{{historyone.MP}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>최종농도</th><td>{{historyone.FP}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>발생</th>
+                                                {% if (historyone.RD[0] == -1) %}
+                                                    <td>생략</td>
+                                                {% elseif (historyone.RD[0] == 0) %}
+                                                    <td>실패</td>
+                                                {% else %}
+                                                    <td>성공</td>
+                                                {% endif %}
+                                            </tr>
+                                            <tr>
+                                                <th>유지</th>
+                                                {% if (historyone.RD[1] == -1) %}
+                                                    <td>생략</td>
+                                                {% elseif (historyone.RD[1] == 0) %}
+                                                    <td>실패</td>
+                                                {% else %}
+                                                    <td>성공</td>
+                                                {% endif %}
+                                            </tr>
+                                            <tr>
+                                                <th>회수</th>
+                                                {% if (historyone.RD[2] == -1) %}
+                                                    <td>생략</td>
+                                                {% elseif (historyone.RD[2] == 0) %}
+                                                    <td>실패</td>
+                                                {% else %}
+                                                    <td>성공</td>
+                                                {% endif %}
+                                            </tr>
+                                            <tr>
+                                                <th>소독기 모델</th><td>{{historyone.DNM}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>소독기 별칭</th>
+                                                {% if (historyone.DNN) %}
+                                                    <td>{{historyone.DNN}}</td>
+                                                {% else %}
+                                                    <td>N/A</td>
+                                                {% endif %}
+                                            </tr>
+                                            <tr>
+                                                <th>F/W 버전</th><td>{{historyone.VER}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer py-1">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Modal -->
+                        
+                        <div class="d-flex justify-content-around align-items-center">
+                            <div class="mb-1 text-center">
+                                <h1 class="mb-1" id="status"></h1>
+                                <h3 id="status_title"></h3>
+                            </div>
+                            <div class="mb-1">
+                                <h5><i class="far mr-2 fa-calendar-alt"></i>최근 소독 일시</h5>
+                                <h4>{{moment(historyone.ET).add('9', 'h').format('YYYY-MM-DD hh:mm:ss')}}</h4>
+                                <h5 class="mb-0">최근 소독으로부터 <span id="status_c">{{term}}일</span> 경과</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end panel -->
+                    
+                    <!-- begin panel -->
+                    <div class="panel panel-inverse">
+                        <div class="py-3 mt-2">
+                            <h4 class="mb-0 text-center">살균 목록</h4>
+                            {% if (term <= 2) %}
+                            
+                                <!--{% set time = historyone.PD.length %}-->
+                                {% set time = 10000 %}
+                                
+                                {% if (time < 5) %}
+                                <p>소독 시간이 부족합니다.</p>
+                                {% endif %}
+                                
+                                {% if (time >= 0.875) %}
+                                <div class="d-flex justify-content-between align-content-center">
+                            		<hr width="30%"><p class="mt-2 text-gray-500">바이러스</p><hr width="30%">
+                            	</div>
+                            	{% endif %}
+                                    <div class="viruslist py-1 text-center d-flex flex-wrap justify-content-center align-content-center">
+                                    	{% if (time >=0.875) %}
+                                    	<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="감기 바이러스" data-kind="Virus" data-color="red"
+                                    		data-body="주로 감염된 사람의 재채기나 기침을 통해 나온 비말 속에 섞여 공기 중으로 나옴. 이 비말을 접촉한 사람의 입이나 코를 통해 감기 바이러스가 몸 안으로 들어옴.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>감기 바이러스</b>
+    									</div>
+    									{% endif %}
+    									{% if (time >= 1.8) %}
+                                    	<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="계 뇌척수염 바이러스" data-kind="Virus"
+                                    		data-body="조류독감을 유발하는 바이러스. 병아리에서는 운동실조, 마비 등이 나타나며, 성계에서는 산란율 감소가 나타나는 제 2종 가축전염병. 외부 환경에 대한 저항성이 매우 높으며, 분변을 통해 다량의 바이러스가 배출됨.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>계 뇌척수염 바이러스</b>
+    									</div>
+    									{% endif %}
+    									{% if (time >= 2.4) %}
+    									<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="인플루엔자" data-kind="Virus"
+                                    		data-body="두통, 발열, 오한, 근육통과 같은 전신 증상이 갑자기 발생하면서 기침이 나는 등 호흡기 증상이 동반됨. 일반적으로 고열이 발생하며, 그 외 증상은 환자별로 다양함. 감염경로는 크게 두가지로 비말(호흡 분비물)감염과 접촉감염으로 이루어짐.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>인플루엔자</b>
+    									</div>
+    									<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="견 바부루 바이러스" data-kind="Virus"
+                                    		data-body="개에서 발생되는 전염성 바이러스로 사람에게는 전염되지 않음. 전염성이 매우 높으며, 직간접적인 분비물로 인해 전파됨. 예방접종을 하지 않을 경우, 치사율은 91%에 다다름.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>견 바부루 바이러스</b>
+    									</div>
+    									{% endif %}
+    									{% if (time >= 3) %}
+    									<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="견 전염성 간염바이러스" data-kind="Virus"
+                                    		data-body="주로 감염된 동물의 분비물로 인해 바이러스가 생성, 전파됨. 회복된 개는 뇨를 통해 6개월 이상 바이러스를 배출함. 개에게 심한 쇠약, 백혈구감소증, 출혈시간 연장 등이 나타남.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>견 전염성 간염바이러스</b>
+    									</div>
+    									{% endif %}
+                                    </div>
+                                
+                                {% if (time >= 2.375) %}
+                                <div class="d-flex justify-content-between align-content-center">
+                            		<hr width="30%"><p class="mt-2 text-gray-500">박테리아</p><hr width="30%">
+                            	</div>
+                            	{% endif %}
+                                    <div class="viruslist py-1 text-center d-flex flex-wrap justify-content-center align-content-center">
+                                        {% if (time >= 2.375) %}
+    									<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="대장균" data-kind="Bacteria"
+                                    		data-body="대장에 분포하는 세균 종 가운데 하나로 대부분 인체에 무해함. 단, 면연력이 저하된 사람은 대장균의 종류에 따라 질환이 생길 수 있음.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>대장균</b>
+    									</div>
+    									{% endif %}
+                                        {% if (time >= 2.7) %}
+                                        <div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="포도상구균" data-kind="Bacteria"
+                                    		data-body="토양미생물이 대부분으로 인체에 무해. 인간이나 여러 생물의 점막 혹은 피부에 서식함.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>포도상구균</b>
+    									</div>
+    									{% endif %}
+    									{% if (time >= 2.5) %}
+    									<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="살모넬라균" data-kind="Bacteria"
+                                    		data-body="대표적인 식중독 원인균이며, 장티푸스와 파라티푸스 등의 질병을 일으킴. 주로 사람이나 동물의 장에 서식하고, 날고기 제품에서 자연적으로 발견될 수 있으며, 위생치 못한 식품 취급 방법을 통해 들어가게 됨. ">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>살모넬라균</b>
+    									</div>
+    									{% endif %}
+    									{% if (time >= 2.65) %}
+    									<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="녹농균" data-kind="Bacteria"
+                                    		data-body="기회성 병원균으로 건강한 사람에겐 무해함. 단, 면역력이 저하된 사람에게는 치명적으로 작용하여 사망에까지 이르게 할 수 있음. 녹농균은 모낭염과 같은 피부질환부터 각막염, 폐렴, 솔수염, 관절증, 복막염 등으로 이어질 수 있음. 특히 수술, 화상, 외상이 발생한 환자가 감염되면 패혈증, 뇌막염 등으로 진행됨.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>녹농균</b>
+    									</div>
+    									{% endif %}
+    									{% if (time >= 2.85) %}
+    									<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="곰팡이 진균" data-kind="Bacteria"
+                                    		data-body="진균은 Bacteria와 비교하여 '진짜 균'이라는 의미를 가짐. 사람과 농작물에 큰 피해를 주는 균으로, 대표적으로 벼 도열병균과 각종 농작물의 잎 마름 병, 버섯의 녹병균을 일으킴. 사람에게는 무좀, 칸디다증(점막 염증), 아스퍼질러스증, 크립토콕쿠스 수염증 등을 일으킴. 건강한 사람에게는 대체로 발병 빈도가 낮으나, 면역력이 저하된 사람에게는 심각함.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>곰팡이 진균</b>
+    									</div>
+    									{% endif %}
+    									{% if (time >= 3.75) %}
+    									<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="황색포도상구균" data-kind="Bacteria"
+                                    		data-body="사람이나 동물의 피부, 소화관에 상재하는 포도상 구균의 하나임. 사람에게 농양 등 다양한 표피 감염, 식중독, 폐렴, 수막염, 패혈증 등을 일으킴. 하지만, 병원체가 아닌 정상 세균종으로 존재할 수도 있음.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>황색포도상구균</b>
+    									</div>
+    									<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="쥐티푸스균" data-kind="Bacteria"
+                                    		data-body="쥐에서 발생하는 티푸스균. 사람이나 동물에게 병원성을 나타내며, 사람에게는 식중독의 원인이 됨.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>쥐티푸스균</b>
+    									</div>
+    									{% endif %}
+    									{% if (time >= 4.5) %}
+    									<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="고초균" data-kind="Bacteria"
+                                    		data-body="자연계에 널리 분포하는 비병원성, 호기성 간균의 일종. 기본적으로 비병원성이지만 안구가 손상되었을 때, 결막염, 홍채염 등 만성화농증을 일으킬 수 있음.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>고초균</b>
+    									</div>
+    									{% endif %}
+    									{% if (time >= 13.5) %}
+    									<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="효모" data-kind="Bacteria"
+                                    		data-body="균계에 속하는 단세포의 진핵미생물. 효모는 약 1,500여 종이 알려져 있으며 양조나 제빵에 사용되는 Sccharomyces가 가장 대표적임. 몇몇 종의 효모는 기회감염균으로, candida는 인간의 점막 등에서 쉽게 발견되는 편리공생을 하는 효모 종이나 가끔 병원성 균으로 작용함. candida albicans는 에이즈 환자나 기타 면역력이 저하된 사람의 구강, 폐에 감염을 일으킴.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>효모</b>
+    									</div>
+    									{% endif %}
+    									{% if (time >= 36) %}
+    									<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="Cladosporium" data-kind="Bacteria"
+                                    		data-body="불완전균류의 하나. 보통 흙 속에 널리 분포하며, 부패한 동식물, 축축한 벽, 섬유나 공업 제품에서 생기기도 하며, 식품을 오염시킴.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>Cladosporium</b>
+    									</div>
+    									{% endif %}
+    									{% if (time >= 112.5) %}
+    									<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="웰치간균" data-kind="Bacteria"
+                                    		data-body="식중독과 장염의 원인. 혐기성 상태에서 잘 자라는 균이며, 14종의 아미노산을 요구하는 그람 양성균이자 간균임.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>웰치간균</b>
+    									</div>
+    									{% endif %}
+    									{% if (time >= 300) %}
+    									<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="곰팡이균" data-kind="Bacteria"
+                                    		data-body="알레르기, 호흡기 질환 유발. 균사로 이루어진 생물의 한 분류로, 두꺼운 세포벽을 가지고 있으며, 스스로 양분을 만들어 살아갈 수 없는 종속영양생물. 곰팡이 포자들은 일상에서 흔히 볼 수 있는 요소이나 대량으로 존재할 경우 사람에게 알레르기 반응과 호흡기 문제를 일으킬 수 있음. 또한, 일부 곰팡이들은 진균독을 유발시켜 인간과 짐승에 심각한 위험을 초래할 수 있음.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>곰팡이균</b>
+    									</div>
+    									{% endif %}
+    									{% if (time >= 343.5) %}
+    									<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="바실러스 세레우스" data-kind="Bacteria"
+                                    		data-body="식중독 유발. 그람 양성 호기성 간균이지만, 어느 정도의 혐기상태에서도 증식하며 내포자를 형성하는 균.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>바실러스 세레우스</b>
+    									</div>
+    									{% endif %}
+    									{% if (time >= 945) %}
+    									<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="B.stearothermophilus" data-kind="Bacteria"
+                                    		data-body="저산성 통조림 식품의 신 부패의 원인. 내열성 포자를 생성하는 호열성 호기성 박테리아.">
+    										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
+    										<b>B.stearothermophilus</b>
+    									</div>
+    									{% endif %}
+                                    </div>
+                                
+                           	{% else %}
+                       		<h3 class="mt-2 mb-0 text-center text-realred">소독이 필요합니다!</h3>
+                           	
+                           	{% endif %}
+                        </div>
+                        	<!-- Begin Modal -->
+							<div class="modal fade" id="modalpop" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+							  <div class="modal-dialog modal-dialog-centered" role="document">
+							    <div class="modal-content">
+							      <div class="modal-header">
+							        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+							        <span class="modal-kind ml-1 text-gray-500"></span>
+							        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          <span aria-hidden="true">&times;</span>
+							        </button>
+							      </div>
+							      <div class="modal-body">
+							      </div>
+							      <div class="modal-footer py-1">
+							        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							      </div>
+							    </div>
+							  </div>
+							</div>
+							<!-- End Modal -->
+                    </div>
+                    <!-- end panel -->
+                    
+                    <!-- Begin panel -->
+                    <div class="panel panel-inverse">
+                        <div class="py-3 mt-2">
+                            <h4 class="mb-3 text-center">오존의 코로나 살균력</h4>
+                            <div class="mb-1 news_box">
+                                <div class="corona_img">
+                                    <img src="../assets/img/corona_news.PNG" class="img-responsive mb-0">
+                                </div>
+                                <div class="ml-3 pb-0">
+                                    <small>출처 : <a href="https://www.futurity.org/ozone-gas-disinfeting-ppe-reuse-2401322/" target="_blank">https://www.futurity.org/ozone-gas-disinfecting-ppe-reuse-2401322/</a></small>
+                                </div>
+                            </div>
+                            <div class="mb-1 news_box">
+                                <div class="corona_img">
+                                    <img src="../assets/img/corona_news2.PNG" class="img-responsive mb-0">
+                                </div>
+                                <div class="ml-3 pb-0">
+                                    <small>출처 : <a href="http://www.astronomer.rocks/news/articleView.html?idxno=88920" target="_blank">http://www.astronomer.rocks/news/articleView.html?idxno=88920</a></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end panel -->
+			    </div>
+			</div>
+			<!-- end row -->
+		</div>
+		<!-- end #content -->
+		
+		<!-- begin #footer -->
+		<div id="footer" class="footer bg-blue border-0">
+		    <div class="text-center text-white">
+				<h4 class="mb-0">안전한 차, {{companyone.CNA}}</h4>
+			</div>
+		</div>
+		<!-- end #footer -->
+	</div>
+	
+	
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+  
+      <!-- Chart code -->
+    <script>
+    am4core.ready(function() {
+    
+        // Themes begin
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+        
+        // Create chart instance
+        var chart = am4core.create("chartdiv", am4charts.XYChart);
+        var chart2 = am4core.create("chartdiv2", am4charts.XYChart);
+        
+        //이것은 차트에 mongodb 연동하는 부분
+        {% set ss = 1 %}
+        
+          {% for item in history_array %}
+          
+          chart.data.push({
+            ss: {{ss}},
+            ppm: {{item}}
+          });
+          chart2.data.push({
+            ss: {{ss}},
+            ppm: {{item}}
+          });
+                
+        {% set ss = ss + 1 %}
+        	  
+          {% endfor %}
+        
+        // Set input format for the dates
+        chart.logo.disabled = true;
+        chart.numberFormatter.numberFormat = "#";
+        chart2.logo.disabled = true;
+        chart2.numberFormatter.numberFormat = "#";
+        
+        // Create axes
+        var ssAxis = chart.xAxes.push(new am4charts.ValueAxis());
+        var ppmAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        ssAxis.title.text = "시간(s)";
+        ppmAxis.title.text = "오존(ppm)";
+        var ssAxis2 = chart2.xAxes.push(new am4charts.ValueAxis());
+        var ppmAxis2 = chart2.yAxes.push(new am4charts.ValueAxis());
+        ssAxis2.title.text = "시간(s)";
+        ppmAxis2.title.text = "오존(ppm)";
+        
+        // Create series
+        var series = chart.series.push(new am4charts.LineSeries());
+        series.dataFields.valueY = "ppm";
+        series.dataFields.valueX = "ss";
+        series.strokeWidth = 2;
+        series.minBulletDistance = 15;
+        var series2 = chart2.series.push(new am4charts.LineSeries());
+        series2.dataFields.valueY = "ppm";
+        series2.dataFields.valueX = "ss";
+        series2.strokeWidth = 2;
+        series2.minBulletDistance = 15;
+        
+        // Make bullets grow on hover 이것은 각 점들의 크기
+        var bullet = series.bullets.push(new am4charts.CircleBullet());
+        bullet.circle.strokeWidth = 2;
+        bullet.circle.radius = 2;
+        bullet.circle.fill = am4core.color("#fff");
+        var bullet2 = series2.bullets.push(new am4charts.CircleBullet());
+        bullet2.circle.strokeWidth = 2;
+        bullet2.circle.radius = 2;
+        bullet2.circle.fill = am4core.color("#fff");
+        
+        // var bullethover = bullet.states.create("hover");
+        // bullethover.properties.scale = 1.3;
+        // var bullethover2 = bullet2.states.create("hover");
+        // bullethover2.properties.scale = 1.3;
+        
+        ssAxis.start = 0;
+        ssAxis.keepSelection = true;
+        ssAxis2.start = 0;
+        ssAxis2.keepSelection = true;
+    
+    
+    }); // end am4core.ready()
+	</script>
+	
+	<script>
+	window.onload = () => {
+		const si = document.getElementById("status");
+		const st = document.getElementById("status_title");
+		const sc = document.getElementById("status_c");
+		console.log(status);
+		
+		if ({{term}} <= 2) {
+			si.style.color = "#00c853";
+			si.innerHTML = "<i class='far fa-smile'></i>";
+			st.style.color = "#00c853";
+			st.innerHTML = "안전";
+			sc.style.color = "#00c853";
+		}
+		else if ({{term}} < 5) {
+			si.style.color = "orange";
+			si.innerHTML = "<i class='far fa-frown'></i>";
+			st.style.color = "orange";
+			st.innerHTML = "주의";
+			sc.style.color = "orange"
+		}
+		else {
+			si.style.color = "realred";
+			si.innerHTML = "<i class='far fa-tired'></i>";
+			st.style.color = "realred";
+			st.innerHTML = "경고";
+			sc.style.color = "realred"
+		}
+	}
+	</script>
+
+	<!-- ================== BEGIN BASE JS ================== -->
+	<script src="../assets/js/app.min.js"></script>
+	<script src="../assets/js/theme/default.min.js"></script>
+	<!-- ================== END BASE JS ================== -->
+	<script src="../assets/js/qrcode.js"></script>
+	
+</body>
+</html>
