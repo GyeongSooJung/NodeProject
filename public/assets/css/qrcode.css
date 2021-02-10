@@ -9,7 +9,7 @@
 /*        height: 100%;*/
 /*    }*/
 /*}*/
-#qrtext {
+.qrtext {
     height: 440px;
     display: flex;
     justify-content: center;
