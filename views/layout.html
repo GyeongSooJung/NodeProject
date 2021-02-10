@@ -46,11 +46,9 @@
 					</a>
 					<div class="dropdown-menu dropdown-menu-right">
 						<a href="/profile" class="dropdown-item">프로필 수정</a>
-						<a href="javascript:;" class="dropdown-item"><span class="badge badge-danger pull-right">2</span> 인박스</a>
-						<a href="javascript:;" class="dropdown-item">캘린더</a>
-						<a href="javascript:;" class="dropdown-item">설정</a>
 						<div class="dropdown-divider"></div>
-						<a href="/auth/logout" class="dropdown-item">로그아웃</a>
+						<a href="javascript:logout()" class="dropdown-item">로그아웃</a>
+						<a href="javascript:withdrawal()" class="dropdown-item">회원탈퇴</a>
 					</div>
 				</li>
 			</ul>
@@ -92,8 +90,8 @@
 								<span>Python/R</span> 
 							</a>
 						<ul class="sub-menu">	
-							<li><a href="http://192.168.168.78:8888/lab"  target="_blank">Jupyter Lab <br> (위치 : 대선 개인서버)</a></li>
-							<li><a href="http://192.168.168.78:8888/tree"  target="_blank">Jupyter NoteBook <br> (위치 : 대선 개인서버)</a></li>
+							<li><a href="/ozone_spread"  target="_blank">3D Scatter Plot <br> (OZone Spreading)</a></li>
+
 						</ul>
 					</li>					
 					{% else %}
@@ -208,6 +206,37 @@
 		$(document).ready(function() {
 			$('#active-menu').find('a[href="' + document.location.pathname + '"]').parents('li').addClass('active');
 		});
+		
+		function withdrawal() {
+			var answer;
+			//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
+			//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
+			answer = confirm("회원탈퇴를 하시겠습니까?");
+			//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
+			if(answer == true){
+				location = '/auth/withdrawal';
+			}
+			else {
+				location = '/main';
+			}
+		}
+		function logout() {
+			var answer;
+			//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
+			//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
+			answer = confirm("로그아웃을 하시겠습니까?");
+			//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
+			if(answer == true){
+				location = '/auth/logout';
+			}
+			else {
+				location = '/main';
+			}
+		}
+		
+		
+		
+		
 	</script>
 	
 	{% block script %}

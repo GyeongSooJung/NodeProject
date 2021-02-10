@@ -9,6 +9,7 @@ const deviceSchema = new Schema({
     },
     MD: {
         type: String,
+        trim: true,
         required: [true, 'MD is required!'],
     },
     MAC: {

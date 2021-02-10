@@ -85,6 +85,12 @@
 					<!-- error script -->
 					<script>
 						window.onload = () => {
+							if (new URL(location.href).searchParams.get('excelCN')) {
+								alert('중복된 번호가 있습니다. 차량번호 혹은 차대번호를 확인해주세요');
+							}
+							if (new URL(location.href).searchParams.get('excel')) {
+								alert('파일이 잘못되었습니다. 형식 또는 양식을 확인해주세요');
+							}
 							if (new URL(location.href).searchParams.get('length')) {
 								alert('차량 번호 자릿수를 확인해주세요.');
 							}
