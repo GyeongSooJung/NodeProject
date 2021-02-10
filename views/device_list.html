@@ -114,6 +114,20 @@
 <!-- end #content -->
 
         <script src="http://code.jquery.com/jquery-1.10.2.js"></script>	
+        		<!--검색기능-->
+		<script>
+		
+	
+			$(document).ready(function() {
+		            $("#keyword").keyup(function() {
+		                var k = $(this).val();
+		                $("#data-table-combine > tbody > tr").hide();
+		                var temp = $("#data-table-combine > tbody > tr > td:contains('" + k + "')");
+		
+		                $(temp).parent().show();
+		            })
+		        })
+        </script>
         <script>
 	
 			function pageBtn(dir) {
