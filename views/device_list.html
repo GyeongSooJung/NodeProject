@@ -32,7 +32,8 @@
 					
 					<div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
 		            	<div class="mr-2">검색 : </div>
-						<div><input type="text" id="keyword" class="form-control"  /></div>
+				<div><input type="text" id="NNkeyword" class="form-control" placeholder ="별칭" /></div>
+				<div><button class="ml-2 btn btn-primary text-white px-1" onclick="searchbutton()">{% if NN %} <i class="fas fa-lg fa-fw m-r-10 fa-chevron-left"></i> {% else %}<i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i> {% endif %}</button></div>
 					</div>
 	               	
 	     <!--          	    <div class="col-xl-4">-->
@@ -129,6 +130,11 @@
 		        })
         </script>
         <script>
+        
+        function searchbutton() {
+			const keyword = document.getElementById('NNkeyword').value;
+			location = '/device_list/?NN=' + keyword;
+		}
 	
 			function pageBtn(dir) {
 				if(dir == 'left') {

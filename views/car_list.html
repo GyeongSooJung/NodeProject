@@ -32,7 +32,8 @@
 					
 	                <div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
 		            	<div class="mr-2">검색 : </div>
-						<div><input type="text" id="keyword" class="form-control"  /></div>
+				<div><input type="text" id="CNkeyword" class="form-control" placeholder ="차량번호" /></div>
+				<div><button class="ml-2 btn btn-primary text-white px-1" onclick="searchbutton()">{% if CN %} <i class="fas fa-lg fa-fw m-r-10 fa-chevron-left"></i> {% else %}<i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i> {% endif %}</button></div>
 					</div>
 					
 					<form action="/car/car_select_delete" method="post">
@@ -130,6 +131,7 @@
     <script src="http://code.jquery.com/jquery-1.10.2.js"></script>	
 	<script>
 	
+	
 
 		$(document).ready(function() {
 	            $("#keyword").keyup(function() {
@@ -140,9 +142,11 @@
 	                $(temp).parent().show();
 	            })
 	        })
-    </script>
-
-	<script>
+	
+		function searchbutton() {
+			const keyword = document.getElementById('CNkeyword').value;
+			location = '/car_list/?CN=' + keyword;
+		}
 		function pageBtn(dir) {
 			if(dir == 'left') {
 				location = '/car_list/?page={{currentPage-1}}';
@@ -260,5 +264,6 @@
 <script src="../assets/plugins/pdfmake/build/pdfmake.min.js"></script>
 <script src="../assets/plugins/pdfmake/build/vfs_fonts.js"></script>
 <script src="../assets/plugins/jszip/dist/jszip.min.js"></script>
+
 <!--<script src="../assets/js/demo/table-manage-combine.demo.js"></script>-->
 {% endblock %}

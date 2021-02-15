@@ -33,8 +33,9 @@
 				<div class="panel-body">
 					
 					<div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
-		            	<div class="mr-2">검색 : </div>
-						<div><input type="text" id="keyword" class="form-control"  /></div>
+		            		<div class="mr-2">검색 : </div>
+				<div><input type="text" id="WNkeyword" class="form-control" placeholder ="이름" /></div>
+				<div><button class="ml-2 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
 					</div>
 					
 				    <form action="/worker/worker_update" method="post">
@@ -132,6 +133,11 @@
 		        })
         </script>
 	<script>
+	    function searchbutton() {
+			const keyword = document.getElementById('WNkeyword').value;
+			location = '/worker_list/?WN=' + keyword;
+		}
+	
 		function pageBtn(dir) {
 			if(dir == 'left') {
 				location = '/worker_list/?page={{currentPage-1}}';
