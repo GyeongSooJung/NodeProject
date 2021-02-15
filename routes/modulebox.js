@@ -23,8 +23,8 @@ exports.pagination = async(page, totalNum) => {
         console.log("44444444444"+skipPost);
     
     const startPage = Math.floor(((currentPage) / pageNum)) * pageNum; // 시작 페이지(ex. 1~5라면 1)
-        let endPage = startPage + pageNum; // 끝 페이지(ex. 1~5라면 5)
-        console.log("!!!!!!!!!!!!!!"+startPage+endPage);
+    let endPage = startPage + pageNum; // 끝 페이지(ex. 1~5라면 5)
+    console.log("!!!!!!!!!!!!!!"+startPage+endPage);
     
     if (endPage > totalPage) { // 끝 페이지가 총 페이지 수보다 많다면 같게끔 처리
         endPage = totalPage;
