@@ -125,7 +125,7 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
                 }
               if (!(resData.Sheet1[j].차종 == 1 || resData.Sheet1[j].차종 == 2 || resData.Sheet1[j].차종 == 3 || resData.Sheet1[j].차종 == 4 || resData.Sheet1[j].차종 == 5 || resData.Sheet1[j].차종 == 6 )) {
                   
-                  return res.redirect('/car_join?excel=true');
+                  return res.redirect('/car_join?CCtype=true');
                 }
               else {
                 resData[sheetnames[0]][j].CID = CID;
