@@ -124,23 +124,12 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
                  return res.redirect('/car_join?type=true');
                 }
               if (!(resData.Sheet1[j].차종 == 1 || resData.Sheet1[j].차종 == 2 || resData.Sheet1[j].차종 == 3 || resData.Sheet1[j].차종 == 4 || resData.Sheet1[j].차종 == 5 || resData.Sheet1[j].차종 == 6 )) {
-                  console.log("여기서 걸렸다!!!!");
-                resData[sheetnames[0]][j].CID = CID;
-                resData[sheetnames[0]][j].CA = CA; //차후에 변경 
-                console.log(resData.Sheet1[j].차종)
-                Car.insertMany({
-                "CID": resData.Sheet1[j].CID,
-                "CC" : resData.Sheet1[j].차종,
-                "CN": resData.Sheet1[j].차량번호,
-                "SN": resData.Sheet1[j].차대번호,
-                "CA" : resData.Sheet1[j].CA,
-                "UA" : resData.Sheet1[j].CA
-                });
+                  
+                  return res.redirect('/car_join?excel=true');
                 }
               else {
                 resData[sheetnames[0]][j].CID = CID;
                 resData[sheetnames[0]][j].CA = CA; //차후에 변경 
-                console.log(resData.Sheet1[j].차종)
                 Car.insertMany({
                 "CID": resData.Sheet1[j].CID,
                 "CC" : resData.Sheet1[j].차종,
