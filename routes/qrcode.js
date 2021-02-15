@@ -27,7 +27,7 @@ router.post('/QR', async (req, res, next) => {
         const historyone = await History.findOne({"VID" : carone._id}).sort({"ET":-1}).limit(1); // 가장 최근 소독이력
         console.log("히스톨"+historyone);
         
-        if ((historyone) && (historyone.RC==1)) {
+        if (historyone) { // && (historyone.RC==1)
           const history_array = await historyone.PD;
           console.log("히스토리 아이디"+historyone._id);
           
