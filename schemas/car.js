@@ -11,7 +11,6 @@ const carSchema = new Schema({
   CC: {
     type: Number,
     unique: false,
-    require : true
   },
   CN: {
     type: String,
@@ -21,7 +20,6 @@ const carSchema = new Schema({
   SN: {
     type: String,
     unique: true,
-    require : true
   },
   CA: {
     type: Date,
