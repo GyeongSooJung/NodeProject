@@ -55,7 +55,7 @@
  	       <div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
 	        	<div class="mr-2">검색 : </div>
 				<div><input type="text" id="keyword" class="form-control"  /></div>
-				<div><a href="javascript:;" class="ml-2 btn btn-primary text-white px-1"><i class="ml-2 fas fa-lg fa-fw m-r-5 fa-search align-items-center"></i></a></div>
+				<div><a href="javascript:;" class="ml-2 btn btn-primary text-white px-1"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></a></div>
 			</div>
 
 			<form action="/history/history_select_delete" method="post">
@@ -194,7 +194,7 @@
 				location = '/history_list/?CN={{carone.CN}}&MD={{deviceone.MD}}&page={{startPage-1}}';
 			}
 			if(dir == 'right') {
-				location = '/history_list/?CN={{carone.CN}}&MD={{deviceone.MD}}&page={{endPage+1}}';
+				location = '/history_list/?CN={{carone.CN}}&MD={{deviceone.MD}}&page={{endPage}}';
 			}
 		}
 		
