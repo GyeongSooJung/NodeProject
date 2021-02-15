@@ -205,6 +205,10 @@
 	<script>
 		$(document).ready(function() {
 			$('#active-menu').find('a[href="' + document.location.pathname + '"]').parents('li').addClass('active');
+			var path = document.location.pathname.toString();
+			var cut =  path.split('/');
+			console.log("패스"+path);
+			console.log("자름"+cut[0]);
 		});
 		
 		function withdrawal() {

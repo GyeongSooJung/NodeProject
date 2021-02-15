@@ -66,19 +66,25 @@
 		    							<td style ="font-weight: bold; width : 1%;">{{totalNum - count - (currentPage*10)}} </td>
 			  							{% set totalNum = totalNum - 1 %}
 		    							{% if car.CC == 1 %}
-										<td>경차</td>
+											<td>경차</td>
 										{% elif car.CC == 2 %}
-										<td>소형</td>
+											<td>소형</td>
 										{% elif car.CC == 3 %}
-										<td>중형</td>
+											<td>중형</td>
 										{% elif car.CC == 4 %}
-										<td>대형</td>
+											<td>대형</td>
 										{% elif car.CC == 5 %}
-										<td>승합</td>
+											<td>SUV</td>
 										{% elif car.CC == 6 %}
-										<td>상용</td>
+											<td>승합</td>
+										{% elif car.CC == 7 %}
+											<td>상용</td>
+										{% elif car.CC == 8 %}
+											<td>전기</td>
+										{% elif car.CC == 6 %}
+											<td>외제</td>
 										{% else %}
-										<td>선택안됨</td>
+											<td>선택안됨</td>
 										{% endif %}
 										<td>{{car.CN}}</td>
 										{% if car.SN %}
