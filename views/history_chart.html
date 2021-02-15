@@ -87,10 +87,18 @@
 					</thead>
 					<tbody>
 						<tr class="bg-light">
-			              <td>{{historyone.PD.length+"s"}}</td>
+					 	{% if (historyone.PD.length//60)==0  %}
+							<td>{{historyone.PD.length%60+"s"}}</td>
+						{% else %}
+							<td>{{historyone.PD.length//60+"m "+historyone.PD.length%60+"s"}}</td>
+						{% endif %}
 			              <td>{{historyone.MP}}</td>
 			              <td>{{historyone.FP}}</td>
-			              <td>{{historyone.RC}}</td>
+						{% if history.RC == 0 %}
+							<td>실패</td>
+						{% else %}
+							<td>성공</td>
+						{% endif %}
 			              <td>{{moment(historyone.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
 						</tr>
 					</tbody>

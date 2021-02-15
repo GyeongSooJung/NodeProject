@@ -9,7 +9,7 @@ const carSchema = new Schema({
     require : true
   },
   CC: {
-    type: Number,
+    type: String,
     unique: false,
   },
   CN: {

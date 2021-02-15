@@ -78,12 +78,12 @@
 										{% elif car.CC == 6 %}
 										<td>상용</td>
 										{% else %}
-										<td></td>
+										<td>선택안됨</td>
 										{% endif %}
 										<td>{{car.CN}}</td>
 										{% if car.SN %}
 										<td>{{car.SN}}</td>
-										{% else %} <td> </td>
+										{% else %} <td>선택안됨 </td>
 										{% endif %}
 										
 										{% set toDt = moment.utc(car.CA).toDate() %}

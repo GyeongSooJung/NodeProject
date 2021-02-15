@@ -126,7 +126,11 @@
                         						</td>
                         						<td>{{moment(history_array.ET).format('YYYY-MM-DD hh:mm:ss')}}</td>
                         						<td>{{moment(history_array.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
-                        						<td>{{history_array.RC}}</td>
+                        						{% if recent_history.RC == 0 %}
+													<td>실패</td>
+												{% else %}
+													<td>성공</td>
+												{% endif %}
                         					</tr>
                         				</tbody>
                         			</table>
