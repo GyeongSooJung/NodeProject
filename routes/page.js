@@ -386,7 +386,7 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
       let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
       const workers = await Worker.find({"WN" : WN}).sort({CA:-1}).skip(skipPost).limit(postNum);
       
-      res.render('worker_list', {aclist, company : req.decoded, workers, totalNum, currentPage, totalPage, startPage, endPage});
+      res.render('worker_list', {aclist, company : req.decoded, workers, totalNum, currentPage, totalPage, startPage, endPage, WN});
       
     }
     else {
@@ -394,7 +394,7 @@ router.get('/worker_list',isNotLoggedIn, async (req, res, next) => {
       let {currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage} = await pagination(page, totalNum);
       const workers = await Worker.find({"WN" : WN,}).sort({CA:-1}).skip(skipPost).limit(postNum);
   
-  res.render('worker_list', {aclist, company : req.decoded, workers, totalNum, currentPage, totalPage, startPage, endPage});
+  res.render('worker_list', {aclist, company : req.decoded, workers, totalNum, currentPage, totalPage, startPage, endPage, WN});
     
     }
     
