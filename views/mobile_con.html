@@ -42,9 +42,10 @@
 				<div class="login-body">
 					<!-- begin login-content -->
 					<div class="login-content">
-						<form action="/qrcode/QR" method="get" class="margin-bottom-0">
+						<!--바로 넘어갈때는 get으로-->
+						<form action="/qrcode/QR" method="post" class="margin-bottom-0">
 							<div class="form-group m-b-20">
-								<input id="CN" name = "CN" type="text" class="form-control form-control-lg inverse-mode" placeholder="차량번호" required />
+								<input id="CN" name = "CN" type="text" class="form-control form-control-lg inverse-mode" placeholder="차량번호" value="{{cn}}" required />
 								 <!--value="{{cn}}" -->
 							</div>
 							<div class="login-buttons">

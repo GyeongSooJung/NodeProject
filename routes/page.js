@@ -535,45 +535,46 @@ router.get('/history_chart/:_id', isNotLoggedIn, async(req, res, next) => {
 //                                  QR코드                                    //
 //----------------------------------------------------------------------------//
 
-// //Mobile Connect Page
-// router.get('/mobile_con', async(req, res, next) => {
-//   var cn = req.query.cn;
-//   console.log(cn);
-  
-//   try {
-//     res.render('mobile_con',{cn:cn});
-//   }
-//   catch (err) {
-//     console.error(err);
-//     next(err);
-//   }
-// });
-
+//Mobile Connect Page
 router.get('/mobile_con', async(req, res, next) => {
   var cn = req.query.cn;
   console.log(cn);
-  console.log(req.body.cn+"dddddddddddddd");
-
+  
   try {
-    if(cn) {
-      const exCN = await Car.findOne({"CN" : cn});
-      if(exCN) {
-          console.log('af1313a');
-          return res.redirect('qrcode/QR?CN='+cn);
-      }
-      else {
-        return res.redirect('/mobile_con?exist=true');
-      }
-    }
-    else {
-      res.render('mobile_con');
-    }
+    res.render('mobile_con', {cn:cn});
   }
   catch (err) {
     console.error(err);
     next(err);
   }
-})
+});
+
+// 바로 넘어갈 경우
+// router.get('/mobile_con', async(req, res, next) => {
+//   var cn = req.query.cn;
+//   console.log(cn);
+//   console.log(req.body.cn+"dddddddddddddd");
+
+//   try {
+//     if(cn) {
+//       const exCN = await Car.findOne({"CN" : cn});
+//       if(exCN) {
+//           console.log('af1313a');
+//           return res.redirect('qrcode/QR?CN='+cn);
+//       }
+//       else {
+//         return res.redirect('/mobile_con?exist=true');
+//       }
+//     }
+//     else {
+//       res.render('mobile_con');
+//     }
+//   }
+//   catch (err) {
+//     console.error(err);
+//     next(err);
+//   }
+// })
 
 //----------------------------------------------------------------------------//
 //                                  A/S                                       //
