@@ -21,9 +21,6 @@ router.post('/register',emailcontrol,async (req, res, next) => {
   res.cookie('ADR',null)
   //email
   var EC = false;
-  const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
-  const UA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
-  const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
   console.log(CNU);
   console.log("EA :"+EA);
   console.log("EC :"+EC);
@@ -63,7 +60,7 @@ router.post('/register',emailcontrol,async (req, res, next) => {
     //암호화 부분
     const hash = await bcrypt.hash(PW, 12);
 
-    await Company.create({NA, CNU, CNA, PN, MN, EA,ADR,CK,CUA,UA,CA,
+    await Company.create({NA, CNU, CNA, PN, MN, EA,ADR,CK,
     PW : hash
     });
     res.cookie('email',null);

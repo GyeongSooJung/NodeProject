@@ -110,26 +110,36 @@
 												{% endif %}
 										</td>
 										
-										<td>{{moment(history.ET).format('YYYY-MM-DD hh:mm:ss')}}</td>
-										<td>{{moment(history.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
+										<td>
+											<script>
+												var het = moment('{{history.ET}}').format('YYYY-MM-DD hh:mm:ss A');
+												document.write(het);
+											</script>
+										</td>
+										<td>
+											<script>
+												var hca = moment('{{history.CA}}').format('YYYY-MM-DD hh:mm:ss A');
+												document.write(hca);
+											</script>
+										</td>
 										{% if (history.PD.length//60)==0  %}
 										<td>{{history.PD.length%60+"s"}}</td>
 										{% else %}
 										<td>{{history.PD.length//60+"m "+history.PD.length%60+"s"}}</td>
 										{% endif %}
 										
-										{% if history.RC == 0 %}
-										<td>실패</td>
-										{% else %}
+										{% if history.RC == 1 %}
 										<td>성공</td>
+										{% else %}
+										<td>실패</td>
 										{% endif %}
 										<td>
-										    	{% if history.WNM %}
-												  	{{history.WNM}}
-												{% else %}
-												  	N/A
-												{% endif %}
-											</td>
+									    	{% if history.WNM %}
+											  	{{history.WNM}}
+											{% else %}
+											  	N/A
+											{% endif %}
+										</td>
 				  						<td>
 				  							<a href="javascript:delete_check('{{history._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
 				  						</td>

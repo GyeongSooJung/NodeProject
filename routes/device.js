@@ -28,10 +28,8 @@ router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
       return res.redirect('/device_join?type=true');
     }
     else{
-      const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss'); //한국시간 맞추기 위해 +9시간
-      const UA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
       await Device.create({
-        CID, MD, VER, MAC, NN, CA
+        CID, MD, VER, MAC, NN
     });
     return res.redirect('/device_join');
     }
@@ -45,8 +43,6 @@ router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
 router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
-  const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss'); //한국시간 맞추기 위해 +9시간
-  const UA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
 
   const resData = {};
     try {
@@ -77,7 +73,6 @@ router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
 
              
               resData[sheetnames[0]][j].CID = CID;
-              resData[sheetnames[0]][j].CA = CA;
               
               
              Device.insertMany({
@@ -85,8 +80,7 @@ router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
               "MD" : resData.Sheet1[j].모델명,
               "VER": resData.Sheet1[j].버전,
               "MAC": resData.Sheet1[j].맥주소,
-              "NN" : resData.Sheet1[j].별칭,
-              "CA" : resData.Sheet1[j].CA
+              "NN" : resData.Sheet1[j].별칭
              });
          }
          
@@ -115,14 +109,12 @@ router.post('/device_edit/upreg/:MAC', isNotLoggedIn,async (req, res, next) => {
       const exDevice = await Device.find({ "MAC" :  MAC });
       console.log(exDevice);
 
-      const UA =  moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
       const deviceone = await Device.where({"MAC" : req.params.MAC})
       .updateMany({ "CID" : CID,
                     "MD" : MD,
                     "VER" : VER,
                     "NN" : NN,
-                    "MAC" : MAC,
-                    "UA" : UA,
+                    "MAC" : MAC
         }).setOptions({runValidators : true})
         .exec();
         console.log(deviceone);

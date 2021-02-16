@@ -16,8 +16,6 @@ router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
   const { CC, CN, SN} = req.body;
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
-  const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
-  console.log(CA);
   
   
   try {
@@ -35,10 +33,9 @@ router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
         return res.redirect('/car_join?error=exist');
       }
       else {
-        const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
-        const UA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+        const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
         await Car.create({
-            CID, CC, CN, SN, CA, UA
+            CID, CC, CN, SN,
         });
         
         const companyone = await Company.where({"CNU" : CNU})
@@ -74,9 +71,7 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
   const { CC, CN, SN } = req.body;
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
-  const CA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
-  const UA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
-  const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+  const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
   var CNlist = []
  
   
@@ -129,14 +124,11 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
                 }
               else {
                 resData[sheetnames[0]][j].CID = CID;
-                resData[sheetnames[0]][j].CA = CA; //차후에 변경 
                 Car.insertMany({
                 "CID": resData.Sheet1[j].CID,
                 "CC" : resData.Sheet1[j].차종,
                 "CN": resData.Sheet1[j].차량번호,
                 "SN": resData.Sheet1[j].차대번호,
-                "CA" : resData.Sheet1[j].CA,
-                "UA" : resData.Sheet1[j].CA
                 });
               }
                       
@@ -146,7 +138,7 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
       
       
         const companyone = await Company.where({"CNU" : CNU})
-          .updateMany({ "CUA" : CA }).setOptions({runValidators : true})
+          .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
           .exec();
           
           
@@ -174,7 +166,7 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn,async (req, res, next) => {
     const { CC, CN, SN } = req.body;
     const CID = req.decoded.CID;
     const CNU = req.decoded.CNU;
-    const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+    const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
     
     try {
       const exCar = await Car.find({ "CN" :  CN });
@@ -191,13 +183,11 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn,async (req, res, next) => {
         return res.redirect('/car_list?error=exist');
       }
       else {
-        const UA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
         const carone = await Car.where({"CN" : req.params.CN})
           .updateMany({ "CID" : CID,
                         "CC" : CC,
                         "CN" : CN,
                         "SN" : SN,
-                        "UA" : UA,
           }).setOptions({runValidators : true})
           .exec();
           console.log(carone);
@@ -217,7 +207,7 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn,async (req, res, next) => {
 router.get('/car_delete/:CN',isNotLoggedIn, async (req, res, next) => {
   const { CC, CN, SN } = req.body;
   const CNU = req.decoded.CNU;
-  const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+  const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
   try {
     await Car.remove({ "CN" : req.params.CN });
     res.redirect('/car_list');
@@ -235,7 +225,7 @@ router.get('/car_delete/:CN',isNotLoggedIn, async (req, res, next) => {
 router.post('/car_select_delete',isNotLoggedIn ,async (req, res, next) => {
     const { CC, CN, SN } = req.body;
       const CNU = req.decoded.CNU;
-    const CUA = moment().add('9','h').format('YYYY-MM-DD hh:mm:ss');
+    const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
     try {
         const {ck} = req.body;
         

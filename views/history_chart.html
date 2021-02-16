@@ -63,7 +63,12 @@
 							<td>{{carone.CN}}</td>
 							<td>{{deviceone.MD}}</td>
 							<td>{{workerone.WN}}</td>
-							<td>{{moment(historyone.ET).format('YYYY-MM-DD hh:mm:ss')}}</td>
+							<td>
+								<script>
+									var het = moment('{{historyone.ET}}').format('YYYY-MM-DD hh:mm:ss A');
+									document.write(het);
+								</script>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -94,12 +99,17 @@
 						{% endif %}
 			              <td>{{historyone.MP}}</td>
 			              <td>{{historyone.FP}}</td>
-						{% if history.RC == 0 %}
-							<td>실패</td>
-						{% else %}
+						{% if history.RC == 1 %}
 							<td>성공</td>
+						{% else %}
+							<td>실패</td>
 						{% endif %}
-			              <td>{{moment(historyone.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
+			              <td>
+			              	<script>
+								var het = moment('{{historyone.CA}}').format('YYYY-MM-DD hh:mm:ss A');
+								document.write(het);
+							</script>
+			              </td>
 						</tr>
 					</tbody>
 				</table>

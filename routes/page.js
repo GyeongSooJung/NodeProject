@@ -10,7 +10,6 @@ const moment = require('moment');
 const router = express.Router();
 const { isLoggedIn, isNotLoggedIn, DataSet, emailcontrol } = require('./middleware');
 const { pagination } = require('./modulebox');
-const moment2 = require('moment-timezone');
 
 //----------------------------------------------------------------------------//
 //                                  기본라우터                                //
@@ -139,10 +138,10 @@ router.get('/main', isNotLoggedIn, async(req, res, next) => {
   if (history_array) {
     const recent_history = history_array.PD;
     console.log("최근 히스토리는 :" + recent_history);
-    res.render('main', { company: req.decoded, aclist, devices, cars, workers, historys, recent_history, history_array, moment, history_count });
+    res.render('main', { company: req.decoded, aclist, devices, cars, workers, historys, recent_history, history_array, history_count });
   }
   else {
-    res.render('main', { company: req.decoded, aclist, devices, cars, workers, historys, history_array, moment, history_count });
+    res.render('main', { company: req.decoded, aclist, devices, cars, workers, historys, history_array, history_count });
   }
 
 
@@ -177,7 +176,7 @@ router.get('/company_list', isNotLoggedIn, async(req, res, next) => {
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const devices = await Device.find({ "CID": DEVICE }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
-    res.render('company_list', { companyone, company: req.decoded, aclist, devices, moment, totalNum, currentPage, totalPage, startPage, endPage });
+    res.render('company_list', { companyone, company: req.decoded, aclist, devices, totalNum, currentPage, totalPage, startPage, endPage });
   }
   else if (CAR) {
     const companyone = await Company.findOne({ "_id": CAR });
@@ -186,7 +185,7 @@ router.get('/company_list', isNotLoggedIn, async(req, res, next) => {
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const cars = await Car.find({ "CID": CAR }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
-    res.render('company_list', { companyone, company: req.decoded, aclist, cars, moment, totalNum, currentPage, totalPage, startPage, endPage });
+    res.render('company_list', { companyone, company: req.decoded, aclist, cars, totalNum, currentPage, totalPage, startPage, endPage });
   }
   else if (WORKER) {
     const companyone = await Company.findOne({ "_id": WORKER });
@@ -195,7 +194,7 @@ router.get('/company_list', isNotLoggedIn, async(req, res, next) => {
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const workers = await Worker.find({ "CID": WORKER }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
-    res.render('company_list', { companyone, company: req.decoded, aclist, workers, moment, totalNum, currentPage, totalPage, startPage, endPage });
+    res.render('company_list', { companyone, company: req.decoded, aclist, workers, totalNum, currentPage, totalPage, startPage, endPage });
   }
   else if (HISTORY) {
     const companyone = await Company.findOne({ "_id": HISTORY });
@@ -204,14 +203,14 @@ router.get('/company_list', isNotLoggedIn, async(req, res, next) => {
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const historys = await History.find({ "CID": HISTORY }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
-    res.render('company_list', { companyone, company: req.decoded, aclist, historys, moment, totalNum, currentPage, totalPage, startPage, endPage });
+    res.render('company_list', { companyone, company: req.decoded, aclist, historys, totalNum, currentPage, totalPage, startPage, endPage });
   }
   else {
     const totalNum = await Company.countDocuments({ "AH": false });
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const companys = await Company.find({ "AH": false }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
-    res.render('company_list', { companys, aclist, moment, company: req.decoded, totalNum, currentPage, totalPage, startPage, endPage });
+    res.render('company_list', { companys, aclist, company: req.decoded, totalNum, currentPage, totalPage, startPage, endPage });
   }
 })
 
@@ -323,7 +322,7 @@ router.get('/car_edit/:CN', isNotLoggedIn, async(req, res, next) => {
 
   try {
     const carone = await Car.findOne({ CN: req.params.CN });
-    res.render('car_edit', { company: req.decoded, aclist, carone, moment, moment2 });
+    res.render('car_edit', { company: req.decoded, aclist, carone });
   }
   catch (err) {
     console.error(err);
@@ -339,9 +338,6 @@ router.get('/car_list', isNotLoggedIn, async(req, res, next) => {
 
   let page = req.query.page;
 
-  console.log("현재 시간은???" + moment.tz.guess(true));
-  console.log(Intl.DateTimeFormat().resolvedOptions().timeZone);
-
   if (CN) {
     const carone = await Car.findOne({ "CN": CN });
     const totalNum = await Car.countDocuments({ "CN": CN });
@@ -349,7 +345,7 @@ router.get('/car_list', isNotLoggedIn, async(req, res, next) => {
     const cars = await Car.find({ "CN": CN }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
     console.log(cars);
 
-    res.render('car_list', { company: req.decoded, aclist, cars, moment, moment2, totalNum, currentPage, totalPage, startPage, endPage, CN });
+    res.render('car_list', { company: req.decoded, aclist, cars, totalNum, currentPage, totalPage, startPage, endPage, CN });
 
   }
   else {
@@ -360,7 +356,7 @@ router.get('/car_list', isNotLoggedIn, async(req, res, next) => {
       const cars = await Car.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
       console.log(cars);
 
-      res.render('car_list', { company: req.decoded, aclist, cars, moment, moment2, totalNum, currentPage, totalPage, startPage, endPage });
+      res.render('car_list', { company: req.decoded, aclist, cars, totalNum, currentPage, totalPage, startPage, endPage });
     }
     catch (err) {
       console.error(err);
@@ -478,7 +474,7 @@ router.get('/history_list', isNotLoggedIn, async(req, res, next) => {
         totalNumlist[i] = i + 1;
       }
 
-      res.render('history_list', { company: req.decoded, aclist, cars, devices, historylist, moment, totalNum, currentPage, totalPage, startPage, endPage, totalNumlist });
+      res.render('history_list', { company: req.decoded, aclist, cars, devices, historylist, totalNum, currentPage, totalPage, startPage, endPage, totalNumlist });
     }
 
     else if (CN) {
@@ -488,7 +484,7 @@ router.get('/history_list', isNotLoggedIn, async(req, res, next) => {
         let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
         const historylist = await History.find({ "VID": carone._id }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
-        res.render('history_list', { company: req.decoded, aclist, cars, carone, devices, historylist, moment, totalNum, currentPage, totalPage, startPage, endPage });
+        res.render('history_list', { company: req.decoded, aclist, cars, carone, devices, historylist, totalNum, currentPage, totalPage, startPage, endPage });
       }
       else {
         res.redirect('?searcherror=true');
@@ -503,7 +499,7 @@ router.get('/history_list', isNotLoggedIn, async(req, res, next) => {
       let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
       const historylist = await History.find({ "DID": deviceone._id }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
-      res.render('history_list', { company: req.decoded, aclist, cars, devices, deviceone, historylist, moment, totalNum, currentPage, totalPage, startPage, endPage });
+      res.render('history_list', { company: req.decoded, aclist, cars, devices, deviceone, historylist, totalNum, currentPage, totalPage, startPage, endPage });
     }
   }
   catch (err) {
@@ -527,7 +523,7 @@ router.get('/history_chart/:_id', isNotLoggedIn, async(req, res, next) => {
     const workerone = await Worker.findOne({ "_id": historyone.WID });
     console.log(deviceone);
     console.log(workerone);
-    res.render('history_chart', { company: req.decoded, aclist, historyone, companyone, carone, deviceone, workerone, history_array, moment });
+    res.render('history_chart', { company: req.decoded, aclist, historyone, companyone, carone, deviceone, workerone, history_array });
   }
   catch (err) {
     console.error(err);

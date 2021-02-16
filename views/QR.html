@@ -21,6 +21,8 @@
 	
 </head>
 <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    
 	<!-- begin #page-container -->
 	<div id="page-container" class="fade page-without-sidebar">
 		<!-- begin #header -->
@@ -75,7 +77,7 @@
                                                 {% endif %}
                                             </tr>
                                             <tr>
-                                                <th>소독일시</th><td>{{moment(historyone.ET).add('9', 'h').format('YYYY-MM-DD hh:mm:ss')}}</td>
+                                                <th>소독일시</th><td id="ET1"></td>
                                             </tr>
                                             <tr>
                                                 <th>소요시간</th>
@@ -152,7 +154,7 @@
                             </div>
                             <div class="mb-1">
                                 <h5><i class="far mr-2 fa-calendar-alt"></i>최근 소독 일시</h5>
-                                <h4>{{moment(historyone.ET).add('9', 'h').format('YYYY-MM-DD hh:mm:ss')}}</h4>
+                                <h4 id="ET2"></h4>
                                 <h5 class="mb-0">최근 소독으로부터 <span id="status_c">{{term}}일</span> 경과</h5>
                             </div>
                         </div>
@@ -388,15 +390,12 @@
     <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
     
     <script>
-        function date(time, format) {
-            var timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            console.log(timezone);
-            var tt = moment(time).tz(timezone).format(format);
-            document.write(timezone);
-            console.log(tt);
-            return tt;
-        }
+        var et1 = document.getElementById('ET1');
+        var et2 = document.getElementById('ET2');
+        et1.innerHTML = moment('{{historyone.ET}}').format('YYYY-MM-DD hh:mm:ss A');
+        et2.innerHTML = moment('{{historyone.ET}}').format('YYYY-MM-DD hh:mm:ss A');
     </script>
+    
     <!-- Chart code -->
     <script>
     am4core.ready(function() {
