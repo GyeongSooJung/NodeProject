@@ -124,8 +124,8 @@
                         								{% endif %}
                         							{% endfor %}
                         						</td>
-                        						<td>{{moment(history_array.ET).format('YYYY-MM-DD hh:mm:ss')}}</td>
-                        						<td>{{moment(history_array.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
+                        						<td id="ET"></td>
+                        						<td id="CA"></td>
                         						{% if recent_history.RC == 0 %}
 													<td>실패</td>
 												{% else %}
@@ -188,6 +188,14 @@
 
 
 {% block script %}
+
+<script>
+	var et = document.getElementById('ET');
+	var ca = document.getElementById('CA');
+	
+	et.innerHTML = moment('{{history_array.ET}}').format('YYYY-MM-DD hh:mm:ss A');
+	ca.innerHTML = moment('{{history_array.CA}}').format('YYYY-MM-DD hh:mm:ss A');
+</script>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>

@@ -114,7 +114,6 @@
 			    							</td>
 			    							<td style ="font-weight: bold; width : 1%;">{{totalNum - count - (currentPage*10)}} </td>
 				  							{% set totalNum = totalNum - 1 %}
-			    							<td style ="width :1%;"></td>
 											{% if car.CC == 1 %}
 												<td>경차</td>
 											{% elif car.CC == 2 %}
@@ -219,7 +218,7 @@
 							<tbody>
 		    					{% if (totalNum == 0) %}
 								<tr>
-									<td colspan="7" class="text-center">No Data</td>
+									<td colspan="8" class="text-center">No Data</td>
 								</tr>
 								{% else %}
 								{% set count = 0 %}
@@ -238,9 +237,19 @@
 												{% endif %}
 											{% endfor %}
 										</td>
-										<td>{{moment(history.ET).format('YYYY-MM-DD hh:mm:ss')}}</td>
+										<td>
+											<script>
+												var het = moment('{{history.ET}}').format('YYYY-MM-DD hh:mm:ss A');
+												document.write(aa);
+											</script>
+										</td>
 										<td>{{history.PD.length}}+"s"</td>
-										<td>{{moment(history.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
+										<td>
+											<script>
+												var hca = moment('{{history.CA}}').format('YYYY-MM-DD hh:mm:ss A');
+												document.write(aa);
+											</script>
+										</td>
 										<td>{{history.RC}}</td>
 				  						<td>
 				  							<a href="javascript:delete_check('{{history._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
@@ -280,7 +289,12 @@
 									<td>{{company.PN}}</td>
 									<td>{{company.MN}}</td>
 									<td>{{company.EA}}</td>
-									<td>{{moment(company.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
+									<td>
+										<script>
+											var cca = moment('{{company.CA}}').format('YYYY-MM-DD hh:mm:ss A');
+											document.write(cca);
+										</script>
+									</td>
 									<td class="d-flex flex-nowrap justify-content-around">
 										<a href="/company_list/?DEVICE={{company._id}}"><button type="button" class="btn btn-primary mx-1 px-2"><i class="fas fa-lg fa-fw fa-microchip"></i></button></a>
 										<a href="/company_list/?CAR={{company._id}}"><button type="button" onClick="location.href='/company_device/{{company._id}}" class="btn btn-info mx-1 px-2"><i class="fas fa-lg fa-fw fa-car"></i></button></a>
@@ -314,19 +328,19 @@
 </div>
 <!-- end #content -->
 
-	<!--검색기능-->
-	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>	
-	<script>
-		$(document).ready(function() {
-	            $("#keyword").keyup(function() {
-	                var k = $(this).val();
-	                $("#data-table-combine > tbody > tr").hide();
-	                var temp = $("#data-table-combine > tbody > tr > td:contains('" + k + "')");
-	
-	                $(temp).parent().show();
-	            })
-	        })
-	</script>
+<!--검색기능-->
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>	
+<script>
+	$(document).ready(function() {
+            $("#keyword").keyup(function() {
+                var k = $(this).val();
+                $("#data-table-combine > tbody > tr").hide();
+                var temp = $("#data-table-combine > tbody > tr > td:contains('" + k + "')");
+
+                $(temp).parent().show();
+            })
+        })
+</script>
 
 <script>
 	function pageBtn(dir) {
