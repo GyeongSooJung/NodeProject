@@ -27,7 +27,6 @@ const carSchema = new Schema({
   },
   UA: {
     type: Date,
-    default: Date.now
     default: Date.now(),
   },
 });
