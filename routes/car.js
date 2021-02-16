@@ -116,7 +116,7 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
               }
                               
                               // 엑셀 파일이 잘 되어있는지 확인
-              if (7 > resData.Sheet1[j].차량번호 || 8 < resData.Sheet1[j].차량번호) {
+              if (7 > resData.Sheet1[j].차량번호.length || 8 < resData.Sheet1[j].차량번호.length) {
                   return res.redirect('/car_join?length=true');
                 }
               if (check.test(resData.Sheet1[j].차량번호) == false) 
