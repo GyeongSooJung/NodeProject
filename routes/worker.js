@@ -180,29 +180,29 @@ router.get('/worker_delete/:EM',isNotLoggedIn ,async (req, res, next) => {
 //작업자 선택삭제
 router.post('/worker_select_delete',isNotLoggedIn ,async (req, res, next) => {
     try {
-        const {EM, AC} = req.body;
+        const {EM, ck} = req.body;
         var i,j;
         let  workerone;
-        console.log("AC: " + AC);
+        console.log("CK: " + ck);
         console.log("EM: " + EM);
         /* EM 이랑 AC 비교 */
         
-        if (!AC) {
+        if (!ck) {
             return res.redirect('/worker_list');
         }
         
-        else if(!(AC instanceof Object)) {
+        else if(!(ck instanceof Object)) {
           for (i =0; i < EM.length; i ++) {
             console.log(EM[i]);
-             if (EM[i] == AC) { 
-              await Worker.remove({ "EM" : AC });
+             if (EM[i] == ck) { 
+              await Worker.remove({ "EM" : ck });
             }
           }
         }
         else{
           for (i =0; i < EM.length; i ++) {
-            for(j =0; j < AC.length; j ++) {
-              if(EM[i] == AC[j]){
+            for(j =0; j < ck.length; j ++) {
+              if(EM[i] == ck[j]){
                 await Worker.remove({ "EM" : EM[i] });
                 break;
               }
