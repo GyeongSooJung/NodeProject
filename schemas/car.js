@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 const carSchema = new Schema({
-  
+
   CID: {
     type: String,
     unique: false,
-    require : true
+    require: true
   },
   CC: {
     type: Number,
@@ -15,7 +15,7 @@ const carSchema = new Schema({
   CN: {
     type: String,
     unique: true,
-    require : true
+    require: true
   },
   SN: {
     type: String,
