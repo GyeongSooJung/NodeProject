@@ -9,7 +9,7 @@ const moment = require('moment');
 //Router or MiddleWare
 const router = express.Router();
 const { isLoggedIn, isNotLoggedIn, DataSet, emailcontrol } = require('./middleware');
-const { pagination } = require('./modulebox');
+const { pagination, timeset } = require('./modulebox');
 
 //----------------------------------------------------------------------------//
 //                                  기본라우터                                //

@@ -110,16 +110,14 @@
 												{% endif %}
 										</td>
 										
-										<td>
+										<td style ="text-align:center;">
 											<script>
-												var het = moment('{{history.ET}}').format('YYYY-MM-DD hh:mm:ss A');
-												document.write(het);
+											Timefunction("{{history.ET}}");
 											</script>
 										</td>
-										<td>
+										<td style ="text-align:center;">
 											<script>
-												var hca = moment('{{history.CA}}').format('YYYY-MM-DD hh:mm:ss A');
-												document.write(hca);
+											Timefunction("{{history.CA}}");
 											</script>
 										</td>
 										{% if (history.PD.length//60)==0  %}
