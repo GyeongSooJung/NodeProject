@@ -6,11 +6,33 @@ const Car = require('../../schemas/car');
 const History = require('../../schemas/history');
 var moment = require('moment');
 const Device = require('../../schemas/device');
+const jwt = require('jsonwebtoken');
+
+const JWT_SECRET = "OASIS";
 
 const UNKOWN = "UNKOWN";
 const NO_SUCH_DATA = "NO_SUCH_DATA";
 const FAIL = "FAIL";
+const TOKEN_ERROR = "TOKEN_ERROR";
 
+
+
+exports.test = async(req, res, next) => {
+    const token = req.body.token;
+    console.log("token: " + token);
+
+    try {
+        jwt.verify(token, JWT_SECRET);
+        next();
+    }
+    catch (error) {
+        res.json({
+            result: false,
+            error: TOKEN_ERROR,
+        });
+    }
+
+};
 
 /// Worker 관련
 exports.findWorker = async(req, res) => {
@@ -29,10 +51,18 @@ exports.signIn = async(req, res) => {
     if (type == "GOOGLE") {
         var worker = await Worker.findOne({ "GID": id, "EM": email });
         if (worker != null) {
-            await Worker.where({ _id: worker._id }).update({ "UA": moment().add('9','h').format('YYYY-MM-DD hh:mm:ss') });
+            // 토큰 생성
+            const token = jwt.sign({
+                id: worker._id,
+            }, JWT_SECRET, {
+                expiresIn: "1d",
+            });
+
+            await Worker.where({ _id: worker._id }).update({ UA: Date.now() });
             return res.json({
                 result: true,
                 data: JSON.stringify(worker),
+                token,
             });
         }
         else {
@@ -76,7 +106,6 @@ exports.updateWorkerInfo = async(req, res) => {
         const { _id, WN, PN, AU } = req.body;
 
         var result = await Worker.where({ _id }).updateOne({ WN, PN, AU, UA: Date.now() });
-        var result = await Worker.where({ _id }).update({ WN, PN, AU, UA: moment().add('9','h').format('YYYY-MM-DD hh:mm:ss') });
         console.log(result);
 
         res.json({
@@ -224,6 +253,27 @@ exports.confirmConpanyPW = async(req, res) => {
 
 /// 차량 정보 관련
 
+// 차량 등록
+exports.registerCar = async(req, res) => {
+    try {
+        const { CID, CC, CN, SN } = req.body;
+
+        var result = await Car.create({ CID, CC, CN, SN });
+        console.log(result);
+
+        res.json({
+            result: true,
+        });
+    }
+    catch (exception) {
+        console.log(exception);
+        res.json({
+            result: false,
+            error: UNKOWN,
+        });
+    }
+};
+
 // 회사(사업주) 소유의 차량 조회
 exports.findCarByComID = async(req, res) => {
     try {
@@ -243,6 +293,47 @@ exports.findCarByComID = async(req, res) => {
                 error: NO_SUCH_DATA,
             });
         }
+    }
+    catch (exception) {
+        res.json({
+            result: false,
+            error: UNKOWN,
+        });
+    }
+};
+
+// 차량 정보 수정
+exports.updateCar = async(req, res) => {
+    try {
+        const { _id, CC, CN, SN } = req.body;
+
+        var result = await Car.where({ _id }).updateOne({ CC, CN, SN, UA: Date.now() });
+        console.log(result);
+
+        res.json({
+            result: true,
+        });
+
+    }
+    catch (exception) {
+        res.json({
+            result: false,
+            error: UNKOWN,
+        });
+    }
+};
+
+// 소독기 삭제
+exports.deleteCar = async(req, res) => {
+    try {
+        const { _id, CN } = req.body;
+
+        var result = await Car.remove({ _id, CN });
+        console.log(result);
+
+        res.json({
+            result: true,
+        });
     }
     catch (exception) {
         res.json({
@@ -305,7 +396,7 @@ exports.findHistories = async(req, res) => {
 // 히스토리 조회
 exports.findHistory = async(req, res) => {
     try {
-        const {_id } = req.body;
+        const { _id } = req.body;
 
         var history = await History.findOne({ _id });
         if (history != null) {
@@ -423,6 +514,8 @@ exports.deleteDevice = async(req, res) => {
 
 
 exports.root = (req, res) => {
+    var tz = moment.tz.guess();
+    console.log(tz);
     res.json({
         result: "hello",
     });
