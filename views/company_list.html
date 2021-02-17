@@ -97,6 +97,8 @@
 										<th>차종</th>
 										<th>차량 번호</th>
 										<th>차대 번호</th>
+										<th>등록 일자</th>
+										<th>수정 일자</th>
 										<th width="1%"></th>
 									</tr>
 								</thead>
@@ -114,7 +116,7 @@
 			    							</td>
 			    							<td class="font-weight-bold">{{totalNum - count - (currentPage*10)}} </td>
 				  							{% set totalNum = totalNum - 1 %}
-											{% if car.CC == 1 %}
+			    							{% if car.CC == 1 %}
 												<td>경차</td>
 											{% elif car.CC == 2 %}
 												<td>소형</td>
@@ -136,7 +138,21 @@
 												<td>선택안됨</td>
 											{% endif %}
 											<td>{{car.CN}}</td>
+											{% if car.SN %}
 											<td>{{car.SN}}</td>
+											{% else %} <td>선택안됨 </td>
+											{% endif %}
+											
+											<td>
+												<script>
+										        Timefunction("{{car.CA}}");
+												</script>
+											</td>
+											<td>
+												<script>
+												Timefunction("{{car.UA}}");
+												</script>
+											</td>
 											<td class="with-btn" nowrap>
 												<a href="/car_edit/{{car.CN}}" class="btn btn-sm btn-primary width-60 m-r-2">수정</a>
 												<a href="javascript:delete_check('{{car.CN}}')" class="btn btn-sm btn-white width-60">삭제</a>
@@ -156,18 +172,19 @@
 	        						<tr>
 	        							<th width="1%"><input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/></th>
 	        							<th width="2.5%"></th>
-	        							<th width="2.5%"></th>
+	        							<th width="2.5%" data-orderable="false"></th>
 	        							<th>이름</th>
 	        							<th>전화번호</th>
 	        							<th>이메일</th>
-	        							<th width="10%">승인</th>
+	        							<th width>사업주권한</th>
+	        							<th width>승인</th>
 	        							<th width="1%"></th>
 	        						</tr>
 	        					</thead>
 	        					<tbody>
 			    					{% if (totalNum == 0) %}
 									<tr>
-										<td colspan="8">No Data</td>
+										<td colspan="9">No Data</td>
 									</tr>
 									{% else %}	
 									{% set count = 0 %}
@@ -183,6 +200,13 @@
 			    							<td>{{worker.PN}}</td>
 			    							<td>{{worker.EM}}</td>
 			    							    <input type="hidden" name="EM" value="{{worker.EM}}">
+		    							    <td class="with-btn" nowrap>
+			    								{% if (worker.AU == 1) %}
+			    								<i class="far fa-circle"></i>
+			    								{% else %}
+			    								<i class="fas fa-times"></i>
+			    								{% endif %}
+			    							</td>
 			    							<td class="with-btn" nowrap>
 			    								{% if (worker.AC) %}
 			    								<i class="far fa-circle"></i>
@@ -211,17 +235,19 @@
 									</th>
 									<th width="2.5%"></th>
 									<th class="text-nowrap">차량 번호</th>
+									<th class="text-nowrap">장비 명</th>
 								    <th class="text-nowrap">소독 일시</th>
-								    <th class="text-nowrap">소독 시간</th>
 									<th class="text-nowrap">등록 일시</th>
+									<th class="text-nowrap">소독 시간</th>
 									<th class="text-nowrap">소독 결과</th>
+									<th class="text-nowrap">작업자</th>
 									<th width="1%"></th>
 								</tr>
 							</thead>
 							<tbody>
 		    					{% if (totalNum == 0) %}
 								<tr>
-									<td colspan="8">No Data</td>
+									<td colspan="10">No Data</td>
 								</tr>
 								{% else %}
 								{% set count = 0 %}
@@ -231,29 +257,51 @@
 				 							<input id="ck" type="checkbox" name = "_id" class="neHeros" value={{history._id}} onChange="eachCheckedBox(this);"/>
 				  						</td>
 				  						<td class="font-weight-bold">{{totalNum - count - (currentPage*10)}} </td>
-				  							{% set totalNum = totalNum - 1 %}
-				  						
+				  						{% set totalNum = totalNum - 1 %}
 										<td>
-											{% for car in cars %}
-												{% if (car._id == history.VID) %}
-													{{car.CN}}
+										     	{% if history.CNM %}
+												  <a href="/history_list/?CN={{history.CNM}}" class="dropdown-item">{{history.CNM}}</a>
+												{% else %}
+												  	N/A
 												{% endif %}
-											{% endfor %}
+										</td>
+										
+										<td>
+												{% if history.DNM %}
+												  	{{history.DNM}}
+												{% else %}
+												  	N/A
+												{% endif %}
+										</td>
+										
+										<td>
+											<script>
+											Timefunction("{{history.ET}}");
+											</script>
 										</td>
 										<td>
 											<script>
-												var het = moment('{{history.ET}}').format('YYYY-MM-DD hh:mm:ss A');
-												document.write(aa);
+											Timefunction("{{history.CA}}");
 											</script>
 										</td>
-										<td>{{history.PD.length}}+"s"</td>
+										{% if (history.PD.length//60)==0  %}
+										<td>{{history.PD.length%60+"s"}}</td>
+										{% else %}
+										<td>{{history.PD.length//60+"m "+history.PD.length%60+"s"}}</td>
+										{% endif %}
+										
+										{% if history.RC == 1 %}
+										<td>성공</td>
+										{% else %}
+										<td>실패</td>
+										{% endif %}
 										<td>
-											<script>
-												var hca = moment('{{history.CA}}').format('YYYY-MM-DD hh:mm:ss A');
-												document.write(aa);
-											</script>
+									    	{% if history.WNM %}
+											  	{{history.WNM}}
+											{% else %}
+											  	N/A
+											{% endif %}
 										</td>
-										<td>{{history.RC}}</td>
 				  						<td>
 				  							<a href="javascript:delete_check('{{history._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
 				  						</td>
