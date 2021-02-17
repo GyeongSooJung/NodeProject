@@ -155,7 +155,13 @@
                             <div class="mb-1">
                                 <h5><i class="far mr-2 fa-calendar-alt"></i>최근 소독 일시</h5>
                                 <h4 id="ET2"></h4>
-                                <h5 class="mb-0">최근 소독으로부터 <span id="status_c">{{term}}일</span> 경과</h5>
+                                {% if (term <= 24) %}
+                                <h5 class="mb-0">최근 소독으로부터 <span id="status_c">{{term}}시간</span> 경과</h5>
+                                {% elseif (term <= 48) %}
+                                <h5 class="mb-0">최근 소독으로부터 <span id="status_c">{{term//24}}일{{term%24}}시간</span> 경과</h5>
+                                {% else %}
+                                <h5 class="mb-0">최근 소독으로부터 <span id="status_c"><script>document.write(Math.ceil({{term/24}}))</script>일</span> 경과</h5>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -165,7 +171,7 @@
                     <div class="panel panel-inverse">
                         <div class="py-3 mt-2">
                             <h4 class="mb-0 text-center">살균 목록</h4>
-                            {% if (term <= 2) %}
+                            {% if (term <= 48) %}
                             
                                 {% set time = historyone.PD.length %}
                                 
@@ -485,14 +491,14 @@
 		const sc = document.getElementById("status_c");
 		console.log(status);
 		
-		if ({{term}} <= 2) {
+		if ({{term}} <= 48) {
 			si.style.color = "#00c853";
 			si.innerHTML = "<i class='far fa-smile'></i>";
 			st.style.color = "#00c853";
 			st.innerHTML = "안전";
 			sc.style.color = "#00c853";
 		}
-		else if ({{term}} < 5) {
+		else if ({{term}} < 120) {
 			si.style.color = "orange";
 			si.innerHTML = "<i class='far fa-frown'></i>";
 			st.style.color = "orange";

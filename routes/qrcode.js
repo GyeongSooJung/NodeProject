@@ -32,7 +32,8 @@ router.post('/QR', async (req, res, next) => {
           console.log("히스토리 아이디"+historyone._id);
           
           const et = moment(historyone.ET).format('YYYY-MM-DD hh:mm:ss'); // 최근 소독이력 포맷맞춰서
-          const term = await moment(timenow).diff(et, 'days'); // 현재 일자 - 최근 소독이력
+          const term = await moment(timenow).diff(et, 'hours'); // 현재 일자 - 최근 소독이력
+          console.log("시간"+term);
           
           console.log("성공실패"+historyone.RC);
           
