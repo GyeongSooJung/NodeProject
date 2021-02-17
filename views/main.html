@@ -284,6 +284,8 @@ var ppmAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
 // Create series
 var series = chart.series.push(new am4charts.LineSeries());
+ssAxis.title.text = "시간(s)";
+ppmAxis.title.text = "오존(ppm)";
 series.dataFields.valueY = "ppm";
 series.dataFields.valueX = "ss";
 series.tooltipText = "{ppm}"
