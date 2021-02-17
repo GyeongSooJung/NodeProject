@@ -9,6 +9,7 @@
 <link href="../assets/plugins/datatables.net-keytable-bs4/css/keyTable.bootstrap4.min.css" rel="stylesheet" />
 <link href="../assets/plugins/datatables.net-rowreorder-bs4/css/rowReorder.bootstrap4.min.css" rel="stylesheet" />
 <link href="../assets/plugins/datatables.net-select-bs4/css/select.bootstrap4.min.css" rel="stylesheet" />
+<link href="../assets/plugins/switchery/switchery.min.css" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
@@ -176,8 +177,8 @@
 	        							<th>이름</th>
 	        							<th>전화번호</th>
 	        							<th>이메일</th>
-	        							<th width>사업주권한</th>
-	        							<th width>승인</th>
+	        							<th width="10%">사업주권한</th>
+	        							<th width="10%">승인</th>
 	        							<th width="1%"></th>
 	        						</tr>
 	        					</thead>
@@ -201,19 +202,13 @@
 			    							<td>{{worker.EM}}</td>
 			    							    <input type="hidden" name="EM" value="{{worker.EM}}">
 		    							    <td class="with-btn" nowrap>
-			    								{% if (worker.AU == 1) %}
-			    								<i class="far fa-circle"></i>
-			    								{% else %}
-			    								<i class="fas fa-times"></i>
-			    								{% endif %}
-			    							</td>
-			    							<td class="with-btn" nowrap>
-			    								{% if (worker.AC) %}
-			    								<i class="far fa-circle"></i>
-			    								{% else %}
-			    								<i class="fas fa-times"></i>
-			    								{% endif %}
-			    							</td>
+		        								<input class ="ck_au" type="checkbox" data-render="switchery" data-theme="black" name="ckone" value ="{{worker.EM}}"  {% if worker.AU == 1 %} checked {% else %} unchecked  {% endif %} />
+		        								
+		        							</td>
+		        							<td class="with-btn" nowrap>
+		        								<input class ="ck_ac" type="checkbox" data-render="switchery" data-theme="default" name="ckone" value ="{{worker.EM}}"  {% if worker.AC == 1 %} checked {% else %} unchecked  {% endif %} />
+		        								
+		        							</td>
 			    							<td>
 			    								<a class="btn btn-sm btn-white width-60" href="javascript:delete_check('{{worker.EM}}')">삭제</a>
 			    								<!--<a class="btn btn-sm btn-white width-60" onclick ="confirm({{worker.EM}})">Delete</a>-->
@@ -450,6 +445,80 @@
             }
         }
     }
+    
+	$(document).ready(function(){
+        $('.ck_au').change(function() {
+           var post = 'POST METHOD CALL';
+           var email = $(this).val();
+			
+	        if($(this).is(":checked")){
+                //Ajax POST Method TEST
+                $.ajax({
+                    url: '/ajax/post',
+                      dataType: 'json',
+                      type: 'POST',
+                      data: {au_true:email},
+                      success: function(result) {
+                          if (result) {
+                             $('#post_output').html(result.result);
+                          }
+                      }
+				});
+	        }
+	        else {
+                //Ajax POST Method TEST
+                $.ajax({
+                    url: '/ajax/post',
+                      dataType: 'json',
+                      type: 'POST',
+                      data: {au_false:email},
+                      success: function(result) {
+                          if (result) {
+                             $('#post_output').html(result.result);
+                          }
+                      }
+				});
+	        }
+        });
+     });
+
+	$(document).ready(function(){         
+		$('.ck_ac').change(function() {
+           var post = 'POST METHOD CALL';
+           var email = $(this).val();
+			
+			if($(this).is(":checked")){
+			 	console.log("@@@@@");
+			    //Ajax POST Method TEST
+			    $.ajax({
+			        url: '/ajax/post',
+			          dataType: 'json',
+			          type: 'POST',
+			          data: {ac_true:email},
+			          success: function(result) {
+			              if (result) {
+			                 $('#post_output').html(result.result);
+			              }
+			          }
+				});
+			}
+			else {
+			    //Ajax POST Method TEST
+			    $.ajax({
+			        url: '/ajax/post',
+			          dataType: 'json',
+			          type: 'POST',
+			          data: {ac_false:email},
+			          success: function(result) {
+			              if (result) {
+			                 $('#post_output').html(result.result);
+			              }
+			          }
+				});
+			}
+        });
+            
+   });
 </script>
 
 {% endblock %}
@@ -459,5 +528,7 @@
 <script src="../assets/plugins/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="../assets/plugins/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="../assets/plugins/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+<script src="../assets/plugins/switchery/switchery.min.js"></script>
+<script src="../assets/js/demo/form-slider-switcher.demo.js"></script>
 <!--<script src="../assets/js/demo/table-manage-default.demo.js"></script>-->
 {% endblock %}
