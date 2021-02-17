@@ -541,7 +541,7 @@ router.get('/mobile_con', async(req, res, next) => {
   console.log(cn);
   
   try {
-    res.render('mobile_con', {cn:cn});
+    res.render('mobile_con', {cn});
   }
   catch (err) {
     console.error(err);
