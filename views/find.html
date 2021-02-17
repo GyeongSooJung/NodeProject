@@ -52,7 +52,7 @@
 						        	<form action="/find/change" method="post" class="margin-bottom-0" >
     						        	<input id="CNU" name = 'CNU' type="hidden" class="form-control form-control-lg inverse-mode"
     						        	value= {{CNU}} />
-    						                <div style="display:flex;" class="row m-b-15" >
+    						                <div class="d-flex row m-b-15" >
     						                    {% if errmsg %} <span class="text-danger mt-0 mb-2">   *{{errmsg}}</span> {% endif %}
         						            <div class="col-md-12 mb-2" name = "password">
         						                <input id="PW1" name = "PW1" type="password"  class="form-control form-control-lg inverse-mode" 
@@ -69,7 +69,7 @@
     					        </form>
 						        {% else %}
 						        	<form action="/find/sendmail" method="post" class="margin-bottom-0" >
-						            <div style="display:flex;" class="row m-b-15" >
+						            <div class="d-flex row m-b-15" >
 						            {% if errmsg %}<span class="text-danger mt-0 mb-2">   *{{errmsg}}</span> {% endif %}
     						        <div class="col-md-12 mb-2" name = "CNU_CK">
     						        <input id="CNU" name = "CNU" type="text" class="form-control form-control-lg inverse-mode" 
@@ -90,7 +90,7 @@
     					</form>
     					
     					<form action="/find/email_cert" method="post" >
-							<div style="display:flex;" class="row">
+							<div class="d-flex row">
     							<div class="col-md-12 mb-2 mt-0" >
     								<input id="Enum" name = 'Enum' type="password" class="form-control form-control-lg inverse-mode" placeholder="인증 문자 6자리 입력" required />
     								{% if authNum %}<input id="authNum" name = 'authNum' type="hidden" class="form-control form-control-lg inverse-mode" value= {{authNum}} />    {% endif %}                                 

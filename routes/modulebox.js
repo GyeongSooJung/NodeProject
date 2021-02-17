@@ -32,3 +32,20 @@ exports.pagination = async(page, totalNum) => {
     
     return { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage };
 }
+
+//TimeSet
+
+// exports.timeset = async(CA,moment) => {
+    
+//     const CAtime = Date.UTC();
+    
+//     if ( (moment('CA').format('DD')) == moment().format('DD') )
+//     {
+//       CAtime = moment('CA').format('HH:mm');
+//     }
+//     else {
+//       CAtime = moment('CA').format('YYYY-MM-DD');
+//     }
+    
+//     return {CAtime};
+// }

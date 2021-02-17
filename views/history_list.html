@@ -60,14 +60,13 @@
 
 			<div class="overflow-auto">
 				<form action="/history/history_select_delete" method="post">
-					<table id="data-table-combine" class="table table-striped table-bordered table-td-valign-middle">
+					<table id="data-table-combine" class="table table-striped table-bordered table-td-valign-middle text-center">
 						<thead>
 							<tr>
-								
 								<th width="1%">
 									<input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/>
 								</th>
-								<th></th>
+								<th width="2.5%"></th>
 								<th class="text-nowrap">차량 번호</th>
 								<th class="text-nowrap">장비 명</th>
 							    <th class="text-nowrap">소독 일시</th>
@@ -81,7 +80,7 @@
 						<tbody>
 							{% if (totalNum == 0) %}
 							<tr>
-								<td colspan="10" class="text-center">No Data</td>
+								<td colspan="10">No Data</td>
 							</tr>
 							{% else %}
 							    
@@ -92,7 +91,7 @@
 				  						<td onclick='event.cancelBubble=true;' class="with-btn" nowrap>
 				 							<input id="ck" type="checkbox" name = "_id" class="neHeros" value={{history._id}} onChange="eachCheckedBox(this);"/>
 				  						</td>
-				  						<td style ="font-weight: bold; width : 1%;">{{totalNum - count - (currentPage*10)}} </td>
+				  						<td class="font-weight-bold">{{totalNum - count - (currentPage*10)}} </td>
 				  						{% set totalNum = totalNum - 1 %}
 										<td>
 										     	{% if history.CNM %}
@@ -110,26 +109,34 @@
 												{% endif %}
 										</td>
 										
-										<td>{{moment(history.ET).format('YYYY-MM-DD hh:mm:ss')}}</td>
-										<td>{{moment(history.CA).format('YYYY-MM-DD hh:mm:ss')}}</td>
+										<td>
+											<script>
+											Timefunction("{{history.ET}}");
+											</script>
+										</td>
+										<td>
+											<script>
+											Timefunction("{{history.CA}}");
+											</script>
+										</td>
 										{% if (history.PD.length//60)==0  %}
 										<td>{{history.PD.length%60+"s"}}</td>
 										{% else %}
 										<td>{{history.PD.length//60+"m "+history.PD.length%60+"s"}}</td>
 										{% endif %}
 										
-										{% if history.RC == 0 %}
-										<td>실패</td>
-										{% else %}
+										{% if history.RC == 1 %}
 										<td>성공</td>
+										{% else %}
+										<td>실패</td>
 										{% endif %}
 										<td>
-										    	{% if history.WNM %}
-												  	{{history.WNM}}
-												{% else %}
-												  	N/A
-												{% endif %}
-											</td>
+									    	{% if history.WNM %}
+											  	{{history.WNM}}
+											{% else %}
+											  	N/A
+											{% endif %}
+										</td>
 				  						<td>
 				  							<a href="javascript:delete_check('{{history._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
 				  						</td>

@@ -42,7 +42,7 @@
 					<!-- begin login-content -->
 					<div class="login-content">
 						<form action="/email/email_send" method="post" class="margin-bottom-0" >
-						    <div style="display:flex;" class="row m-b-15" >
+						    <div class="d-flex row m-b-15" >
     							<div class="col-md-6 mb-2 " name = "email_send_complete">
 
     						        <input id="EA" name = "EA" type="email" class="form-control form-control-lg inverse-mode" placeholder="이메일 주소" required
@@ -61,8 +61,8 @@
     					</form>
     					
     					<form action="/email/email_cert" method="post" class="margin-bottom-0">
-							<div style="display:flex;" class="row m-b-15">
-    							<div class="col-md-12" style=" padding-bottom : 20px;">
+							<div class="d-flex row m-b-15">
+    							<div class="col-md-12 pb-3">
     								<input id="Enum" name = 'Enum' type="password" class="form-control form-control-lg inverse-mode" placeholder="인증 문자 6자리 입력" required />
     							{% if authNum %}<input id='authNum' type="hidden" name = "authNum" value = "{{authNum}}">{% endif %}
     								<input type="hidden" name = "reademailaddress" value = "{{reademailaddress}}">

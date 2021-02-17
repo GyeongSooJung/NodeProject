@@ -23,10 +23,11 @@ const carSchema = new Schema({
   },
   CA: {
     type: Date,
-    default: Date.now
+    default: Date.now(),
   },
   UA: {
     type: Date,
+    default: Date.now()
   },
 });
 
