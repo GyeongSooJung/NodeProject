@@ -38,13 +38,13 @@
 					
 					<div class="overflow-auto">
 						<form action="/car/car_select_delete" method="post">
-							<table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle">
+							<table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle text-center">
 								<thead>
 									<tr>
 										<th width="1%">
 											<input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/>
 										</th>
-										<th></th>
+										<th width="2.5%"></th>
 										<th>차종</th>
 										<th>차량 번호</th>
 										<th>차대 번호</th>
@@ -56,7 +56,7 @@
 								<tbody>
 									{% if (totalNum == 0) %}
 									<tr>
-										<td colspan="7" class="text-center">No Data</td>
+										<td colspan="7">No Data</td>
 									</tr>
 									{% else %}
 									{% set count = 0 %}
@@ -65,7 +65,7 @@
 			    							<td class="with-btn" nowrap>
 												<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{car.CN}} onChange="eachCheckedBox(this);"/>
 			    							</td>
-			    							<td style ="font-weight: bold; width : 1%;">{{totalNum - count - (currentPage*10)}} </td>
+			    							<td class="font-weight-bold">{{totalNum - count - (currentPage*10)}} </td>
 				  							{% set totalNum = totalNum - 1 %}
 			    							{% if car.CC == 1 %}
 												<td>경차</td>
