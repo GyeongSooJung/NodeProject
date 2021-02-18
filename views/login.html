@@ -81,24 +81,24 @@
 	</div>
 	<!-- end page container -->
 	
-	<!-- ================== BEGIN BASE JS ================== -->
-	<script src="../assets/js/app.min.js"></script>
-	<script src="../assets/js/theme/default.min.js"></script>
-	<!-- ================== END BASE JS ================== -->
-	 <script>
-    window.onload = () => {
-      if (new URL(location.href).searchParams.get('fail')) {
-        alert('아이디 혹은 비밀번호를 확인해주세요.');
-      }
-      if (new URL(location.href).searchParams.get('again')) {
-        alert('다시 로그인 해주세요.');
-      }
-            if (new URL(location.href).searchParams.get('pwc')) {
-            alert('비밀번호 변경이 완료되었습니다.');
-            }
-    	
-    }
-      
-      </script>
+<script>
+	// 에러 링크 기능
+	window.onload = () => {
+		if (new URL(location.href).searchParams.get('fail')) {
+			alert('아이디 혹은 비밀번호를 확인해주세요.');
+		}
+		if (new URL(location.href).searchParams.get('again')) {
+			alert('다시 로그인 해주세요.');
+		}
+		if (new URL(location.href).searchParams.get('pwc')) {
+			alert('비밀번호 변경이 완료되었습니다.');
+		}
+	}
+</script>
+
+<!-- ================== BEGIN BASE JS ================== -->
+<script src="../assets/js/app.min.js"></script>
+<script src="../assets/js/theme/default.min.js"></script>
+<!-- ================== END BASE JS ================== -->
 </body>
 </html>

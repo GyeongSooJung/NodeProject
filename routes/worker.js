@@ -179,40 +179,67 @@ router.get('/worker_delete/:EM',isNotLoggedIn ,async (req, res, next) => {
 
 //작업자 선택삭제
 router.post('/worker_select_delete',isNotLoggedIn ,async (req, res, next) => {
-    try {
-        const {EM, ck} = req.body;
-        var i,j;
-        let  workerone;
-        console.log("CK: " + ck);
-        console.log("EM: " + EM);
-        /* EM 이랑 AC 비교 */
-        
-        if (!ck) {
-            return res.redirect('/worker_list');
+  try {
+        const {ck} = req.body;
+
+        if(!ck) {
+          return res.redirect('/worker_list?null=true');
         }
-        
-        else if(!(ck instanceof Object)) {
-          for (i =0; i < EM.length; i ++) {
-            console.log(EM[i]);
-             if (EM[i] == ck) { 
-              await Worker.remove({ "EM" : ck });
+        else {
+          const workerone = await Worker.findOne({"EM" : ck});
+          console.log("zzzzzzzzz : "+workerone);
+          const EMc = workerone.EM;
+          var i;
+          console.log("EM: " + ck);
+          console.log("EMc: " + EMc)
+
+          for(i=0; i < ck.length; i++){
+            if(ck[i] == EMc){
+                await Worker.remove({ "EM" : ck });
+            }
+            else if(!(ck instanceof Object)) {
+                await Worker.remove({ "EM" : ck });
             }
           }
+          res.redirect('/worker_list');
         }
-        else{
-          for (i =0; i < EM.length; i ++) {
-            for(j =0; j < ck.length; j ++) {
-              if(EM[i] == ck[j]){
-                await Worker.remove({ "EM" : EM[i] });
-                break;
-              }
-            }
-          }
-        }
-        res.redirect('/worker_list');
     }   catch (err) {
         console.error(err);
         next(err);
+    // try {
+    //     const {EM, ck} = req.body;
+    //     var i,j;
+    //     let  workerone;
+    //     console.log("CK: " + ck);
+    //     console.log("EM: " + EM);
+    //     /* EM 이랑 AC 비교 */
+        
+    //     if (!ck) {
+    //         return res.redirect('/worker_list');
+    //     }
+        
+    //     else if(!(ck instanceof Object)) {
+    //       for (i =0; i < EM.length; i ++) {
+    //         console.log(EM[i]);
+    //         if (EM[i] == ck) { 
+    //           await Worker.remove({ "EM" : ck });
+    //         }
+    //       }
+    //     }
+    //     else{
+    //       for (i =0; i < EM.length; i ++) {
+    //         for(j =0; j < ck.length; j ++) {
+    //           if(EM[i] == ck[j]){
+    //             await Worker.remove({ "EM" : EM[i] });
+    //             break;
+    //           }
+    //         }
+    //       }
+    //     }
+    //     res.redirect('/worker_list');
+    // }   catch (err) {
+    //     console.error(err);
+    //     next(err);
   }
 });
 

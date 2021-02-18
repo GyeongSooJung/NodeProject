@@ -207,7 +207,7 @@
 
 <!-- Chart code -->
 <script>
-	am4core.ready(function() {
+am4core.ready(function() {
 	
 	// Themes begin
 	am4core.useTheme(am4themes_animated);
@@ -277,7 +277,7 @@
 	chart.hiddenState.properties.radius = am4core.percent(0);
 	
 	
-	}); // end am4core.ready()
+}); // end am4core.ready()
 </script>
 
 <!-----------------------------------------------------------
@@ -290,214 +290,214 @@
 <script src="../assets/js/koreamap.js"></script>
 
 <script>
-	var container = document.getElementById('mapchart');
-	var data = {
-	    series: [
-	        {
-	            code: 'KR-SU',
-	            data: 105
-	        },
-	        {
-	            code: 'KR-BS',
-	            data: 147
-	        },
-	        {
-	            code: 'KR-DG',
-	            data: 141
-	        },
-	        {
-	            code: 'KR-IC',
-	            data: 121
-	        },
-	        {
-	            code: 'KR-GJ',
-	            data: 138
-	        },
-	        {
-	            code: 'KR-DJ',
-	            data: 130
-	        },
-	        {
-	            code: 'KR-US',
-	            data: 141
-	        },
-	        {
-	            code: 'KR-GG',
-	            data: 116
-	        },
-	        {
-	            code: 'KR-GW',
-	            data: 113
-	        },
-	        {
-	            code: 'KR-NC',
-	            data: 117
-	        },
-	        {
-	            code: 'KR-SC',
-	            data: 119
-	        },
-	        {
-	            code: 'KR-NJ',
-	            data: 128
-	        },
-	        {
-	            code: 'KR-SJ',
-	            data: 136
-	        },
-	        {
-	            code: 'KR-NG',
-	            data: 142
-	        },
-	        {
-	            code: 'KR-SG',
-	            data: 142
-	        },
-	        {
-	            code: 'KR-JJ',
-	            data: 155
-	        },
-	        {
-	            code: 'KR-SE',
-	            data: 118
-	        }
-	    ]
-	};
-	var options = {
-		chart: {
-	        width: 400,
-	        height: 460
-	    },
-	    map: 'south-korea',
-	    legend: {
-	        align: 'right'
-	    },
-	    tooltip: {
-	        suffix: '개'
-	    },
-	};
-	var theme = {
-	    series: {
-	        startColor: '#ffefef',
-	        endColor: '#ac4142',
-	        overColor: '#75b5aa'
-	    }
-	};
-	
-	tui.chart.mapChart(container, data, options);
+var container = document.getElementById('mapchart');
+var data = {
+    series: [
+        {
+            code: 'KR-SU',
+            data: 105
+        },
+        {
+            code: 'KR-BS',
+            data: 147
+        },
+        {
+            code: 'KR-DG',
+            data: 141
+        },
+        {
+            code: 'KR-IC',
+            data: 121
+        },
+        {
+            code: 'KR-GJ',
+            data: 138
+        },
+        {
+            code: 'KR-DJ',
+            data: 130
+        },
+        {
+            code: 'KR-US',
+            data: 141
+        },
+        {
+            code: 'KR-GG',
+            data: 116
+        },
+        {
+            code: 'KR-GW',
+            data: 113
+        },
+        {
+            code: 'KR-NC',
+            data: 117
+        },
+        {
+            code: 'KR-SC',
+            data: 119
+        },
+        {
+            code: 'KR-NJ',
+            data: 128
+        },
+        {
+            code: 'KR-SJ',
+            data: 136
+        },
+        {
+            code: 'KR-NG',
+            data: 142
+        },
+        {
+            code: 'KR-SG',
+            data: 142
+        },
+        {
+            code: 'KR-JJ',
+            data: 155
+        },
+        {
+            code: 'KR-SE',
+            data: 118
+        }
+    ]
+};
+var options = {
+	chart: {
+        width: 400,
+        height: 460
+    },
+    map: 'south-korea',
+    legend: {
+        align: 'right'
+    },
+    tooltip: {
+        suffix: '개'
+    },
+};
+var theme = {
+    series: {
+        startColor: '#ffefef',
+        endColor: '#ac4142',
+        overColor: '#75b5aa'
+    }
+};
+
+tui.chart.mapChart(container, data, options);
 </script>
 
 <!-- Chart2 code -->
 <script>
 am4core.ready(function() {
-// Apply chart themes
-am4core.useTheme(am4themes_animated);
-am4core.useTheme(am4themes_kelly);
-
-// Create chart instance
-var chart = am4core.create("chartdiv2", am4charts.XYChart);
-
-// Remove chart logo
-chart.logo.disabled = true;
-
-// Add data
-chart.data = [{
-  "month": "1",
-  "uv": 501.9,
-  "sensor": 250000
-}, {
-  "month": "2",
-  "uv": 301.9,
-  "sensor": 222000
-}, {
-  "month": "3",
-  "uv": 201.1,
-  "sensor": 170000
-}, {
-  "month": "4",
-  "uv": 165.8,
-  "sensor": 122000
-}, {
-  "month": "5",
-  "uv": 139.9,
-  "sensor": 99000
-}, {
-  "month": "6",
-  "uv": 128.3,
-  "sensor": 85000
-}, {
-  "month": "7",
-  "uv": 99,
-  "sensor": 93000
-}, {
-  "month": "8",
-  "uv": 60,
-  "sensor": 50000
-}, {
-  "month": "9",
-  "uv": 50,
-  "sensor": 42000
-}, {
-  "month": "10",
-  "uv": 50,
-  "sensor": 42000
-}, {
-  "month": "11",
-  "uv": 50,
-  "sensor": 42000
-}, {
-  "month": "12",
-  "uv": 50,
-  "sensor": 42000
-}];
-
-// Create axes
-var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-categoryAxis.dataFields.category = "month";
-categoryAxis.title.text = "Month";
-categoryAxis.renderer.minGridDistance = 0;
-
-// First value axis
-var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-valueAxis.title.text = "UV 램프";
-
-// Second value axis
-var valueAxis2 = chart.yAxes.push(new am4charts.ValueAxis());
-valueAxis2.title.text = "센서";
-valueAxis2.renderer.opposite = true;
-
-// First series
-var series = chart.series.push(new am4charts.LineSeries());
-series.dataFields.valueY = "uv";
-series.dataFields.categoryX = "month";
-series.name = "UV 램프";
-series.strokeWidth = 3;
-series.tooltipText = "{name}: [bold]{valueY}[/]";
-
-// Second series
-var series2 = chart.series.push(new am4charts.LineSeries());
-series2.dataFields.valueY = "sensor";
-series2.dataFields.categoryX = "month";
-series2.name = "센서";
-series2.strokeWidth = 3;
-series2.tooltipText = "{name}: [bold]{valueY}[/]";
-series2.yAxis = valueAxis2;
-
-// Add bullet
-var circle = series.bullets.push(new am4charts.CircleBullet());
-
-var bullet = series2.bullets.push(new am4charts.Bullet());
-var square = bullet.createChild(am4core.Rectangle);
-square.width = 10;
-square.height = 10;
-square.horizontalCenter = "middle";
-square.verticalCenter = "middle";
-
-// Add legend
-chart.legend = new am4charts.Legend();
-
-// Add cursor
-chart.cursor = new am4charts.XYCursor();
+	// Apply chart themes
+	am4core.useTheme(am4themes_animated);
+	am4core.useTheme(am4themes_kelly);
+	
+	// Create chart instance
+	var chart = am4core.create("chartdiv2", am4charts.XYChart);
+	
+	// Remove chart logo
+	chart.logo.disabled = true;
+	
+	// Add data
+	chart.data = [{
+	  "month": "1",
+	  "uv": 501.9,
+	  "sensor": 250000
+	}, {
+	  "month": "2",
+	  "uv": 301.9,
+	  "sensor": 222000
+	}, {
+	  "month": "3",
+	  "uv": 201.1,
+	  "sensor": 170000
+	}, {
+	  "month": "4",
+	  "uv": 165.8,
+	  "sensor": 122000
+	}, {
+	  "month": "5",
+	  "uv": 139.9,
+	  "sensor": 99000
+	}, {
+	  "month": "6",
+	  "uv": 128.3,
+	  "sensor": 85000
+	}, {
+	  "month": "7",
+	  "uv": 99,
+	  "sensor": 93000
+	}, {
+	  "month": "8",
+	  "uv": 60,
+	  "sensor": 50000
+	}, {
+	  "month": "9",
+	  "uv": 50,
+	  "sensor": 42000
+	}, {
+	  "month": "10",
+	  "uv": 50,
+	  "sensor": 42000
+	}, {
+	  "month": "11",
+	  "uv": 50,
+	  "sensor": 42000
+	}, {
+	  "month": "12",
+	  "uv": 50,
+	  "sensor": 42000
+	}];
+	
+	// Create axes
+	var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+	categoryAxis.dataFields.category = "month";
+	categoryAxis.title.text = "Month";
+	categoryAxis.renderer.minGridDistance = 0;
+	
+	// First value axis
+	var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+	valueAxis.title.text = "UV 램프";
+	
+	// Second value axis
+	var valueAxis2 = chart.yAxes.push(new am4charts.ValueAxis());
+	valueAxis2.title.text = "센서";
+	valueAxis2.renderer.opposite = true;
+	
+	// First series
+	var series = chart.series.push(new am4charts.LineSeries());
+	series.dataFields.valueY = "uv";
+	series.dataFields.categoryX = "month";
+	series.name = "UV 램프";
+	series.strokeWidth = 3;
+	series.tooltipText = "{name}: [bold]{valueY}[/]";
+	
+	// Second series
+	var series2 = chart.series.push(new am4charts.LineSeries());
+	series2.dataFields.valueY = "sensor";
+	series2.dataFields.categoryX = "month";
+	series2.name = "센서";
+	series2.strokeWidth = 3;
+	series2.tooltipText = "{name}: [bold]{valueY}[/]";
+	series2.yAxis = valueAxis2;
+	
+	// Add bullet
+	var circle = series.bullets.push(new am4charts.CircleBullet());
+	
+	var bullet = series2.bullets.push(new am4charts.Bullet());
+	var square = bullet.createChild(am4core.Rectangle);
+	square.width = 10;
+	square.height = 10;
+	square.horizontalCenter = "middle";
+	square.verticalCenter = "middle";
+	
+	// Add legend
+	chart.legend = new am4charts.Legend();
+	
+	// Add cursor
+	chart.cursor = new am4charts.XYCursor();
 });
 </script>
 						

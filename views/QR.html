@@ -394,14 +394,7 @@
     <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
     <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
     <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
-    
-    <script>
-        var et1 = document.getElementById('ET1');
-        var et2 = document.getElementById('ET2');
-        et1.innerHTML = moment('{{historyone.ET}}').format('YYYY-MM-DD hh:mm:ss A');
-        et2.innerHTML = moment('{{historyone.ET}}').format('YYYY-MM-DD hh:mm:ss A');
-    </script>
-    
+
     <!-- Chart code -->
     <script>
     am4core.ready(function() {
@@ -486,6 +479,13 @@
 	
 	<script>
 	window.onload = () => {
+	   // 시간 표현 기능
+        var et1 = document.getElementById('ET1');
+        var et2 = document.getElementById('ET2');
+        et1.innerHTML = moment('{{historyone.ET}}').format('YYYY-MM-DD HH:mm');
+        et2.innerHTML = moment('{{historyone.ET}}').format('YYYY-MM-DD HH:mm');
+        
+        // 상태 문구 기능
 		const si = document.getElementById("status");
 		const st = document.getElementById("status_title");
 		const sc = document.getElementById("status_c");

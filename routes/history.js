@@ -33,13 +33,11 @@ router.post('/history_select_delete',isNotLoggedIn ,async (req, res, next) => {
             console.log("@@@@@@@@@@@@@@@@@@@@@@@_id: " + _id);
             
             for(i=0; i < _id.length; i++){
-                if(_id){
-                    if(_id[i] == id){
-                        await History.remove({ "_id" : _id });
-                    }
-                    else if(!(_id instanceof Object)) {
-                        await History.remove({ "_id" : _id });
-                    }
+                if(_id[i] == id){
+                    await History.remove({ "_id" : _id });
+                }
+                else if(!(_id instanceof Object)) {
+                    await History.remove({ "_id" : _id });
                 }
             }
             res.redirect('/history_list');

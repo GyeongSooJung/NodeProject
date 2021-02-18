@@ -200,66 +200,61 @@
 	</div>
 	<!-- end page container -->
 	
-	<!-- ================== BEGIN BASE JS ================== -->
-	<script src="../assets/js/app.min.js"></script>
-	<script src="../assets/js/theme/default.min.js"></script>
-	<!-- ================== END BASE JS ================== -->
+<script>
+	// 메뉴 active 기능
+	$(document).ready(function() {
+		// $('#active-menu').find('a[href="' + document.location.pathname + '"]').parents('li').addClass('active');
+		var path = document.location.pathname.toString();
+		var cut =  path.split('/');
+		if (cut[1]=='car_edit') {
+			cut[1] = 'car_list';
+		}
+		if (cut[1]=='device_edit') {
+			cut[1] = 'device_list';
+		}
+		if (cut[1]=='history_chart') {
+			cut[1] = 'history_list';
+		}
+		$('#active-menu').find('a[href="' + '/' + cut[1] + '"]').parents('li').addClass('active');
+	});
 	
+	// 회원탈퇴 기능
+	function withdrawal() {
+		var answer;
+		//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
+		//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
+		answer = confirm("회원탈퇴를 하시겠습니까?");
+		//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
+		if(answer == true){
+			location = '/auth/withdrawal';
+		}
+		else {
+			location = '/main';
+		}
+	}
+	
+	// 로그아웃 기능
+	function logout() {
+		var answer;
+		//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
+		//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
+		answer = confirm("로그아웃을 하시겠습니까?");
+		//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
+		if(answer == true){
+			location = '/auth/logout';
+		}
+		else {
+			location = '/main';
+		}
+	}
+</script>
 
-	<script>
-     
-		
-	
-		$(document).ready(function() {
-			// $('#active-menu').find('a[href="' + document.location.pathname + '"]').parents('li').addClass('active');
-			var path = document.location.pathname.toString();
-			var cut =  path.split('/');
-			if (cut[1]=='car_edit') {
-				cut[1] = 'car_list';
-			}
-			if (cut[1]=='device_edit') {
-				cut[1] = 'device_list';
-			}
-			if (cut[1]=='history_chart') {
-				cut[1] = 'history_list';
-			}
-			$('#active-menu').find('a[href="' + '/' + cut[1] + '"]').parents('li').addClass('active');
-		});
-		
-		function withdrawal() {
-			var answer;
-			//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
-			//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
-			answer = confirm("회원탈퇴를 하시겠습니까?");
-			//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
-			if(answer == true){
-				location = '/auth/withdrawal';
-			}
-			else {
-				location = '/main';
-			}
-		}
-		function logout() {
-			var answer;
-			//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
-			//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
-			answer = confirm("로그아웃을 하시겠습니까?");
-			//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
-			if(answer == true){
-				location = '/auth/logout';
-			}
-			else {
-				location = '/main';
-			}
-		}
-		
-		
-		
-		
-	</script>
-	
-	{% block script %}
-	{% endblock %}
+<!-- ================== BEGIN BASE JS ================== -->
+<script src="../assets/js/app.min.js"></script>
+<script src="../assets/js/theme/default.min.js"></script>
+<!-- ================== END BASE JS ================== -->
+{% block script %}
+{% endblock %}
 	
 </body>
 </html>

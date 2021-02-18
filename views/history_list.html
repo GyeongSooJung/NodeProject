@@ -138,7 +138,7 @@
 											{% endif %}
 										</td>
 				  						<td>
-				  							<a href="javascript:delete_check('{{history._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
+				  							<a href="javascript:delete_one('{{history._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
 				  						</td>
 									</tr>
 								{% endfor %}
@@ -148,7 +148,7 @@
 						</tbody>
 					</table>
 					<div class="d-flex justify-content-between align-item-center">
-						<input class="btn btn-primary" type='button' value='선택항목 삭제' onclick="return btn(this.form);">
+						<input class="btn btn-primary" type='button' value='선택항목 삭제' onclick="return delete_check(this.form);">
 						
 						<div class="d-flex justify-content-around align-item-center">
 							<a href="javascript:pageDoubleBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
@@ -172,29 +172,26 @@
 </div>
 <!-- end #content -->
 
-	<!--검색기능-->
-    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>	
+<!--Script-->
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 	<script>
-	
-
+		// 검색 기능
 		$(document).ready(function() {
-	            $("#keyword").keyup(function() {
-	                var k = $(this).val();
-	                $("#data-table-combine > tbody > tr").hide();
-	                var temp = $("#data-table-combine > tbody > tr > td:contains('" + k + "')");
+	        $("#keyword").keyup(function() {
+	            var k = $(this).val();
+	            $("#data-table-combine > tbody > tr").hide();
+	            var temp = $("#data-table-combine > tbody > tr > td:contains('" + k + "')");
 	
-	                $(temp).parent().show();
-	            })
+	            $(temp).parent().show();
 	        })
-	        
-	        
-    </script>
-
-	<script>
+	    })
+	    
 		function searchbutton() {
 			const keyword = document.getElementById('CNkeyword').value;
 			location = '/history_list/?CN=' + keyword;
 		}
+		
+		// 페이지 기능
 		function pageBtn(dir) {
 			if(dir == 'left') {
 				location = '/history_list/?CN={{carone.CN}}&MD={{deviceone.MD}}&page={{currentPage-1}}';
@@ -213,19 +210,8 @@
 			}
 		}
 		
-		function btn(frm) {
-			var answer;
-			answer = confirm("데이터를 삭제하시겠습니까?");
-			if(answer == true){
-				frm.action='/history/history_select_delete/'; frm.submit(); return true;
-			}
-			else {
-				location = '/history_list';
-			}
-		}
-	
-	
-		function delete_check(_id) {
+		// 일반 삭제 기능
+		function delete_one(_id) {
 			var answer;
 			var idc = _id;
 			//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
@@ -239,34 +225,43 @@
 				location = '/history_list';
 			}
 		}
+		
+		// 선택항목 삭제 기능
+		function delete_check(frm) {
+			var answer;
+			answer = confirm("데이터를 삭제하시겠습니까?");
+			if(answer == true){
+				frm.action='/history/history_select_delete/'; frm.submit(); return true;
+			}
+			else {
+				location = '/history_list';
+			}
+		}
 
+		// 전체 선택 기능
 		function allCheckedBox(obj) {
-			
-	   	// @brief 선택한 체크박스의 클래스 명칭을 가져온다.
-	   	const termClass = obj.getAttribute("class");
-	
-	   	// @brief 선택한 클래스명과 같은 클래스의 갯수
-	   	console.log(document.getElementsByClassName(termClass).length);
-	
-	   	Array.prototype.forEach.call(document.getElementsByClassName(termClass), function(element, index, array) {
-	
-	        // @brief 엘리먼트의 값 출력
-	        console.log(element.value);
-	        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 되있는 경우
-	        if(document.getElementsByClassName(termClass)[0].checked == true) {
-	            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 완료 처리 한다.
-	            element.checked = true;
-	        }
-	        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 해제된 경우
-	        else {
-	            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 해제 처리 한다.
-	            element.checked = false;
-	        }
-	   	});
+		   	// @brief 선택한 체크박스의 클래스 명칭을 가져온다.
+		   	const termClass = obj.getAttribute("class");
+		   	// @brief 선택한 클래스명과 같은 클래스의 갯수
+		   	console.log(document.getElementsByClassName(termClass).length);
+		   	Array.prototype.forEach.call(document.getElementsByClassName(termClass), function(element, index, array) {
+		        // @brief 엘리먼트의 값 출력
+		        console.log(element.value);
+		        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 되있는 경우
+		        if(document.getElementsByClassName(termClass)[0].checked == true) {
+		            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 완료 처리 한다.
+		            element.checked = true;
+		        }
+		        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 해제된 경우
+		        else {
+		            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 해제 처리 한다.
+		            element.checked = false;
+		        }
+		   	});
 	    }
     
-    
-	   function eachCheckedBox(obj) {
+    	// 항목 선택 기능
+		function eachCheckedBox(obj) {
 	      // @brief 선택한 체크박스의 상태가 선택해제인 경우
 	      if(obj.checked == false) {
 	            // @brief 선택한 체크박스의 클래스 명칭을 가져온다.

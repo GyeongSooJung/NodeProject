@@ -224,13 +224,13 @@ router.get('/car_delete/:CN',isNotLoggedIn, async (req, res, next) => {
 //차량 선택삭제
 router.post('/car_select_delete',isNotLoggedIn ,async (req, res, next) => {
     const { CC, CN, SN } = req.body;
-      const CNU = req.decoded.CNU;
+    const CNU = req.decoded.CNU;
     const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
     try {
         const {ck} = req.body;
         
         if(!ck) {
-          return res.redirect('/car_list');
+          return res.redirect('/car_list?null=true');
         }
         else {
           const carone = await Car.findOne({"CN" : ck});
@@ -238,16 +238,15 @@ router.post('/car_select_delete',isNotLoggedIn ,async (req, res, next) => {
           const CNc = carone.CN;
           var i;
           console.log("CN: " + ck);
+          console.log("CNc: " + CNc);
           
           for(i=0; i < ck.length; i++){
-              if(ck){
-                  if(ck[i] == CNc){
-                      await Car.remove({ "CN" : ck });
-                  }
-                  else if(!(ck instanceof Object)) {
-                      await Car.remove({ "CN" : ck });
-                  }
-              }
+            if(ck[i] == CNc){
+                await Car.remove({ "CN" : ck });
+            }
+            else if(!(ck instanceof Object)) {
+                await Car.remove({ "CN" : ck });
+            }
           }
           
       const companyone = await Company.where({"CNU" : CNU})

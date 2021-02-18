@@ -142,7 +142,7 @@ router.post('/device_select_delete',isNotLoggedIn ,async (req, res, next) => {
         const {ck} = req.body;
 
         if(!ck) {
-          return res.redirect('/device_list');
+          return res.redirect('/device_list?null=true');
         }
         else {
           const deviceone = await Device.findOne({"MAC" : ck});
@@ -150,16 +150,15 @@ router.post('/device_select_delete',isNotLoggedIn ,async (req, res, next) => {
           const MACc = deviceone.MAC;
           var i;
           console.log("MAC: " + ck);
+          console.log("MACc: " + MACc);
 
           for(i=0; i < ck.length; i++){
-              if(ck){
-                  if(ck[i] == MACc){
-                      await Device.remove({ "MAC" : ck });
-                  }
-                  else if(!(ck instanceof Object)) {
-                      await Device.remove({ "MAC" : ck });
-                  }
-              }
+            if(ck[i] == MACc){
+                await Device.remove({ "MAC" : ck });
+            }
+            else if(!(ck instanceof Object)) {
+                await Device.remove({ "MAC" : ck });
+            }
           }
           res.redirect('/device_list');
         }

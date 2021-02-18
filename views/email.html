@@ -44,10 +44,8 @@
 						<form action="/email/email_send" method="post" class="margin-bottom-0" >
 						    <div class="d-flex row m-b-15" >
     							<div class="col-md-6 mb-2 " name = "email_send_complete">
-
     						        <input id="EA" name = "EA" type="email" class="form-control form-control-lg inverse-mode" placeholder="이메일 주소" required
     							    {% if reademailaddress %} value ={{reademailaddress}} readonly {% endif %}/>
-    						        
     							</div>
     							
     							<div class="col-md-6">
@@ -71,9 +69,9 @@
     							<div class="col-md-12 mb-2">
     								<button type="submit" class="btn btn-primary btn-block btn-lg">확인</button> 
     							</div>
-									{% if ErrMsg %}
-    								<span class="text-danger">{{ErrMsg}}</span>
-    								{% endif %}    							
+								{% if ErrMsg %}
+								<span class="text-danger">{{ErrMsg}}</span>
+								{% endif %}    							
     						</div>
 						</form>
 						
@@ -96,50 +94,44 @@
 	</div>
 	<!-- end page container -->
 	
+	<!--Script-->
+	<script>
+		// 에러 링크 기능
+		window.onload = () => {
+		    //인증번호 인증이 성공했을 때
+		    if (new URL(location.href).searchParams.get('success2')) {
+		        alert('인증이 완료되었습니다.');
+		        opener.parent.location.replace('./register');
+		        window.close();
+		    }
+		    if (new URL(location.href).searchParams.get('false')) {
+		         alert('인증번호가 틀립니다. 다시 시도해 주세요');
+		    }
+		}
+		
+		var authNum = document.getElementById("authNum").value;    
+		var TimeSet = 180
+		var sec = "";
+		
+		if(authNum) {
+		    var x = setInterval(function(){
+		        sec = (TimeSet)%60
+		        document.getElementById('demo').innerHTML ="남은 시간은 "+ parseInt(TimeSet/60) + "분" + sec + "초입니다.";
+		        TimeSet--;
+		        
+		        if(TimeSet <0){
+		            clearInterval(x);
+		            alert('시간이 초과되었습니다.');
+		            window.open("/email", "_self");
+		        }
+		        
+		    },1000)                
+		}
+	</script>
+		
 	<!-- ================== BEGIN BASE JS ================== -->
 	<script src="../assets/js/app.min.js"></script>
 	<script src="../assets/js/theme/default.min.js"></script>
 	<!-- ================== END BASE JS ================== -->
-	 <script>
-	         window.onload = () => {
-            
-            
-            
-            //인증번호 인증이 성공했을 때
-            if (new URL(location.href).searchParams.get('success2')) {
-                alert('인증이 완료되었습니다.');
-                opener.parent.location.replace('./register');
-                window.close();
-            }
-            if (new URL(location.href).searchParams.get('false')) {
-                 alert('인증번호가 틀립니다. 다시 시도해 주세요');
-            }
-          
-        	
-        }
-     </script>
-     <script>
-        var authNum = document.getElementById("authNum").value;    
-	    var TimeSet = 180
-	    var sec = "";
-	        if(authNum) {
-	                var x = setInterval(function(){
-	                    sec = (TimeSet)%60
-	                    document.getElementById('demo').innerHTML ="남은 시간은 "+ parseInt(TimeSet/60) + "분" + sec + "초입니다.";
-	                    TimeSet--;
-	                    
-	                    if(TimeSet <0){
-	                        clearInterval(x);
-	                        alert('시간이 초과되었습니다.');
-	                        window.open("/email", "_self");
-	                    }
-	                    
-	                },1000)                
-	            }
-                   
-            
-            
-
-      </script>
 </body>
 </html>

@@ -56,7 +56,7 @@
 								<tbody>
 									{% if (totalNum == 0) %}
 									<tr>
-										<td colspan="7">No Data</td>
+										<td colspan="8">No Data</td>
 									</tr>
 									{% else %}
 									{% set count = 0 %}
@@ -106,7 +106,7 @@
 											</td>
 											<td class="with-btn" nowrap>
 												<a href="/car_edit/{{car.CN}}" class="btn btn-sm btn-primary width-60 m-r-2">수정</a>
-												<a href="javascript:delete_check('{{car.CN}}')" class="btn btn-sm btn-white width-60">삭제</a>
+												<a href="javascript:delete_one('{{car.CN}}')" class="btn btn-sm btn-white width-60">삭제</a>
 											</td>
 										</tr>
 										{% endfor %}
@@ -114,7 +114,7 @@
 								</tbody>
 							</table>
 							<div class="d-flex justify-content-between align-item-center">
-								<input class="btn btn-primary" type='button' value='선택항목 삭제' onclick="return btn(this.form);">
+								<input class="btn btn-primary" type='button' value='선택항목 삭제' onclick="return delete_check(this.form);">
 								
 								<div class="d-flex justify-content-around align-item-center">
 									<a href="javascript:pageDoubleBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
@@ -141,88 +141,80 @@
 </div>
 <!-- end #content -->
 
-	<!--검색기능-->
-    
-    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>	
-	<script>
-	 window.onload = () => {
-							if (new URL(location.href).searchParams.get('searcherror')) {
-								alert('검색어를 다시 확인해주세요');
-							}
-	        }
-	
-	
+<!-- Script -->
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script>
+	// 검색 기능
+	$(document).ready(function() {
+        $("#keyword").keyup(function() {
+            var k = $(this).val();
+            $("#data-table-combine > tbody > tr").hide();
+            var temp = $("#data-table-combine > tbody > tr > td:contains('" + k + "')");
 
-		$(document).ready(function() {
-	            $("#keyword").keyup(function() {
-	                var k = $(this).val();
-	                $("#data-table-combine > tbody > tr").hide();
-	                var temp = $("#data-table-combine > tbody > tr > td:contains('" + k + "')");
-	
-	                $(temp).parent().show();
-	            })
-	        })
-	
-		function searchbutton() {
-			const keyword = document.getElementById('CNkeyword').value;
-			location = '/car_list/?CN=' + keyword;
-		}
-		function pageBtn(dir) {
-			if(dir == 'left') {
-				location = '/car_list/?page={{currentPage-1}}';
-			}
-			if(dir == 'right') {
-				location = '/car_list/?page={{currentPage+1}}';
-			}
-		}
-		
-		function pageDoubleBtn(dir) {
-			if(dir == 'left') {
-				location = '/car_list/?page={{startPage-1}}';
-			}
-			if(dir == 'right') {
-				location = '/car_list/?page={{endPage+1}}';
-			}
-		}
-			
-		function btn(frm) {
-			var answer;
-			answer = confirm("데이터를 삭제하시겠습니까?");
-			if(answer == true){
-				frm.action='/car/car_select_delete/'; frm.submit(); return true;
-			}
-			else {
-				location = '/car_list';
-			}
-		}
-	
-	
-		function delete_check(ck) {
-			var answer;
-			var ckc = ck;
-			//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
-			//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
-			answer = confirm("데이터를 삭제하시겠습니까?");
-			//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
-			if(answer == true){
-				location = '/car/car_delete/' + ckc;
-			}
-			else {
-				location = '/car_list';
-			}
-		}
+            $(temp).parent().show();
+        })
+    })
 
-		function allCheckedBox(obj) {
-			
+	function searchbutton() {
+		const keyword = document.getElementById('CNkeyword').value;
+		location = '/car_list/?CN=' + keyword;
+	}
+	
+	// 페이지 기능
+	function pageBtn(dir) {
+		if(dir == 'left') {
+			location = '/car_list/?page={{currentPage-1}}';
+		}
+		if(dir == 'right') {
+			location = '/car_list/?page={{currentPage+1}}';
+		}
+	}
+	
+	function pageDoubleBtn(dir) {
+		if(dir == 'left') {
+			location = '/car_list/?page={{startPage-1}}';
+		}
+		if(dir == 'right') {
+			location = '/car_list/?page={{endPage+1}}';
+		}
+	}
+	
+	// 일반 삭제 기능
+	function delete_one(ck) {
+		var answer;
+		var ckc = ck;
+		//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
+		//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
+		answer = confirm("데이터를 삭제하시겠습니까?");
+		//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
+		if(answer == true){
+			location = '/car/car_delete/' + ckc;
+		}
+		else {
+			location = '/car_list';
+		}
+	}
+	
+	// 선택항목 삭제 기능
+	function delete_check(frm) {
+		var answer;
+		answer = confirm("데이터를 삭제하시겠습니까?");
+		if(answer == true){
+			frm.action='/car/car_select_delete/'; frm.submit(); return true;
+		}
+		else {
+			location = '/car_list';
+		}
+	}
+	
+	// 전체선택 기능
+	function allCheckedBox(obj) {
 	   	// @brief 선택한 체크박스의 클래스 명칭을 가져온다.
 	   	const termClass = obj.getAttribute("class");
-	
 	   	// @brief 선택한 클래스명과 같은 클래스의 갯수
 	   	console.log(document.getElementsByClassName(termClass).length);
-	
 	   	Array.prototype.forEach.call(document.getElementsByClassName(termClass), function(element, index, array) {
-	
-	        // @brief 엘리먼트의 값 출력
+        	// @brief 엘리먼트의 값 출력
 	        console.log(element.value);
 	        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 되있는 경우
 	        if(document.getElementsByClassName(termClass)[0].checked == true) {
@@ -235,34 +227,41 @@
 	            element.checked = false;
 	        }
 	   	});
-	    }
+    }
+
+	// 항목선택 기능
+	function eachCheckedBox(obj) {
+      // @brief 선택한 체크박스의 상태가 선택해제인 경우
+      if(obj.checked == false) {
+            // @brief 선택한 체크박스의 클래스 명칭을 가져온다.
+            const termClass = obj.getAttribute("class");
+            // @brief 첫번째 checkbox의 상태가 체크가 되어있는경우
+            if(document.getElementsByClassName(termClass)[0].checked == true) {
+                // @brief 첫번째 checkbox의 상태를 체크해제한다.
+                document.getElementsByClassName(termClass)[0].checked = false;
+            }
+        }
+    }
     
-    
-	   function eachCheckedBox(obj) {
-	      // @brief 선택한 체크박스의 상태가 선택해제인 경우
-	      if(obj.checked == false) {
-	            // @brief 선택한 체크박스의 클래스 명칭을 가져온다.
-	            const termClass = obj.getAttribute("class");
-	            // @brief 첫번째 checkbox의 상태가 체크가 되어있는경우
-	            if(document.getElementsByClassName(termClass)[0].checked == true) {
-	                // @brief 첫번째 checkbox의 상태를 체크해제한다.
-	                document.getElementsByClassName(termClass)[0].checked = false;
-	            }
-	        }
-	    }
-	    
-		window.onload = () => {
-			if (new URL(location.href).searchParams.get('length')) {
-				alert('차량 번호 자릿수를 확인해주세요.');
-			}
-			if (new URL(location.href).searchParams.get('type')) {
-				alert('차량 번호를 확인해주세요.');
-			}
-			if (new URL(location.href).searchParams.get('error')) {
-				alert('차량 번호 또는 차대 번호를 다시 확인해주세요.');
-			}
-		};
-	</script>
+    // 에러 링크 기능
+	window.onload = () => {
+		if (new URL(location.href).searchParams.get('null')) {
+			alert('항목을 선택해주세요.');
+		}
+		if (new URL(location.href).searchParams.get('length')) {
+			alert('차량 번호 자릿수를 확인해주세요.');
+		}
+		if (new URL(location.href).searchParams.get('type')) {
+			alert('차량 번호를 확인해주세요.');
+		}
+		if (new URL(location.href).searchParams.get('error')) {
+			alert('차량 번호 또는 차대 번호를 다시 확인해주세요.');
+		}
+		if (new URL(location.href).searchParams.get('searcherror')) {
+			alert('검색어를 다시 확인해주세요');
+		}
+	}
+</script>
 {% endblock %}
 
 {% block script %}
