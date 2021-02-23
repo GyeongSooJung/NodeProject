@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 //schema
 const Company = require('../schemas/company');
 const Device = require('../schemas/device');
@@ -115,6 +116,7 @@ router.get('/main', isNotLoggedIn, async(req, res, next) => {
 
   const CID = req.decoded.CID;
 
+  const HOME = process.env.IP;
 
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   const devices = await Device.find({ "CID": req.decoded.CID });
@@ -137,10 +139,10 @@ router.get('/main', isNotLoggedIn, async(req, res, next) => {
   console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" + aclist);
   if (history_array) {
     const recent_history = history_array.PD;
-    res.render('main', { company: req.decoded, aclist, devices, cars, workers, historys, recent_history, history_array, history_count });
+    res.render('main', { company: req.decoded, aclist, devices, cars, workers, historys, recent_history, history_array, history_count, HOME });
   }
   else {
-    res.render('main', { company: req.decoded, aclist, devices, cars, workers, historys, history_array, history_count });
+    res.render('main', { company: req.decoded, aclist, devices, cars, workers, historys, history_array, history_count, HOME });
   }
 
 
