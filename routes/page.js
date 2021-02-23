@@ -121,7 +121,7 @@ router.get('/main', isNotLoggedIn, async(req, res, next) => {
   const cars = await Car.find({ "CID": req.decoded.CID });
   const workers = await Worker.find({ "CID": req.decoded.CID });
 
-  const Days = await 24 * 60 * 60 * 1000
+  const Days = await 24 * 60 * 60 * 1000;
   const h1 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now(), $gte: (Date.now() - Days) } });
   const h2 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days, $gte: (Date.now() - Days * 2) } });
   const h3 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days * 2, $gte: (Date.now() - Days * 3) } });
@@ -137,7 +137,6 @@ router.get('/main', isNotLoggedIn, async(req, res, next) => {
   console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" + aclist);
   if (history_array) {
     const recent_history = history_array.PD;
-    console.log("최근 히스토리는 :" + recent_history);
     res.render('main', { company: req.decoded, aclist, devices, cars, workers, historys, recent_history, history_array, history_count });
   }
   else {
