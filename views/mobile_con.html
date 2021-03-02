@@ -46,7 +46,7 @@
 						<form action="/qrcode/QR" method="post" class="margin-bottom-0">
 							<div class="form-group m-b-20">
 								<input id="CN" name = "CN" type="text" class="form-control form-control-lg inverse-mode" placeholder="차량번호" value="{{cn}}" required />
-						 <!--value="{{cn}}" -->
+								<input id="type" name = "type" type="hidden" value="{{type}}" />
 							</div>
 							<div class="login-buttons">
 								<button type="submit" class="btn btn-primary btn-block btn-lg">접속</button>	
@@ -77,8 +77,8 @@
 	<!-- ================== END BASE JS ================== -->
 	<script>
 	window.onload = () => {
-		if (new URL(location.href).searchParams.get('exist')) {
-			alert('차량번호를 다시 입력하세요.');
+		if (new URL(location.href).searchParams.get('nodata')) {
+			alert('소독이력이 없는 차량입니다.');
 		}
 	};
   	</script>

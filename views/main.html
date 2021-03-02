@@ -126,10 +126,10 @@
                         						</td>
                         						<td id="ET"></td>
                         						<td id="CA"></td>
-                        						{% if recent_history.RC == 0 %}
-													<td>실패</td>
-												{% else %}
+                        						{% if recent_history.RC == 1 %}
 													<td>성공</td>
+												{% else %}
+													<td>실패</td>
 												{% endif %}
                         					</tr>
                         				</tbody>
@@ -378,6 +378,7 @@ am4core.ready(function() {
 	categoryAxis.renderer.grid.template.location = 0;
 	
 	var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+	valueAxis.title.text = "횟수(개)";
 	
 	// Create series
 	var series = chart.series.push(new am4charts.ColumnSeries());

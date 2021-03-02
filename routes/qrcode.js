@@ -1,50 +1,47 @@
 const express = require('express');
+const router = express.Router();
 //schema
 const Company = require('../schemas/company');
 const Device = require('../schemas/device');
 const Car = require('../schemas/car');
 const Worker = require('../schemas/worker');
 const History = require('../schemas/history');
+const QRS = require('../schemas/QR');
 const moment = require('moment');
 //Router or MiddleWare
-const router = express.Router();
+
 
 //Mobile QR Code Page
 router.post('/QR', async (req, res, next) => {
-  const {CN} = req.body;
-  const exCN = await Car.findOne({"CN" : CN});
+  const {CN, type} = req.body;
+  console.log("타입투"+type);
+
+  const timenow = moment().format('YYYY-MM-DD HH:mm');
+  
+  const exQR = await QRS.findOne({"QRT" : type});
+  
+  if(exQR) {
+    await QRS.update({"QRT" : type}, {'$inc': {'QRC' : 1}});
+  }
+  else {
+    await QRS.create({"QRT" : type});
+    await QRS.update({"QRT" : type}, {'$inc': {'QRC' : 1}});
+  }
+  
     try {
-      if (exCN) {
-        const carone = await Car.findOne({"CN" : CN});
-        const companyone = await Company.findOne({"_id" : carone.CID});
-        const deviceone = await Device.findOne({"CID" : companyone._id});
+      const historyone = await History.findOne({"CNM" : CN}).sort({"ET" : -1}).limit(1);
+      
+      if(historyone) { //historyone.RC == 1
+        const companyone = await Company.findOne({"_id" : historyone.CID});
+        const history_array = await historyone.PD;
         
-        // const kmoment = await moment(); //현재 시간
-        const timenow = moment().format('YYYY-MM-DD hh:mm:ss'); //현재 시간 포맷맞춰서
-        // const find_month = await {'$gte' : kmoment.add('-1', 'M').format('YYYY-MM-DD hh:mm:ss')}; //kmoment 1개월 전
+        const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
+        const term = await moment(timenow).diff(et, 'hours');
         
-        // const historys = await History.find({"VID" : carone._id, "ET": find_month}).sort({"ET":-1}); // 1개월 간 소독이력 ----------- 다시 생각
-        const historyone = await History.findOne({"VID" : carone._id}).sort({"ET":-1}).limit(1); // 가장 최근 소독이력
-        console.log("히스톨"+historyone);
-        
-        if (historyone) { // && (historyone.RC==1)
-          const history_array = await historyone.PD;
-          console.log("히스토리 아이디"+historyone._id);
-          
-          const et = moment(historyone.ET).format('YYYY-MM-DD hh:mm:ss'); // 최근 소독이력 포맷맞춰서
-          const term = await moment(timenow).diff(et, 'hours'); // 현재 일자 - 최근 소독이력
-          console.log("시간"+term);
-          
-          console.log("성공실패"+historyone.RC);
-          
-          res.render('QR', {carone, companyone, deviceone, historyone, history_array, term,});
-        }
-        else {
-          res.render('QR2', {companyone, carone});
-        }
+        res.render('QR', {companyone, historyone, history_array, term});
       }
       else {
-        return res.redirect('/mobile_con?exist=true');
+        res.redirect('/mobile_con?type='+type+'&nodata=true');
       }
     } catch(err) {
         console.error(err);
@@ -61,14 +58,13 @@ router.post('/QR', async (req, res, next) => {
 //       if (exCN) {
 //         const carone = await Car.findOne({"CN" : CN});
 //         const companyone = await Company.findOne({"_id" : carone.CID});
-//         const deviceone = await Device.findOne({"CID" : companyone._id});
         
 //         // const kmoment = await moment(); //현재 시간
 //         const timenow = moment().format('YYYY-MM-DD hh:mm:ss'); //현재 시간 포맷맞춰서
 //         // const find_month = await {'$gte' : kmoment.add('-1', 'M').format('YYYY-MM-DD hh:mm:ss')}; //kmoment 1개월 전
         
 //         // const historys = await History.find({"VID" : carone._id, "ET": find_month}).sort({"ET":-1}); // 1개월 간 소독이력 ----------- 다시 생각
-//         const historyone = await History.findOne({"VID" : carone._id}).sort({"ET":-1}).limit(1); // 가장 최근 소독이력
+        // const historyone = await History.findOne({"VID" : carone._id}).sort({"ET":-1}).limit(1); // 가장 최근 소독이력
 //         console.log("히스톨"+historyone);
         
 //         if (historyone) { // && (historyone.RC==1)
@@ -80,7 +76,7 @@ router.post('/QR', async (req, res, next) => {
           
 //           console.log("성공실패"+historyone.RC);
           
-//           res.render('QR', {carone, companyone, deviceone, historyone, history_array, term,});
+//           res.render('QR', {carone, companyone, historyone, history_array, term,});
 //         }
 //         else {
 //           res.render('QR2', {companyone, carone});

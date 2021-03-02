@@ -14,7 +14,6 @@ const connect = () => {
         }
         else {
             console.log('DB Connect is SuccessFul!');
-            console.log("몽고몽고"+process.env.MONGO_PORT);
         }
     });
 };

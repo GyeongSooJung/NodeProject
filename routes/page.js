@@ -524,7 +524,7 @@ router.get('/history_chart/:_id', isNotLoggedIn, async(req, res, next) => {
     const workerone = await Worker.findOne({ "_id": historyone.WID });
     console.log(deviceone);
     console.log(workerone);
-    res.render('history_chart', { company: req.decoded, aclist, historyone, companyone, carone, deviceone, workerone, history_array });
+    res.render('history_chart', { company: req.decoded, aclist, historyone, companyone, history_array });
   }
   catch (err) {
     console.error(err);
@@ -539,10 +539,17 @@ router.get('/history_chart/:_id', isNotLoggedIn, async(req, res, next) => {
 //Mobile Connect Page
 router.get('/mobile_con', async(req, res, next) => {
   var cn = req.query.cn;
+  var type = req.query.type;
   console.log(cn);
+  console.log("타입"+type);
   
   try {
-    res.render('mobile_con', {cn});
+    if(type == 1 || type == 2 || type == 3 || type == 4) {
+      res.render('mobile_con', {cn, type});
+    }
+    else {
+      res.render('error');
+    }
   }
   catch (err) {
     console.error(err);

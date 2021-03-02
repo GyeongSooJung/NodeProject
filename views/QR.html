@@ -44,7 +44,7 @@
     		        <div class="panel panel-inverse">
                         <div class="py-3 mt-2 text-center">
                         	<h1 class="mb-2">{{companyone.CNA}}</h1>
-                            <h4 class="mb-1">{{carone.CN}}</h4>
+                            <h4 class="mb-1">{{historyone.CNM}}</h4>
                         </div>
                         <div id="chartdiv" class="height-sm" data-toggle="modal" data-target="#graphpop"></div>
                         <!-- Begin Modal -->
@@ -60,7 +60,7 @@
                                     <div class="modal-body">
                                         <table id="facility" class="table table-striped m-b-0">
                                             <tr>
-                                                <th>차량번호</th><td>{{carone.CN}}</td>
+                                                <th>차량번호</th><td>{{historyone.CNM}}</td>
                                             </tr>
                                             <tr>
                                                 <td colspan="2"><div id="chartdiv2" class="height-sm"></div></td>
@@ -175,7 +175,7 @@
                             
                                 {% set time = historyone.PD.length %}
                                 
-                                {% if (time < 5) %}
+                                {% if (time < 0.875) %}
                                 <p>소독 시간이 부족합니다.</p>
                                 {% endif %}
                                 
@@ -185,7 +185,7 @@
                             	</div>
                             	{% endif %}
                                     <div class="viruslist py-1 text-center d-flex flex-wrap justify-content-center align-content-center">
-                                    	{% if (time >=0.875) %}
+                                    	{% if (time >= 0.875) %}
                                     	<div class="mx-2 my-1" data-toggle="modal" data-target="#modalpop" data-title="감기 바이러스" data-kind="Virus" data-color="red"
                                     		data-body="주로 감염된 사람의 재채기나 기침을 통해 나온 비말 속에 섞여 공기 중으로 나옴. 이 비말을 접촉한 사람의 입이나 코를 통해 감기 바이러스가 몸 안으로 들어옴.">
     										<img src="../assets/img/novirus.png" alt="novirus" class="mx-auto img-responsive">
@@ -479,6 +479,7 @@
 	
 	<script>
 	window.onload = () => {
+	    
 	   // 시간 표현 기능
         var et1 = document.getElementById('ET1');
         var et2 = document.getElementById('ET2');
