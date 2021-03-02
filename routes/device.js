@@ -31,7 +31,7 @@ router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
       await Device.create({
         CID, MD, VER, MAC, NN
     });
-    return res.redirect('/device_join');
+    return res.redirect('/device_list');
     }
   } catch (err) {
     console.error(err);
