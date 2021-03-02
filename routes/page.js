@@ -547,6 +547,10 @@ router.get('/mobile_con', async(req, res, next) => {
     if(type == 1 || type == 2 || type == 3 || type == 4) {
       res.render('mobile_con', {cn, type});
     }
+    else if(type == null) {
+      type = 1;
+      res.render('mobile_con', {cn, type});
+    }
     else {
       res.render('error');
     }
