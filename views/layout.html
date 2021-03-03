@@ -202,11 +202,11 @@
 	
 <script>
 	// 메뉴 active 기능
-	$(document).ready(function() {
+	window.onload = () => {
 		// $('#active-menu').find('a[href="' + document.location.pathname + '"]').parents('li').addClass('active');
 		var path = document.location.pathname.toString();
 		var cut =  path.split('/');
-		console.log("나와라 좀");
+		console.log("패스"+path+" 컷"+cut);
 		if (cut[1]=='car_edit') {
 			cut[1] = 'car_list';
 		}
@@ -217,7 +217,7 @@
 			cut[1] = 'history_list';
 		}
 		$('#active-menu').find('a[href="' + '/' + cut[1] + '"]').parents('li').addClass('active');
-	});
+	};
 	
 	// 회원탈퇴 기능
 	function withdrawal() {
