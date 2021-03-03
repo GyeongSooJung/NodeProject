@@ -17,7 +17,7 @@ https://github.com/here4you81/mk_dokenly
   - www.cleanoasis.net
     : 3.36.183.74
     : 3.36.183.74:9002 (cloud9)
-  - 테스트개발서버
+  - 테스트개발서버(허병철)
     : 18.140.74.102
     : 18.140.74.102:9002 (cloud9)
 
