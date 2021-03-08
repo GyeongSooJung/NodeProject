@@ -6,8 +6,6 @@ const connect = () => {
         mongoose.set('debug', true);
     }
     mongoose.connect(process.env.MONGO_IP, {dbName: 'OASIS'}, {
-        // 개발db : 18.140.74.102:9003/admin', {dbName: 'OASIS'}
-
     }, (error) => {
         if (error) {
             console.log('DB Connection is Error', error);

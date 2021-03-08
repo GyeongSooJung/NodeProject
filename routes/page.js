@@ -519,11 +519,7 @@ router.get('/history_chart/:_id', isNotLoggedIn, async(req, res, next) => {
     const historyone = await History.findOne({ "_id": req.params._id });
     const history_array = historyone.PD;
     const companyone = await Company.findOne({ "_id": CID });
-    const carone = await Car.findOne({ "_id": historyone.VID });
-    const deviceone = await Device.findOne({ "_id": historyone.DID });
-    const workerone = await Worker.findOne({ "_id": historyone.WID });
-    console.log(deviceone);
-    console.log(workerone);
+    console.log("길이"+history_array.length);
     res.render('history_chart', { company: req.decoded, aclist, historyone, companyone, history_array });
   }
   catch (err) {
@@ -566,7 +562,7 @@ router.get('/mobile_con', async(req, res, next) => {
 //   var cn = req.query.cn;
 //   console.log(cn);
 //   console.log(req.body.cn+"dddddddddddddd");
-
+  
 //   try {
 //     if(cn) {
 //       const exCN = await Car.findOne({"CN" : cn});

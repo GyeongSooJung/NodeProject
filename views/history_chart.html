@@ -129,10 +129,10 @@
 {% endblock %}
 
 {% block script %}
- <!-- Resources -->
-  <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
-  <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
-  <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+<!-- Resources -->
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
   
   <!-- Chart code -->
 <script>
@@ -176,6 +176,20 @@ am4core.ready(function() {
 	series.tooltipText = "{ppm}"
 	series.strokeWidth = 2;
 	series.minBulletDistance = 15;
+
+	// Range Color
+	var range1 = ppmAxis.createSeriesRange(series);
+	range1.value = 0;
+	range1.endValue = 0.5;
+	range1.contents.stroke = am4core.color("green");
+	var range2 = ppmAxis.createSeriesRange(series);
+	range2.value = 0.501;
+	range2.endValue = 1;
+	range2.contents.stroke = am4core.color("orange");
+	var range3 = ppmAxis.createSeriesRange(series);
+	range3.value = 1.001;
+	range3.endValue = 5;
+	range3.contents.stroke = am4core.color("red");
 	
 	// Drop-shaped tooltips 이것은 마우스를 올렸을 때 말풍선이 나오는 것이여
 	series.tooltip.background.cornerRadius = 20;
