@@ -19,16 +19,16 @@ const CompanySchema = new Schema({
         type: String,
         required: true
 
-    }, //Company_PhoneNumber
+    }, //Company_Kinds 
+    //1 : 렌터카,  2 : 카센터, 3 :  출장정비, 4 : 출장세차,  5 : 택시운수업, 6 : 버스운수업,  7 : 타이어샵
     CK: {
         type: String,
         required: true
-    }, //Company_Kinds 
-    //1 : 렌터카,  2 : 카센터, 3 :  출장정비, 4 : 출장세차,  5 : 택시운수업, 6 : 버스운수업,  7 : 타이어샵
+    }, //Company_Address
     ADR: {
         type: String,
         required: true
-    }, //Company_Address
+    }, //Company Phone Number
     PN: {
         type: String,
         required: true,

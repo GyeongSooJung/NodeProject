@@ -593,10 +593,11 @@ router.get('/pay_sms', isNotLoggedIn, async(req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const aclist = await Worker.find({ "CID" : CID, "AC" : false });
+  const companyone = await Company.findOne({ "_id": CID });
   const imp_code = process.env.imp_code;
   
   try {
-    res.render('pay_sms', { company: req.decoded, aclist, imp_code });
+    res.render('pay_sms', { company: req.decoded, companyone, aclist, imp_code });
   }
   catch(err) {
     console.error(err);

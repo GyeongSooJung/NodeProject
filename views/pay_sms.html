@@ -1,5 +1,9 @@
 {% extends 'layout.html' %}
 
+{% block css %}
+<link href="../assets/css/custom.css" rel="stylesheet" />
+{% endblock %}
+
 {% block content %}
 <div id="content" class="content">
 	<!-- begin page-header -->
@@ -19,14 +23,46 @@
 				<!-- end panel-heading -->
 				<!-- begin panel-body -->
 				<div class="panel-body">
-				    <div class="d-flex justify-content-center align-items-center">
 				        <form method="post" data-parsley-validate="true">
-				            <input type="radio" name="radio">
+				            <div class="d-flex justify-content-center align-items-center flex-wrap">
+    				            <div class="radio-tile">
+    				                <input type="radio" class="radio-btn" name="sms" value="100" />
+        				            <div class="radio-text">
+        				                <i class="fas fa-4x fa-sms mb-2 icolor"></i>
+        				                <p class="mb-2 font-weight-bold">+ 5 point</p>
+        				                <div class="d-flex justify-content-center align-items-center">
+        				                    <h1 class="mb-0 mr-1">100</h1>
+            				                <h4 class="mb-0 mt-1">원</h4>
+        				                </div>
+        				            </div>
+    				            </div>
+    				            <div class="radio-tile">
+    				                <input type="radio" class="radio-btn" name="sms" value="500" />
+        				            <div class="radio-text">
+        				                <i class="fas fa-4x fa-sms mb-2 icolor"></i>
+        				                <p class="mb-2 font-weight-bold">+ 10 point</p>
+        				                <div class="d-flex justify-content-center align-items-center">
+        				                    <h1 class="mb-0 mr-1">500</h1>
+            				                <h4 class="mb-0 mt-1">원</h4>
+        				                </div>
+        				            </div>
+    				            </div>
+    				            <div class="radio-tile">
+    				                <input type="radio" class="radio-btn" name="sms" value="1000" />
+        				            <div class="radio-text">
+        				                <i class="fas fa-4x fa-sms mb-2 icolor"></i>
+        				                <p class="mb-2 font-weight-bold">+ 50 point</p>
+        				                <div class="d-flex justify-content-center align-items-center">
+        				                    <h1 class="mb-0 mr-1">1,000</h1>
+            				                <h4 class="mb-0 mt-1">원</h4>
+        				                </div>
+        				            </div>
+    				            </div>
+    				        </div>
+        				    <div class="btn-group m-b-5 mx-3">
+                               <a href="javascript:payments('sms')" class="btn btn-primary text-white px-4">결제하기</a>
+                            </div>
 				        </form>
-				    </div>
-				    <div class="btn-group m-b-5 mx-3">
-                       <a href="javascript:payments()" class="btn btn-primary text-white px-4">결제하기</a>
-                    </div>
                 </div>
 				<!-- end panel-body -->
 			</div>
@@ -54,7 +90,37 @@
 	};
 
     // 결제 기능
-    function payments() {
+    function payments(objName) {
+        var goods = document.all(objName);
+        var checktest;
+        var goods_name;
+        var goods_amount;
+        
+        for (var i=0; i<goods.length; i++) {
+            if (goods[i].checked == true) {
+                if(goods[i].value == 100) {
+                  goods_name = "a";
+                  goods_amount = "100";
+                  checktest = true;
+                }
+                else if(goods[i].value == 500) {
+                  goods_name = "b";
+                  goods_amount = "500";
+                  checktest = true;
+                }
+                else if(goods[i].value == 1000) {
+                  goods_name = "c";
+                  goods_amount = "1000";
+                  checktest = true;
+                }
+                alert(goods_name+goods_amount);
+            }
+        }
+        
+        if(!checktest) {
+            return alert("항목을 선택해주세요.");
+        }
+        
         var IMP = window.IMP;
         IMP.init('{{imp_code}}');
         
@@ -62,14 +128,12 @@
             pg : 'inicis', // version 1.1.0부터 지원.
             pay_method : 'card',
             merchant_uid : 'merchant_' + new Date().getTime(),
-            name : 'a',
-            amount : 100,
-            buyer_email : 'iamport@siot.do',
-            buyer_name : '구매자이름',
-            buyer_tel : '010-1234-5678',
-            buyer_addr : '서울특별시 강남구 삼성동',
-            buyer_postcode : '123-456',
-            // m_redirect_url : 'https://www.cleanoasis.net/payments/complete'
+            name : goods_name,
+            amount : goods_amount,
+            buyer_name : '{{companyone.CNA}}',
+            buyer_email : '{{companyone.EA}}',
+            buyer_tel : '{{companyone.PN}}',
+            buyer_addr : '{{companyone.ADR}}',
             m_redirect_url : '/payments/complete/mobile'
         }, function(rsp) {
             if (rsp.success) {
@@ -90,19 +154,19 @@
                             msg += '\n생성일' + rsp.vbank_date;
                             break;
                         case "success":
-                            var msg = '결제가 완료되었습니다.';
-                            msg += '고유ID : ' + rsp.imp_uid;
-                            msg += '상점 거래ID : ' + rsp.merchant_uid;
-                            msg += '결제 금액 : ' + rsp.paid_amount;
-                            msg += '카드 승인번호 : ' + rsp.apply_num;
+                            var msg = "결제가 완료되었습니다.";
                             break;
+                        case "cancelled":
+                            var msg = "결제가 취소되었습니다.";
+                        case "failed":
+                            var msg = "결제에 실패하였습니다.";
                         case "forgery":
                             var msg = "위조된 결제시도입니다.";
                     }
                     return alert(msg);
                 });
             } else {
-                return alert("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg);
+                return alert("결제에 실패하였습니다. " +  rsp.error_msg);
             }
         });
     }

@@ -14,6 +14,12 @@ const OrderSchema = new Schema({
     CID: {
         type: String,
         required: true,
+    }, //Buyer Name
+    BN: {
+        type: String
+    }, //Buyer Email
+    BE: {
+        type: String
     }, //Buyer Telephone
     BT: {
         type: String
