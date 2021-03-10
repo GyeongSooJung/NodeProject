@@ -585,6 +585,26 @@ router.get('/mobile_con', async(req, res, next) => {
 // })
 
 //----------------------------------------------------------------------------//
+//                                  pay                                       //
+//----------------------------------------------------------------------------//
+
+//알림톡 결제
+router.get('/pay_sms', isNotLoggedIn, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const CNU = req.decoded.CNU;
+  const aclist = await Worker.find({ "CID" : CID, "AC" : false });
+  const imp_code = process.env.imp_code;
+  
+  try {
+    res.render('pay_sms', { company: req.decoded, aclist, imp_code });
+  }
+  catch(err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+//----------------------------------------------------------------------------//
 //                                  A/S                                       //
 //----------------------------------------------------------------------------//
 
@@ -601,6 +621,6 @@ router.get('/repair', isNotLoggedIn, async(req, res, next) => {
     console.error(err);
     next(err);
   }
-})
+});
 
 module.exports = router;

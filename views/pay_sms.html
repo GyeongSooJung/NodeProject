@@ -1,0 +1,111 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div id="content" class="content">
+	<!-- begin page-header -->
+	<h1 class="page-header">결제</h1>
+	<!-- end page-header -->
+	<!-- begin row -->
+	<div class="row">
+		<!-- begin col-6 -->
+		<div class="col-xl-12">
+			<!-- begin panel -->
+			<div class="panel panel-inverse" data-sortable-id="form-validation-1">
+				<!-- begin panel-heading -->
+				<div class="panel-heading">
+					<h4 class="panel-title">SMS 서비스 신청</h4>
+					<p class="m-0"></p>
+				</div>
+				<!-- end panel-heading -->
+				<!-- begin panel-body -->
+				<div class="panel-body">
+				    <div class="btn-group m-b-5 mx-3">
+                       <a href="javascript:payments()" class="btn btn-primary text-white px-4">결제하기</a>
+                    </div>
+                </div>
+				<!-- end panel-body -->
+			</div>
+			<!-- end panel -->
+		</div>
+	</div>
+	<!-- end row -->
+</div>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+
+<script>
+	// 에러 링크 기능
+	window.onload = () => {
+		if (new URL(location.href).searchParams.get('bad')) {
+			alert('잘못된 결제시도입니다.');
+		}
+		if (new URL(location.href).searchParams.get('create')) {
+			alert('가상계좌가 생성되었습니다.');
+		}
+		if (new URL(location.href).searchParams.get('success')) {
+			alert('결제가 완료되었습니다.');
+		}
+	};
+
+    // 결제 기능
+    function payments() {
+        var IMP = window.IMP;
+        IMP.init('{{imp_code}}');
+        
+        IMP.request_pay({
+            pg : 'inicis', // version 1.1.0부터 지원.
+            pay_method : 'card',
+            merchant_uid : 'merchant_' + new Date().getTime(),
+            name : 'a',
+            amount : 100,
+            buyer_email : 'iamport@siot.do',
+            buyer_name : '구매자이름',
+            buyer_tel : '010-1234-5678',
+            buyer_addr : '서울특별시 강남구 삼성동',
+            buyer_postcode : '123-456',
+            // m_redirect_url : 'https://www.cleanoasis.net/payments/complete'
+            m_redirect_url : '/payments/complete/mobile'
+        }, function(rsp) {
+            if (rsp.success) {
+                $.ajax({
+                    url: "/payments/complete",
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        imp_uid: rsp.imp_uid,
+                        merchant_uid: rsp.merchant_uid
+                    }
+                }).done(function (data) {
+                    switch(data.status) {
+                        case "vbankIssued":
+                            var msg = "가상계좌가 생성되었습니다.";
+                            msg += '\n가상계좌명' + rsp.vbank_name;
+                            msg += '\n가상계좌번호' + rsp.vbank_num;
+                            msg += '\n생성일' + rsp.vbank_date;
+                            break;
+                        case "success":
+                            var msg = '결제가 완료되었습니다.';
+                            msg += '고유ID : ' + rsp.imp_uid;
+                            msg += '상점 거래ID : ' + rsp.merchant_uid;
+                            msg += '결제 금액 : ' + rsp.paid_amount;
+                            msg += '카드 승인번호 : ' + rsp.apply_num;
+                            break;
+                        case "forgery":
+                            var msg = "위조된 결제시도입니다.";
+                    }
+                    return alert(msg);
+                });
+            } else {
+                return alert("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg);
+            }
+        });
+    }
+</script>
+{% endblock %}
+
+{% block script %}
+<script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
+<script src="../assets/plugins/highlight.js/highlight.min.js"></script>
+<script src="../assets/js/demo/render.highlight.js"></script>
+{% endblock %}

@@ -47,11 +47,24 @@ const CompanySchema = new Schema({
         type: Boolean,
         required: true,
         default: false,
-    },
-    //E-mail
+    }, //E-mail
     EA: {
         type: String,
         unique: true
+    }, //Service Mileage
+    SML: {
+        type: Number,
+        default: 0
+    }, //Virtual Account Number
+    VAN: {
+        type: Number
+    }, //Virtual Account Date
+    VAD: {
+        type: Date,
+        default: Date.now
+    }, //Virtual Account Name
+    VA: {
+        type: String
     },
     CA: {
         type: Date,

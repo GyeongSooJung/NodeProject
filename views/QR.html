@@ -453,6 +453,33 @@
         series2.strokeWidth = 2;
         series2.minBulletDistance = 15;
         
+        // Range Color
+        var range1 = ppmAxis.createSeriesRange(series);
+        range1.value = 0;
+        range1.endValue = 0.5;
+        range1.contents.stroke = am4core.color("green");
+        var range2 = ppmAxis.createSeriesRange(series);
+        range2.value = 0.501;
+        range2.endValue = 1;
+        range2.contents.stroke = am4core.color("orange");
+        var range3 = ppmAxis.createSeriesRange(series);
+        range3.value = 1.001;
+        range3.endValue = 5;
+        range3.contents.stroke = am4core.color("red");
+        
+        var range11 = ppmAxis.createSeriesRange(series2);
+        range11.value = 0;
+        range11.endValue = 0.5;
+        range11.contents.stroke = am4core.color("green");
+        var range22 = ppmAxis.createSeriesRange(series2);
+        range22.value = 0.501;
+        range22.endValue = 1;
+        range22.contents.stroke = am4core.color("orange");
+        var range33 = ppmAxis.createSeriesRange(series2);
+        range33.value = 1.001;
+        range33.endValue = 5;
+        range33.contents.stroke = am4core.color("red");
+        
         // Make bullets grow on hover 이것은 각 점들의 크기
         var bullet = series.bullets.push(new am4charts.CircleBullet());
         bullet.circle.strokeWidth = 2;

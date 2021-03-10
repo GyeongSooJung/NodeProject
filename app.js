@@ -23,6 +23,7 @@ const mobileRouter = require('./routes/mobile/'); // mobile 뒤에 슬래쉬 삭
 const findRouter = require('./routes/find');
 const adressRouter = require('./routes/adress');
 const qrcodeRouter = require('./routes/qrcode');
+const paymentsRouter = require('./routes/payments');
 
 const path = require('path');
 const ColorHash = require('color-hash');
@@ -58,6 +59,7 @@ app.use('/email', emailRouter);
 app.use('/mobile', mobileRouter);
 app.use('/adress', adressRouter);
 app.use('/qrcode', qrcodeRouter);
+app.use('/payments', paymentsRouter);
 app.use(function(req, res, next) {
   const error = new Error(`${req.method}${req.url} NO Router`);
   error.status = 404;
