@@ -6,11 +6,14 @@ const Device = require('../schemas/device');
 const Car = require('../schemas/car');
 const Worker = require('../schemas/worker');
 const History = require('../schemas/history');
+const Order = require('../schemas/order');
+
 const moment = require('moment');
 //Router or MiddleWare
 const router = express.Router();
 const { isLoggedIn, isNotLoggedIn, DataSet, emailcontrol } = require('./middleware');
 const { pagination, timeset } = require('./modulebox');
+const axios = require('axios');
 
 //----------------------------------------------------------------------------//
 //                                  기본라우터                                //
@@ -35,6 +38,7 @@ router.get('/', (req, res, next) => {
 Route_page('car_join');
 Route_page('device_join');
 Route_page('ozone_spread');
+Route_page('receipt');
 //----------------------------------------------------------------------------//
 //                                  회원정보                                  //
 //----------------------------------------------------------------------------//
@@ -592,11 +596,57 @@ router.get('/mobile_con', async(req, res, next) => {
 router.get('/pay_sms', isNotLoggedIn, async(req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
-  const aclist = await Worker.find({ "CID" : CID, "AC" : false });
   const imp_code = process.env.imp_code;
   
+  
   try {
-    res.render('pay_sms', { company: req.decoded, aclist, imp_code });
+    res.render('pay_sms', { company: req.decoded, imp_code });
+  }
+  catch(err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+
+//결제 내역
+router.get('/pay_list', isNotLoggedIn, async(req, res, next) => {
+  
+  const CID = req.decoded.CID;
+  const imp_code = process.env.imp_code;
+  let page = req.query.page;
+  const MID = req.query.MID;
+  const IP = process.env.IP;
+  
+  
+  try {
+    
+    const order = await Order.find({ "CID" : CID});
+  if (MID) {
+    const orderone = await Order.find({"MID" : MID});
+    const totalNum = await Order.countDocuments({ "MID": MID });
+    let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
+    const orders = await Order.find({ "MID": MID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
+
+    res.render('pay_list', { company: req.decoded, totalNum, currentPage, totalPage, startPage, endPage, imp_code,IP, orders, MID});
+
+  }
+  else {
+
+    try {
+      const totalNum = await Order.countDocuments({ "CID": CID });
+    let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
+    const orders = await Order.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
+
+      res.render('pay_list', { company: req.decoded, totalNum, currentPage, totalPage, startPage, endPage,IP, orders });
+    }
+    catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
+        
+        
   }
   catch(err) {
     console.error(err);

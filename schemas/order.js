@@ -10,6 +10,10 @@ const OrderSchema = new Schema({
     AM: {
         type: Number,
         required: true,
+    },//Amount
+    CAM: {
+        type: Number,
+        default: 0,
     },//Company ID
     CID: {
         type: String,
@@ -22,6 +26,10 @@ const OrderSchema = new Schema({
         type: String
     }, //Merchant_uid
     MID: {
+        type: String,
+        required: true
+    }, //imp_uid
+    IID: {
         type: String,
         required: true
     }, //Payment Method

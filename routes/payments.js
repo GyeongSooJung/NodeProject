@@ -13,6 +13,8 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
     try {
         const { imp_uid, merchant_uid } = req.body;
         
+        console.log(imp_uid,merchant_uid);
+        
         // 엑세스 토큰 발급 받기
         const getToken = await axios({
             url: "https://api.iamport.kr/users/getToken",
@@ -51,6 +53,7 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
                 BT : companyone.PN,
                 BA : companyone.ADR,
                 MID : merchant_uid,
+                IID : imp_uid,
                 PAM : paymentData.pay_method,
                 PG : paymentData.pg,
                 PS : paymentData.status,
@@ -82,6 +85,65 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
         next(err);
     }
 });
+
+// 환불하기
+router.post('/cancel', isNotLoggedIn, DataSet, async (req, res, next) => {
+    
+    const CID = req.decoded.CID;
+    const { merchant_uid, reason, cancel_request_amount } = req.body;
+    
+    try {
+      /* 액세스 토큰(access token) 발급 */
+      const getToken = await axios({
+        url: "https://api.iamport.kr/users/getToken",
+        method: "post", // POST method
+        headers: { 
+          "Content-Type": "application/json" 
+        },
+        data: {
+          imp_key: process.env.imp_key, // [아임포트 관리자] REST API키
+          imp_secret: process.env.imp_secret // [아임포트 관리자] REST API Secret
+        }
+      });
+      const { access_token } = getToken.data.response; // 엑세스 토큰
+      /* 결제정보 조회 */
+      
+      const orderone = await Order.find({MID : merchant_uid}, async function(err, payment) {
+          if (err) {
+              return res.json(err);
+          }
+          
+          const paymentData = payment[0];
+          const { imp_uid } = paymentData;
+          
+          const getCancelData = await axios({
+          url: "https://api.iamport.kr/payments/cancel",
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": access_token // 아임포트 서버로부터 발급받은 엑세스 토큰
+          },
+          data: {
+            reason, // 가맹점 클라이언트로부터 받은 환불사유
+            imp_uid, // imp_uid를 환불 고유번호로 입력
+            amount: cancel_request_amount, // 가맹점 클라이언트로부터 받은 환불금액
+          }
+        });
+        const { response } = getCancelData.data; // 환불 결과
+        /* 환불 결과 동기화 */
+          
+      });
+      console.log(orderone);
+      
+      
+    } catch (error) {
+      res.status(400).send(error);
+    }
+  });
+  
+  
+
+
 
 router.post("/iamport-webhook", isNotLoggedIn, async(req, res, next) => {
     const companyone = req.decoded;
@@ -136,7 +198,7 @@ router.post("/iamport-webhook", isNotLoggedIn, async(req, res, next) => {
     }
 });
 
-router.get("/paymetns/complete/mobile/", isNotLoggedIn, async(req, res, next) => {
+router.get("/complete/mobile/", isNotLoggedIn, async(req, res, next) => {
     const companyone = req.decoded;
     try {
         const { imp_uid, merchant_uid } = req.body; // req의 body에서 imp_uid, merchant_uid 추출
@@ -188,5 +250,8 @@ router.get("/paymetns/complete/mobile/", isNotLoggedIn, async(req, res, next) =>
         next(err);
     }
 });
+
+
+
 
 module.exports = router;
