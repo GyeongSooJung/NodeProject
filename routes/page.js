@@ -596,11 +596,13 @@ router.get('/mobile_con', async(req, res, next) => {
 router.get('/pay_sms', isNotLoggedIn, async(req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
+  const aclist = await Worker.find({ "CID" : CID, "AC" : false });
+  const companyone = await Company.findOne({ "_id": CID });
   const imp_code = process.env.imp_code;
   
   
   try {
-    res.render('pay_sms', { company: req.decoded, imp_code });
+    res.render('pay_sms', { company: req.decoded, companyone, aclist, imp_code });
   }
   catch(err) {
     console.error(err);
@@ -608,11 +610,16 @@ router.get('/pay_sms', isNotLoggedIn, async(req, res, next) => {
   }
 });
 
+//결제 완료 내역
+router.get('/pay_confirm', isNotLoggedIn, async(req, res, next) => {
+  
+});
 
-//결제 내역
+//결제 목록
 router.get('/pay_list', isNotLoggedIn, async(req, res, next) => {
   
   const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID" : CID, "AC" : false });
   const imp_code = process.env.imp_code;
   let page = req.query.page;
   const MID = req.query.MID;
@@ -620,33 +627,28 @@ router.get('/pay_list', isNotLoggedIn, async(req, res, next) => {
   
   
   try {
-    
     const order = await Order.find({ "CID" : CID});
-  if (MID) {
-    const orderone = await Order.find({"MID" : MID});
-    const totalNum = await Order.countDocuments({ "MID": MID });
-    let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-    const orders = await Order.find({ "MID": MID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-
-    res.render('pay_list', { company: req.decoded, totalNum, currentPage, totalPage, startPage, endPage, imp_code,IP, orders, MID});
-
-  }
-  else {
-
-    try {
-      const totalNum = await Order.countDocuments({ "CID": CID });
-    let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-    const orders = await Order.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-
-      res.render('pay_list', { company: req.decoded, totalNum, currentPage, totalPage, startPage, endPage,IP, orders });
+    if (MID) {
+      const orderone = await Order.find({"MID" : MID});
+      const totalNum = await Order.countDocuments({ "MID": MID });
+      let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
+      const orders = await Order.find({ "MID": MID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
+  
+      res.render('pay_list', { company: req.decoded, aclist, totalNum, currentPage, totalPage, startPage, endPage, imp_code,IP, orders, MID});
     }
-    catch (err) {
-      console.error(err);
-      next(err);
+    else {
+      try {
+        const totalNum = await Order.countDocuments({ "CID": CID });
+        let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
+        const orders = await Order.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
+  
+        res.render('pay_list', { company: req.decoded, aclist, totalNum, currentPage, totalPage, startPage, endPage,IP, orders });
+      }
+      catch (err) {
+        console.error(err);
+        next(err);
+      }
     }
-  }
-        
-        
   }
   catch(err) {
     console.error(err);
