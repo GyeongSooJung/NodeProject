@@ -25,11 +25,11 @@
 				    <table class="col-md-8 table table-bordered table-td-valign-middle mx-auto mt-4 text-center">
 				        <caption class="text-black font-weight-bold" style="caption-side:top">결제정보</caption>
 				        <tr>
-				            <th width="30%">주문번호</th>
+				            <th width="30%" class="table-secondary">주문번호</th>
 				            <td>{{paymentData.merchant_uid}}</td>
 				        </tr>
 				        <tr>
-				            <th>결제일시</th>
+				            <th class="table-secondary">결제일시</th>
 				            <td>
 				                <script>
 				                Unix_timestamp('{{paymentData.paid_at}}');
@@ -37,21 +37,25 @@
 				            </td>
 				        </tr>
 				        <tr>
-				            <th>상품명</th>
+				            <th class="table-secondary">상품명</th>
 				            <td>{{paymentData.name}}</td>
 				        </tr>
 				        <tr>
-				            <th>결제금액</th>
-				            <td class="text-red bold">{{paymentData.amount}}</td>
+				            <th class="table-secondary">결제금액</th>
+				            <td>{{paymentData.amount}}</td>
 				        </tr>
 				    </table>
 				    <table class="col-md-8 table table-bordered table-td-valign-middle mx-auto mt-4 text-center">
 				        <caption class="text-black font-weight-bold" style="caption-side:top">구매정보</caption>
 				        <tr>
-				            <th width="30%">적립포인트</th>
+				            <th width="30%" class="table-secondary">적립포인트</th>
 				            <td>{{serviceone.ML}} p</td>
 				        </tr>
 				    </table>
+				    <div class="d-flex justify-content-center align-items-center mt-5">
+				        <a href="/pay_list" class="btn btn-primary text-white px-4 mx-3">결제 내역</a>
+				        <a href="javascript:receiptPay('{{paymentData.imp_uid}}')" class="btn btn-primary text-white px-4 mx-3">영수증 출력</a>
+                    </div>
                 </div>
 				<!-- end panel-body -->
 			</div>

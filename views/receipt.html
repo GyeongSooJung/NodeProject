@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-	<title>Color Admin | Invoice</title>
+	<title>영 수 증</title>
 	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 	<meta content="" name="description" />
 	<meta content="" name="author" />
@@ -13,6 +13,8 @@
 	<!-- ================== END BASE CSS STYLE ================== -->
 </head>
 <body>
+	<!--오아시스 제이쿼리 자바스크립트-->
+	<script src="../assets/oasisjquery.js"></script>
 	<!-- begin #page-container -->
 	<div id="page-container">
 		
@@ -50,7 +52,11 @@
 					</div>
 					<div class="invoice-date">
 						<small>period</small>
-						<div class="date text-inverse m-t-5">{{moment(orderone.CA).format('YYYY-MM-DD')}}</div>
+						<div class="date text-inverse m-t-5">
+							<script>
+			                Unix_timestamp('{{paymentData.paid_at}}');
+			                </script>
+						</div>
 						<div class="invoice-detail">
 						</div>
 					</div>
