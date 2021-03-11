@@ -13,21 +13,9 @@ const moment = require('moment');
 
 //Mobile QR Code Page
 router.post('/QR', async (req, res, next) => {
-  const {CN, type} = req.body;
-  console.log("타입투"+type);
+  const {CN} = req.body;
 
   const timenow = moment().format('YYYY-MM-DD HH:mm');
-  
-  const exQR = await QRS.findOne({"QRT" : type});
-  
-  if(exQR) {
-    await QRS.update({"QRT" : type}, {'$inc': {'QRC' : 1}});
-  }
-  else {
-    await QRS.create({"QRT" : type});
-    await QRS.update({"QRT" : type}, {'$inc': {'QRC' : 1}});
-  }
-  
     try {
       const historyone = await History.findOne({"CNM" : CN}).sort({"ET" : -1}).limit(1);
       
@@ -41,7 +29,7 @@ router.post('/QR', async (req, res, next) => {
         res.render('QR', {companyone, historyone, history_array, term});
       }
       else {
-        res.redirect('/mobile_con?type='+type+'&nodata=true');
+        res.redirect('/mobile_con?&nodata=true');
       }
     } catch(err) {
         console.error(err);

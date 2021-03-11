@@ -539,21 +539,9 @@ router.get('/history_chart/:_id', isNotLoggedIn, async(req, res, next) => {
 //Mobile Connect Page
 router.get('/mobile_con', async(req, res, next) => {
   var cn = req.query.cn;
-  var type = req.query.type;
-  console.log(cn);
-  console.log("타입"+type);
   
   try {
-    if(type == 1 || type == 2 || type == 3 || type == 4) {
-      res.render('mobile_con', {cn, type});
-    }
-    else if(type == null) {
-      type = 1;
-      res.render('mobile_con', {cn, type});
-    }
-    else {
-      res.render('error');
-    }
+    res.render('mobile_con', { cn });
   }
   catch (err) {
     console.error(err);
@@ -599,8 +587,7 @@ router.get('/pay_sms', isNotLoggedIn, async(req, res, next) => {
   const aclist = await Worker.find({ "CID" : CID, "AC" : false });
   const companyone = await Company.findOne({ "_id": CID });
   const imp_code = process.env.imp_code;
-  
-  
+
   try {
     res.render('pay_sms', { company: req.decoded, companyone, aclist, imp_code });
   }
@@ -612,7 +599,19 @@ router.get('/pay_sms', isNotLoggedIn, async(req, res, next) => {
 
 //결제 완료 내역
 router.get('/pay_confirm', isNotLoggedIn, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const CNU = req.decoded.CNU;
+  const aclist = await Worker.find({ "CID" : CID, "AC" : false });
+  const companyone = await Company.findOne({ "_id": CID });
+  const imp_code = process.env.imp_code;
   
+  try {
+    res.render('pay_confirm', { company: req.decoded, companyone, aclist, imp_code });
+  }
+  catch(err) {
+    console.error(err);
+    next(err);
+  }
 });
 
 //결제 목록
