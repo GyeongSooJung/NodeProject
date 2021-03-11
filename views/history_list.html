@@ -26,31 +26,31 @@
 		<!-- end panel-heading -->
 		<!-- begin panel-body -->
 		<div class="panel-body">
-			         <center>
-            <div class="btn-group m-b-5 mx-3">
-               <a href="/history_list" class="btn btn-primary text-white px-4">전체</a>
-            </div>
-            <div class="btn-group m-b-5 mx-3">
-               <a href="javascript:;" class="btn btn-primary text-white px-5">차량</a>
-               <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle text-white"><b class="caret"></b></a>
-               <div class="dropdown-menu dropdown-menu-right">
-                  {% for car in cars %}
-                  <a href="/history_list/?CN={{car.CN}}" class="dropdown-item">{{car.CN}}</a>
-                  <!--/history_CN_select/{{car.CN}}-->
-                  {% endfor %}
-               </div>
-            </div>
-            <div class="btn-group m-b-5 mx-3">
-               <a href="javascript:;" class="btn btn-primary text-white px-5">장비</a>
-               <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle text-white"><b class="caret"></b></a>
-               <div class="dropdown-menu dropdown-menu-right">
-                  {% for device in devices %}
-                  <a href="/history_list/?MD={{device.MD}}" class="dropdown-item">{{device.MD}}</a>
-                  <!--/history_MD_select/{{device.MD}}-->
-                  {% endfor %}
-               </div>
-            </div>
-         </center>
+			<center>
+	            <div class="btn-group m-b-5 mx-3">
+	               <a href="/history_list" class="btn btn-primary text-white px-4">전체</a>
+	            </div>
+	            <div class="btn-group m-b-5 mx-3">
+	               <a href="javascript:;" class="btn btn-primary text-white px-5">차량</a>
+	               <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle text-white"><b class="caret"></b></a>
+	               <div class="dropdown-menu dropdown-menu-right">
+	                  {% for car in cars %}
+	                  <a href="/history_list/?CN={{car.CN}}" class="dropdown-item">{{car.CN}}</a>
+	                  <!--/history_CN_select/{{car.CN}}-->
+	                  {% endfor %}
+	               </div>
+	            </div>
+	            <div class="btn-group m-b-5 mx-3">
+	               <a href="javascript:;" class="btn btn-primary text-white px-5">장비</a>
+	               <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle text-white"><b class="caret"></b></a>
+	               <div class="dropdown-menu dropdown-menu-right">
+	                  {% for device in devices %}
+	                  <a href="/history_list/?MD={{device.MD}}" class="dropdown-item">{{device.MD}}</a>
+	                  <!--/history_MD_select/{{device.MD}}-->
+	                  {% endfor %}
+	               </div>
+	            </div>
+			</center>
          
  	       <div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
 	        	<div class="mr-2">검색 : </div>

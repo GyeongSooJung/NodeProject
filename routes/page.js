@@ -7,6 +7,7 @@ const Car = require('../schemas/car');
 const Worker = require('../schemas/worker');
 const History = require('../schemas/history');
 const Order = require('../schemas/order');
+const Service = require('../schemas/service');
 
 const moment = require('moment');
 //Router or MiddleWare
@@ -603,10 +604,34 @@ router.get('/pay_confirm', isNotLoggedIn, async(req, res, next) => {
   const CNU = req.decoded.CNU;
   const aclist = await Worker.find({ "CID" : CID, "AC" : false });
   const companyone = await Company.findOne({ "_id": CID });
+  const imp_uid = req.query.imp_uid;
   const imp_code = process.env.imp_code;
   
+  // 엑세스 토큰 발급 받기
+  const getToken = await axios({
+      url: "https://api.iamport.kr/users/getToken",
+      method: "post", // POST method
+      headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
+      data: {
+        imp_key: process.env.imp_key, // REST API키
+        imp_secret: process.env.imp_secret // REST API Secret
+      }
+  });
+  const { access_token } = getToken.data.response; // 인증 토큰
+  
+  // imp_uid로 아임포트 서버에서 결제 정보 조회
+  const getPaymentData = await axios({
+      url: 'https://api.iamport.kr/payments/'+imp_uid, // imp_uid 전달
+      method: "get", // GET method
+      headers: { "Authorization": access_token } // 인증 토큰 Authorization header에 추가
+  });
+  const paymentData = getPaymentData.data.response; // 조회한 결제 정보
+  
+  const serviceone = await Service.findOne({"SN" : paymentData.name});
+  console.log(serviceone);
+  
   try {
-    res.render('pay_confirm', { company: req.decoded, companyone, aclist, imp_code });
+    res.render('pay_confirm', { company: req.decoded, companyone, aclist, imp_code, paymentData, serviceone });
   }
   catch(err) {
     console.error(err);
