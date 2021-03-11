@@ -14,8 +14,13 @@
     
     
     //영수증 출력 화면
-    function receiptPay() {
-        window.open("/receipt","pop","width=570,height=420, scrollbars=yes, resizable=yes"); 
+    function receiptPay(imp_code) {
+        if (imp_code)
+        window.open("/receipt?imp_uid="+imp_code,"pop","width=570,height=700, scrollbars=yes, resizable=yes"); 
+        else{
+            alert("구매 내용이 잘못되었습니다.");
+        }
+        
                      
     }
     

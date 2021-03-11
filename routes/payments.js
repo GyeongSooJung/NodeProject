@@ -200,20 +200,23 @@ router.post("/iamport-webhook", isNotLoggedIn, async(req, res, next) => {
         const { amount, status } = paymentData;
         
         if (amount === amountToBePaid) { // 결제 금액 일치. 결제 된 금액 === 결제 되어야 하는 금액
-            await Order.create({
-                GN : paymentData.name,
-                AM : paymentData.amount,
-                CID: companyone._id,
-                BN : paymentData.buyer_name,
-                BE : paymentData.buyer_email,
-                BT : paymentData.buyer_tel,
-                BA : paymentData.buyer_addr,
-                MID : merchant_uid,
-                PAM : paymentData.pay_method,
-                PG : paymentData.pg_provider,
-                PS : paymentData.status,
-            }); // DB에 결제 정보 저장
+        
+            if(paymentData.status === 'paid'){
+                await Order.create({
+                    GN : paymentData.name,
+                    AM : paymentData.amount,
+                    CID: companyone._id,
+                    BN : paymentData.buyer_name,
+                    BE : paymentData.buyer_email,
+                    BT : paymentData.buyer_tel,
+                    BA : paymentData.buyer_addr,
+                    MID : merchant_uid,
+                    PAM : paymentData.pay_method,
+                    PG : paymentData.pg_provider,
+                    PS : paymentData.status,
+                }); // DB에 결제 정보 저장
             
+            }
             switch (status) {
                 // case "ready": // 가상계좌 발급
                 //     // DB에 가상계좌 발급 정보 저장

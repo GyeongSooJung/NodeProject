@@ -190,10 +190,11 @@
                         case "success":
                             var msg = "결제가 완료되었습니다.";
                             alert(msg);
-                            window.location.href = '/pay_confirm';
+                            window.open("/receipt?imp_uid="+rsp.imp_uid,"pop","width=570,height=420, scrollbars=yes, resizable=yes");
+                            window.location.href = '/pay_list';
                             break;
                         case "cancelled":
-                            var msg = "결제가 취소되었습니다.";
+                            var msg = "결제가 취소되었습니다.";E
                             break;
                         case "failed":
                             var msg = "결제에 실패하였습니다.";

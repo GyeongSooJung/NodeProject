@@ -38,7 +38,6 @@ router.get('/', (req, res, next) => {
 Route_page('car_join');
 Route_page('device_join');
 Route_page('ozone_spread');
-Route_page('receipt');
 //----------------------------------------------------------------------------//
 //                                  회원정보                                  //
 //----------------------------------------------------------------------------//
@@ -625,6 +624,7 @@ router.get('/pay_list', isNotLoggedIn, async(req, res, next) => {
   const IP = process.env.IP;
   
   
+  
   try {
     const order = await Order.find({ "CID" : CID});
     if (MID) {
@@ -632,7 +632,6 @@ router.get('/pay_list', isNotLoggedIn, async(req, res, next) => {
       const totalNum = await Order.countDocuments({ "MID": MID });
       let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
       const orders = await Order.find({ "MID": MID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-  
       res.render('pay_list', { company: req.decoded, aclist, totalNum, currentPage, totalPage, startPage, endPage, imp_code,IP, orders, MID});
     }
     else {
@@ -640,6 +639,7 @@ router.get('/pay_list', isNotLoggedIn, async(req, res, next) => {
         const totalNum = await Order.countDocuments({ "CID": CID });
         let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
         const orders = await Order.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
+        console.log(orders);
   
         res.render('pay_list', { company: req.decoded, aclist, totalNum, currentPage, totalPage, startPage, endPage,IP, orders });
       }
@@ -654,6 +654,48 @@ router.get('/pay_list', isNotLoggedIn, async(req, res, next) => {
     next(err);
   }
 });
+
+// 영수증
+router.get('/receipt', isNotLoggedIn, async(req, res, next) => {
+  
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID" : CID, "AC" : false });
+  const imp_code = process.env.imp_code;
+  const imp_uid = req.query.imp_uid;
+  
+   const getToken = await axios({
+            url: "https://api.iamport.kr/users/getToken",
+            method: "post", // POST method
+            headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
+            data: {
+              imp_key: process.env.imp_key, // REST API키
+              imp_secret: process.env.imp_secret // REST API Secret
+            }
+        });
+        const { access_token } = getToken.data.response; // 인증 토큰
+        
+        // imp_uid로 아임포트 서버에서 결제 정보 조회
+        const getPaymentData = await axios({
+            url: 'https://api.iamport.kr/payments/'+imp_uid, // imp_uid 전달
+            method: "get", // GET method
+            headers: { "Authorization": access_token } // 인증 토큰 Authorization header에 추가
+        });
+        const paymentData = getPaymentData.data.response; // 조회한 결제 정보
+        
+        console.log(paymentData);
+        
+        const orderone = await Order.find({"IID" : imp_uid});
+        
+        
+        
+        
+  
+  
+  
+  
+  res.render('receipt', { company: req.decoded, aclist, paymentData, orderone,moment });
+  
+})
 
 //----------------------------------------------------------------------------//
 //                                  A/S                                       //
