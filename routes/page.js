@@ -581,15 +581,16 @@ router.get('/mobile_con', async(req, res, next) => {
 //----------------------------------------------------------------------------//
 
 //알림톡 결제
-router.get('/pay_sms', isNotLoggedIn, async(req, res, next) => {
+router.get('/pay_point', isNotLoggedIn, async(req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const aclist = await Worker.find({ "CID" : CID, "AC" : false });
   const companyone = await Company.findOne({ "_id": CID });
   const imp_code = process.env.imp_code;
+  const HOME = process.env.IP;
 
   try {
-    res.render('pay_sms', { company: req.decoded, companyone, aclist, imp_code });
+    res.render('pay_point', { company: req.decoded, companyone, aclist, imp_code, HOME });
   }
   catch(err) {
     console.error(err);
@@ -647,8 +648,6 @@ router.get('/pay_list', isNotLoggedIn, async(req, res, next) => {
   let page = req.query.page;
   const MID = req.query.MID;
   const IP = process.env.IP;
-  
-  
   
   try {
     const order = await Order.find({ "CID" : CID});

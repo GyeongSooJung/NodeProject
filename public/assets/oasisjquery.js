@@ -21,14 +21,14 @@
         var minute = "0" + date.getMinutes();
         var second = "0" + date.getSeconds();
         
-        var datetime =  year + "-" + month.substr(-2) + "-" + day.substr(-2) + " " + hour.substr(-2) + ":" + second.substr(-2);
+        var datetime =  year + "-" + month.substr(-2) + "-" + day.substr(-2) + " " + hour.substr(-2) + ":" + minute.substr(-2) + ":" + second.substr(-2);
         return document.write(datetime);
     }
     
     //영수증 출력 화면
     function receiptPay(imp_code) {
         if (imp_code)
-        window.open("/receipt?imp_uid="+imp_code,"pop","width=620,height=700, scrollbars=yes, resizable=yes"); 
+        window.open("/receipt?imp_uid="+imp_code,"pop","width=620, height=700, scrollbars=yes, resizable=yes"); 
         else{
             alert("구매 내용이 잘못되었습니다.");
         }

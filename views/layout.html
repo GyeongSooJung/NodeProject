@@ -46,11 +46,14 @@
 				<li class="dropdown navbar-user">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<i class="fas fa-lg fa-fw fa-user-circle"></i>
-						<span class="d-none d-md-inline font-weight-bold">{{company.CNA}}</span> <b class="caret"></b>
+						<span class="d-none d-md-inline font-weight-bold">{{company.CNA}}</span>
+						<small>(보유 포인트 : <span class="text-primary">{{company.SML}} p</span>)</small>
+						<b class="caret"></b>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right">
 						<a href="/profile" class="dropdown-item">프로필 수정</a>
 						<div class="dropdown-divider"></div>
+						<a href="/pay_point" class="dropdown-item">포인트 충전</a>
 						<a href="javascript:logout()" class="dropdown-item">로그아웃</a>
 						<a href="javascript:withdrawal()" class="dropdown-item">회원탈퇴</a>
 					</div>
@@ -173,7 +176,7 @@
 							<span> 결제 </span> 
 						</a>
 						<ul class="sub-menu">
-							<li><a href="/pay_sms">알림 서비스</a></li>
+							<li><a href="/pay_point">포인트 구매</a></li>
 							<li><a href="/pay_list">결제 목록</a></li>
 						</ul>
 					</li>

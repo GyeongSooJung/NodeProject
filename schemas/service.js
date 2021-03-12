@@ -9,8 +9,8 @@ const ServiceSchema = new Schema({
     }, //Price
     PR: {
         type: Number
-    }, //Mileage
-    ML: {
+    }, //Point
+    PO: {
         type: Number
     }, //Create Time
     CA: {

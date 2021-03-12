@@ -51,8 +51,8 @@ const CompanySchema = new Schema({
     EA: {
         type: String,
         unique: true
-    }, //Service Mileage
-    SML: {
+    }, //Service Point
+    SPO: {
         type: Number,
         default: 0
     }, //Virtual Account Number

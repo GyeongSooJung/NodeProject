@@ -54,9 +54,9 @@
 									<tr>
 										<th width="2.5%"></th>
 										<th width="30.5%">주문 번호</th>
-										<th width="23%">구매 일시</th>
-										<th width="23%">상품명</th>
-										<th width="23%">금액</th>
+										<th width="24%">결제 일시</th>
+										<th width="21%">상품명</th>
+										<th width="21%">금액</th>
 										<th width="1%"></th>
 									</tr>
 								</thead>
@@ -74,7 +74,8 @@
 											<td>{{order.MID}}</td>
 											<td>
 											    <script>
-    											Timefunction("{{order.CA}}");
+    											var pa = moment('{{order.CA}}').format('YYYY-MM-DD HH:mm:ss');
+    											document.write(pa);
     											</script>
 											</td>
 											<td>{{order.GN}}</td>
