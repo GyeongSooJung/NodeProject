@@ -709,6 +709,7 @@ router.get('/receipt', isNotLoggedIn, async(req, res, next) => {
         
         console.log(paymentData);
         
+        
         const orderone = await Order.find({"IID" : imp_uid});
 
   res.render('receipt', { company: req.decoded, aclist, paymentData, orderone,moment });
