@@ -174,7 +174,7 @@
 						</a>
 						<ul class="sub-menu">
 							<li><a href="/pay_sms">알림 서비스</a></li>
-							<li><a href="/pay_list">결제 내역</a></li>
+							<li><a href="/pay_list">결제 목록</a></li>
 						</ul>
 					</li>
 					<li class="has-sub">
@@ -218,14 +218,17 @@
 		var path = document.location.pathname.toString();
 		var cut =  path.split('/');
 		console.log("패스"+path+" 컷"+cut);
-		if (cut[1]=='car_edit') {
+		if (cut[1] == 'car_edit') {
 			cut[1] = 'car_list';
 		}
-		if (cut[1]=='device_edit') {
+		if (cut[1] == 'device_edit') {
 			cut[1] = 'device_list';
 		}
-		if (cut[1]=='history_chart') {
+		if (cut[1] == 'history_chart') {
 			cut[1] = 'history_list';
+		}
+		if (cut[1] == 'pay_confirm') {
+			cut[1] = 'pay_sms';
 		}
 		$('#active-menu').find('a[href="' + '/' + cut[1] + '"]').parents('li').addClass('active');
 	};
