@@ -33,10 +33,10 @@
 					<div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
 	            	<div class="mr-2">검색 : </div>
 				<div>
-					<input type="text" id="MIDkeywordword" class="form-control" placeholder ="주문번호" />
+					<input type="text" id="GNkeyword" class="form-control" placeholder ="상품명" />
 				</div>
 				<div>
-					<button class="ml-2 btn btn-primary text-white px-1" onclick="searchbutton()">{% if MID %} <i class="fas fa-lg fa-fw m-r-10 fa-chevron-left"></i> {% else %}<i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i> {% endif %}</button></div>
+					<button class="ml-2 btn btn-primary text-white px-1" onclick="searchbutton()">{% if GN %} <i class="mx-1 fas fa-lg fa-fw m-r-10 fa-chevron-left"></i> {% else %}<i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i> {% endif %}</button></div>
 				</div>
 	               	
 	     <!--          	    <div class="col-xl-4">-->
@@ -160,8 +160,8 @@
     })
 
     function searchbutton() {
-		const keyword = document.getElementById('MIDkeyword').value;
-		location = '/pay_list/?MID=' + keyword;
+		const keyword = document.getElementById('GNkeyword').value;
+		location = '/pay_list/?GN=' + keyword;
 	}
 	
 	// 페이지 기능
