@@ -11,6 +11,7 @@ const { isNotLoggedIn, DataSet } = require('./middleware');
 // 일반 결제 진행
 router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
     const companyone = req.decoded;
+    console.log(companyone);
     try {
         const { imp_uid, merchant_uid } = req.body;
         
@@ -152,7 +153,7 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
 //     }
 //   });
   
-router.post("/iamport-webhook", isNotLoggedIn, async(req, res, next) => {
+router.post("/iamport-webhook", isNotLoggedIn, DataSet, async(req, res, next) => {
     const companyone = req.decoded;
     try {
         const { imp_uid, merchant_uid } = req.body;
@@ -238,10 +239,10 @@ router.post("/iamport-webhook", isNotLoggedIn, async(req, res, next) => {
     }
 });
 
-router.get("/complete/mobile/", isNotLoggedIn, async(req, res, next) => {
+router.get("/complete/mobile", isNotLoggedIn, DataSet, async(req, res, next) => {
     const companyone = req.decoded;
     try {
-        const { imp_uid, merchant_uid } = req.body;
+        const { imp_uid, merchant_uid } = req.query;
         
         // 엑세스 토큰 발급 받기
         const getToken = await axios({
