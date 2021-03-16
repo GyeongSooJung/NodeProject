@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="../assets/qrcode/css/main.css" class="css">
   <script src="https://kit.fontawesome.com/71839e8cce.js" crossorigin="anonymous"></script>
   <script type="text/javascript" src="../assets/qrcode/js/accordion.js"></script>
+  <link href="../assets/img/favicon.png" rel="icon">
 </head>
 <body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
@@ -22,46 +23,50 @@
           </div>
         </div>
         <div class="navbar-util">
-          <a id="open" class="button is-light is-share">
+          <a id="showModal" class="button is-light is-share">
             <i class="fas fa-share-square"></i>
             <span>공유하기</span>
           </a>
         </div>
-        <!-- modal -->
-        <div class="modal hidden">
-          <div class="md_overlay"></div>
-          <div class="md_content">
-            <h1>링크 공유</h1>
-            <div class="modal_text">
-            	 <div class="sns-go">
+        <div class="modal">
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">링크 공유</p>
+              <button id="closetop" class="delete" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+              <div class="sns-go">
                 <ul>
+                  <li>
+                    <a href="#" onclick="javascript:copyLink()"><img src="../assets/qrcode/assets/images/copy_link.png" width="40" alt="링크 복사"></a>
+                  </li>
                   <!-- 네이버 블로그 공유 -->
-                  <li>
-                    <a href="#" onclick="javascript:window.open('http://share.naver.com/web/shareView.nhn?url=' +encodeURIComponent(document.URL)+'&title='+encodeURIComponent(document.title), 'naversharedialog', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;" target="_blank" alt="Share on Naver" ><img src="../assets/qrcode/assets/images/sns_naver.png" width="40" alt="네이버 블로그 공유하기"></a>
-                  </li>
+                  <!--<li>-->
+                  <!--  <a href="#" onclick="javascript:window.open('http://share.naver.com/web/shareView.nhn?url=' +encodeURIComponent(document.URL)+'&title='+encodeURIComponent(document.title), 'naversharedialog');return false;" target="_blank" alt="Share on Naver" ><img src="../assets/qrcode/assets/images/sns_naver.png" width="40" alt="네이버 블로그 공유하기"></a>-->
+                  <!--</li>-->
                   <!-- 페이스북 공유 -->		
-                  <li>
-                    <a href="#" onclick="javascript:window.open('https://www.facebook.com/sharer/sharer.php?u=' +encodeURIComponent(document.URL)+'&t='+encodeURIComponent(document.title), 'facebooksharedialog', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;" target="_blank" alt="Share on Facebook" ><img src="../assets/qrcode/assets/images/sns_face.png" width="40" alt="페이스북 공유하기"></a>
-                  </li>
+                  <!--<li>-->
+                  <!--  <a href="#" onclick="javascript:window.open('https://www.facebook.com/sharer/sharer.php?u=' +encodeURIComponent(document.URL)+'&t='+encodeURIComponent(document.title), 'facebooksharedialog');return false;" target="_blank" alt="Share on Facebook" ><img src="../assets/qrcode/assets/images/sns_face.png" width="40" alt="페이스북 공유하기"></a>-->
+                  <!--</li>-->
                   <!-- 트위터 공유 -->		
-                  <li>
-                    <a href="#" onclick="javascript:window.open('https://twitter.com/intent/tweet?text=[%EA%B3%B5%EC%9C%A0]%20' +encodeURIComponent(document.URL)+'%20-%20'+encodeURIComponent(document.title), 'twittersharedialog', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;" target="_blank" alt="Share on Twitter" ><img src="../assets/qrcode/assets/images/sns_tw.png" width="40" alt="트위터 공유하기"></a>
-                  </li>
-                  <!-- 구글 플러스 공유 -->		
-              		<li>
-                    <a href="#" onclick="javascript:window.open('https://plus.google.com/share?url=' +encodeURIComponent(document.URL), 'googleplussharedialog','menubar=no,toolbar=no,resizable=yes, scrollbars=yes,height=350,width=600');return false;" target="_blank" alt="Share on Google+"><img src="../assets/qrcode/assets/images/sns_google.png" width="40" alt="구글 플러스 공유하기"></a>
-                  </li>
+                  <!--<li>-->
+                  <!--  <a href="#" onclick="javascript:window.open('https://twitter.com/intent/tweet?text=[%EA%B3%B5%EC%9C%A0]%20' +encodeURIComponent(document.URL)+'%20-%20'+encodeURIComponent(document.title), 'twittersharedialog');return false;" target="_blank" alt="Share on Twitter" ><img src="../assets/qrcode/assets/images/sns_tw.png" width="40" alt="트위터 공유하기"></a>-->
+                  <!--</li>-->
                   <!-- 카카오톡 공유 -->
               		<li>
                     <a href="javascript:shareKatalk()"><img src="../assets/qrcode/assets/images/sns_ka.png" width="40" alt="카카오톡 공유하기"></a></li>
                   <!-- 카카오스토리 공유 -->		
-                  <li>
-                    <a href="#" onclick="javascript:window.open('https://story.kakao.com/s/share?url=' +encodeURIComponent(document.URL), 'kakaostorysharedialog', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes, height=400,width=600');return false;" target="_blank" alt="Share on kakaostory"><img src="../assets/qrcode/assets/images/sns_kakao.png" width="40" alt="카카오스토리 공유하기"></a>
-                  </li>
+                  <!--<li>-->
+                  <!--  <a href="#" onclick="javascript:window.open('https://story.kakao.com/s/share?url=' +encodeURIComponent(document.URL), 'kakaostorysharedialog');return false;" target="_blank" alt="Share on kakaostory"><img src="../assets/qrcode/assets/images/sns_kakao.png" width="40" alt="카카오스토리 공유하기"></a>-->
+                  <!--</li>-->
                 </ul>
               </div>
-            </div>
-            <button>X</button>
+              <div class='toast'>링크가 복사되었습니다.</div>
+            </section>
+            <footer class="modal-card-foot">
+              <button id="closebtn" class="button">창 닫기</button>
+            </footer>
           </div>
         </div>
       </nav>
@@ -485,51 +490,44 @@
   <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
   <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
   <script>
+    // Current Link
+    const link = document.location.href;
+  
+    // Accordions
     var accordions = bulmaAccordion.attach();
     
-    window.onload = function() {
-      const openButton = document.getElementById("open");
-  		const modal = document.querySelector(".modal");
-  		const overlay = modal.querySelector(".md_overlay");
-  		const closeButton = modal.querySelector("button");
-  		//동작함수
-  		const openModal = () => {
-  			modal.classList.remove("hidden");
-  		}
-  		const closeModal = () => {
-  			modal.classList.add("hidden");
-  		}
-  		//클릭 이벤트
-  		openButton.addEventListener("click", openModal);
-  		closeButton.addEventListener("click", closeModal);
-    };
-    // shareSNS(this);
+    // Modal
+    $("#showModal").click(function() {
+      $(".modal").addClass("is-active");  
+    });
     
-    function shareSNS(a) {
-      var snsCode = $(a).attr('id');
-        var url = "현재페이지 주소";
-        
-        switch(snsCode){
-            case"vIconTw":
-              //트위터
-              url = 'https://twitter.com/intent/tweet?text=페이지제목:&url='+url;
-            break;
-            case"vIconTg":
-              //텔레그램
-              url = 'https://telegram.me/share/url?url='+url;
-            break;
-            case"vIconFb":
-              //페이스북
-              url = 'http://www.facebook.com/sharer/sharer.php?u='+url;
-            break;
-            case"vIconKs":
-              //카카오스토리
-              url = 'https://story.kakao.com/share?url='+url;
-            break;
-        }
-        window.open(url,'','width=600,height=300,top=100,left=100,scrollbars=yes');
+    $("#closetop").click(function() {
+       $(".modal").removeClass("is-active");
+    });
+    
+    $("#closebtn").click(function() {
+       $(".modal").removeClass("is-active");
+    });
+    
+    $(".modal-background").click(function() {
+       $(".modal").removeClass("is-active");
+    });
+    
+    // Copy Link
+    function copyLink() {
+      var textArea = document.createElement("textarea");
+      document.body.appendChild(textArea);
+      textArea.value = link;
+      textArea.select();
+      
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      // Toast Message
+      $('.toast').fadeIn(400).delay(1000).fadeOut(400);
     }
     
+    // Graph
     am4core.ready(function() {
       // Themes begin
       am4core.useTheme(am4themes_animated);
