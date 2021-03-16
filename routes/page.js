@@ -646,17 +646,17 @@ router.get('/pay_list', isNotLoggedIn, async(req, res, next) => {
   const aclist = await Worker.find({ "CID" : CID, "AC" : false });
   const imp_code = process.env.imp_code;
   let page = req.query.page;
-  const MID = req.query.MID;
+  const GN = req.query.GN;
   const IP = process.env.IP;
   
   try {
     const order = await Order.find({ "CID" : CID});
-    if (MID) {
-      const orderone = await Order.find({"MID" : MID});
-      const totalNum = await Order.countDocuments({ "MID": MID });
+    if (GN) {
+      const orderone = await Order.find({"GN" : GN});
+      const totalNum = await Order.countDocuments({ "GN": GN });
       let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-      const orders = await Order.find({ "MID": MID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-      res.render('pay_list', { company: req.decoded, aclist, totalNum, currentPage, totalPage, startPage, endPage, imp_code,IP, orders, MID});
+      const orders = await Order.find({ "GN": GN }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
+      res.render('pay_list', { company: req.decoded, aclist, totalNum, currentPage, totalPage, startPage, endPage, imp_code,IP, orders, GN});
     }
     else {
       try {
@@ -707,6 +707,7 @@ router.get('/receipt', isNotLoggedIn, async(req, res, next) => {
         const paymentData = getPaymentData.data.response; // 조회한 결제 정보
         
         console.log(paymentData);
+        
         
         const orderone = await Order.find({"IID" : imp_uid});
 
