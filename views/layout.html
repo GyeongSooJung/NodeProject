@@ -47,7 +47,7 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<i class="fas fa-lg fa-fw fa-user-circle"></i>
 						<span class="d-none d-md-inline font-weight-bold">{{company.CNA}}</span>
-						<small>(보유 포인트 : <span class="text-primary">{{company.SML}} p</span>)</small>
+						<small class="font-weight-bold">(보유 포인트 : <span id="pointbox" class="text-primary">{{companyone.SPO}} p</span>)</small>
 						<b class="caret"></b>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right">
@@ -213,7 +213,8 @@
 		<!-- end scroll to top btn -->
 	</div>
 	<!-- end page container -->
-	
+
+<script src="/socket.io/socket.io.js"></script>
 <script>
 	// 메뉴 active 기능
 	window.onload = () => {

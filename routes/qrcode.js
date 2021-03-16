@@ -12,24 +12,43 @@ const moment = require('moment');
 
 
 //Mobile QR Code Page
-router.post('/QR', async (req, res, next) => {
-  const {CN} = req.body;
-
+router.get('/qr', async (req, res, next) => {
+  const CN = req.query.cn;
+  const HID = req.query.hid;
   const timenow = moment().format('YYYY-MM-DD HH:mm');
+  
     try {
-      const historyone = await History.findOne({"CNM" : CN}).sort({"ET" : -1}).limit(1);
-      
-      if(historyone) { //historyone.RC == 1
-        const companyone = await Company.findOne({"_id" : historyone.CID});
-        const history_array = await historyone.PD;
+      if(HID){
+        const historyone = await History.findOne({"_id" : HID});
         
-        const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
-        const term = await moment(timenow).diff(et, 'hours');
-        
-        res.render('QR', {companyone, historyone, history_array, term});
+        if(historyone) {
+          const companyone = await Company.findOne({"_id" : historyone.CID});
+          const history_array = await historyone.PD;
+          
+          const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
+          const term = await moment(timenow).diff(et, 'hours');
+          
+          res.render('qr', {companyone, historyone, history_array, term});
+        }
+        else {
+          res.redirect('/mobile_con?&nodata=true');
+        }
       }
       else {
-        res.redirect('/mobile_con?&nodata=true');
+        const historyone = await History.findOne({"CNM" : CN}).sort({"ET" : -1}).limit(1);
+      
+        if(historyone) { //historyone.RC == 1
+          const companyone = await Company.findOne({"_id" : historyone.CID});
+          const history_array = await historyone.PD;
+          
+          const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
+          const term = await moment(timenow).diff(et, 'hours');
+          
+          res.render('qr', {companyone, historyone, history_array, term});
+        }
+        else {
+          res.redirect('/mobile_con?&nodata=true');
+        }
       }
     } catch(err) {
         console.error(err);

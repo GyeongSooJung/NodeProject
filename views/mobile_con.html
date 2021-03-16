@@ -1,86 +1,40 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-	<meta charset="utf-8" />
-	<title>MK QR | Login</title>
-	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
-	<meta content="" name="description" />
-	<meta content="" name="author" />
-	
-	<!-- ================== BEGIN BASE CSS STYLE ================== -->
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-	<link href="../assets/css/default/app.min.css" rel="stylesheet" />
-	<!-- ================== END BASE CSS STYLE ================== -->
-	
-	<link href="../assets/img/favicon.png" rel="icon">
-</head>
-<body class="pace-top">
-	<!-- begin #page-loader -->
-	<div id="page-loader" class="fade show">
-		<span class="spinner"></span>
-	</div>
-	<!-- end #page-loader -->
-	
-	<!-- begin #page-container -->
-	<div id="page-container" class="fade">
-		<!-- begin login -->
-		<div class="login login-v1">
-			<!-- begin login-container -->
-			<div class="login-container">
-				<!-- begin login-header -->
-				<div class="login-header">
-					<div class="brand">
-						<span class="logo bg-blue"></span> <b>OASIS</b> QR
-						<small>QR 코드 페이지</small>
-					</div>
-					<div class="icon">
-						<i class="fa fa-lock"></i>
-					</div>
-				</div>
-				<!-- end login-header -->
-				<!-- begin login-body -->
-				<div class="login-body">
-					<!-- begin login-content -->
-					<div class="login-content">
-						<!--바로 넘어갈때는 get으로-->
-						<form action="/qrcode/QR" method="post" class="margin-bottom-0">
-							<div class="form-group m-b-20">
-								<input id="CN" name = "CN" type="text" class="form-control form-control-lg inverse-mode" placeholder="차량번호" value="{{cn}}" required />
-								<input id="type" name = "type" type="hidden" value="{{type}}" />
-							</div>
-							<div class="login-buttons">
-								<button type="submit" class="btn btn-primary btn-block btn-lg">접속</button>	
-							</div>
-						</form>
-		
-					</div>
-					<!-- end login-content -->
-				</div>
-				<!-- end login-body -->
-			</div>
-			<!-- end login-container -->
-		</div>
-		<!-- end login -->
-		
-		
-		<!-- end theme-panel -->
-		
-		<!-- begin scroll to top btn -->
-		<a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
-		<!-- end scroll to top btn -->
-	</div>
-	<!-- end page container -->
-	
-	<!-- ================== BEGIN BASE JS ================== -->
-	<script src="../assets/js/app.min.js"></script>
-	<script src="../assets/js/theme/default.min.js"></script>
-	<!-- ================== END BASE JS ================== -->
-	<script>
-	window.onload = () => {
-		if (new URL(location.href).searchParams.get('nodata')) {
-			alert('소독이력이 없는 차량입니다.');
-		}
-	};
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OASIS 보이는 소독 시스템</title>
+    <link rel="stylesheet" href="../assets/qrcode/css/main.css" class="css">
+    <script src="https://kit.fontawesome.com/71839e8cce.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div class="wrap-login">
+      <section class="section">
+        <div class="container">
+            <h1>
+              <img src="../assets/qrcode/assets/images/brand-symbol-w.svg" alt="오아시스 심볼" class="is-block mb-10">
+              <img src="../assets/qrcode/assets/images/brand-wordtype.svg" alt="오아시스">
+            </h1>
+            <p class="keymessage">
+              안전이 보이니<br>마음이 놓인다.
+            </p>
+            <form action="/qrcode/qr" method="get">
+              <div class="form-group">
+                <input type="text" name="cn" value="{{cn}}" placeholder="차량 번호를 입력하세요." class="input">
+                <button type="submit" class="button">
+                  소독리포트 보기 <img src="../assets/qrcode/assets/images/chevron_right-24px.svg" alt="" class="ico_arrow-right">
+                </button>
+              </div>
+            </form>
+        </div>
+      </section>
+    </div>
+    <script>
+  		window.onload = () => {
+  			if (new URL(location.href).searchParams.get('nodata')) {
+  				alert('소독이력이 없는 차량입니다.');
+  			}
+  		};
   	</script>
-</body>
+  </body>
 </html>
