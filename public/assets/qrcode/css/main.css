@@ -589,8 +589,10 @@ table th {
 
 /* amchart */
 #chartdiv {
-  width: 100%;
+  width: 120%;
   height: 300px;
+  margin-top: 20px;
+  margin-left: -12%;
 }
 
 /* toast message */
