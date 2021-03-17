@@ -12,7 +12,7 @@ const moment = require('moment');
 
 
 //Mobile QR Code Page
-router.get('/publish', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   const CN = req.query.cn;
   const HID = req.query.hid;
   const timenow = moment().format('YYYY-MM-DD HH:mm');
