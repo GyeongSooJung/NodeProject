@@ -37,6 +37,10 @@ pw : root
   - PORT = 기본 웹포트 (ex. 80)
   - IP = 홈페이지 주소  (ex. http://1.23.45.678)
   - MONGO_IP = mongodb://각 개발IP/admin (ex. mongodb://1.23.45.678:1111/admin)
+  - imp_code = 아임포트 식별자 코드
+  - imp_key = 아임포트 REST API 키
+  - imp_secret = 아임포트 REST API 비밀키
+  - KAKAO = 카카오 개발자 API
 
 ### 공지 사항
 * Cloug9 소스의 README.md 파일을 자주 확인하세요.
