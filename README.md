@@ -87,7 +87,6 @@ pw : root
 소스코드 root 디렉토리에 서버 운영에 유용한 스크립트들이 추가되고 있습니다.
 * show_forever_list.sh: 현재 동작중인 forever 데몬의 리스트를 확인 가능
 * show_log.sh: 현재 동작중인 서버의 로그 정보를 실시간으로 확인 가능
-* 
 
 #### 폴더 소개
 * /config : 환경변수가 저장되있는 폴더
@@ -95,3 +94,12 @@ pw : root
 * /routes : html과 nodeJS간의 Router통신을 위한 폴더
 * /schemas : MongoDB의 DB 스키마 및 DB 연결을 위한 폴더
 * /views : html이 저장되어 있는 폴더
+
+#### 공정 결과 노출
+오아시스의 소독결과는 QR코드나 알림톡 등을 이용해서 외부로 노출할 수 있으며 이 때 사용되는 URL은 다음과 같다.
+* 유입 path: QR코드나 알림톡을 통해 사용자가 접근하는 유입링크용 path => /inflow/
+  - 기본 주소: http://cleanoasis.net/inflow/
+  - 첫번째 link: http://cleanoasis.net/inflow/?cat=1
+
+* 제공 path: QR코드나 알림톡을 통해 접근한 사용자에게 해당 페이지를 제공할 때 사용할 path => /publish/
+  - 기본 주소: http://cleanoasis.net/publish/
