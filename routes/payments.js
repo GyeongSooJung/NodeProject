@@ -79,6 +79,7 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
                         PG : paymentData.pg_provider,
                         PS : paymentData.status,
                     }); // DB에 결제 정보 저장
+                    await Company.update({"_id" : companyone._id}, {$inc : { SPO : service.PO }})
                     res.send({ status: "success", message: "일반 결제 성공" });
                     break;
                 case "cancelled": // 결제 취소

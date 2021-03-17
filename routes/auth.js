@@ -24,7 +24,7 @@ const TokenMake = async function(req,res,next){
   const company = await Company.findOne({"CNU":parseInt(CNU)})// CNU에 맞는 데이터 찾아오기
     //bcrypt 암호화된 PW와 입력 PW 비교
     if(bcrypt.compareSync( PW,company.PW) ){
-       const token = jwt.sign({CNU : company.CNU, CNA : company.CNA, CID : company._id, AH : company.AH, SML : company.SML },// 토큰의 내용(payload)
+       const token = jwt.sign({CNU : company.CNU, CNA : company.CNA, CID : company._id, AH : company.AH },// 토큰의 내용(payload)
         secretObj.secret ,   // 비밀 키
       {expiresIn: '1440m'})  // 유효 시간은 1440분 하루 설정
       res.cookie("token", token); // 쿠키에 token 등록  
