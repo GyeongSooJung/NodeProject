@@ -16,6 +16,7 @@ router.get('/qr', async (req, res, next) => {
   const CN = req.query.cn;
   const HID = req.query.hid;
   const timenow = moment().format('YYYY-MM-DD HH:mm');
+  const kakao = process.env.KAKAO;
   
     try {
       if(HID){
@@ -28,7 +29,7 @@ router.get('/qr', async (req, res, next) => {
           const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
           const term = await moment(timenow).diff(et, 'hours');
           
-          res.render('qr', {companyone, historyone, history_array, term});
+          res.render('qr', {companyone, historyone, history_array, term, kakao});
         }
         else {
           res.redirect('/mobile_con?&nodata=true');
@@ -44,7 +45,7 @@ router.get('/qr', async (req, res, next) => {
           const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
           const term = await moment(timenow).diff(et, 'hours');
           
-          res.render('qr', {companyone, historyone, history_array, term});
+          res.render('qr', {companyone, historyone, history_array, term, kakao});
         }
         else {
           res.redirect('/mobile_con?&nodata=true');
