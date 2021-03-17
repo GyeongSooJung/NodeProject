@@ -525,10 +525,11 @@ exports.root = (req, res) => {
 
 exports.registerSMS = async(req, res) => {
     try {
-       // const { _id, number } = req.body;
+        const historyid = req.body._id;
+        const number = req.body.number;
        
-       const historyid = '6046d067b1d64326737c82bd'
-       const number = '01021128228'
+      // const historyid = '6046d067b1d64326737c82bd'
+       //const number = '01021128228'
        
         const apiKey = 'NCS3UVB461GJGRSG'
         const apiSecret = '8YWUASVQUCDISORWHRPD6JNITLZKTPCO'
@@ -555,7 +556,7 @@ exports.registerSMS = async(req, res) => {
               
               
               const params = [{
-                text: '안녕하세요 '+ companyone.CNA  +'입니다. www.cleanoasis.net/publish?HID=' + historyid, // 문자 내용
+                text: '안녕하세요. www.cleanoasis.net/publish?HID=' + historyid, // 문자 내용
                 type: 'SMS', // 발송할 메시지 타입 (SMS, LMS, MMS, ATA, CTA)
                 to: number, // 수신번호 (받는이)
                 from: '16443486' // 발신번호 (보내는이)
