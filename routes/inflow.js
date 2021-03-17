@@ -16,7 +16,12 @@ router.get('/', async(req, res, next) => {
   var cat = req.query.cat;
   
   try {
-    res.render('inflow', { cn, cat });
+    if(cat) {
+        res.render('inflow', { cn, cat });
+    }
+    else {
+        res.render('error');
+    }
   }
   catch (err) {
     console.error(err);
