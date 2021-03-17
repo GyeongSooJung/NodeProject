@@ -15,6 +15,7 @@ const moment = require('moment');
 router.get('/', async (req, res, next) => {
   const CN = req.query.cn;
   const HID = req.query.hid;
+  const cat = req.query.cat;
   const timenow = moment().format('YYYY-MM-DD HH:mm');
   const kakao = process.env.KAKAO;
   
@@ -32,7 +33,7 @@ router.get('/', async (req, res, next) => {
           res.render('publish', {companyone, historyone, history_array, term, kakao});
         }
         else {
-          res.redirect('/inflow?&nodata=true');
+          res.redirect('/inflow?cat='+cat+'&nodata=true');
         }
       }
       else {
@@ -48,7 +49,7 @@ router.get('/', async (req, res, next) => {
           res.render('publish', {companyone, historyone, history_array, term, kakao});
         }
         else {
-          res.redirect('/inflow?&nodata=true');
+          res.redirect('/inflow?cat='+cat+'&nodata=true');
         }
       }
     } catch(err) {
