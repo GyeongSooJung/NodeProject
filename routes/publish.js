@@ -12,7 +12,7 @@ const moment = require('moment');
 
 
 //Mobile QR Code Page
-router.get('/qr', async (req, res, next) => {
+router.get('/publish', async (req, res, next) => {
   const CN = req.query.cn;
   const HID = req.query.hid;
   const timenow = moment().format('YYYY-MM-DD HH:mm');
@@ -29,10 +29,10 @@ router.get('/qr', async (req, res, next) => {
           const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
           const term = await moment(timenow).diff(et, 'hours');
           
-          res.render('qr', {companyone, historyone, history_array, term, kakao});
+          res.render('publish', {companyone, historyone, history_array, term, kakao});
         }
         else {
-          res.redirect('/mobile_con?&nodata=true');
+          res.redirect('/inflow/?&nodata=true');
         }
       }
       else {
@@ -45,10 +45,10 @@ router.get('/qr', async (req, res, next) => {
           const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
           const term = await moment(timenow).diff(et, 'hours');
           
-          res.render('qr', {companyone, historyone, history_array, term, kakao});
+          res.render('publish', {companyone, historyone, history_array, term, kakao});
         }
         else {
-          res.redirect('/mobile_con?&nodata=true');
+          res.redirect('/inflow/?&nodata=true');
         }
       }
     } catch(err) {

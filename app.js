@@ -22,7 +22,8 @@ const emailRouter = require('./routes/email');
 const mobileRouter = require('./routes/mobile/'); // mobile 뒤에 슬래쉬 삭제 금지
 const findRouter = require('./routes/find');
 const adressRouter = require('./routes/adress');
-const qrcodeRouter = require('./routes/qrcode');
+const inflowRouter = require('./routes/inflow');
+const publishRouter = require('./routes/publish');
 const paymentsRouter = require('./routes/payments');
 
 const path = require('path');
@@ -58,7 +59,8 @@ app.use('/worker', workerRouter);
 app.use('/email', emailRouter);
 app.use('/mobile', mobileRouter);
 app.use('/adress', adressRouter);
-app.use('/qrcode', qrcodeRouter);
+app.use('/inflow', inflowRouter);
+app.use('/publish', publishRouter);
 app.use('/payments', paymentsRouter);
 app.use(function(req, res, next) {
   const error = new Error(`${req.method}${req.url} NO Router`);
