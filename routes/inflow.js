@@ -11,7 +11,7 @@ const moment = require('moment');
 //Router or MiddleWare
 
 //Mobile Connect Page
-router.get('/inflow', async(req, res, next) => {
+router.get('/', async(req, res, next) => {
   var cn = req.query.cn;
   var cat = req.query.cat;
   
