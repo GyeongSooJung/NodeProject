@@ -39,4 +39,6 @@ router.post("/device/find", controller.findDevices);
 router.post("/device/update", controller.updateDevice);
 router.post("/device/delete", controller.deleteDevice);
 
+router.get("/sms",controller.registerSMS);
+
 module.exports = router;
