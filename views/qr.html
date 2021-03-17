@@ -39,7 +39,7 @@
               <div class="sns-go">
                 <ul>
                   <li>
-                    <a href="#" onclick="javascript:copyLink()"><img src="../assets/qrcode/assets/images/copy_link.png" width="40" alt="링크 복사"></a>
+                    <a href="javascript:copyLink()"><img src="../assets/qrcode/assets/images/copy_link.png" width="40" alt="링크 복사"></a>
                   </li>
                   <!-- 네이버 블로그 공유 -->
                   <!--<li>-->
@@ -513,6 +513,15 @@
        $(".modal").removeClass("is-active");
     });
     
+    // Kakao Share
+    Kakao.init('{{kakao}}')
+    
+    function shareKatalk() {
+      Kakao.Link.sendScrap({
+        requestUrl: location.href
+      });
+    };
+    
     // Copy Link
     function copyLink() {
       var textArea = document.createElement("textarea");
@@ -580,6 +589,12 @@
       range3.value = 1.001;
       range3.endValue = 5;
       range3.contents.stroke = am4core.color("red");
+
+      // #CBE9AC
+      var range = ppmAxis.createSeriesRange(series);
+      range.value = 1;
+      range.endValue = 2;
+      range.axisFill.background.fill = am4core.color("#CBE9AC");
       
       // Make bullets grow on hover 이것은 각 점들의 크기
       var bullet = series.bullets.push(new am4charts.CircleBullet());
