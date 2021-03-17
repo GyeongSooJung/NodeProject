@@ -15,6 +15,9 @@ const NO_SUCH_DATA = "NO_SUCH_DATA";
 const FAIL = "FAIL";
 const TOKEN_ERROR = "TOKEN_ERROR";
 
+const { config, Group } = require('solapi')
+
+
 
 
 exports.test = async(req, res, next) => {
@@ -510,13 +513,73 @@ exports.deleteDevice = async(req, res) => {
 
 /// 히스토리 관련
 
-
-
-
 exports.root = (req, res) => {
     var tz = moment.tz.guess();
     console.log(tz);
     res.json({
         result: "hello",
     });
+};
+
+// SMS 관련
+
+exports.registerSMS = async(req, res) => {
+    try {
+       // const { _id, number } = req.body;
+       
+       const historyid = '6046d067b1d64326737c82bd'
+       const number = '01021128228'
+       
+        const apiKey = 'NCS3UVB461GJGRSG'
+        const apiSecret = '8YWUASVQUCDISORWHRPD6JNITLZKTPCO'
+        
+        const historyone = await History.findOne({'_id' : historyid});
+        const companyone = await Company.findOne({'_id' : historyone.CID})
+        var companypoint = companyone.SPO;
+        
+        if(companypoint > 0) {
+        
+            config.init({ apiKey, apiSecret })
+             
+             
+              async function send (params = {}) {
+                try {
+                  const response = await Group.sendSimpleMessage(params)
+                  console.log(response)
+                  Group.deleteGroup(response.groupId);
+                  
+                } catch (e) {
+                  console.log(e)
+                }
+              }
+              
+              
+              const params = [{
+                text: '안녕하세요 '+ companyone.CNA  +'입니다. www.cleanoasis.net/publish?HID=' + historyid, // 문자 내용
+                type: 'SMS', // 발송할 메시지 타입 (SMS, LMS, MMS, ATA, CTA)
+                to: number, // 수신번호 (받는이)
+                from: '16443486' // 발신번호 (보내는이)
+              }]
+              
+              
+              
+              for(var i =0; i < params.length; i ++) {
+              companypoint = companypoint - 1;
+                send(params[i])
+              }
+            
+              
+            const companyone =  await Company.where({'_id' : historyone.CID})
+            .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
+            .exec();
+        }
+        
+        
+            }
+            catch (exception) {
+                res.json({
+                    result: false,
+                    error: UNKOWN,
+                });
+            }
 };
