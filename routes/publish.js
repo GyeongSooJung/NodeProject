@@ -32,7 +32,7 @@ router.get('/', async (req, res, next) => {
           res.render('publish', {companyone, historyone, history_array, term, kakao});
         }
         else {
-          res.redirect('/inflow/?&nodata=true');
+          res.redirect('/inflow?&nodata=true');
         }
       }
       else {
@@ -48,7 +48,7 @@ router.get('/', async (req, res, next) => {
           res.render('publish', {companyone, historyone, history_array, term, kakao});
         }
         else {
-          res.redirect('/inflow/?&nodata=true');
+          res.redirect('/inflow?&nodata=true');
         }
       }
     } catch(err) {
