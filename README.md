@@ -98,6 +98,7 @@ pw : root
 #### 공정 결과 노출
 오아시스의 소독결과는 QR코드나 알림톡 등을 이용해서 외부로 노출할 수 있으며 이 때 사용되는 URL은 다음과 같다.
 * 유입 path: QR코드나 알림톡을 통해 사용자가 접근하는 유입링크용 path => /inflow/
+
 http://cleanoasis.net/inflow/
 * http://cleanoasis.net/inflow/?cat=1 : 첫번째 공유링크
 
