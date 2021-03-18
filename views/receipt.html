@@ -78,7 +78,7 @@
 									<td>
 										<span class="text-inverse">{{paymentData.name}}</span><br />
 									</td>
-									<td class="text-right">${{paymentData.amount}}</td>
+									<td class="text-right">&#8361;{{paymentData.amount}}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -90,19 +90,19 @@
 							<div class="invoice-price-row">
 								<div class="sub-price">
 									<small>구매가격</small>
-									<span class="text-inverse">${{paymentData.amount * (9/10)}}</span>
+									<span class="text-inverse">&#8361;{{paymentData.amount * (9/10)}}</span>
 								</div>
 								<div class="sub-price">
 									<i class="fa fa-plus text-muted"></i>
 								</div>
 								<div class="sub-price">
 									<small>부가세 (10%)</small>
-									<span class="text-inverse">${{paymentData.amount * (1/10)}}</span>
+									<span class="text-inverse">&#8361;{{paymentData.amount * (1/10)}}</span>
 								</div>
 							</div>
 						</div>
 						<div class="invoice-price-right">
-							<small>TOTAL</small> <span class="f-w-600">${{paymentData.amount}}</span>
+							<small>TOTAL</small> <span class="f-w-600">&#8361;{{paymentData.amount}}</span>
 						</div>
 					</div>
 					<!-- end invoice-price -->

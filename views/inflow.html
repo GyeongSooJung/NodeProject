@@ -31,12 +31,18 @@
         </div>
       </section>
     </div>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
     <script>
-  		window.onload = () => {
-  			if (new URL(location.href).searchParams.get('nodata')) {
+  		// window.onload = () => {
+  		// 	if (new URL(location.href).searchParams.get('nodata')) {
+  		// 		alert('소독이력이 없는 차량입니다.');
+  		// 	}
+  		// };
+  		$(window).load(function() {
+  		  if (new URL(location.href).searchParams.get('nodata')) {
   				alert('소독이력이 없는 차량입니다.');
   			}
-  		};
+  		});
   	</script>
   </body>
 </html>

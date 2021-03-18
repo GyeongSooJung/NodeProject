@@ -55,7 +55,7 @@ exports.AdressAdd = async(req, res, next) => {
 exports.DataSet = async(req,res,next)=>{
   try{
      const CID = await req.decoded.CID;
-      req.decoded  = await Company.findOne({"_id" : CID});
+      req.decoded.company  = await Company.findOne({"_id" : CID});
       next();
     
   } catch(err){
