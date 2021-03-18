@@ -556,6 +556,16 @@ router.get('/pay_point', isNotLoggedIn, DataSet, async(req, res, next) => {
   }
 });
 
+router.post('/ajax/check', isNotLoggedIn, DataSet, async(req, res, next) => {
+  var pr = req.body.pr;
+  if(pr) {
+    const serviceone = await Service.findOne({"PR" : pr});
+    console.log(serviceone);
+    
+    res.render('pay_point', { company: req.decoded.company, serviceone });
+  }
+});
+
 //결제 완료 내역
 router.get('/pay_confirm', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
@@ -721,8 +731,8 @@ router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
   const historyid = '6046d067b1d64326737c82bd';
   const number = '01021128228';
        
-  const apiKey = 'NCS3UVB461GJGRSG';
-  const apiSecret = '8YWUASVQUCDISORWHRPD6JNITLZKTPCO';
+  const apiKey = process.env.sol_key;
+  const apiSecret = process.env.sol_secret;
         
   const historyone = await History.findOne({'_id' : historyid});
   const companyone = await Company.findOne({'_id' : historyone.CID});
@@ -773,8 +783,8 @@ router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
 //----------------------------------------------------------------------------//
 //                                  App About                                 //
 //----------------------------------------------------------------------------//
-router.get('/appabout', async(req, res, next) => {
-  res.render('appabout');
+router.get('/aboutapp', async(req, res, next) => {
+  res.render('aboutapp');
 });
 
 

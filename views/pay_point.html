@@ -27,7 +27,7 @@
     		            <div class="d-flex justify-content-center align-items-center flex-wrap">
     		                {% for goods in service %}
     			            <div class="radio-tile">
-    			                <input type="radio" class="radio-btn" name="sms" value="{{goods.PR}}" onclick="check(this.value)" />
+    			                <input type="radio" class="radio-btn" name="sms" value="{{goods.PR}}" />
     				            <div class="radio-text">
     				                <i class="fas fa-4x fa-sms mb-2 icolor"></i>
     				                <p class="mb-2 font-weight-bold">+ {{goods.PO}} point</p>
@@ -102,7 +102,22 @@
         cka.innerHTML = "<span class='text-realred h2 mb-0'>"+goods_amount+"</span>"+" 원";
         ckp.innerHTML = goods_point+" p";
     }
-
+    // $(".radio-btn").on("click", function() {
+    //     var goods_amount = $('input[name=sms]').val();
+    //     $.ajax({
+    //         url: "/ajax/check",
+    //         type: "POST",
+    //         dataType: "JSON",
+    //         data: { "pr" : goods_amount },
+    //         success: function(result) {
+    //             if(result) {
+    //                 console.log(result);
+    //                 $("#check_name").text('안녕');
+    //             }
+    //         }
+    //     })
+    // });
+    
     // 결제 기능
     function payments(objName) {
         var goods = document.getElementsByName(objName);
