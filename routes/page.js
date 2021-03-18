@@ -770,5 +770,12 @@ router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
   }
 });
 
+//----------------------------------------------------------------------------//
+//                                  App About                                 //
+//----------------------------------------------------------------------------//
+router.get('/appabout', async(req, res, next) => {
+  res.render('appabout');
+});
+
 
 module.exports = router;
