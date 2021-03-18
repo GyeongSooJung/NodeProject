@@ -91,7 +91,19 @@
         cka.innerHTML = "<span class='text-realred h2 mb-0'>"+goods_amount+"</span>"+" 원";
         ckp.innerHTML = goods_point+" p";
     }
-
+    // $(".radio-btn").on("click", function() {
+    //     var goods_amount = $('input[name=sms]').val();
+    //     $.ajax({
+    //         url: "/ajax/check",
+    //         type: "POST",
+    //         dataType: "JSON",
+    //         data: { "pr" : goods_amount }
+    //     })
+    //     .done(function (json) {
+    //         $("#check_name").
+    //     })
+    // });
+    
     // 결제 기능
     function payments(objName) {
         var goods = document.getElementsByName(objName);

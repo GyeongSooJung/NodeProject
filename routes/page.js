@@ -721,8 +721,8 @@ router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
   const historyid = '6046d067b1d64326737c82bd';
   const number = '01021128228';
        
-  const apiKey = 'NCS3UVB461GJGRSG';
-  const apiSecret = '8YWUASVQUCDISORWHRPD6JNITLZKTPCO';
+  const apiKey = process.env.sol_key;
+  const apiSecret = process.env.sol_secret;
         
   const historyone = await History.findOne({'_id' : historyid});
   const companyone = await Company.findOne({'_id' : historyone.CID});
