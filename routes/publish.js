@@ -6,7 +6,6 @@ const Device = require('../schemas/device');
 const Car = require('../schemas/car');
 const Worker = require('../schemas/worker');
 const History = require('../schemas/history');
-const QRS = require('../schemas/QR');
 const moment = require('moment');
 //Router or MiddleWare
 
