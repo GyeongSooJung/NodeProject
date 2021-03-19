@@ -678,18 +678,73 @@ router.get('/receipt', isNotLoggedIn, DataSet, async(req, res, next) => {
 //----------------------------------------------------------------------------//
 
 router.get('/sms_send', isNotLoggedIn, DataSet, async(req, res, next) => {
+        const historyid = req.body._id;
+        const number = req.body.number;
+       
+      // const historyid = '6046d067b1d64326737c82bd'
+       //const number = '01021128228'
+       
+        const apiKey = 'NCS3UVB461GJGRSG'
+        const apiSecret = '8YWUASVQUCDISORWHRPD6JNITLZKTPCO'
+        
+        const historyone = await History.findOne({'_id' : historyid});
+        const companyone = await Company.findOne({'_id' : historyone.CID})
+        var companypoint = companyone.SPO;
+        
+        if(companypoint > 0) {
+        
+            config.init({ apiKey, apiSecret })
+             
+             
+              async function send (params = {}) {
+                try {
+                  const response = await Group.sendSimpleMessage(params)
+                  console.log(response)
+                  Group.deleteGroup(response.groupId);
+                  
+                } catch (e) {
+                  console.log(e)
+                }
+              }
+              
+              
+              const params = [{
+                text: '안녕하세요. www.cleanoasis.net/publish?HID=' + historyid, // 문자 내용
+                type: 'SMS', // 발송할 메시지 타입 (SMS, LMS, MMS, ATA, CTA)
+                to: number, // 수신번호 (받는이)
+                from: '16443486' // 발신번호 (보내는이)
+              }]
+              
+              
+              
+              for(var i =0; i < params.length; i ++) {
+              companypoint = companypoint - 1;
+                send(params[i])
+              }
+            
+              
+            const companyone =  await Company.where({'_id' : historyone.CID})
+            .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
+            .exec();
+        }
+        
+});
+
+router.get('/kakao_send', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
 
   try {
-    res.render('sms_send', { company: req.decoded.company, aclist });
+    res.render('repair', { company: req.decoded.company, aclist });
   }
   catch (err) {
     console.error(err);
     next(err);
   }
+  
 });
+
 
 
 //----------------------------------------------------------------------------//
