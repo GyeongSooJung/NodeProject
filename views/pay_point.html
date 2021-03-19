@@ -30,9 +30,9 @@
     			                <input type="radio" class="radio-btn" name="sms" value="{{goods.SN}}" />
     				            <div class="radio-text">
     				                <i class="fas fa-4x fa-sms mb-2 icolor"></i>
-    				                <p class="mb-2 font-weight-bold">+ {{goods.PO}} point</p>
+    				                <p class="mb-2 font-weight-bold">+ <script>document.write(MoneyComma({{goods.PO}}));</script> point</p>
     				                <div class="d-flex justify-content-center align-items-center">
-    				                    <h1 class="mb-0 mr-1">{{goods.PR}}</h1>
+    				                    <h1 class="mb-0 mr-1"><script>document.write(MoneyComma({{goods.PR}}));</script></h1>
         				                <h4 class="mb-0 mt-1">원</h4>
     				                </div>
     				            </div>
@@ -95,8 +95,8 @@
             data: { "SN" : goods_name },
             success: function(result) {
                 $('#check_name').html(result.serviceone.SN);
-                $('#check_point').html(result.serviceone.PO+' p');
-                $('#check_amount').html("<span class='text-realred h2 mb-0'>"+result.serviceone.PR+"</span>"+' 원');
+                $('#check_point').html(MoneyComma(result.serviceone.PO)+' p');
+                $('#check_amount').html("<span class='text-realred h2 mb-0'>"+MoneyComma(result.serviceone.PR)+"</span>"+' 원');
             },
             error: function(request, status, error) {
                 alert("code : "+request.status+"\n"+"message : "+req.responseText+"\n"+"error : "+error)

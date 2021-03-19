@@ -31,8 +31,11 @@
         window.open("/receipt?imp_uid="+imp_code,"pop","width=620, height=700, scrollbars=yes, resizable=yes"); 
         else{
             alert("구매 내용이 잘못되었습니다.");
-        }
-        
-                     
+        }   
     }
     
+    //원화 콤마 표시
+    function MoneyComma(money) {
+        var money = String(money);
+        return money.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+    }
