@@ -545,7 +545,6 @@ router.get('/pay_point', isNotLoggedIn, DataSet, async(req, res, next) => {
   const HOME = process.env.IP;
   
   const service = await Service.find({});
-  console.log("서비스"+service)
 
   try {
     res.render('pay_point', { company: req.decoded.company, aclist, imp_code, HOME, service });
@@ -556,13 +555,31 @@ router.get('/pay_point', isNotLoggedIn, DataSet, async(req, res, next) => {
   }
 });
 
+//알림톡 라디오 버튼 클릭 ajax
 router.post('/ajax/check', isNotLoggedIn, DataSet, async(req, res, next) => {
-  var pr = req.body.pr;
-  if(pr) {
-    const serviceone = await Service.findOne({"PR" : pr});
+  var SN = req.body.SN;
+  if(SN) {
+    const serviceone = await Service.findOne({"SN" : SN});
     console.log(serviceone);
     
-    res.render('pay_point', { company: req.decoded.company, serviceone });
+    res.json({ result: true, serviceone: serviceone });
+  }
+  else {
+    res.json({ result: true });
+  }
+});
+
+//알림톡 결제 ajax
+router.post('/ajax/payment', isNotLoggedIn, DataSet, async(req, res, next) => {
+  var SN = req.body.SN;
+  if(SN) {
+    const serviceone = await Service.findOne({"SN" : SN});
+    console.log(serviceone);
+    
+    res.json({ result: true, serviceone: serviceone, check: true });
+  }
+  else {
+    res.json({ result: true, check: false });
   }
 });
 

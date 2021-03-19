@@ -27,7 +27,7 @@
     		            <div class="d-flex justify-content-center align-items-center flex-wrap">
     		                {% for goods in service %}
     			            <div class="radio-tile">
-    			                <input type="radio" class="radio-btn" name="sms" value="{{goods.PR}}" />
+    			                <input type="radio" class="radio-btn" name="sms" value="{{goods.SN}}" />
     				            <div class="radio-text">
     				                <i class="fas fa-4x fa-sms mb-2 icolor"></i>
     				                <p class="mb-2 font-weight-bold">+ {{goods.PO}} point</p>
@@ -86,56 +86,62 @@
 
 <script>
     // 체크 시 텍스트 반영 기능
-    function check(value) {
-        const ckn = document.getElementById("check_name");
-        const cka = document.getElementById("check_amount");
-        const ckp = document.getElementById("check_point");
-        var goods_name;
-        var goods_amount;
-        var goods_point;
-        
-        if(value == 10000) {
-            goods_name = "문자전송 포인트";
-            goods_amount = 10000;
-            goods_point = 10000;
-        }
-        
-        ckn.innerHTML = goods_name;
-        cka.innerHTML = "<span class='text-realred h2 mb-0'>"+goods_amount+"</span>"+" 원";
-        ckp.innerHTML = goods_point+" p";
-    }
-    // $(".radio-btn").on("click", function() {
-    //     var goods_amount = $('input[name=sms]').val();
-    //     $.ajax({
-    //         url: "/ajax/check",
-    //         type: "POST",
-    //         dataType: "JSON",
-    //         data: { "pr" : goods_amount },
-    //         success: function(result) {
-    //             if(result) {
-    //                 console.log(result);
-    //                 $("#check_name").text('안녕');
-    //             }
-    //         }
-    //     })
-    // });
+    $(".radio-btn").on("click", function() {
+        var goods_name = $('input[name=sms]:checked').val();
+        $.ajax({
+            url: "/ajax/check",
+            type: "POST",
+            dataType: "JSON",
+            data: { "SN" : goods_name },
+            success: function(result) {
+                $('#check_name').html(result.serviceone.SN);
+                $('#check_point').html(result.serviceone.PO+' p');
+                $('#check_amount').html("<span class='text-realred h2 mb-0'>"+result.serviceone.PR+"</span>"+' 원');
+            },
+            error: function(request, status, error) {
+                alert("code : "+request.status+"\n"+"message : "+req.responseText+"\n"+"error : "+error)
+            }
+        })
+    });
     
     // 결제 기능
     function payments(objName) {
-        var goods = document.getElementsByName(objName);
+        // var goods = document.getElementsByName(objName);
         var checktest;
         var goods_name;
         var goods_amount;
         
-        for (var i=0; i<goods.length; i++) {
-            if (goods[i].checked == true) {
-                if(goods[i].value == 10000) {
-                  goods_name = "문자전송 포인트";
-                  goods_amount = 10000;
-                  checktest = true;
-                }
+        // for (var i=0; i<goods.length; i++) {
+        //     if (goods[i].checked == true) {
+        //         if(goods[i].value == 10000) {
+        //           goods_name = "문자전송 포인트";
+        //           goods_amount = 10000;
+        //           checktest = true;
+        //         }
+        //     }
+        // }
+        var goods = $('input[name=sms]:checked');
+        var goods_name = goods.val();
+        console.log(goods_name);
+        $.ajax({
+            url: "/ajax/payment",
+            type: "POST",
+            async: false,
+            dataType: "JSON",
+            data: { "SN" : goods_name },
+            success: function(result) {
+               if(goods_name == result.serviceone.SN) {
+                   goods_name = result.serviceone.SN;
+                   goods_amount = result.serviceone.PR;
+                   checktest = result.check;
+               }
+            },
+            error: function(request, status, error) {
+                alert("code : "+request.status+"\n"+"message : "+req.responseText+"\n"+"error : "+error)
             }
-        }
+        });
+        
+        console.log(checktest);
         
         if(!checktest) {
             return alert("항목을 선택해주세요.");
