@@ -40,36 +40,36 @@ router.post('/register',emailcontrol,async (req, res, next) => {
     return  res.render('register',{NA,CNA,PN,MN, CNU,ADR,CK ,ErrMsg : "잘못된 사업자 등록번호 입니다!"});
   } 
   else{
-  try {
-    const exPN = await Company.findOne({"PN" : PN});
-    if(exPN) {
-      return  res.render('register',{NA,CNA,PN,MN, CNU,ADR,CK ,PNMsg : "가입된 전화번호입니다."});
-    }
-    
-    
-    const exCNU = await Company.findOne({"CNU" : parseInt(CNU)});
-    console.log(exCNU);
-    if (exCNU) {
-     return  res.render('register',{NA,CNA,PN,MN, CNU,ADR,CK ,ErrMsg : "가입된 사업자입니다."});
-    }
-      if(PW ===! PW2 ){
-      return res.render('register',{NA,CNU,CNA,PN,MN,ADR,CK,message : "비밀번호가 다릅니다."});
-    }
-
-    //중복값 생성시 에러 반환
-    //암호화 부분
-    const hash = await bcrypt.hash(PW, 12);
-
-    await Company.create({NA, CNU, CNA, PN, MN, EA,ADR,CK,
-    PW : hash
-    });
-    res.cookie('email',null);
-    res.cookie('authNum',null);
-    return res.redirect('/');
-  } catch (error) {
-    console.error(error);
-    return next(error);
+    try {
+      const exPN = await Company.findOne({"PN" : PN});
+      if(exPN) {
+        return  res.render('register',{NA,CNA,PN,MN, CNU,ADR,CK ,PNMsg : "가입된 전화번호입니다."});
       }
+      
+      
+      const exCNU = await Company.findOne({"CNU" : parseInt(CNU)});
+      console.log(exCNU);
+      if (exCNU) {
+       return  res.render('register',{NA,CNA,PN,MN, CNU,ADR,CK ,ErrMsg : "가입된 사업자입니다."});
+      }
+        if(PW ===! PW2 ){
+        return res.render('register',{NA,CNU,CNA,PN,MN,ADR,CK,message : "비밀번호가 다릅니다."});
+      }
+  
+      //중복값 생성시 에러 반환
+      //암호화 부분
+      const hash = await bcrypt.hash(PW, 12);
+  
+      await Company.create({NA, CNU, CNA, PN, MN, EA,ADR,CK,
+      PW : hash
+      });
+      res.cookie('email',null);
+      res.cookie('authNum',null);
+      return res.redirect('/');
+    } catch (error) {
+      console.error(error);
+      return next(error);
+    }
   }
 });
 

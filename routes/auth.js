@@ -43,10 +43,10 @@ const TokenMake = async function(req,res,next){
 
 
 //login 진행 할경우 토큰 만들어서 cookie에 넣음
-router.post("/login",TokenMake);
+router.post("/login", TokenMake);
 
 //logout시 Browser Cookie 삭제
-router.get("/logout",async function(req,res,next){
+router.get("/logout", async function(req,res,next){
   try{
   await res.cookie("token", req.cookies,{expiresIn:0});
   res.redirect("/");
