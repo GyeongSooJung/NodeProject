@@ -20,7 +20,7 @@ exports.isNotLoggedIn = (req, res, next) => {
       next();   
   } 
     catch(err) {
-        res.redirect('/index') ;//Token 만료시 다시 로그인 페이지로 넘어가게 설정
+        res.redirect('/') ;//Token 만료시 다시 로그인 페이지로 넘어가게 설정
   }
   
 };

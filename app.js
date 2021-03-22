@@ -5,6 +5,7 @@ const nunjucks = require('nunjucks');
 const connect = require('./schemas');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const i18n = require('./i18n');
 // Middle Ware
 //const {TurnBackErr} = require('./routes/middleware')
 //const { isLoggedIn, isNotLoggedIn } = require('./routes/middleware');
@@ -47,7 +48,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-
+app.use(i18n);
 app.use('/', pageRouter);
 app.use('/auth', authRouter);
 app.use('/company', CompanyRouter);
@@ -63,6 +64,7 @@ app.use('/adress', adressRouter);
 app.use('/inflow', inflowRouter);
 app.use('/publish', publishRouter);
 app.use('/payments', paymentsRouter);
+
 app.use(function(req, res, next) {
   const error = new Error(`${req.method}${req.url} NO Router`);
   error.status = 404;
@@ -98,6 +100,6 @@ app.use(function(err, req, res, next) {
 
 const server = app.listen(app.get('port'), function() {
   console.log(app.get('port'), 'Port is Waiting~');
-})
+});
 
 webSocket(server, app, sessionMiddleware);

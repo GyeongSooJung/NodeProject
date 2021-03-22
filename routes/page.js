@@ -20,26 +20,26 @@ const axios = require('axios');
 //                                  기본라우터                                //
 //----------------------------------------------------------------------------//
 
-//홈페이지 연결 및 추가 방법 + cookie 연결 사용방법 : company.CNA or company.CNU
-const Route_page = function(page, req, res) {
-  let pages = "/" + page;
-  router.get(pages, isNotLoggedIn, async(req, res) => {
-    const CID = req.decoded.CID;
-    const aclist = await Worker.find({ "CID": CID, "AC": false });
-    res.render(page, { company: req.decoded, aclist });
-  });
-}
-
 //기본 페이지 설정
+<<<<<<< HEAD
 router.get('/', (req, res, next) => {
   
   res.redirect('main');
+=======
+router.get('/', isLoggedIn, (req, res) => {
+  res.render('index');
 });
 
-// 공통페이지 작성 방법
-Route_page('car_join');
-Route_page('device_join');
-Route_page('ozone_spread');
+router.get('/en', function(req, res) {
+  res.cookie('lang', 'en');
+  res.redirect('/main');
+>>>>>>> 17cfd9590ba9055dc6c8b40c0f0233d4333d29b8
+});
+
+router.get('/ko', function(req, res) {
+  res.cookie('lang', 'ko');
+  res.redirect('/main');
+});
 //----------------------------------------------------------------------------//
 //                                  회원정보                                  //
 //----------------------------------------------------------------------------//
@@ -48,9 +48,7 @@ Route_page('ozone_spread');
 router.get('/login', isLoggedIn, (req, res) => {
   res.render('login', { title: 'Login Website - OASIS' });
 });
-router.get('/index', isLoggedIn, (req, res) => {
-  res.render('index')
-})
+
 router.get('/adress', (req, res) => {
   res.render('adress_pop');
 });
@@ -264,6 +262,14 @@ router.get('/history_static', isNotLoggedIn, DataSet, async(req, res, nex) => {
 //                                  장비                                      //
 //----------------------------------------------------------------------------//
 
+//장비 등록
+router.get('/device_join', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  
+  res.render('device_join', {company: req.decoded.company, aclist});
+});
+
 //장비 수정
 router.get('/device_edit/:MAC', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
@@ -321,6 +327,14 @@ router.get('/device_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 //----------------------------------------------------------------------------//
 //                                  자동차                                    //
 //----------------------------------------------------------------------------//
+
+//차량 등록
+router.get('/car_join', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  
+  res.render('car_join', {company: req.decoded.company, aclist});
+});
 
 //차량 수정
 router.get('/car_edit/:CN', isNotLoggedIn, DataSet, async(req, res, next) => {
@@ -952,6 +966,18 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
 //----------------------------------------------------------------------------//
 router.get('/aboutapp', async(req, res, next) => {
   res.render('aboutapp');
+});
+
+//----------------------------------------------------------------------------//
+//                                  Ozone Spread                              //
+//----------------------------------------------------------------------------//
+
+//Ozone Spread
+router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  
+  res.render('ozone_spread', {company: req.decoded.company, aclist});
 });
 
 

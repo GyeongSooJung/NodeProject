@@ -21,7 +21,7 @@ const smtpTransport = nodemailer.createTransport({
   service: "Gmail",
   auth: {
       user: "mk.manager2020@gmail.com",
-      pass: "showmethemoney"
+      pass: process.env.gmail
   },
   tls: {
       rejectUnauthorized: false
