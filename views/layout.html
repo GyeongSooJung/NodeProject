@@ -2,7 +2,7 @@
 <html lang="kor">
 <head>
 	<meta charset="utf-8" />
-	<title>OASIS | Admin Page</title>
+	<title>{{__('main_title')}}</title>
 	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 	<meta content="" name="description" />
 	<meta content="" name="author" />
@@ -47,7 +47,7 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<i class="fas fa-lg fa-fw fa-user-circle"></i>
 						<span class="d-none d-md-inline font-weight-bold">{{company.CNA}}</span>
-						<small class="font-weight-bold">(보유 포인트 : <span id="pointbox" class="text-primary">{{companyone.SPO}} p</span>)</small>
+						<small class="font-weight-bold">({{__('main_point')}} : <span id="pointbox" class="text-primary">{{company.SPO}} p</span>)</small>
 						<b class="caret"></b>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right">
@@ -56,6 +56,16 @@
 						<a href="/pay_point" class="dropdown-item">포인트 충전</a>
 						<a href="javascript:logout()" class="dropdown-item">로그아웃</a>
 						<a href="javascript:withdrawal()" class="dropdown-item">회원탈퇴</a>
+					</div>
+				</li>
+				<li class="dropdown navbar-user">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						<span class="d-none d-md-inline small font-weight-bold">{{__('main_lang')}}</span>
+						<b class="caret"></b>
+					</a>
+					<div class="dropdown-menu dropdown-menu-right">
+						<a href="/ko" class="dropdown-item">한국어</a>
+						<a href="/en" class="dropdown-item">영어</a>
 					</div>
 				</li>
 			</ul>
@@ -73,7 +83,7 @@
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-fw m-r-10 fa-building"></i>
-							<span> 사업자 </span> 
+							<span> {{__('main_company')}} </span> 
 						</a>
 						<ul class="sub-menu">
 							<li><a href="/company_list">사업자 목록</a></li>
@@ -227,7 +237,7 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
 	// 메뉴 active 기능
-	window.onload = () => {
+	window.addEventListener('load', function() {
 		// $('#active-menu').find('a[href="' + document.location.pathname + '"]').parents('li').addClass('active');
 		var path = document.location.pathname.toString();
 		var cut =  path.split('/');
@@ -245,7 +255,7 @@
 			cut[1] = 'pay_sms';
 		}
 		$('#active-menu').find('a[href="' + '/' + cut[1] + '"]').parents('li').addClass('active');
-	};
+	});
 	
 	// 회원탈퇴 기능
 	function withdrawal() {
