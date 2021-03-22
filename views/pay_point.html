@@ -27,12 +27,12 @@
     		            <div class="d-flex justify-content-center align-items-center flex-wrap">
     		                {% for goods in service %}
     			            <div class="radio-tile">
-    			                <input type="radio" class="radio-btn" name="sms" value="{{goods.SN}}" />
+    			                <input type="radio" class="radio-btn" name="sms" value="{{goods.PR}}" onclick="check(this.value)" />
     				            <div class="radio-text">
     				                <i class="fas fa-4x fa-sms mb-2 icolor"></i>
-    				                <p class="mb-2 font-weight-bold">+ <script>document.write(MoneyComma({{goods.PO}}));</script> point</p>
+    				                <p class="mb-2 font-weight-bold">+ {{goods.PO}} point</p>
     				                <div class="d-flex justify-content-center align-items-center">
-    				                    <h1 class="mb-0 mr-1"><script>document.write(MoneyComma({{goods.PR}}));</script></h1>
+    				                    <h1 class="mb-0 mr-1">{{goods.PR}}</h1>
         				                <h4 class="mb-0 mt-1">원</h4>
     				                </div>
     				            </div>
@@ -63,18 +63,14 @@
 				<!-- end panel-body -->
 			</div>
 			<!-- end panel -->
-			
-			<div class="text-center">
-            <h5 class="mb-1">소독공정 완료 후 업체 고객들에게 SMS 알림을 주는 서비스입니다.</h5>
-            </div>
-            <div class="text-center">
-                <p class="font-weight-bold mb-0">&#8251;환불 규정 및 민원 처리&#8251;</p>
-                <ul class="list-unstyled">
-                    <li>- 본 서비스는 당일 환불이 불가능합니다.</li>
-                    <li>- 결제 후 3개월 이내에 환불이 가능합니다.</li>
-                    <li>- 이용내역이 존재할 경우 환불이 불가능합니다.</li>
-                    <li>- 환불 요청 및 민원 처리나 자세한 문의사항은 mk@mklc.co.kr로 메일부탁드립니다.</li>
-                </ul>
+			<div style="display:flex;">
+			    <div >
+			       본 서비스는 소독공정 완료 후 업체 고객들에게 SMS 알림을 주는 서비스입니다. </br>
+    			※ 환불 규정 및 민원 처리</br>
+                    - 본 서비스는 당일 환불이 불가능 합니다.</br>
+                    - 결제 후 3개월 이내에 환불이 가능합니다.</br>
+                    - 환불 요청 및 민원 처리는 mk@mklc.co.kr 로 메일 부탁드립니다.
+                </div>
             </div>
 		</div>
 	</div>
@@ -86,62 +82,53 @@
 
 <script>
     // 체크 시 텍스트 반영 기능
-    $(".radio-btn").on("click", function() {
-        var goods_name = $('input[name=sms]:checked').val();
-        $.ajax({
-            url: "/ajax/check",
-            type: "POST",
-            dataType: "JSON",
-            data: { "SN" : goods_name },
-            success: function(result) {
-                $('#check_name').html(result.serviceone.SN);
-                $('#check_point').html(MoneyComma(result.serviceone.PO)+' p');
-                $('#check_amount').html("<span class='text-realred h2 mb-0'>"+MoneyComma(result.serviceone.PR)+"</span>"+' 원');
-            },
-            error: function(request, status, error) {
-                alert("code : "+request.status+"\n"+"message : "+req.responseText+"\n"+"error : "+error)
-            }
-        })
-    });
+    function check(value) {
+        const ckn = document.getElementById("check_name");
+        const cka = document.getElementById("check_amount");
+        const ckp = document.getElementById("check_point");
+        var goods_name;
+        var goods_amount;
+        var goods_point;
+        
+        if(value == 10000) {
+            goods_name = "문자전송 포인트";
+            goods_amount = 10000;
+            goods_point = 10000;
+        }
+        
+        ckn.innerHTML = goods_name;
+        cka.innerHTML = "<span class='text-realred h2 mb-0'>"+goods_amount+"</span>"+" 원";
+        ckp.innerHTML = goods_point+" p";
+    }
+    // $(".radio-btn").on("click", function() {
+    //     var goods_amount = $('input[name=sms]').val();
+    //     $.ajax({
+    //         url: "/ajax/check",
+    //         type: "POST",
+    //         dataType: "JSON",
+    //         data: { "pr" : goods_amount }
+    //     })
+    //     .done(function (json) {
+    //         $("#check_name").
+    //     })
+    // });
     
     // 결제 기능
     function payments(objName) {
-        // var goods = document.getElementsByName(objName);
+        var goods = document.getElementsByName(objName);
         var checktest;
         var goods_name;
         var goods_amount;
         
-        // for (var i=0; i<goods.length; i++) {
-        //     if (goods[i].checked == true) {
-        //         if(goods[i].value == 10000) {
-        //           goods_name = "문자전송 포인트";
-        //           goods_amount = 10000;
-        //           checktest = true;
-        //         }
-        //     }
-        // }
-        var goods = $('input[name=sms]:checked');
-        var goods_name = goods.val();
-        console.log(goods_name);
-        $.ajax({
-            url: "/ajax/payment",
-            type: "POST",
-            async: false,
-            dataType: "JSON",
-            data: { "SN" : goods_name },
-            success: function(result) {
-               if(goods_name == result.serviceone.SN) {
-                   goods_name = result.serviceone.SN;
-                   goods_amount = result.serviceone.PR;
-                   checktest = result.check;
-               }
-            },
-            error: function(request, status, error) {
-                alert("code : "+request.status+"\n"+"message : "+req.responseText+"\n"+"error : "+error)
+        for (var i=0; i<goods.length; i++) {
+            if (goods[i].checked == true) {
+                if(goods[i].value == 10000) {
+                  goods_name = "문자전송 포인트";
+                  goods_amount = 10000;
+                  checktest = true;
+                }
             }
-        });
-        
-        console.log(checktest);
+        }
         
         if(!checktest) {
             return alert("항목을 선택해주세요.");
