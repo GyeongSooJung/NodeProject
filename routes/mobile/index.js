@@ -40,5 +40,6 @@ router.post("/device/update", controller.updateDevice);
 router.post("/device/delete", controller.deleteDevice);
 
 router.get("/sms",controller.registerSMS);
+router.get("/kakao",controller.registerKAKAO);
 
 module.exports = router;
