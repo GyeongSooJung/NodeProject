@@ -39,7 +39,7 @@
 						<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-microchip"></i></div>
 						<div class="stats-info">
 							<h4>소독기</h4>
-							<p id="p1">{{devices.length}}</p>	
+							<p id="socket_device">{{devices.length}}</p>	
 						</div>
 						<div class="stats-link">
 							<a href="/device_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
@@ -53,7 +53,7 @@
 						<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-car"></i></div>
 						<div class="stats-info">
 							<h4>자동차</h4>
-							<p id="p2">{{cars.length}}</p>	
+							<p id="socket_car">{{cars.length}}</p>	
 						</div>
 						<div class="stats-link">
 							<a href="/car_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
@@ -67,7 +67,7 @@
 						<div class="stats-icon"><i class="fa fa-users"></i></div>
 						<div class="stats-info">
 							<h4>작업자</h4>
-							<p id="p3">{{workers.length}}</p>	
+							<p id="socket_worker">{{workers.length}}</p>	
 						</div>
 						<div class="stats-link">
 							<a href="/worker_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
@@ -81,7 +81,7 @@
 						<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-history"></i></div>
 						<div class="stats-info">
 							<h4>소독이력</h4>
-							<p id="p4">{{historys.length}}</p>	
+							<p id="socket_history">{{historys.length}}</p>	
 						</div>
 						<div class="stats-link">
 							<a href="/history_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
@@ -202,45 +202,55 @@
 	const socket = io.connect('{{HOME}}', {
 		path: '/socket.io',
 		transports: ['websocket'],
-	})
-  
-  socket.on('newworker', function (data) {
-  	var i,j = 0;
-  	var socket_worker_array = [];
-  	console.log(data);
-    // console.log(data[0]._id);
-	// console.log("{{company.CID}}");
+	});
 	
-	for(i = 0; i < data.length; i++) {
-		if (data[i].CID == "{{company.CID}}") {
-	// console.log(data[i]._id);
-	// {{company.CID}} 는 지금 접속한 사람의 CID를 나타냄
-		
-			socket_worker_array.push(data[i].CID);
+	socket.on('newDevice', function (data) {
+		var socket_new_device = [];
+		for(i = 0; i < data.length; i++) {
+			if(data[i].CID == '{{company._id}}') {
+				socket_new_device.push(data[i]);
+			}
 		}
-	}
-	document.getElementById('p3').innerHTML = socket_worker_array.length;
-    socket.emit('reply', 'HTML 에서 node로 보내는 메세지(작업자 갱신)');
-  });
-  
-  socket.on('newhistory', function (data) {
-  	var i,j = 0;
-  	var socket_worker_array = [];
-  	console.log(data);
-    // console.log(data[0]._id);
-	// console.log("{{company.CID}}");
+		console.log(socket_new_device.length);
+		document.getElementById('socket_device').innerHTML = socket_new_device.length;
+		socket.emit('reply', '소독기 갱신');
+	});
 	
-	for(i = 0; i < data.length; i++) {
-		if (data[i].CID == "{{company.CID}}") {
-	// console.log(data[i]._id);
-	// {{company.CID}} 는 지금 접속한 사람의 CID를 나타냄
-			socket_worker_array.push(data[i].CID);
+	socket.on('newCar', function (data) {
+		var socket_new_car = [];
+		for(i = 0; i < data.length; i++) {
+			if(data[i].CID == '{{company._id}}') {
+				socket_new_car.push(data[i]);
+			}
 		}
-	}
-	document.getElementById('p4').innerHTML = socket_worker_array.length;
-    socket.emit('reply', 'HTML 에서 node로 보내는 메세지(히스토리 갱신)');
-  });
-  
+		console.log(socket_new_car.length);
+		document.getElementById('socket_car').innerHTML = socket_new_car.length;
+		socket.emit('reply', '자동차 갱신');
+	});
+	
+	socket.on('newWorker', function (data) {
+		var socket_new_worker = [];
+		for(i = 0; i < data.length; i++) {
+			if(data[i].CID == '{{company._id}}') {
+				socket_new_worker.push(data[i]);
+			}
+		}
+		console.log(socket_new_worker.length);
+		document.getElementById('socket_worker').innerHTML = socket_new_worker.length;
+		socket.emit('reply', '작업자 갱신');
+	});
+	
+	socket.on('newHistory', function (data) {
+		var socket_new_history = [];
+		for(i = 0; i < data.length; i++) {
+			if(data[i].CID == '{{company._id}}') {
+				socket_new_history.push(data[i]);
+			}
+		}
+		console.log(socket_new_history.length);
+		document.getElementById('socket_history').innerHTML = socket_new_history.length;
+		socket.emit('reply', '소독이력 갱신');
+	});
 </script>
 
 <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
