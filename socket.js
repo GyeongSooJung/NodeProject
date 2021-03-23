@@ -4,7 +4,7 @@ const Device = require('./schemas/device');
 const Car = require('./schemas/car');
 const Worker = require('./schemas/worker');
 const History = require('./schemas/history');
-const QR = require('./schemas/qr');
+const Publish = require('./schemas/publish');
 const jwt = require('jsonwebtoken');
 const secretObj = require("./config/jwt");
 
