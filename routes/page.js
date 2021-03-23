@@ -808,6 +808,9 @@ router.get('/repair', isNotLoggedIn, DataSet, async(req, res, next) => {
 
 
 router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
+  
+        const historyid = '6046d067b1d64326737c82bd';
+        const number = '01021128228';
    
     
         let apiSecret = process.env.sol_secret;
@@ -827,9 +830,6 @@ router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
         const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
     
         var request = require('request');
-        
-        const historyid = '6046d067b1d64326737c82bd';
-        const number = '01021128228';
        
       // const historyid = '6046d067b1d64326737c82bd'
        //const number = '01021128228'
@@ -879,7 +879,8 @@ router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
 
 router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
         
-        
+        const historyid = '60596b85e6449d194e5bb8a7';
+        const number = '01021128228';
     
         let apiSecret = process.env.sol_secret;
         let apiKey = process.env.sol_key;
@@ -899,11 +900,7 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
     
         var request = require('request');
         
-        const historyid = '6045f060b1d64326737c82bb';
-        const number = '01021128228';
-        
         const historyone = await History.findOne({'_id' : historyid});
-        console.log(historyone);
         const companyone = await Company.findOne({'_id' : historyone.CID})
         var companypoint = companyone.SPO;
         
