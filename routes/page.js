@@ -8,6 +8,7 @@ const Worker = require('../schemas/worker');
 const History = require('../schemas/history');
 const Order = require('../schemas/order');
 const Service = require('../schemas/service');
+const QR = require('../schemas/qr');
 
 const moment = require('moment');
 //Router or MiddleWare
@@ -129,6 +130,15 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
   const devices = await Device.find({ "CID": req.decoded.CID });
   const cars = await Car.find({ "CID": req.decoded.CID });
   const workers = await Worker.find({ "CID": req.decoded.CID });
+  const qrs = await QR.find({});
+  
+  var qrsum = 0;
+  for(var i = 0; i < qrs.length; i++) {
+    var qrcount = qrs[i].QRN;
+    console.log("카운트"+qrcount);
+    
+    qrsum += qrcount;
+  }
 
   const Days = await 24 * 60 * 60 * 1000;
   const h1 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now(), $gte: (Date.now() - Days) } });
@@ -146,10 +156,10 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
   console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" + aclist);
   if (history_array) {
     const recent_history = history_array.PD;
-    res.render('main', { company: req.decoded.company, aclist, devices, cars, workers, historys, recent_history, history_array, history_count, HOME });
+    res.render('main', { company: req.decoded.company, aclist, devices, cars, workers, historys, recent_history, history_array, history_count, HOME, qrsum });
   }
   else {
-    res.render('main', { company: req.decoded.company, aclist, devices, cars, workers, historys, history_array, history_count, HOME });
+    res.render('main', { company: req.decoded.company, aclist, devices, cars, workers, historys, history_array, history_count, HOME, qrsum });
   }
 
 
