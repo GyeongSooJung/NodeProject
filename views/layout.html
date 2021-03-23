@@ -10,6 +10,7 @@
 	<!-- ================== BEGIN BASE CSS STYLE ================== -->
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
 	<link href="../assets/css/default/app.min.css" rel="stylesheet" />
+	<link href="../assets/plugins/flag-icon-css/css/flag-icon.min.css" rel="stylesheet" />
 	<!-- ================== END BASE CSS STYLE ================== -->
 	
 	{% block css %}
@@ -59,13 +60,12 @@
 					</div>
 				</li>
 				<li class="dropdown navbar-user">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<span class="d-none d-md-inline small font-weight-bold">{{__('main_lang')}}</span>
-						<b class="caret"></b>
+					<a href="#" class="dropdown-toggle mr-3" data-toggle="dropdown">
+						<h2 class="flag-icon flag-icon-kr width-full m-r-10 m-t-0 m-b-3 px-1" title="kr" id="flag"></h2>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right">
-						<a href="/ko" class="dropdown-item">한국어</a>
-						<a href="/en" class="dropdown-item">영어</a>
+						<a href="/ko" class="dropdown-item"><span class="flag-icon flag-icon-kr mr-2 px-1" title="kr" id="kr"></span>한국어 (기본)</a>
+						<a href="/en" class="dropdown-item"><span class="flag-icon flag-icon-us mr-2" title="us" id="us"></span>영어</a>
 					</div>
 				</li>
 			</ul>

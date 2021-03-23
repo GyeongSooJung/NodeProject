@@ -34,6 +34,16 @@ router.get('/ko', function(req, res) {
   res.cookie('lang', 'ko');
   res.redirect('/main');
 });
+
+router.get('/en_index', function(req, res) {
+  res.cookie('lang', 'en');
+  res.redirect('/');
+});
+
+router.get('/ko_index', function(req, res) {
+  res.cookie('lang', 'ko');
+  res.redirect('/');
+});
 //----------------------------------------------------------------------------//
 //                                  회원정보                                  //
 //----------------------------------------------------------------------------//
