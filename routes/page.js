@@ -818,6 +818,9 @@ router.get('/repair', isNotLoggedIn, DataSet, async(req, res, next) => {
 
 
 router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
+  
+        const historyid = '6046d067b1d64326737c82bd';
+        const number = '01021128228';
    
     
         let apiSecret = process.env.sol_secret;
@@ -837,9 +840,6 @@ router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
         const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
     
         var request = require('request');
-        
-        const historyid = '6046d067b1d64326737c82bd';
-        const number = '01021128228';
        
       // const historyid = '6046d067b1d64326737c82bd'
        //const number = '01021128228'
@@ -888,7 +888,9 @@ router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
-   
+        
+        const historyid = '60596b85e6449d194e5bb8a7';
+        const number = '01021128228';
     
         let apiSecret = process.env.sol_secret;
         let apiKey = process.env.sol_key;
@@ -908,9 +910,6 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
     
         var request = require('request');
         
-        const historyid = '6046d067b1d64326737c82bd';
-        const number = '01021128228';
-        
         const historyone = await History.findOne({'_id' : historyid});
         const companyone = await Company.findOne({'_id' : historyone.CID})
         var companypoint = companyone.SPO;
@@ -923,10 +922,10 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
             body: {
               messages: [
                 {
-                  to: '01021128228',
+                  to: number,
                   from: '16443486',
                   text:
-                    "#{홍길동}님이 요청하신 출금 요청 처리가 완료되어 아래 정보로 입금 처리되었습니다. #{입금정보} 관련하여 문의 있으시다면'1:1문의하기'를이용부탁드립니다. 감사합니다.",
+                    companyone.CNA + "에서 소독이 완료되었음을 알려드립니다. 자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
                   type: 'ATA',
                   kakaoOptions: {
                     pfId: 'KA01PF210319072804501wAicQajTRe4',
@@ -934,8 +933,9 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
                     buttons: [
                       {
                         buttonType: 'WL',
-                        buttonName: '1:1문의',
-                        linkMo: 'https://www.example.com'
+                        buttonName: '확인하기',
+                        linkMo: 'http://www.cleanoasis.net/publish?cat=1&hid=' + historyid,
+                        linkPc: 'http://www.cleanoasis.net/publish?cat=1&hid=' + historyid
                       }
                     ]
                   }
