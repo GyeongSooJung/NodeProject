@@ -21,7 +21,11 @@ const axios = require('axios');
 //----------------------------------------------------------------------------//
 
 //기본 페이지 설정
+<<<<<<< HEAD
 router.get('/', isLoggedIn, (req, res) => {
+=======
+router.get('/', (req, res, next) => {
+>>>>>>> e49775b44117b43664609c1557390c0575c6e3cf
   res.render('index');
 });
 
