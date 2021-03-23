@@ -19,19 +19,11 @@ router.get('/', async (req, res, next) => {
   const timenow = moment().format('YYYY-MM-DD HH:mm');
   const kakao = process.env.KAKAO;
   
-  const publish = await Publish.findOne({"PUC" : cat});
-  
     try {
       if(HID){
         const historyone = await History.findOne({"_id" : HID});
         if(historyone) {
-          if(publish) {
-            await Publish.update({"PUC" : cat}, {$inc : {"PUN" : 1}});
-          }
-          else {
-            await Publish.create({"PUC" : cat});
-            await Publish.update({"PUC" : cat}, {$inc : {"PUN" : 1}});
-          }
+          await Publish.update({"PUC" : cat}, {$inc : {"PUN" : 1}}, {upsert: true});
           
           const companyone = await Company.findOne({"_id" : historyone.CID});
           const history_array = await historyone.PD;
@@ -49,13 +41,7 @@ router.get('/', async (req, res, next) => {
         const historyone = await History.findOne({"CNM" : CN}).sort({"ET" : -1}).limit(1);
       
         if(historyone) { //historyone.RC == 1
-          if(publish) {
-            await Publish.update({"PUC" : cat}, {$inc : {"PUN" : 1}});
-          }
-          else {
-            await Publish.create({"PUC" : cat});
-            await Publish.update({"PUC" : cat}, {$inc : {"PUN" : 1}});
-          }
+          await Publish.update({"PUC" : cat}, {$inc : {"PUN" : 1}}, {upsert: true});
           
           const companyone = await Company.findOne({"_id" : historyone.CID});
           const history_array = await historyone.PD;
