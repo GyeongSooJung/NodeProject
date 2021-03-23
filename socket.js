@@ -4,7 +4,7 @@ const Device = require('./schemas/device');
 const Car = require('./schemas/car');
 const Worker = require('./schemas/worker');
 const History = require('./schemas/history');
-const QR = require('./schemas/qr');
+const Publish = require('./schemas/publish');
 const jwt = require('jsonwebtoken');
 const secretObj = require("./config/jwt");
 
@@ -38,13 +38,13 @@ module.exports = (server) => {
       const socket_car = await Car.find({});
       const socket_worker = await Worker.find({});
       const socket_history = await History.find({});
-      const socket_qr = await QR.find({});
+      const socket_publish = await Publish.find({});
       
       socket.emit('newDevice', socket_device);
       socket.emit('newCar', socket_car);
       socket.emit('newWorker', socket_worker);
       socket.emit('newHistory', socket_history);
-      socket.emit('newQR', socket_qr);
+      socket.emit('newPublish', socket_publish);
       
     }, 60000);
     
