@@ -900,7 +900,7 @@ router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
         
         const historyid = '60596b85e6449d194e5bb8a7';
-        const number = '01090309615';
+        const number = '01023452379';
     
         let apiSecret = process.env.sol_secret;
         let apiKey = process.env.sol_key;
