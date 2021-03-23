@@ -149,28 +149,29 @@
 				</div>
 				<!-- end col-8 -->
 				<!-- begin col-4 -->
-				<div class="col-xl-4">
+				<div class="col-xl-4 align-self-start">
 					<!-- begin panel -->
 					<!-- 막대그래프 만들곳 시작점 -->
 					<div class="panel panel-inverse" data-sortable-id="index-6">
 						<div class="panel-heading">
 							<h4 class="panel-title">최근 일주일간 소독 횟수</h4>
 						</div>
-						<div class="table-responsive">
-							<table class="table table-valign-middle table-panel mb-0">
-								<thead>
-
-								</thead>
-								<tbody>
-									<tr>
-										<div id="first week" style ="height : 300px"></div>
-									</tr>
-
-								</tbody>
-							</table>
+						<div class="panel-body">
+							<div id="first week" class="height-sm"></div>
 						</div>
 					</div>
 					<!-- 막대그래프 끝 -->
+					<!-- QR코드 방문자 수 -->
+					{% if(company.AH == true) %}
+					<div class="panel panel-inverse" data-sortable-id="index-6">
+						<div class="panel-heading">
+							<h4 class="panel-title">QR코드 총 접속 수</h4>
+						</div>
+						<div class="panel-body">
+							<h3 id="socket_qr" class="mb-0 ml-3">{{qrsum}}</h3>
+						</div>
+					</div>
+					{% endif %}
 					<!-- end panel -->
 				</div>
 				<!-- end col-4 -->

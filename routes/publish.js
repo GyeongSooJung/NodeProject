@@ -6,6 +6,7 @@ const Device = require('../schemas/device');
 const Car = require('../schemas/car');
 const Worker = require('../schemas/worker');
 const History = require('../schemas/history');
+const QR = require('../schemas/qr');
 const moment = require('moment');
 //Router or MiddleWare
 
@@ -18,11 +19,20 @@ router.get('/', async (req, res, next) => {
   const timenow = moment().format('YYYY-MM-DD HH:mm');
   const kakao = process.env.KAKAO;
   
+  const qr = await QR.findOne({"QRC" : cat});
+  
     try {
       if(HID){
         const historyone = await History.findOne({"_id" : HID});
-        
         if(historyone) {
+          if(qr) {
+            await QR.update({"QRC" : cat}, {$inc : {"QRN" : 1}});
+          }
+          else {
+            await QR.create({"QRC" : cat});
+            await QR.update({"QRC" : cat}, {$inc : {"QRN" : 1}});
+          }
+          
           const companyone = await Company.findOne({"_id" : historyone.CID});
           const history_array = await historyone.PD;
           
@@ -39,6 +49,14 @@ router.get('/', async (req, res, next) => {
         const historyone = await History.findOne({"CNM" : CN}).sort({"ET" : -1}).limit(1);
       
         if(historyone) { //historyone.RC == 1
+          if(qr) {
+            await QR.update({"QRC" : cat}, {$inc : {"QRN" : 1}});
+          }
+          else {
+            await QR.create({"QRC" : cat});
+            await QR.update({"QRC" : cat}, {$inc : {"QRN" : 1}});
+          }
+          
           const companyone = await Company.findOne({"_id" : historyone.CID});
           const history_array = await historyone.PD;
           
