@@ -900,7 +900,7 @@ router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
         
         const historyid = '60596b85e6449d194e5bb8a7';
-        const number = '01021128228';
+        const number = '01023452379';
     
         let apiSecret = process.env.sol_secret;
         let apiKey = process.env.sol_key;
@@ -938,6 +938,7 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
                     companyone.CNA + "에서 소독이 완료되었음을 알려드립니다. 자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
                   type: 'ATA',
                   kakaoOptions: {
+                    disableSms: true,
                     pfId: 'KA01PF210319072804501wAicQajTRe4',
                     templateId: 'KA01TP210319074611283wL0AjgZVdog',
                     buttons: [
