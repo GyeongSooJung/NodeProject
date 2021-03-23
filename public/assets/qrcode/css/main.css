@@ -587,6 +587,8 @@ table th {
   }
 }
 
+/* Start Custom */
+
 /* amchart */
 #chartdiv {
   width: 120%;
@@ -630,6 +632,8 @@ table th {
 .sns-go li img {
   border-radius:50%;
 }
+
+/* End Custom */
 
 /* Bulma Elements */
 .box {
