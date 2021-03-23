@@ -1,6 +1,7 @@
 {
     "main_title": "OASIS | Admin Page",
     "main_point": "point",
-	"main_lang": "Language",
+	"main_lang_kr": "Korean (Basic)",
+	"main_lang_en": "English",
 	"main_company": "Company"
 }
