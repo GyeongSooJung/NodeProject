@@ -21,7 +21,6 @@ router.get('/', async (req, res, next) => {
     try {
       if(HID){
         const historyone = await History.findOne({"_id" : HID});
-        
         if(historyone) {
           const companyone = await Company.findOne({"_id" : historyone.CID});
           const history_array = await historyone.PD;

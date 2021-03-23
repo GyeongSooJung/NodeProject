@@ -61,11 +61,11 @@
 				</li>
 				<li class="dropdown navbar-user">
 					<a href="#" class="dropdown-toggle mr-3" data-toggle="dropdown">
-						<h2 class="flag-icon flag-icon-kr width-full m-r-10 m-t-0 m-b-3 px-1" title="kr" id="flag"></h2>
+						<h2 class="flag-icon flag-icon-kr width-full m-r-10 m-t-0 m-b-3 px-1" id="flag"></h2>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right">
-						<a href="/ko" class="dropdown-item"><span class="flag-icon flag-icon-kr mr-2 px-1" title="kr" id="kr"></span>한국어 (기본)</a>
-						<a href="/en" class="dropdown-item"><span class="flag-icon flag-icon-us mr-2" title="us" id="us"></span>영어</a>
+						<a href="/ko" class="dropdown-item" onclick="changeFlag('kr')"><span class="flag-icon flag-icon-kr mr-2 px-1" title="kr" id="kr"></span>한국어 (기본)</a>
+						<a href="/en" class="dropdown-item" onclick="changeFlag('us')"><span class="flag-icon flag-icon-us mr-2 px-1" title="us" id="us"></span>영어</a>
 					</div>
 				</li>
 			</ul>
@@ -256,6 +256,9 @@
 		}
 		$('#active-menu').find('a[href="' + '/' + cut[1] + '"]').parents('li').addClass('active');
 	});
+	
+	// 언어 변경시 국기 변환 기능
+	// if()
 	
 	// 회원탈퇴 기능
 	function withdrawal() {
