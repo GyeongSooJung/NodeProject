@@ -165,10 +165,10 @@
 					{% if(company.AH == true) %}
 					<div class="panel panel-inverse" data-sortable-id="index-6">
 						<div class="panel-heading">
-							<h4 class="panel-title">QR코드 누적 조회 수</h4>
+							<h4 class="panel-title">QR페이지 누적 조회 수</h4>
 						</div>
 						<div class="panel-body">
-							<h3 id="socket_qr" class="mb-0 ml-3">{{qrsum}}</h3>
+							<h3 id="socket_publish" class="mb-0 ml-3">{{psum}}</h3>
 						</div>
 					</div>
 					{% endif %}
@@ -253,15 +253,15 @@
 		socket.emit('reply', '소독이력 갱신');
 	});
 	
-	socket.on('newQR', function (data) {
-		var qrsum = 0;
+	socket.on('newPublish', function (data) {
+		var psum = 0;
 		for(var i = 0; i < data.length; i++) {
-			var qrcount = data[i].QRN;
-			qrsum += qrcount;
+			var pcount = data[i].PUN;
+			psum += pcount;
 		}
-		console.log(qrsum);
-		document.getElementById('socket_qr').innerHTML = qrsum;
-		socket.emit('reply', 'QR 누적 조회 갱신');
+		console.log(psum);
+		document.getElementById('socket_publish').innerHTML = psum;
+		socket.emit('reply', 'Publish 누적 조회 갱신');
 	});
 </script>
 
