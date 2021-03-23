@@ -165,7 +165,7 @@
 					{% if(company.AH == true) %}
 					<div class="panel panel-inverse" data-sortable-id="index-6">
 						<div class="panel-heading">
-							<h4 class="panel-title">QR코드 총 접속 수</h4>
+							<h4 class="panel-title">QR코드 누적 조회 수</h4>
 						</div>
 						<div class="panel-body">
 							<h3 id="socket_qr" class="mb-0 ml-3">{{qrsum}}</h3>
@@ -219,7 +219,7 @@
 	
 	socket.on('newCar', function (data) {
 		var socket_new_car = [];
-		for(i = 0; i < data.length; i++) {
+		for(var i = 0; i < data.length; i++) {
 			if(data[i].CID == '{{company._id}}') {
 				socket_new_car.push(data[i]);
 			}
@@ -231,7 +231,7 @@
 	
 	socket.on('newWorker', function (data) {
 		var socket_new_worker = [];
-		for(i = 0; i < data.length; i++) {
+		for(var i = 0; i < data.length; i++) {
 			if(data[i].CID == '{{company._id}}') {
 				socket_new_worker.push(data[i]);
 			}
@@ -243,7 +243,7 @@
 	
 	socket.on('newHistory', function (data) {
 		var socket_new_history = [];
-		for(i = 0; i < data.length; i++) {
+		for(var i = 0; i < data.length; i++) {
 			if(data[i].CID == '{{company._id}}') {
 				socket_new_history.push(data[i]);
 			}
@@ -251,6 +251,17 @@
 		console.log(socket_new_history.length);
 		document.getElementById('socket_history').innerHTML = socket_new_history.length;
 		socket.emit('reply', '소독이력 갱신');
+	});
+	
+	socket.on('newQR', function (data) {
+		var qrsum = 0;
+		for(var i = 0; i < data.length; i++) {
+			var qrcount = data[i].QRN;
+			qrsum += qrcount;
+		}
+		console.log(qrsum);
+		document.getElementById('socket_qr').innerHTML = qrsum;
+		socket.emit('reply', 'QR 누적 조회 갱신');
 	});
 </script>
 
