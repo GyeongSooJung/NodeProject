@@ -11,6 +11,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
 	<link href="../assets/css/one-page-parallax/app.min.css" rel="stylesheet" />
 	<link href="../assets/css/one-page-parallax/theme/blue.min.css" rel="stylesheet" />
+	<link href="../assets/plugins/flag-icon-css/css/flag-icon.min.css" rel="stylesheet" />
 	<!-- ================== END BASE CSS STYLE ================== -->
 	
 	<link href="../assets/img/favicon.png" rel="icon">
@@ -46,6 +47,13 @@
 						<li class="nav-item"><a class="nav-link" href="#team" data-click="scroll-to-target">팀원</a></li>
 						<li class="nav-item"><a class="nav-link" href="#service" data-click="scroll-to-target">서비스</a></li>
 						<!--<li class="nav-item"><a class="nav-link" href="#pricing" data-click="scroll-to-target">제품 가격</a></li>-->
+						<li class="dropdown nav-item">
+							<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" id="select-lang"></a>
+							<div class="dropdown-menu dropdown-menu-right">
+								<a href="/ko" class="dropdown-item text-white"><span class="flag-icon flag-icon-kr mr-2 px-1" title="kr" id="kr"></span>{{__('lang_kr')}}</a>
+								<a href="/en" class="dropdown-item text-white"><span class="flag-icon flag-icon-us mr-2 px-1" title="us" id="us"></span>{{__('lang_en')}}</a>
+							</div>
+						</li>
 					</ul>
 				</div>
 				<!-- end navbar-collapse -->
@@ -550,6 +558,29 @@
 		<!-- end #footer -->
 	</div>
 	<!-- end #page-container -->
+	
+	<script>
+		window.addEventListener('load', function() {
+			// 언어 변경시 국기 변환 기능
+			var cookie = document.cookie;
+			var startIndexOf = cookie.indexOf('lang');
+			var endIndexOf = cookie.indexOf(';',startIndexOf);
+			if(endIndexOf == -1)endIndexOf = cookie.length; //맨끝일경우;가 없으므로 맨마지막자리를 가져온다.
+			
+			const sl = document.getElementById('select-lang');
+			var lang = cookie.substring(startIndexOf+'lang='.length, endIndexOf);
+			console.log(lang);
+			if(lang == 'ko') {
+				sl.innerHTML = "한국어";
+			}
+			else if(lang == 'en') {
+				sl.innerHTML = "영어";
+			}
+			else {
+				sl.innerHTML = "한국어";
+			}
+		});
+	</script>
 	
 	<!-- ================== BEGIN BASE JS ================== -->
 	<script src="../assets/js/one-page-parallax/app.min.js"></script>
