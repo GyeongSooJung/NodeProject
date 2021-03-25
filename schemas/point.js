@@ -10,7 +10,6 @@ const PointSchema = new Schema({
     },//Point Name
     PN: {
         type: String,
-        unique: true
     },//Point
     PO: {
         type: Number

@@ -749,10 +749,10 @@ router.get('/point_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 
         const totalNum = await Point.countDocuments({ "CID": CID });
         let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-        const Points = await Point.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-        console.log(Points);
+        const points = await Point.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
+        console.log(points);
   
-        res.render('point_list', { company: req.decoded.company, aclist, totalNum, currentPage, totalPage, startPage, endPage,IP, Points });
+        res.render('point_list', { company: req.decoded.company, aclist, totalNum, currentPage, totalPage, startPage, endPage,IP, points });
 
   }
   catch(err) {
@@ -906,6 +906,7 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
                         buttonType: 'WL',
                         buttonName: '확인하기',
                         linkMo: 'http://www.cleanoasis.net/publish?cat=1&hid=' + historyid,
+                        linkPc: 'http://www.cleanoasis.net/publish?cat=1&hid=' + historyid
                       }
                     ]
                   }
@@ -916,35 +917,50 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
             json: true,
             url: 'http://api.solapi.com/messages/v4/send-many'
           };
-
-        var messageID = "";
-        
-         request(options, function(error, response, body) {
-          if (error)
-          {
-            throw error;
-          }else{
+          
+        request(options, function(error, response, body) {
+          if (error) throw error;
           console.log('result :', body);
-          messageID = body._id;
           
-          }
+        }); 
+        
+            console.log("@@@@@@@@@@@@@@@@@@@@")
+          const pointone = await Point.insertMany({
+            "CID" : companyone._id,
+            "PN" : "알림톡 전송",
+            "PO" : 20,
+          });
           
-          var options2 = {
-            headers: {
-              Authorization:
-                autori
-            },
-            method: 'GET',
-            json: true,
-            url:
-              'http://api.solapi.com/messages/v4/list?criteria=messageId&value='+messageID+'&cond=eq'
-          };
           
-            request(options2, function(error, response, body) {
-              if (error) throw error;
-              console.log('result :', body);
-            });
-        });     
+
+        // var messageID = "";
+        
+        // request(options, function(error, response, body) {
+        //   if (error)
+        //   {
+        //     throw error;
+        //   }else{
+        //   console.log('result :', body);
+        //   messageID = body._id;
+          
+        //   }
+          
+        //   var options2 = {
+        //     headers: {
+        //       Authorization:
+        //         autori
+        //     },
+        //     method: 'GET',
+        //     json: true,
+        //     url:
+        //       'http://api.solapi.com/messages/v4/list?criteria=messageId&value='+messageID+'&cond=eq'
+        //   };
+          
+        //     request(options2, function(error, response, body) {
+        //       if (error) throw error;
+        //       console.log('result :', body);
+        //     });
+        // });     
           console.log(companypoint);
          companypoint = companypoint - 20;
           console.log(companypoint);
@@ -953,11 +969,8 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
             .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
             .exec();
             
-          const pointone = await Point.insertMany({
-            "CID" : companyone.CID,
-            "PN" : "알림톡 전송",
-            "PO" : 20,
-          });
+            
+          
     
 });
 
