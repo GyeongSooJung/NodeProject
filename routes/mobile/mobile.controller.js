@@ -531,7 +531,7 @@ exports.registerSMS = async(req, res) => {
             const historyid = _id;
             const number = num;
             
-             let apiSecret = process.env.sol_secret;
+            let apiSecret = process.env.sol_secret;
             let apiKey = process.env.sol_key;
       
             const moment = require('moment')
@@ -614,7 +614,7 @@ exports.registerKAKAO = async(req, res) => {
             const historyid = _id;
             const number = num;
             
-             let apiSecret = process.env.sol_secret;
+            let apiSecret = process.env.sol_secret;
             let apiKey = process.env.sol_key;
       
             const moment = require('moment')

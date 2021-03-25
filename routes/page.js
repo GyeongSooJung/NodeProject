@@ -896,11 +896,12 @@ router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
         
     
 });
-
+//01079277544
 router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
         
-        const historyid = '60596b85e6449d194e5bb8a7';
-        const number = '01023452379';
+        const historyid = '605aec074164b23448038c2d';
+        const number = '01021128228';
+        const comname = '롯데렌터카';
     
         let apiSecret = process.env.sol_secret;
         let apiKey = process.env.sol_key;
@@ -935,7 +936,7 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
                   to: number,
                   from: '16443486',
                   text:
-                    companyone.CNA + "에서 소독이 완료되었음을 알려드립니다. 자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
+                    comname+ "에서 소독이 완료되었음을 알려드립니다.      자세한 사항은 아래 링크에서          확인 가능합니다 (미소)",
                   type: 'ATA',
                   kakaoOptions: {
                     disableSms: true,
@@ -946,7 +947,6 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
                         buttonType: 'WL',
                         buttonName: '확인하기',
                         linkMo: 'http://www.cleanoasis.net/publish?cat=1&hid=' + historyid,
-                        linkPc: 'http://www.cleanoasis.net/publish?cat=1&hid=' + historyid
                       }
                     ]
                   }
@@ -958,13 +958,34 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
             url: 'http://api.solapi.com/messages/v4/send-many'
           };
 
-        
+        var messageID = "";
         
          request(options, function(error, response, body) {
-          if (error) throw error;
+          if (error)
+          {
+            throw error;
+          }else{
           console.log('result :', body);
+          messageID = body._id;
+          
+          }
+          
+          var options2 = {
+            headers: {
+              Authorization:
+                autori
+            },
+            method: 'GET',
+            json: true,
+            url:
+              'http://api.solapi.com/messages/v4/list?criteria=messageId&value='+messageID+'&cond=eq'
+          };
+          
+            request(options2, function(error, response, body) {
+              if (error) throw error;
+              console.log('result :', body);
+            });
         });     
-              
           console.log(companypoint);
          companypoint = companypoint - 20;
           console.log(companypoint);
