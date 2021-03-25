@@ -9,6 +9,7 @@ const History = require('../schemas/history');
 const Order = require('../schemas/order');
 const Service = require('../schemas/service');
 const Publish = require('../schemas/publish');
+const Point = require('../schemas/point');
 
 const moment = require('moment');
 //Router or MiddleWare
@@ -730,75 +731,34 @@ router.get('/receipt', isNotLoggedIn, DataSet, async(req, res, next) => {
 
 
 //----------------------------------------------------------------------------//
-//                                  SMS                                       //
+//                                   Point                                    //
 //----------------------------------------------------------------------------//
 
-router.get('/sms_send', isNotLoggedIn, DataSet, async(req, res, next) => {
-        const historyid = req.body._id;
-        const number = req.body.number;
-       
-      // const historyid = '6046d067b1d64326737c82bd'
-       //const number = '01021128228'
-       
-        const apiKey = 'NCS3UVB461GJGRSG'
-        const apiSecret = '8YWUASVQUCDISORWHRPD6JNITLZKTPCO'
-        
-        const historyone = await History.findOne({'_id' : historyid});
-        const companyone = await Company.findOne({'_id' : historyone.CID})
-        var companypoint = companyone.SPO;
-        
-        if(companypoint > 0) {
-        
-            config.init({ apiKey, apiSecret })
-             
-             
-              async function send (params = {}) {
-                try {
-                  const response = await Group.sendSimpleMessage(params)
-                  console.log(response)
-                  Group.deleteGroup(response.groupId);
-                  
-                } catch (e) {
-                  console.log(e)
-                }
-              }
-              
-              
-              const params = [{
-                text: '안녕하세요. www.cleanoasis.net/publish?HID=' + historyid, // 문자 내용
-                type: 'SMS', // 발송할 메시지 타입 (SMS, LMS, MMS, ATA, CTA)
-                to: number, // 수신번호 (받는이)
-                from: '16443486' // 발신번호 (보내는이)
-              }]
-              
-              
-              
-              for(var i =0; i < params.length; i ++) {
-              companypoint = companypoint - 1;
-                send(params[i])
-              }
-            
-              
-            const companyone =  await Company.where({'_id' : historyone.CID})
-            .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
-            .exec();
-        }
-        
-});
-
-router.get('/kakao_send', isNotLoggedIn, DataSet, async(req, res, next) => {
+//포인트 사용 목록
+router.get('/point_list', isNotLoggedIn, DataSet, async(req, res, next) => {
+  
   const CID = req.decoded.CID;
-  const CNU = req.decoded.CNU;
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
-
+  const aclist = await Worker.find({ "CID" : CID, "AC" : false });
+  const imp_code = process.env.imp_code;
+  let page = req.query.page;
+  const GN = req.query.GN;
+  const IP = process.env.IP;
+  
   try {
-    res.render('repair', { company: req.decoded.company, aclist });
+    const point = await Point.find({ "CID" : CID});
+
+        const totalNum = await Point.countDocuments({ "CID": CID });
+        let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
+        const Points = await Point.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
+        console.log(Points);
+  
+        res.render('point_list', { company: req.decoded.company, aclist, totalNum, currentPage, totalPage, startPage, endPage,IP, Points });
+
   }
-  catch (err) {
+  catch(err) {
     console.error(err);
     next(err);
   }
-  
 });
 
 
@@ -896,7 +856,6 @@ router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
         
     
 });
-//01079277544
 router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
         
         const historyid = '605aec074164b23448038c2d';
@@ -993,6 +952,12 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
            companyone =  await Company.where({'_id' : historyone.CID})
             .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
             .exec();
+            
+          const pointone = await Point.insertMany({
+            "CID" : companyone.CID,
+            "PN" : "알림톡 전송",
+            "PO" : 20,
+          });
     
 });
 
