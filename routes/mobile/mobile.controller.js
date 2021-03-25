@@ -4,6 +4,7 @@ const Worker = require('../../schemas/worker');
 const Company = require('../../schemas/company');
 const Car = require('../../schemas/car');
 const History = require('../../schemas/history');
+const Point = require('../../schemas/point')
 var moment = require('moment');
 const Device = require('../../schemas/device');
 const jwt = require('jsonwebtoken');
@@ -582,7 +583,7 @@ exports.registerSMS = async(req, res) => {
             });     
                   
               console.log(companypoint);
-             companypoint = companypoint - 20;
+            //  companypoint = companypoint - 20;
               console.log(companypoint);
                   
                 const companyone =  await Company.where({'_id' : historyone.CID})
@@ -671,13 +672,23 @@ exports.registerKAKAO = async(req, res) => {
                 method: 'POST',
                 json: true,
                 url: 'http://api.solapi.com/messages/v4/send-many'
-              };
+            };
             
+                
+                request(options, function(error, response, body) {
+                    if (error) throw error;
+                    console.log('result :', body);
+                });     
             
-             request(options, function(error, response, body) {
-              if (error) throw error;
-              console.log('result :', body);
-            });     
+                const pointone = await Point.insertMany({
+                    "CID" : companyone._id,
+                    "PN" : "알림톡 전송",
+                     "PO" : 20,
+                });
+                
+                console.log(companypoint);
+                // companypoint = companypoint - 20;
+                console.log(companypoint);
                   
                 const companyone =  await Company.where({'_id' : historyone.CID})
                 .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
