@@ -14,7 +14,6 @@ const UNKOWN = "UNKOWN";
 const NO_SUCH_DATA = "NO_SUCH_DATA";
 const FAIL = "FAIL";
 const TOKEN_ERROR = "TOKEN_ERROR";
-const NO_POINT = ""
 
 const { config, Group } = require('solapi')
 
@@ -678,6 +677,10 @@ exports.registerKAKAO = async(req, res) => {
               if (error) throw error;
               console.log('result :', body);
             });     
+                  
+              console.log(companypoint);
+            //  companypoint = companypoint - 20;
+              console.log(companypoint);
                   
                 const companyone =  await Company.where({'_id' : historyone.CID})
                 .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
