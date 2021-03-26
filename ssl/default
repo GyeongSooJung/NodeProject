@@ -1,0 +1,22 @@
+server {
+  listen       80;
+  server_name  pcb.cleanoasis.net;
+  rewrite ^ https://$server_name$request_uri? permanent;
+}
+    
+server {
+  listen       443 ssl;
+  server_name  pcb.cleanoasis.net;
+
+  ssl_certificate  /etc/nginx/ssl/server.pem;
+  ssl_certificate_key /etc/nginx/ssl/key.pem;
+
+  location / {
+    proxy_pass http://localhost:8080;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+  }
+}
