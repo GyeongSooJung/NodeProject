@@ -613,7 +613,6 @@ exports.registerKAKAO = async(req, res) => {
 
         const { _id, num } = req.body;
 
-        console.log("\n\m:::::::::::::::::::::::1");
 
 
         const historyid = _id;
@@ -629,7 +628,6 @@ exports.registerKAKAO = async(req, res) => {
         // const fs = require('fs');
         // const path = require('path');
 
-        console.log("\n\m:::::::::::::::::::::::2");
 
         const date = moment.utc().format();
         const salt = generate();
@@ -639,16 +637,13 @@ exports.registerKAKAO = async(req, res) => {
 
         var request = require('request');
 
-        console.log("\n\m:::::::::::::::::::::::3");
 
         const historyone = await History.findOne({ '_id': historyid });
         const companyone = await Company.findOne({ '_id': historyone.CID });
         var companypoint = companyone.SPO;
 
-        console.log("\n\m:::::::::::::::::::::::3.1");
 
         if (companypoint > 0) {
-            console.log("\n\m:::::::::::::::::::::::3.2");
             var options = {
                 headers: {
                     Authorization: autori,
@@ -666,8 +661,8 @@ exports.registerKAKAO = async(req, res) => {
                             buttons: [{
                                 buttonType: 'WL',
                                 buttonName: '확인하기',
-                                linkMo: 'http://www.cleanoasis.net/publish?cat=1&hid=' + historyid,
-                                linkPc: 'http://www.cleanoasis.net/publish?cat=1&hid=' + historyid
+                                linkMo: process.env.IP +'/publish?cat=1&hid=' + historyid,
+                                linkPc: process.env.IP +'/publish?cat=1&hid=' + historyid
                             }]
                         }
                     }]
@@ -675,25 +670,8 @@ exports.registerKAKAO = async(req, res) => {
                 method: 'POST',
                 json: true,
                 url: 'http://api.solapi.com/messages/v4/send-many'
-<<<<<<< HEAD
-              };
-            
-            
-             request(options, function(error, response, body) {
-              if (error) throw error;
-              console.log('result :', body);
-            });     
-                  
-              console.log(companypoint);
-            //  companypoint = companypoint - 20;
-              console.log(companypoint);
-                  
-                const companyone =  await Company.where({'_id' : historyone.CID})
-                .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
-=======
             };
 
-            console.log("\n\m:::::::::::::::::::::::4");
 
             request(options, function(error, response, body) {
                 if (error) throw error;
@@ -712,7 +690,6 @@ exports.registerKAKAO = async(req, res) => {
 
             companyone = await Company.where({ '_id': historyone.CID })
                 .updateMany({ "SPO": companypoint }).setOptions({ runValidators: true })
->>>>>>> 47fb554c952db9706d310e3cdb4d545c0fbb741f
                 .exec();
         }
         else {

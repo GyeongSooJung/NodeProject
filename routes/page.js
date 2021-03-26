@@ -885,7 +885,6 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
         var companypoint = companyone.SPO;
         
         var msgID = ""
-        
         var options = {
             headers: {
               Authorization:
@@ -906,8 +905,8 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
                       {
                         buttonType: 'WL',
                         buttonName: '확인하기',
-                        linkMo: 'http://www.cleanoasis.net/publish?cat=1&hid=' + historyid,
-                        linkPc: 'http://www.cleanoasis.net/publish?cat=1&hid=' + historyid
+                        linkMo: process.env.IP +'/publish?cat=1&hid=' + historyid,
+                        linkPc: process.env.IP +'/publish?cat=1&hid=' + historyid
                       }
                     ]
                   }
@@ -919,9 +918,11 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
             url: 'http://api.solapi.com/messages/v4/send-many'
           };
           
+        request(options, function(error, response, body) {
+          if (error) throw error;
+          console.log('result :', body);
+        });  
         
-       
-        console.log("@@@@@@@@@@@@@@@@@@@@")
         const pointone = await Point.insertMany({
           "CID" : companyone._id,
           "PN" : "알림톡 전송",
@@ -932,7 +933,7 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
         // companypoint = companypoint - 20;
           console.log(companypoint);
               
-           companyone =  await Company.where({'_id' : historyone.CID})
+         await Company.where({'_id' : historyone.CID})
             .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
             .exec();
             
