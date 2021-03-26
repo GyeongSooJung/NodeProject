@@ -884,6 +884,8 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
         const companyone = await Company.findOne({'_id' : historyone.CID})
         var companypoint = companyone.SPO;
         
+        var msgID = ""
+        
         var options = {
             headers: {
               Authorization:
@@ -895,10 +897,9 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
                   to: number,
                   from: '16443486',
                   text:
-                    comname+ "에서 소독이 완료되었음을 알려드립니다.      자세한 사항은 아래 링크에서          확인 가능합니다 (미소)",
+                    comname+ "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
                   type: 'ATA',
                   kakaoOptions: {
-                    disableSms: true,
                     pfId: 'KA01PF210319072804501wAicQajTRe4',
                     templateId: 'KA01TP210319074611283wL0AjgZVdog',
                     buttons: [
@@ -918,51 +919,17 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
             url: 'http://api.solapi.com/messages/v4/send-many'
           };
           
-        request(options, function(error, response, body) {
-          if (error) throw error;
-          console.log('result :', body);
-          
-        }); 
         
-            console.log("@@@@@@@@@@@@@@@@@@@@")
-          const pointone = await Point.insertMany({
-            "CID" : companyone._id,
-            "PN" : "알림톡 전송",
-            "PO" : 20,
-          });
-          
-          
-
-        // var messageID = "";
-        
-        // request(options, function(error, response, body) {
-        //   if (error)
-        //   {
-        //     throw error;
-        //   }else{
-        //   console.log('result :', body);
-        //   messageID = body._id;
-          
-        //   }
-          
-        //   var options2 = {
-        //     headers: {
-        //       Authorization:
-        //         autori
-        //     },
-        //     method: 'GET',
-        //     json: true,
-        //     url:
-        //       'http://api.solapi.com/messages/v4/list?criteria=messageId&value='+messageID+'&cond=eq'
-        //   };
-          
-        //     request(options2, function(error, response, body) {
-        //       if (error) throw error;
-        //       console.log('result :', body);
-        //     });
-        // });     
+       
+        console.log("@@@@@@@@@@@@@@@@@@@@")
+        const pointone = await Point.insertMany({
+          "CID" : companyone._id,
+          "PN" : "알림톡 전송",
+          "PO" : 20,
+        });
+              
           console.log(companypoint);
-         companypoint = companypoint - 20;
+        // companypoint = companypoint - 20;
           console.log(companypoint);
               
            companyone =  await Company.where({'_id' : historyone.CID})

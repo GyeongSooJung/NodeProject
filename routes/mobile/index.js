@@ -32,6 +32,7 @@ router.post("/car/delete", controller.deleteCar);
 router.post("/history/create", controller.createHistory);
 router.post("/history/find", controller.findHistories);
 router.post("/history/findOne", controller.findHistory);
+router.post("/history/share",controller.registerKAKAO);
 
 // 소독기 관련
 router.post("/device/register", controller.registerDevice);
@@ -40,6 +41,6 @@ router.post("/device/update", controller.updateDevice);
 router.post("/device/delete", controller.deleteDevice);
 
 router.get("/sms",controller.registerSMS);
-router.get("/kakao",controller.registerKAKAO);
+
 
 module.exports = router;
