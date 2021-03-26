@@ -63,6 +63,9 @@ const historySchema = new Schema({
         type: [Number()],
         default: null,
     },
+    COS: { // 공정 코스, 0: 쾌속, 1: 일반, 2: 탈취
+        type: Number,
+    },
     CA: {
         type: Date,
         required: [true, 'CA is required!'],
