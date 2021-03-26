@@ -1,6 +1,7 @@
 {
+    "lang_kr": "한국어 (기본)",
+	"lang_en": "영어",
     "main_title": "OASIS | 관리자 페이지",
     "main_point": "보유 포인트",
-	"main_lang": "언어",
 	"main_company": "사업자"
 }

@@ -149,31 +149,30 @@
 				</div>
 				<!-- end col-8 -->
 				<!-- begin col-4 -->
-				<div class="col-xl-4">
+				<div class="col-xl-4 align-self-start">
 					<!-- begin panel -->
 					<!-- 막대그래프 만들곳 시작점 -->
 					<div class="panel panel-inverse" data-sortable-id="index-6">
 						<div class="panel-heading">
 							<h4 class="panel-title">최근 일주일간 소독 횟수</h4>
 						</div>
-						<div class="table-responsive">
-							<table class="table table-valign-middle table-panel mb-0">
-								<thead>
-
-								</thead>
-								<tbody>
-									<tr>
-										<div id="first week" style ="height : 300px"></div>
-									</tr>
-
-								</tbody>
-							</table>
+						<div class="panel-body">
+							<div id="first week" class="height-sm"></div>
 						</div>
 					</div>
 					<!-- 막대그래프 끝 -->
+					<!-- QR코드 방문자 수 -->
+					{% if(company.AH == true) %}
+					<div class="panel panel-inverse" data-sortable-id="index-6">
+						<div class="panel-heading">
+							<h4 class="panel-title">QR코드 총 접속 수 수h4h4>
+						</div>
+						<div class="panel-body">
+							<h3 id="socket_qr" clhss="ms-0 mb-3">{{qrsum}}</h3</h3>
+						</div>
+					</div>
+					{% endif %}
 					<!-- end panel -->
-					<a href="/sendkko">send</a>
-				
 				</div>
 				<!-- end col-4 -->
 			</div>
@@ -204,45 +203,66 @@
 	const socket = io.connect('{{HOME}}', {
 		path: '/socket.io',
 		transports: ['websocket'],
-	})
-  
-  socket.on('newworker', function (data) {
-  	var i,j = 0;
-  	var socket_worker_array = [];
-  	console.log(data);
-    // console.log(data[0]._id);
-	// console.log("{{company.CID}}");
+	});
 	
-	for(i = 0; i < data.length; i++) {
-		if (data[i].CID == "{{company.CID}}") {
-	// console.log(data[i]._id);
-	// {{company.CID}} 는 지금 접속한 사람의 CID를 나타냄
-		
-			socket_worker_array.push(data[i].CID);
+	socket.on('newDevice', function (data) {
+		var socket_new_device = [];
+		for(i = 0; i < data.length; i++) {
+			if(data[i].CID == '{{company._id}}') {
+				socket_new_device.push(data[i]);
+			}
 		}
-	}
-	document.getElementById('p3').innerHTML = socket_worker_array.length;
-    socket.emit('reply', 'HTML 에서 node로 보내는 메세지(작업자 갱신)');
-  });
-  
-  socket.on('newhistory', function (data) {
-  	var i,j = 0;
-  	var socket_worker_array = [];
-  	console.log(data);
-    // console.log(data[0]._id);
-	// console.log("{{company.CID}}");
+		console.log(socket_new_device.length);
+		document.getElementById('socket_device').innerHTML = socket_new_device.length;
+		socket.emit('reply', '소독기 갱신');
+	});
 	
-	for(i = 0; i < data.length; i++) {
-		if (data[i].CID == "{{company.CID}}") {
-	// console.log(data[i]._id);
-	// {{company.CID}} 는 지금 접속한 사람의 CID를 나타냄
-			socket_worker_array.push(data[i].CID);
+	socket.on('newCar', function (data) {
+		var socket_new_car = [];
+		for(var i = 0; i < data.length; i++) {
+			if(data[i].CID == '{{company._id}}') {
+				socket_new_car.push(data[i]);
+			}
 		}
-	}
-	document.getElementById('p4').innerHTML = socket_worker_array.length;
-    socket.emit('reply', 'HTML 에서 node로 보내는 메세지(히스토리 갱신)');
-  });
-  
+		console.log(socket_new_car.length);
+		document.getElementById('socket_car').innerHTML = socket_new_car.length;
+		socket.emit('reply', '자동차 갱신');
+	});
+	
+	socket.on('newWorker', function (data) {
+		var socket_new_worker = [];
+		for(var i = 0; i < data.length; i++) {
+			if(data[i].CID == '{{company._id}}') {
+				socket_new_worker.push(data[i]);
+			}
+		}
+		console.log(socket_new_worker.length);
+		document.getElementById('socket_worker').innerHTML = socket_new_worker.length;
+		socket.emit('reply', '작업자 갱신');
+	});
+	
+	socket.on('newHistory', function (data) {
+		var socket_new_history = [];
+		for(var i = 0; i < data.length; i++) {
+			if(data[i].CID == '{{company._id}}') {
+				socket_new_history.push(data[i]);
+			}
+		}
+		console.log(socket_new_history.length);
+		document.getElementById('socket_history').innerHTML = socket_new_history.length;
+		socket.emit('reply', '소독이력 갱신');
+	});
+	
+	socket.on('newPublish', function (data) {
+		var psum = 0;
+		for(var i = 0; i < data.length; i++) {
+			var pcount = data[i].PUN;
+			psum += pcount;
+		}
+		console.log(psum);
+		document.getElementById('socket_publish').innerHTML = psum;
+		socket.emit('reply', 'Publish 누적 조회 갱신');
+	});
 </script>
 
 <script src="https://cdn.amcharts.com/lib/4/core.js"></script>

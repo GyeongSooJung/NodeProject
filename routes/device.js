@@ -54,6 +54,13 @@ router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
         
           const workbook = xlsx.readFile(file.path);
           const sheetnames = Object.keys(workbook.Sheets);
+          
+          const excel1= [];
+          const excel2= [];
+          const excel3= [];
+          const excel4= [];
+          const excel5= [];
+          
           resData[sheetnames[0]] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetnames[0]]);
           console.log(resData);
            for(var j = 0; j < resData.Sheet1.length;  j++) {
@@ -74,15 +81,24 @@ router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
              
               resData[sheetnames[0]][j].CID = CID;
               
+             excel1[j] = resData.Sheet1[j].CID;
+             excel2[j] = resData.Sheet1[j].모델명;
+             excel3[j] = resData.Sheet1[j].버전;
+             excel4[j] = resData.Sheet1[j].맥주소;
+             excel5[j] = resData.Sheet1[j].별칭;
               
-             Device.insertMany({
-              "CID": resData.Sheet1[j].CID,
-              "MD" : resData.Sheet1[j].모델명,
-              "VER": resData.Sheet1[j].버전,
-              "MAC": resData.Sheet1[j].맥주소,
-              "NN" : resData.Sheet1[j].별칭
-             });
+             
          }
+         
+           for (var i = 0; i < excel1.length; i ++) {
+           Device.insertMany({
+                "CID": excel1[i],
+                "MD" : excel2[i],
+                "VER": excel3[i],
+                "MAC": excel4[i],
+                "NN" : excel5[i]
+               });
+           }
          
       res.redirect('/device_list');
       });

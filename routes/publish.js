@@ -6,6 +6,7 @@ const Device = require('../schemas/device');
 const Car = require('../schemas/car');
 const Worker = require('../schemas/worker');
 const History = require('../schemas/history');
+const Publish = require('../schemas/publish');
 const moment = require('moment');
 //Router or MiddleWare
 
@@ -21,8 +22,9 @@ router.get('/', async (req, res, next) => {
     try {
       if(HID){
         const historyone = await History.findOne({"_id" : HID});
-        
         if(historyone) {
+          await Publish.update({"PUC" : cat}, {$inc : {"PUN" : 1}}, {upsert: true});
+          
           const companyone = await Company.findOne({"_id" : historyone.CID});
           const history_array = await historyone.PD;
           
@@ -39,6 +41,8 @@ router.get('/', async (req, res, next) => {
         const historyone = await History.findOne({"CNM" : CN}).sort({"ET" : -1}).limit(1);
       
         if(historyone) { //historyone.RC == 1
+          await Publish.update({"PUC" : cat}, {$inc : {"PUN" : 1}}, {upsert: true});
+          
           const companyone = await Company.findOne({"_id" : historyone.CID});
           const history_array = await historyone.PD;
           

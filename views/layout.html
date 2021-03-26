@@ -10,6 +10,7 @@
 	<!-- ================== BEGIN BASE CSS STYLE ================== -->
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
 	<link href="../assets/css/default/app.min.css" rel="stylesheet" />
+	<link href="../assets/plugins/flag-icon-css/css/flag-icon.min.css" rel="stylesheet" />
 	<!-- ================== END BASE CSS STYLE ================== -->
 	
 	{% block css %}
@@ -59,13 +60,12 @@
 					</div>
 				</li>
 				<li class="dropdown navbar-user">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<span class="d-none d-md-inline small font-weight-bold">{{__('main_lang')}}</span>
-						<b class="caret"></b>
+					<a href="#" class="dropdown-toggle mr-3" data-toggle="dropdown">
+						<h2 class="flag-icon width-full m-r-10 m-t-0 m-b-3 px-1" id="flag"></h2>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right">
-						<a href="/ko" class="dropdown-item">한국어</a>
-						<a href="/en" class="dropdown-item">영어</a>
+						<a href="/ko" class="dropdown-item"><span class="flag-icon flag-icon-kr mr-2 px-1" title="kr" id="kr"></span>{{__('lang_kr')}}</a>
+						<a href="/en" class="dropdown-item"><span class="flag-icon flag-icon-us mr-2 px-1" title="us" id="us"></span>{{__('lang_en')}}</a>
 					</div>
 				</li>
 			</ul>
@@ -187,7 +187,9 @@
 						</a>
 						<ul class="sub-menu">
 							<li><a href="/pay_point">포인트 구매</a></li>
+							<li><a href="/point_list">포인트 사용내역</a></li>
 							<li><a href="/pay_list">결제 목록</a></li>
+							
 						</ul>
 					</li>
 					<!--<li class="has-sub">-->
@@ -236,9 +238,27 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-	// 메뉴 active 기능
 	window.addEventListener('load', function() {
-		// $('#active-menu').find('a[href="' + document.location.pathname + '"]').parents('li').addClass('active');
+		// 언어 변경시 국기 변환 기능
+		var cookie = document.cookie;
+		var startIndexOf = cookie.indexOf('lang');
+		var endIndexOf = cookie.indexOf(';',startIndexOf);
+		if(endIndexOf == -1)endIndexOf = cookie.length; //맨끝일경우;가 없으므로 맨마지막자리를 가져온다.
+		
+		const flag = document.getElementById('flag');
+		var lang = cookie.substring(startIndexOf+'lang='.length, endIndexOf);
+		console.log(lang);
+		if(lang == 'ko') {
+			flag.classList.add('flag-icon-kr');
+		}
+		else if(lang == 'en') {
+			flag.classList.add('flag-icon-us');
+		}
+		else {
+			flag.classList.add('flag-icon-kr');
+		}
+		
+		// 메뉴 active 기능
 		var path = document.location.pathname.toString();
 		var cut =  path.split('/');
 		console.log("패스"+path+" 컷"+cut);
