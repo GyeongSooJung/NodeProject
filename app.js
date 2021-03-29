@@ -48,6 +48,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+}));
+
 app.use(i18n);
 app.use('/', pageRouter);
 app.use('/auth', authRouter);
@@ -88,8 +94,6 @@ app.use((req, res, next) => {
   }
   next();
 });
-
-
 
 app.use(function(err, req, res, next) {
   res.locals.message = err.message;

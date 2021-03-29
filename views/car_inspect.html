@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="kor">
+<head>
+	<meta charset="utf-8" />
+	<title>{{__('main_title')}}</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+	
+	<!-- ================== BEGIN BASE CSS STYLE ================== -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+	<link href="../assets/css/default/app.min.css" rel="stylesheet" />
+	<link href="../assets/plugins/flag-icon-css/css/flag-icon.min.css" rel="stylesheet" />
+	<!-- ================== END BASE CSS STYLE ================== -->
+	<link href="../assets/img/favicon.png" rel="icon">
+</head>
+<body>
+    <div id="content" class="content">
+    	<!-- begin row -->
+    	<div class="row">
+    		<!-- begin col-6 -->
+    		<div class="col-xl-12">
+    			<!-- begin panel -->
+    			<div class="panel panel-inverse" data-sortable-id="form-validation-1">
+    				<!-- begin panel-heading -->
+    				<div class="panel-heading d-flex justify-content-between">
+    					<h4 class="panel-title">중복된 차량목록 확인 (차량번호 or 차대번호)</h4>
+    				</div>
+    				<!-- end panel-heading -->
+    				<!-- begin panel-body -->
+    				<div class="panel-body">
+    				    <div class="overflow-auto">
+    				        <form id="car-inspect-form" action="/car/car_overwrite_all" method="post" class="form-horizontal" data-parsley-validate="true" name="car-inspect-form">
+            					<table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle text-center">
+                                    <thead>
+    									<tr>
+    										<th width="1%">
+    											<input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/>
+    										</th>
+    										<th width="33%">차종</th>
+    										<th width="33%">차량 번호</th>
+    										<th width="33%">차대 번호</th>
+    									</tr>
+    								</thead>
+    								<tbody>
+                                        {% if ((session_excel == "") and (session_excel2 == "") and (session_excel3 == "")) %}
+                                        <tr>
+                                            <td colspan="5">중복된 목록이 없습니다.</td>
+                                        </tr>
+                                        {% else %}
+                                            {% for item in session_excel %}
+                                            <tr>
+                                                <td class="with-btn" nowrap>
+    												<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{item[2]}} onChange="eachCheckedBox(this);"/>
+    			    							</td>
+                                                <td>
+                                                    <input class="form-control" type="text" name="CC" value="{{item[1]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control border-danger" type="text" name="CN" value="{{item[2]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                    <input type="hidden" name="exCN" value="{{item[2]}}">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control" type="text" name="SN" value="{{item[3]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                    <input type="hidden" name="exSN" value="{{item[3]}}">
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                            {% for item in session_excel2 %}
+                                            <tr>
+                                                <td class="with-btn" nowrap>
+    												<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{item[2]}} onChange="eachCheckedBox(this);"/>
+    			    							</td>
+                                                <td>
+                                                    <input class="form-control" type="text" name="CC" value="{{item[1]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control" type="text" name="CN" value="{{item[2]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                    <input type="hidden" name="exCN" value="{{item[2]}}">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control border-danger" type="text" name="SN" value="{{item[3]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                    <input type="hidden" name="exSN" value="{{item[3]}}">
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                            {% for item in session_excel3 %}
+                                            {{item}}
+                                            <tr>
+                                                <td class="with-btn" nowrap>
+    												<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{item[2]}} onChange="eachCheckedBox(this);"/>
+    			    							</td>
+                                                <td>
+                                                    <input class="form-control" type="text" name="CC" value="{{item[1]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control border-danger" type="text" name="CN" value="{{item[2]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                    <input type="hidden" name="exCN" value="{{item[2]}}">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control border-danger" type="text" name="SN" value="{{item[3]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                    <input type="hidden" name="exSN" value="{{item[3]}}">
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        {% endif %}
+    								</tbody>
+                                </table>
+                                <div class="d-flex justify-content-between align-item-center">
+                                    {% if ((session_excel == "") and (session_excel2 == "") and (session_excel3 == "")) %}
+                                    <input class="btn btn-primary mx-auto" type="button" value="확인" onclick="winClose();">
+        							{% else %}
+        							<input class="btn btn-primary" type="button" value='선택항목만 덮어쓰기' onclick="return overwrite_check(this.form);">
+    								<div class="d-flex justify-content-around align-item-center">
+        								<input class="btn btn-primary mx-2" type="button" value="전체 덮어쓰기" onclick="return overwrite_all(this.form);">
+        								<input class="btn btn-primary" type="button" value="건너뛰기" onclick="pass();">
+    							    </div>
+        							{% endif %}
+    							</div>
+        					</form>
+    				    </div>
+    				</div>
+    				<!-- end panel-body -->
+    			</div>
+    			<!-- end panel -->
+    		</div>
+    	</div>
+    	<!-- end row -->
+    </div>
+    
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+    <script>
+        // 에러 링크 기능
+    	window.onload = () => {
+    	    if (new URL(location.href).searchParams.get('exist')) {
+    			alert('수정한 차량 번호 혹은 차대 번호가 이미 존재합니다.');
+    		}
+    		if (new URL(location.href).searchParams.get('overwrite')) {
+    			window.opener.location.href='/car_list';
+                window.close();
+    		}
+    	};
+    	
+        // 건너뛰기 기능
+        function pass() {
+            var answer = confirm('건너뛰면 중복된 목록은 등록되지 않습니다.\n건너뛰시겠습니까?')
+            if (answer == true) {
+                window.opener.location.href='/car_list';
+                window.close();
+            }
+            else {
+                return false;
+            }
+        }
+        
+        // 전체 덮어쓰기 기능
+        function overwrite_all(frm) {
+            var answer = confirm("덮어쓰면 중복된 목록이 변경됩니다.\n덮어쓰시겠습니까?");
+            if(answer == true) {
+                frm.action='/car/car_overwrite_all'; frm.submit(); return true;
+            }
+            else {
+                return false;
+            }
+        }
+        
+        // 선택항목만 덮어쓰기 기능
+        function overwrite_check(frm) {
+            var checktest;
+            var answer = confirm("덮어쓰면 중복된 목록이 변경됩니다.\n덮어쓰시겠습니까?");
+    		if(answer == true) {
+    		    if(typeof(frm.elements['ck'].length) == 'undefined') {
+                    if (frm.elements['ck'].checked == false) {
+                        frm.elements['CC'].disabled = true;
+                        frm.elements['CN'].disabled = true;
+                        frm.elements['SN'].disabled = true;
+                    }
+                    else {
+                        checktest = true;
+                    }
+                }
+                else {
+                    for (var i = 0; i < frm.elements['ck'].length; i ++) {
+                        if (frm.elements['ck'][i].checked == false) {
+                            frm.elements['CC'][i].disabled = true;
+                            frm.elements['CN'][i].disabled = true;
+                            frm.elements['SN'][i].disabled = true;
+                        }
+                        else {
+                            checktest = true;
+                        }
+                    }
+                }
+                
+                if(!checktest) {
+                    return alert("항목을 선택해주세요.");
+                }
+    			frm.action='/car/car_overwrite_check'; frm.submit(); return true;
+    		}
+    		else {
+    			return false;
+    		}
+        }
+        
+        // 창 닫기 기능
+        function winClose() {
+            window.opener.location.href='/car_list';
+            window.close();
+        }
+        
+    	// 전체 선택 기능
+    	function allCheckedBox(obj) {
+    	   	// @brief 선택한 체크박스의 클래스 명칭을 가져온다.
+    	   	const termClass = obj.getAttribute("class");
+    	   	// @brief 선택한 클래스명과 같은 클래스의 갯수
+    	   	console.log(document.getElementsByClassName(termClass).length);
+    	   	Array.prototype.forEach.call(document.getElementsByClassName(termClass), function(element, index, array) {
+    	        // @brief 엘리먼트의 값 출력
+    	        console.log(element.value);
+    	        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 되있는 경우
+    	        if(document.getElementsByClassName(termClass)[0].checked == true) {
+    	            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 완료 처리 한다.
+    	            element.checked = true;
+    	        }
+    	        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 해제된 경우
+    	        else {
+    	            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 해제 처리 한다.
+    	            element.checked = false;
+    	        }
+    	   	});
+        }
+    
+    	// 항목 선택 기능
+    	function eachCheckedBox(obj) {
+          // @brief 선택한 체크박스의 상태가 선택해제인 경우
+          if(obj.checked == false) {
+                // @brief 선택한 체크박스의 클래스 명칭을 가져온다.
+                const termClass = obj.getAttribute("class");
+                // @brief 첫번째 checkbox의 상태가 체크가 되어있는경우
+                if(document.getElementsByClassName(termClass)[0].checked == true) {
+                    // @brief 첫번째 checkbox의 상태를 체크해제한다.
+                    document.getElementsByClassName(termClass)[0].checked = false;
+                }
+            }
+        }
+    </script>
+    
+</body>
+
+<script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
+<script src="../assets/plugins/highlight.js/highlight.min.js"></script>
+<script src="../assets/js/demo/render.highlight.js"></script>

@@ -11,6 +11,7 @@ const Service = require('../schemas/service');
 const Publish = require('../schemas/publish');
 
 const moment = require('moment');
+const session = require('express-session');
 //Router or MiddleWare
 const router = express.Router();
 const { isLoggedIn, isNotLoggedIn, DataSet, emailcontrol } = require('./middleware');
@@ -284,6 +285,15 @@ router.get('/device_join', isNotLoggedIn, DataSet, async(req, res, next) => {
   res.render('device_join', {company: req.decoded.company, aclist});
 });
 
+//장비 검증
+router.get('/device_inspect', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  var session_excel = await req.session.re_device_excel;
+  
+  res.render('device_inspect', {company: req.decoded.company, aclist, session_excel});
+});
+
 //장비 수정
 router.get('/device_edit/:MAC', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
@@ -348,6 +358,22 @@ router.get('/car_join', isNotLoggedIn, DataSet, async(req, res, next) => {
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   
   res.render('car_join', {company: req.decoded.company, aclist});
+});
+
+//차량 검증
+router.get('/car_inspect', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  // console.log("세션"+req.session.re_excel);
+  var session_excel = await req.session.re_car_excel;
+  var session_excel2 = await req.session.re2_car_excel;
+  var session_excel3 = await req.session.re3_car_excel;
+  console.log("세션1"+session_excel);
+  console.log("세션2"+session_excel2);
+  console.log("세션3"+session_excel3);
+  console.log("세션확인"+typeof(session_excel3[1]));
+  
+  res.render('car_inspect', {company: req.decoded.company, aclist, session_excel, session_excel2, session_excel3});
 });
 
 //차량 수정

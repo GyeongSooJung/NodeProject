@@ -18,7 +18,7 @@ router.post('/register',emailcontrol,async (req, res, next) => {
   const {NA, CNU, CNA, PN, MN, PW, PW2, CK, EA} = req.body;
   console.log("주소상세"+req.body.addrDtail);
   const ADR = req.body.roadAddrPart1+req.body.roadAddrPart2+req.body.addrDetail;
-  res.cookie('ADR',null)
+  res.cookie('ADR',null);
   //email
   var EC = false;
   console.log(CNU);
@@ -32,9 +32,8 @@ router.post('/register',emailcontrol,async (req, res, next) => {
   console.log("EC :"+EC);
 
   if(!EC) {
-      return res.render('register',{NA,CNU,CNA,PN,MN,ADR,CK,EAMsg : "메일 인증을 받으세요"})
-      
-  };
+      return res.render('register',{NA,CNU,CNA,PN,MN,ADR,CK,EAMsg : "메일 인증을 받으세요"});
+  }
     const CNU_CK  = await postCRN(CNU);
   if(CNU_CK == false){
     return  res.render('register',{NA,CNA,PN,MN, CNU,ADR,CK ,ErrMsg : "잘못된 사업자 등록번호 입니다!"});
@@ -79,11 +78,11 @@ router.post('/register',emailcontrol,async (req, res, next) => {
 
 
 async function postCRN(crn){
-  const postUrl = "https://teht.hometax.go.kr/wqAction.do?actionId=ATTABZAA001R08&screenId=UTEABAAA13&popupYn=false&realScreenId="
-  const xmlRaw = "<map id=\"ATTABZAA001R08\"><pubcUserNo/><mobYn>N</mobYn><inqrTrgtClCd>1</inqrTrgtClCd><txprDscmNo>{CRN}</txprDscmNo><dongCode>15</dongCode><psbSearch>Y</psbSearch><map id=\"userReqInfoVO\"/></map>"
+  const postUrl = "https://teht.hometax.go.kr/wqAction.do?actionId=ATTABZAA001R08&screenId=UTEABAAA13&popupYn=false&realScreenId=";
+  const xmlRaw = "<map id=\"ATTABZAA001R08\"><pubcUserNo/><mobYn>N</mobYn><inqrTrgtClCd>1</inqrTrgtClCd><txprDscmNo>{CRN}</txprDscmNo><dongCode>15</dongCode><psbSearch>Y</psbSearch><map id=\"userReqInfoVO\"/></map>";
     try{
         const result  = await axios.post(postUrl,xmlRaw.replace(/\{CRN\}/, crn),
-        { headers: { 'Content-Type': 'text/xml' } })
+        { headers: { 'Content-Type': 'text/xml' } });
        let CRNumber = await getCRNresultFromXml(result.data);
        console.log(CRNumber);
        if(CRNumber ==='부가가치세 일반과세자 입니다.'){
@@ -92,7 +91,7 @@ async function postCRN(crn){
        }else{
          CRNumber = false;
        }
-        console.log(CRNumber)
+        console.log(CRNumber);
         return(CRNumber);
     }catch(err){
         console.error(err);
@@ -104,10 +103,10 @@ function getCRNresultFromXml(dataString) {
     return new Promise((resolve, reject) => {
         xml2js.parseString(dataString, // API 응답의 'data' 에 지정된 xml 값 추출, 파싱
             (err, res) => {
-                if (err) reject(err)
-                else resolve(res.map.trtCntn[0]) // trtCntn 이라는 TAG 의 값을 get
-            })
-    })
+                if (err) reject(err);
+                else resolve(res.map.trtCntn[0]); // trtCntn 이라는 TAG 의 값을 get
+            });
+    });
 }
 
 

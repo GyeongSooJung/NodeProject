@@ -248,14 +248,8 @@
 		if (new URL(location.href).searchParams.get('null')) {
 			alert('항목을 선택해주세요.');
 		}
-		if (new URL(location.href).searchParams.get('length')) {
-			alert('차량 번호 자릿수를 확인해주세요.');
-		}
-		if (new URL(location.href).searchParams.get('type')) {
-			alert('차량 번호를 확인해주세요.');
-		}
-		if (new URL(location.href).searchParams.get('error')) {
-			alert('차량 번호 또는 차대 번호를 다시 확인해주세요.');
+		if (new URL(location.href).searchParams.get('exist')) {
+			alert('차대 번호가 이미 존재합니다.');
 		}
 		if (new URL(location.href).searchParams.get('searcherror')) {
 			alert('검색어를 다시 확인해주세요');

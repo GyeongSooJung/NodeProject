@@ -61,7 +61,7 @@
 				</div>
 				<!-- Excel 파일 업로드 -->
 				<div class="panel-body bg-grey pb-0">
-					<form id="device-xlsx-form" action="/device/device_join_xlsx" method="post" enctype="multipart/form-data" class="form-horizontal"name="device-xlsx-form">
+					<form id="device-xlsx-form" action="/device/device_join_xlsx" method="post" enctype="multipart/form-data" class="form-horizontal" name="device-xlsx-form">
 						<div class="form-group row m-b-15">
 							<label class="col-md-4 col-sm-4 col-form-label text-green" for="file"><b># Excel 파일로 등록</b> :</label>
 							<div class="col-md-8 col-sm-8">
@@ -83,34 +83,36 @@
 	// MAC주소 콜론 기능
 	function setComma(str){
 		//var MAC =document.getElementById('MAC')
-	if((Number(str.length) % 3) ==2){
-		
-		if(Number(str.length) == 17){
-			return str
+		if((Number(str.length) % 3) ==2) {
+			if(Number(str.length) == 17) {
+				return str;
+			}
+			return str+":";
 		}
-		return str+":"
-		
-	}
-	
 		return str;
 	}
 	
 	// 에러 링크 기능
 	window.onload = () => {
-		if (new URL(location.href).searchParams.get('error')) {
+		if (new URL(location.href).searchParams.get('exist')) {
 			alert('이미 존재하는 MAC 입니다.');
 		}
-	
 		if (new URL(location.href).searchParams.get('type')) {
 			alert('MAC 주소를 정확히 입력해주세요.');
 		}
+		if (new URL(location.href).searchParams.get('nofile')) {
+			alert('파일을 선택해주세요.');
+		}
 		if (new URL(location.href).searchParams.get('excel')) {
-			alert('파일이 잘못되었습니다. 형식 또는 양식을 확인해주세요');
+			alert('잘못된 파일입니다. 파일 형식을 확인해주세요');
 		}
-		if (new URL(location.href).searchParams.get('excelMAC')) {
-			alert('이미 존재하는 MAC 입니다.');
+		if (new URL(location.href).searchParams.get('excelType')) {
+			alert('파일 내 잘못된 MAC 주소가 존재합니다.');
 		}
-	}
+		if (new URL(location.href).searchParams.get('inspect')) {
+			window.open('/device_inspect', 'pop', "width=620, height=700, scrollbars=yes, resizable=yes");
+		}
+	};
 </script>
 
 {% endblock %}

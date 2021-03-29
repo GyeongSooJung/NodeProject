@@ -73,7 +73,7 @@
 				</div>
 				<!-- Excel 파일 업로드 -->
 				<div class="panel-body bg-grey pb-0">
-					<form id="car-xlsx-form" action="/car/car_join_xlsx" method="post" enctype="multipart/form-data" class="form-horizontal"name="car-xlsx-form">
+					<form id="car-xlsx-form" action="/car/car_join_xlsx" method="post" enctype="multipart/form-data" class="form-horizontal" name="car-xlsx-form">
 					   <!--현재 시간 변수-->
 						<div class="form-group row m-b-15">
 							<label class="col-md-4 col-sm-4 col-form-label text-green" for="file"><b># Excel 파일로 등록</b> :</label>
@@ -96,23 +96,32 @@
 <!-- error script -->
 <script>
 	window.onload = () => {
-		if (new URL(location.href).searchParams.get('excelCN')) {
-			alert('중복된 번호가 있습니다. 차량번호 혹은 차대번호를 확인해주세요');
-		}
-		if (new URL(location.href).searchParams.get('excel')) {
-			alert('파일이 잘못되었습니다. 형식 또는 양식을 확인해주세요');
-		}
 		if (new URL(location.href).searchParams.get('length')) {
 			alert('차량 번호 자릿수를 확인해주세요.');
 		}
 		if (new URL(location.href).searchParams.get('type')) {
 			alert('차량 번호를 확인해주세요.');
 		}
-		if (new URL(location.href).searchParams.get('CCtype')) {
-			alert('차종을 확인해주세요.');
+		if (new URL(location.href).searchParams.get('exist')) {
+			alert('차량번호 또는 차대번호가 이미 존재합니다.');
 		}
-		if (new URL(location.href).searchParams.get('error')) {
-			alert('차량번호 또는 차대번호를 다시 확인해주세요.');
+		if (new URL(location.href).searchParams.get('nofile')) {
+			alert('파일을 선택해주세요.');
+		}
+		if (new URL(location.href).searchParams.get('excel')) {
+			alert('잘못된 파일입니다. 파일 형식을 확인해주세요');
+		}
+		if (new URL(location.href).searchParams.get('excelCC')) {
+			alert('파일 내 잘못된 차종이 존재합니다.');
+		}
+		if (new URL(location.href).searchParams.get('excelLength')) {
+			alert('파일 내 차량 번호 자릿수를 확인해주세요.');
+		}
+		if (new URL(location.href).searchParams.get('excelType')) {
+			alert('파일 내 잘못된 차량 번호가 존재합니다.');
+		}
+		if (new URL(location.href).searchParams.get('inspect')) {
+			window.open('/car_inspect', 'pop', "width=620, height=700, scrollbars=yes, resizable=yes");
 		}
 	};
 </script>

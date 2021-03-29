@@ -1,6 +1,24 @@
 {
     "lang_kr": "Korean (Basic)",
 	"lang_en": "English",
+	"login" : "Log In",
+	"signup" : "Sign Up",
+	"mk" : "MK Co., Ltd.",
+	"mk_ceo" : "Moo Young",
+	
+	"index_title" : "OASIS | Sterilization Service",
+	"index_about" : "ABOUT",
+	"index_team" : "TEAM",
+	"index_service" : "SERVICES",
+	"index_text" : "It provides complete internal space sterilization with automated system and disinfection using ozone.",
+	"index_vision" : "Vision",
+	"index_philosophy" : "Philosophy",
+	"index_strength" : "Strength",
+	"index_vision_text1" : "Our company, MK, offers a variety of customized products and components with reasonable price and high quality.",
+	"index_vision_text2" : "We help you maintain and improve your equipment economically and efficiently.",
+	"index_philosophy_text1" : "Always the best",
+	"index_philosophy_text2" : "do everything.",
+	
     "main_title": "OASIS | Admin Page",
     "main_point": "point",
 	"main_company": "Company"

@@ -1,7 +1,25 @@
 {
-    "lang_kr": "한국어 (기본)",
-	"lang_en": "영어",
-    "main_title": "OASIS | 관리자 페이지",
-    "main_point": "보유 포인트",
-	"main_company": "사업자"
+    "lang_kr" : "한국어 (기본)",
+	"lang_en" : "영어",
+	"login" : "로그인",
+	"signup" : "회원가입",
+	"mk" : "주식회사 엠케이",
+	"mk_ceo" : "변무영",
+	
+	"index_title" : "OASIS | 소독 서비스",
+	"index_about" : "회사 소개",
+	"index_team" : "팀원",
+	"index_service" : "서비스",
+	"index_text" : "자동화된 시스템과 오존을 활용한 소독 방식으로 완벽한 내부 공간 살균을 제공합니다.",
+	"index_vision" : "비전",
+	"index_philosophy" : "철학",
+	"index_strength" : "강점",
+	"index_vision_text1" : "우리 회사 MK는 합리적인 가격과 고품질의 다양한 맞춤형 제품 및 부품을 제공합니다.",
+	"index_vision_text2" : "장비를 경제적이고 효율적으로 유지 보수하고 개선할 수 있도록 도와드립니다.",
+	"index_philosophy_text1" : "항상 최선을",
+	"index_philosophy_text2" : "다하겠습니다",
+	
+    "main_title" : "OASIS | 관리자 페이지",
+    "main_point" : "보유 포인트",
+	"main_company" : "사업자"
 }
