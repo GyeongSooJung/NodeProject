@@ -132,12 +132,13 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
   const cars = await Car.find({ "CID": req.decoded.CID });
   const workers = await Worker.find({ "CID": req.decoded.CID });
   const publishs = await Publish.find({});
-
+    const historys = await History.find({ "CID": req.decoded.CID });
+  
   var psum = 0;
-  for (var i = 0; i < publishs.length; i++) {
+  for(var i = 0; i < publishs.length; i++) {
     var pcount = publishs[i].PUN;
-    console.log("카운트" + pcount);
-
+    console.log("카운트"+pcount);
+    
     psum += pcount;
   }
 
@@ -149,13 +150,25 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
   const h5 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days * 4, $gte: (Date.now() - Days * 5) } });
   const h6 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days * 5, $gte: (Date.now() - Days * 6) } });
   const h7 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days * 6, $gte: (Date.now() - Days * 7) } });
-  const history_count = await [h1, h2, h3, h4, h5, h6, h7];
+  const history_count = await [h1, h2, h3, h4, h5, h6, h7];  
+  // var history_count2 = [0,0,0,0,0,0,0];
+  // const Days = 24 * 60 * 60 * 1000;
+  
+  // const history_date = await History.find({ "CID": req.decoded.CID, "CA": { $lte: Date.now(), $gte: (Date.now() - Days * 7) } });
 
-  const historys = await History.find({ "CID": req.decoded.CID });
-  console.log(historys);
-  const history_array = await History.findOne({ "CID": req.decoded.CID }).sort({ 'CA': -1 });
-  console.log(history_array);
-  console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" + aclist);
+  //   for (var i =  0; i < 7 ; i ++) {
+  //       console.log(history_date[i]);
+  //       for(var j = await 0; j < history_date.length; j ++) {
+  //         if((history_date[j].CA <=  (Date.now() - (Days * i))) && (history_date[j].CA >=  (Date.now() - Days * (i + 1)))) {
+  //           history_count2[i] += await 1;
+  //         }
+  //       } 
+  //     }
+
+  // const history_count = await history_count2;
+  // console.log(history_count);
+  
+  const history_array = await (historys.reverse())[0]
   if (history_array) {
     const recent_history = history_array.PD;
     res.render('main', { company: req.decoded.company, aclist, devices, cars, workers, historys, recent_history, history_array, history_count, HOME, psum });
@@ -163,7 +176,6 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
   else {
     res.render('main', { company: req.decoded.company, aclist, devices, cars, workers, historys, history_array, history_count, HOME, psum });
   }
-
 
 });
 
