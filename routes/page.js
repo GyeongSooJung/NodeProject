@@ -123,6 +123,7 @@ router.get('/error', (req, res) => {
 //메인 페이지
 router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
 
+
   const CID = req.decoded.CID;
 
   const HOME = process.env.IP;
@@ -132,7 +133,7 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
   const cars = await Car.find({ "CID": req.decoded.CID });
   const workers = await Worker.find({ "CID": req.decoded.CID });
   const publishs = await Publish.find({});
-    const historys = await History.find({ "CID": req.decoded.CID });
+  const historys = await History.find({ "CID": req.decoded.CID });
   
   var psum = 0;
   for(var i = 0; i < publishs.length; i++) {
@@ -142,31 +143,23 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
     psum += pcount;
   }
 
-  const Days = await 24 * 60 * 60 * 1000;
-  const h1 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now(), $gte: (Date.now() - Days) } });
-  const h2 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days, $gte: (Date.now() - Days * 2) } });
-  const h3 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days * 2, $gte: (Date.now() - Days * 3) } });
-  const h4 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days * 3, $gte: (Date.now() - Days * 4) } });
-  const h5 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days * 4, $gte: (Date.now() - Days * 5) } });
-  const h6 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days * 5, $gte: (Date.now() - Days * 6) } });
-  const h7 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days * 6, $gte: (Date.now() - Days * 7) } });
-  const history_count = await [h1, h2, h3, h4, h5, h6, h7];  
-  // var history_count2 = [0,0,0,0,0,0,0];
-  // const Days = 24 * 60 * 60 * 1000;
+
+  var history_count2 = [0,0,0,0,0,0,0];
+  const Days = 24 * 60 * 60 * 1000;
   
-  // const history_date = await History.find({ "CID": req.decoded.CID, "CA": { $lte: Date.now(), $gte: (Date.now() - Days * 7) } });
+  const history_date = await History.find({ "CID": req.decoded.CID, "CA": { $lte: Date.now(), $gte: (Date.now() - Days * 7) } });
 
-  //   for (var i =  0; i < 7 ; i ++) {
-  //       console.log(history_date[i]);
-  //       for(var j = await 0; j < history_date.length; j ++) {
-  //         if((history_date[j].CA <=  (Date.now() - (Days * i))) && (history_date[j].CA >=  (Date.now() - Days * (i + 1)))) {
-  //           history_count2[i] += await 1;
-  //         }
-  //       } 
-  //     }
+    for (var i =  0; i < 7 ; i ++) {
+        console.log(history_date[i]);
+        for(var j = await 0; j < history_date.length; j ++) {
+          if((history_date[j].CA <=  (Date.now() - (Days * i))) && (history_date[j].CA >=  (Date.now() - Days * (i + 1)))) {
+            history_count2[i] += await 1;
+          }
+        } 
+      }
 
-  // const history_count = await history_count2;
-  // console.log(history_count);
+  const history_count = await history_count2;
+  console.log(history_count);
   
   const history_array = await (historys.reverse())[0]
   if (history_array) {
