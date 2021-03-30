@@ -926,11 +926,11 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
         const pointone = await Point.insertMany({
           "CID" : companyone._id,
           "PN" : "알림톡 전송",
-          "PO" : 20,
+          "PO" : 50,
         });
               
           console.log(companypoint);
-        // companypoint = companypoint - 20;
+        companypoint = companypoint - 50;
           console.log(companypoint);
               
          await Company.where({'_id' : historyone.CID})
