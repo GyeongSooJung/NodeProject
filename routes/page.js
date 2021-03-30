@@ -291,11 +291,10 @@ router.get('/device_inspect', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   var session_excel = await req.session.re_device_excel;
-  var session_excel_1 = await req.session.re_device_excel;
   
   if(session_excel) {
     if(typeof(session_excel[1]) == 'string') {
-      session_excel_1 = session_excel;
+      var session_excel_1 = session_excel;
       res.render('device_inspect', {company: req.decoded.company, aclist, session_excel_1});
     }
     else{
@@ -377,46 +376,18 @@ router.get('/car_join', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.get('/car_inspect', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-  // console.log("세션"+req.session.re_excel);
   var session_excel = await req.session.re_car_excel;
-  var session_excel2 = await req.session.re2_car_excel;
-  var session_excel3 = await req.session.re3_car_excel;
-  var session_excel_1 = await req.session.re_car_excel;
-  var session_excel2_1 = await req.session.re2_car_excel;
-  var session_excel3_1 = await req.session.re3_car_excel;
-  
-  console.log("세션1"+session_excel);
-  console.log("세션2"+session_excel2);
-  console.log("세션3"+session_excel3);
   if(session_excel) {
     if(typeof(session_excel[1]) == 'string') {
-      session_excel_1 = session_excel;
-      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel2, session_excel3, session_excel_1});
+      var session_excel_1 = session_excel;
+      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel_1});
     }
     else{
-      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel, session_excel2, session_excel3});
-    }
-  }
-  else if(session_excel2) {
-    if(typeof(session_excel2[1]) == 'string') {
-      session_excel2_1 = session_excel2;
-      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel, session_excel3, session_excel2_1});
-    }
-    else{
-      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel, session_excel2, session_excel3});
-    }
-  }
-  else if(session_excel3) {
-    if(typeof(session_excel3[1]) == 'string') {
-      session_excel3_1 = session_excel3;
-      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel, session_excel2, session_excel3_1});
-    }
-    else{
-      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel, session_excel2, session_excel3});
+      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel});
     }
   }
   else {
-    res.render('car_inspect', {company: req.decoded.company, aclist, session_excel, session_excel2, session_excel3});
+    res.render('car_inspect', {company: req.decoded.company, aclist, session_excel});
   }
 });
 
@@ -995,11 +966,11 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
         const pointone = await Point.insertMany({
           "CID" : companyone._id,
           "PN" : "알림톡 전송",
-          "PO" : 50,
+          "PO" : 20,
         });
               
           console.log(companypoint);
-        companypoint = companypoint - 50;
+        // companypoint = companypoint - 20;
           console.log(companypoint);
               
          await Company.where({'_id' : historyone.CID})

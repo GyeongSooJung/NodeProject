@@ -13,6 +13,7 @@
 	<link href="../assets/plugins/flag-icon-css/css/flag-icon.min.css" rel="stylesheet" />
 	<!-- ================== END BASE CSS STYLE ================== -->
 	<link href="../assets/img/favicon.png" rel="icon">
+	<script src="https://kit.fontawesome.com/71839e8cce.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div id="content" class="content">
@@ -37,20 +38,18 @@
     										<th width="1%">
     											<input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/>
     										</th>
-    										<th width="27%">모델명</th>
-    										<th width="13%">버전</th>
-    										<th width="32%">맥 주소</th>
-    										<th width="27%">별칭</th>
+    										<th width="76%">엑셀 내 중복된 MAC<i class="fas mx-2 fa-arrow-right"></i>수정할 MAC</th>
+    										<th width="23%">별칭</th>
     									</tr>
     								</thead>
     								<tbody>
                                         {% if (session_excel == "") or (session_excel_1 == "") %}
                                         <tr>
-                                            <td colspan="5">중복된 목록이 없습니다.</td>
+                                            <td colspan="3">중복된 목록이 없습니다.</td>
                                         </tr>
                                         {% elseif (session_excel == null) and (session_excel_1 == null) %}
                                         <tr>
-                                            <td colspan="5">중복된 목록이 없습니다.</td>
+                                            <td colspan="3">중복된 목록이 없습니다.</td>
                                         </tr>
                                         {% else %}
                                             <script>
@@ -59,20 +58,19 @@
                                             {% for item in session_excel %}
                                             <tr>
                                                 <td class="with-btn" nowrap>
-    												<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{item[3]}} onChange="eachCheckedBox(this);"/>
+    												<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{item[1]}} onChange="eachCheckedBox(this);"/>
     			    							</td>
-                                                <td>
-                                                    <input class="form-control" type="text" name="MD" value="{{item[1]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                <td class="d-flex justify-content-around align-items-center">
+                                                    {% if (item[3] == null) %}
+                                                    <input class="form-control" type="text" name="exMAC" value="{{item[1]}}" readonly>
+                                                    {% else %}
+                                                    <input class="form-control" type="text" name="exMAC" value="{{item[3]}}" readonly>
+                                                    {% endif %}
+                                                    <i class="fas fa-2x mx-3 fa-caret-right"></i>
+                                                    <input class="form-control border-danger" type="text" name="MAC" value="{{item[1]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
                                                 </td>
                                                 <td>
-                                                    <input class="form-control" type="text" name="VER" value="{{item[2]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
-                                                </td>
-                                                <td>
-                                                    <input class="form-control border-danger" type="text" name="MAC" value="{{item[3]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
-                                                    <input type="hidden" name ="exMAC" value ="{{item[3]}}">
-                                                </td>
-                                                <td>
-                                                    <input class="form-control" type="text" name="NN" value="{{item[4]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                    <input class="form-control" type="text" name="NN" value="{{item[2]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -80,20 +78,15 @@
                                             {% if session_excel_1 %}
                                             <tr>
                                                 <td class="with-btn" nowrap>
-    												<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{session_excel_1[3]}} onChange="eachCheckedBox(this);"/>
+    												<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{session_excel_1[1]}} onChange="eachCheckedBox(this);"/>
     			    							</td>
-                                                <td>
-                                                    <input class="form-control" type="text" name="MD" value="{{session_excel_1[1]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+    			    							<td class="d-flex justify-content-around align-items-center">
+                                                    <input class="form-control" type="text" name="exMAC" value="{{session_excel_1[3]}}" readonly>
+                                                    <i class="fas fa-2x mx-3 fa-caret-right"></i>
+                                                    <input class="form-control border-danger" type="text" name="MAC" value="{{session_excel_1[1]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
                                                 </td>
                                                 <td>
-                                                    <input class="form-control" type="text" name="VER" value="{{session_excel_1[2]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
-                                                </td>
-                                                <td>
-                                                    <input class="form-control border-danger" type="text" name="MAC" value="{{session_excel_1[3]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
-                                                    <input type="hidden" name ="exMAC" value ="{{session_excel_1[5]}}">
-                                                </td>
-                                                <td>
-                                                    <input class="form-control" type="text" name="NN" value="{{session_excel_1[4]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                    <input class="form-control" type="text" name="NN" value="{{session_excel_1[2]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
                                                 </td>
                                             </tr>
                                             {% endif %}
@@ -157,8 +150,6 @@
     		if(answer == true) {
     		    if(typeof(frm.elements['ck'].length) == 'undefined') {
                     if (frm.elements['ck'].checked == false) {
-                        frm.elements['MD'].disabled = true;
-                        frm.elements['VER'].disabled = true;
                         frm.elements['MAC'].disabled = true;
                         frm.elements['NN'].disabled = true;
                         frm.elements['exMAC'].disabled = true;
@@ -170,11 +161,9 @@
                 else {
                     for (var i = 0; i < frm.elements['ck'].length; i ++) {
                         if (frm.elements['ck'][i].checked == false) {
-                            frm.elements['MD'][i].disabled = true;
-                            frm.elements['VER'][i].disabled = true;
                             frm.elements['MAC'][i].disabled = true;
                             frm.elements['NN'][i].disabled = true;
-                            frm.elements['exMAC'].disabled = true;
+                            frm.elements['exMAC'][i].disabled = true;
                         }
                         else {
                             checktest = true;
@@ -182,9 +171,6 @@
                     }
                 }
                 
-                if(!checktest) {
-                    return alert("항목을 선택해주세요.");
-                }
     			frm.action='/device/device_overwrite_check'; frm.submit(); return true;
     		}
     		else {

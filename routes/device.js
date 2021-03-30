@@ -61,25 +61,16 @@ router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
           const add_excel1 = [];
           const add_excel2 = [];
           const add_excel3 = [];
-          const add_excel4 = [];
-          const add_excel5 = [];
           // 중복된 값들을 넣는 배열
           const re_excel1 = [];
           const re_excel2 = [];
           const re_excel3 = [];
-          const re_excel4 = [];
-          const re_excel5 = [];
+          
           // 엑셀 파일 처리
           const workbook = xlsx.readFile(file.path);
           const sheetnames = Object.keys(workbook.Sheets);
-          
-          const excel1= [];
-          const excel2= [];
-          const excel3= [];
-          const excel4= [];
-          const excel5= [];
-          
           resData[sheetnames[0]] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetnames[0]]);
+          
           var a = 0;
           var b = 0;
           
@@ -93,20 +84,16 @@ router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
                 resData[sheetnames[0]][j].CID = CID;
                 
                 add_excel1[a] = resData.Sheet1[j].CID;
-                add_excel2[a] = resData.Sheet1[j].모델명;
-                add_excel3[a] = resData.Sheet1[j].버전;
-                add_excel4[a] = resData.Sheet1[j].맥주소;
-                add_excel5[a] = resData.Sheet1[j].별칭;
+                add_excel2[a] = resData.Sheet1[j].맥주소;
+                add_excel3[a] = resData.Sheet1[j].별칭;
                 a += 1;
               }
               else {
                 resData[sheetnames[0]][j].CID = CID;
                 
                 re_excel1[b] = resData.Sheet1[j].CID;
-                re_excel2[b] = resData.Sheet1[j].모델명;
-                re_excel3[b] = resData.Sheet1[j].버전;
-                re_excel4[b] = resData.Sheet1[j].맥주소;
-                re_excel5[b] = resData.Sheet1[j].별칭;
+                re_excel2[b] = resData.Sheet1[j].맥주소;
+                re_excel3[b] = resData.Sheet1[j].별칭;
                 b += 1;
               }
             }
@@ -121,17 +108,17 @@ router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
           for (var i = 0; i < add_excel1.length; i ++) {
             Device.insertMany({
               "CID": add_excel1[i],
-              "MD" : add_excel2[i],
-              "VER": add_excel3[i],
-              "MAC": add_excel4[i],
-              "NN" : add_excel5[i]
+              "MD" : "엑셀등록",
+              "VER" : NaN,
+              "MAC": add_excel2[i],
+              "NN" : add_excel3[i]
             });
           }
           
           var re_excel = [];
           
           for (var h = 0; h < re_excel1.length; h ++) {
-            re_excel[h] = [re_excel1[h], re_excel2[h], re_excel3[h], re_excel4[h], re_excel5[h]];
+            re_excel[h] = [re_excel1[h], re_excel2[h], re_excel3[h]];
           }
           req.session.re_device_excel = await re_excel;
           
@@ -159,20 +146,21 @@ router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
 
   //전체
 router.post('/device_overwrite_all', isNotLoggedIn, async(req, res, next) => {
-  const { MD, VER, MAC, NN, exMAC } = req.body;
+  const { MAC, NN, exMAC } = req.body;
   const CID = req.decoded.CID;
   
   try {
     if (typeof(MAC) == 'string') {
+      
       const exDevice = await Device.findOne({ "MAC" : MAC });
       
       if (!exDevice) {
         await Device.where({"MAC" : exMAC})
           .updateMany({
             "CID" : CID,
-            "MD" : MD,
+            "MD" : "엑셀등록",
+            "VER" : NaN,
             "MAC" : MAC,
-            "VER" : VER,
             "NN" : NN,
           }).setOptions({runValidators : true})
             .exec();
@@ -182,15 +170,15 @@ router.post('/device_overwrite_all', isNotLoggedIn, async(req, res, next) => {
           await Device.where({"MAC" : exMAC})
             .updateMany({
               "CID" : CID,
-              "MD" : MD,
+              "MD" : "엑셀등록",
+              "VER" : NaN,
               "MAC" : MAC,
-              "VER" : VER,
               "NN" : NN,
             }).setOptions({runValidators : true})
               .exec();
         }
         else {
-          var re_excel = [CID, MD, VER, MAC, NN, exMAC];
+          var re_excel = [CID, MAC, NN, exMAC];
         }
       }
       
@@ -206,8 +194,6 @@ router.post('/device_overwrite_all', isNotLoggedIn, async(req, res, next) => {
       var re_excel2 = [];
       var re_excel3 = [];
       var re_excel4 = [];
-      var re_excel5 = [];
-      var re_excel6 = [];
       
       var a = 0;
       
@@ -219,9 +205,9 @@ router.post('/device_overwrite_all', isNotLoggedIn, async(req, res, next) => {
           await Device.where({"MAC" : exMAC[i]})
             .updateMany({
               "CID" : CID,
-              "MD" : MD[i].toString(),
+              "MD" : "엑셀등록",
+              "VER" : NaN,
               "MAC" : MAC[i].toString(),
-              "VER" : parseFloat(VER[i]),
               "NN" : NN[i].toString(),
             }).setOptions({runValidators : true})
               .exec();
@@ -231,20 +217,18 @@ router.post('/device_overwrite_all', isNotLoggedIn, async(req, res, next) => {
             await Device.where({"MAC" : exMAC[i]})
               .updateMany({
                 "CID" : CID,
-                "MD" : MD[i].toString(),
+                "MD" : "엑셀등록",
+                "VER" : NaN,
                 "MAC" : MAC[i].toString(),
-                "VER" : parseFloat(VER[i]),
                 "NN" : NN[i].toString(),
               }).setOptions({runValidators : true})
                 .exec();
           }
           else {
             re_excel1[a] = CID;
-            re_excel2[a] = MD[i];
-            re_excel3[a] = VER[i];
-            re_excel4[a] = MAC[i];
-            re_excel5[a] = NN[i];
-            re_excel6[a] = exMAC[i];
+            re_excel2[a] = MAC[i];
+            re_excel3[a] = NN[i];
+            re_excel4[a] = exMAC[i];
             a += 1;
           }
         }
@@ -258,7 +242,7 @@ router.post('/device_overwrite_all', isNotLoggedIn, async(req, res, next) => {
       var re_excel = [];
       
       for (var h = 0; h < re_excel1.length; h ++) {
-        re_excel[h] = [re_excel1[h], re_excel2[h], re_excel3[h], re_excel4[h], re_excel5[h], re_excel6[h]];
+        re_excel[h] = [re_excel1[h], re_excel2[h], re_excel3[h], re_excel4[h]];
       }
       
       req.session.re_device_excel = await re_excel;
@@ -274,79 +258,110 @@ router.post('/device_overwrite_all', isNotLoggedIn, async(req, res, next) => {
 
   //선택
 router.post('/device_overwrite_check', isNotLoggedIn, async(req, res, next) => {
-  const { ck, MD, VER, MAC, NN, exMAC } = req.body;
+  const { ck, MAC, NN, exMAC } = req.body;
   const CID = req.decoded.CID;
   
   try {
     if (typeof(ck) == 'string') {
-      
+
       const exDevice = await Device.findOne({ "MAC" : MAC });
+      
       if (!exDevice) {
-        await Device.where({"MAC" : ck})
+        await Device.where({"MAC" : exMAC})
           .updateMany({
             "CID" : CID,
-            "MD" : MD,
-            "MAC" : MAC,
-            "VER" : VER,
-            "NN" : NN,
+            "MD" : "엑셀등록",
+            "VER" : NaN,
+            "MAC" : MAC.toString(),
+            "NN" : NN.toString(),
           }).setOptions({runValidators : true})
             .exec();
       }
       else {
         if (MAC === exMAC) {
-          await Device.where({"MAC" : ck})
+          await Device.where({"MAC" : exMAC})
             .updateMany({
               "CID" : CID,
-              "MD" : MD,
-              "MAC" : MAC,
-              "VER" : VER,
-              "NN" : NN,
+              "MD" : "엑셀등록",
+              "VER" : NaN,
+              "MAC" : MAC.toString(),
+              "NN" : NN.toString(),
             }).setOptions({runValidators : true})
               .exec();
         }
         else {
-          return res.redirect('/device_inspect?exist=true');
+          var re_excel = [CID, MAC, NN, exMAC];
         }
       }
       
+      req.session.re_device_excel = await null;
+      req.session.re_device_excel = await re_excel;
+      
+      return res.redirect('/device_inspect');
+      
     }
     else {
+      
+      var re_excel1 = [];
+      var re_excel2 = [];
+      var re_excel3 = [];
+      var re_excel4 = [];
+      
+      var a = 0;
+      
       for (var i = 0; i < ck.length; i ++) {
         
         const exDevice = await Device.findOne({ "MAC" : MAC[i] });
+        
         if (!exDevice) {
-          await Device.where({"MAC" : ck[i]})
+          await Device.where({"MAC" : exMAC[i]})
             .updateMany({
               "CID" : CID,
-              "MD" : MD[i].toString(),
+              "MD" : "엑셀등록",
+              "VER" : NaN,
               "MAC" : MAC[i].toString(),
-              "VER" : parseFloat(VER[i]),
               "NN" : NN[i].toString(),
             }).setOptions({runValidators : true})
               .exec();
-              
         }
         else {
           if (MAC[i] === exMAC[i]) {
-            await Device.where({"MAC" : ck[i]})
+            await Device.where({"MAC" : exMAC[i]})
               .updateMany({
                 "CID" : CID,
-                "MD" : MD[i].toString(),
+                "MD" : "엑셀등록",
+                "VER" : NaN,
                 "MAC" : MAC[i].toString(),
-                "VER" : parseFloat(VER[i]),
                 "NN" : NN[i].toString(),
               }).setOptions({runValidators : true})
                 .exec();
           }
           else {
-            return res.redirect('/device_inspect?exist=true');
+            re_excel1[a] = CID;
+            re_excel2[a] = MAC[i];
+            re_excel3[a] = NN[i];
+            re_excel4[a] = exMAC[i];
+            a += 1;
           }
         }
         
       }
+      
+      a = 0;
+      
+      req.session.re_device_excel = await null;
+      
+      var re_excel = [];
+      
+      for (var h = 0; h < re_excel1.length; h ++) {
+        re_excel[h] = [re_excel1[h], re_excel2[h], re_excel3[h], re_excel4[h]];
+      }
+      
+      req.session.re_device_excel = await re_excel;
+      
+      return res.redirect('/device_inspect');
+      
     }
-    req.session.re_device_excel = null;
-    return res.redirect('/device_inspect');
   } catch (err) {
     console.error(err);
     next(err);

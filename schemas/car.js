@@ -19,7 +19,6 @@ const carSchema = new Schema({
   },
   SN: {
     type: String,
-    unique: true,
   },
   CA: {
     type: Date,
