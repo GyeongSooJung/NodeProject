@@ -46,7 +46,6 @@
 			<ul class="navbar-nav navbar-right">
 				<li class="dropdown navbar-user">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<i class="fas fa-lg fa-fw fa-user-circle"></i>
 						<span class="d-none d-md-inline font-weight-bold">{{company.CNA}}</span>
 						<small class="font-weight-bold">({{__('main_point')}} : <span id="pointbox" class="text-primary">{{company.SPO}} p</span>)</small>
 						<b class="caret"></b>
@@ -77,7 +76,9 @@
 		<div id="sidebar" class="sidebar">
 			<!-- begin sidebar scrollbar -->
 			<div id="active-menu" data-scrollbar="true" data-height="100%">
-				<ul class="nav"><li class="nav-header">Navigation</li>
+				<ul class="nav">
+				<li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>
+				
 					{% if(company.AH == true) %}
 					<li class="has-sub">
 						<a href="javascript:;">
@@ -116,7 +117,7 @@
 					<li class="has-sub">
 						<a href="javascript:;">
 							<b class="caret"></b>
-							<i class="fas fa-lg fa-fw m-r-10 fa-microchip"></i>
+							<i class="fas fa-lg fa-fw m-r-10 fa-microchip"></i>ㄹ
 							<span> 소독기 </span> 
 						</a>
 						<ul class="sub-menu">
@@ -215,7 +216,7 @@
 				
 					
 					<!-- begin sidebar minify button -->
-					<li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>
+					
 					<!-- end sidebar minify button -->
 				</ul>
 				<!-- end sidebar nav -->
