@@ -132,6 +132,7 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
   const cars = await Car.find({ "CID": req.decoded.CID });
   const workers = await Worker.find({ "CID": req.decoded.CID });
   const publishs = await Publish.find({});
+  const historys = await History.find({ "CID": req.decoded.CID });
   
   var psum = 0;
   for(var i = 0; i < publishs.length; i++) {
@@ -141,20 +142,25 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
     psum += pcount;
   }
 
-  const Days = await 24 * 60 * 60 * 1000;
-  const h1 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now(), $gte: (Date.now() - Days) } });
-  const h2 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days, $gte: (Date.now() - Days * 2) } });
-  const h3 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days * 2, $gte: (Date.now() - Days * 3) } });
-  const h4 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days * 3, $gte: (Date.now() - Days * 4) } });
-  const h5 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days * 4, $gte: (Date.now() - Days * 5) } });
-  const h6 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days * 5, $gte: (Date.now() - Days * 6) } });
-  const h7 = await History.countDocuments({ "CID": req.decoded.CID, "CA": { $lte: Date.now() - Days * 6, $gte: (Date.now() - Days * 7) } });
-  const history_count = await [h1, h2, h3, h4, h5, h6, h7];
 
-  const historys = await History.find({ "CID": req.decoded.CID });
-  const history_array = await History.findOne({ "CID": req.decoded.CID }).sort({ '_id': -1 }).limit(1);
-  console.log(history_array);
-  console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" + aclist);
+  var history_count2 = [0,0,0,0,0,0,0];
+  const Days = 24 * 60 * 60 * 1000;
+  
+  const history_date = await History.find({ "CID": req.decoded.CID, "CA": { $lte: Date.now(), $gte: (Date.now() - Days * 7) } });
+
+    for (var i =  0; i < 7 ; i ++) {
+        console.log(history_date[i]);
+        for(var j = await 0; j < history_date.length; j ++) {
+          if((history_date[j].CA <=  (Date.now() - (Days * i))) && (history_date[j].CA >=  (Date.now() - Days * (i + 1)))) {
+            history_count2[i] += await 1;
+          }
+        } 
+      }
+
+  const history_count = await history_count2;
+  console.log(history_count);
+  
+  const history_array = await (historys.reverse())[0]
   if (history_array) {
     const recent_history = history_array.PD;
     res.render('main', { company: req.decoded.company, aclist, devices, cars, workers, historys, recent_history, history_array, history_count, HOME, psum });
@@ -162,7 +168,6 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
   else {
     res.render('main', { company: req.decoded.company, aclist, devices, cars, workers, historys, history_array, history_count, HOME, psum });
   }
-
 
 });
 
