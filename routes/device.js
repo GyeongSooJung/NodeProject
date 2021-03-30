@@ -72,6 +72,13 @@ router.post('/device_join_xlsx', isNotLoggedIn, async(req, res, next) => {
           // 엑셀 파일 처리
           const workbook = xlsx.readFile(file.path);
           const sheetnames = Object.keys(workbook.Sheets);
+          
+          const excel1= [];
+          const excel2= [];
+          const excel3= [];
+          const excel4= [];
+          const excel5= [];
+          
           resData[sheetnames[0]] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetnames[0]]);
           var a = 0;
           var b = 0;
@@ -157,8 +164,8 @@ router.post('/device_overwrite_all', isNotLoggedIn, async(req, res, next) => {
   
   try {
     if (typeof(MAC) == 'string') {
-      
       const exDevice = await Device.findOne({ "MAC" : MAC });
+      
       if (!exDevice) {
         await Device.where({"MAC" : exMAC})
           .updateMany({
@@ -183,16 +190,31 @@ router.post('/device_overwrite_all', isNotLoggedIn, async(req, res, next) => {
               .exec();
         }
         else {
-          return res.redirect('/device_inspect?exist=true');
+          var re_excel = [CID, MD, VER, MAC, NN, exMAC];
         }
       }
+      
+      req.session.re_device_excel = await null;
+      req.session.re_device_excel = await re_excel;
+      
+      return res.redirect('/device_inspect');
       
     }
     else {
       
+      var re_excel1 = [];
+      var re_excel2 = [];
+      var re_excel3 = [];
+      var re_excel4 = [];
+      var re_excel5 = [];
+      var re_excel6 = [];
+      
+      var a = 0;
+      
       for (var i = 0; i < MAC.length; i ++) {
         
         const exDevice = await Device.findOne({ "MAC" : MAC[i] });
+        
         if (!exDevice) {
           await Device.where({"MAC" : exMAC[i]})
             .updateMany({
@@ -203,7 +225,6 @@ router.post('/device_overwrite_all', isNotLoggedIn, async(req, res, next) => {
               "NN" : NN[i].toString(),
             }).setOptions({runValidators : true})
               .exec();
-              
         }
         else {
           if (MAC[i] === exMAC[i]) {
@@ -218,15 +239,33 @@ router.post('/device_overwrite_all', isNotLoggedIn, async(req, res, next) => {
                 .exec();
           }
           else {
-            return res.redirect('/device_inspect?exist=true');
+            re_excel1[a] = CID;
+            re_excel2[a] = MD[i];
+            re_excel3[a] = VER[i];
+            re_excel4[a] = MAC[i];
+            re_excel5[a] = NN[i];
+            re_excel6[a] = exMAC[i];
+            a += 1;
           }
         }
         
       }
       
+      a = 0;
+      
+      req.session.re_device_excel = await null;
+      
+      var re_excel = [];
+      
+      for (var h = 0; h < re_excel1.length; h ++) {
+        re_excel[h] = [re_excel1[h], re_excel2[h], re_excel3[h], re_excel4[h], re_excel5[h], re_excel6[h]];
+      }
+      
+      req.session.re_device_excel = await re_excel;
+      
+      return res.redirect('/device_inspect');
+      
     }
-    req.session.re_device_excel = null;
-    return res.redirect('/device_inspect?overwrite=true');
   } catch (err) {
     console.error(err);
     next(err);
@@ -307,7 +346,7 @@ router.post('/device_overwrite_check', isNotLoggedIn, async(req, res, next) => {
       }
     }
     req.session.re_device_excel = null;
-    return res.redirect('/device_inspect?overwrite=true');
+    return res.redirect('/device_inspect');
   } catch (err) {
     console.error(err);
     next(err);

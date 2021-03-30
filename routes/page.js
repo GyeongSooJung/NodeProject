@@ -9,6 +9,7 @@ const History = require('../schemas/history');
 const Order = require('../schemas/order');
 const Service = require('../schemas/service');
 const Publish = require('../schemas/publish');
+const Point = require('../schemas/point');
 
 const moment = require('moment');
 const session = require('express-session');
@@ -290,8 +291,20 @@ router.get('/device_inspect', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   var session_excel = await req.session.re_device_excel;
+  var session_excel_1 = await req.session.re_device_excel;
   
-  res.render('device_inspect', {company: req.decoded.company, aclist, session_excel});
+  if(session_excel) {
+    if(typeof(session_excel[1]) == 'string') {
+      session_excel_1 = session_excel;
+      res.render('device_inspect', {company: req.decoded.company, aclist, session_excel_1});
+    }
+    else{
+      res.render('device_inspect', {company: req.decoded.company, aclist, session_excel});
+    }
+  }
+  else {
+    res.render('device_inspect', {company: req.decoded.company, aclist, session_excel});
+  }
 });
 
 //장비 수정
@@ -368,12 +381,43 @@ router.get('/car_inspect', isNotLoggedIn, DataSet, async(req, res, next) => {
   var session_excel = await req.session.re_car_excel;
   var session_excel2 = await req.session.re2_car_excel;
   var session_excel3 = await req.session.re3_car_excel;
+  var session_excel_1 = await req.session.re_car_excel;
+  var session_excel2_1 = await req.session.re2_car_excel;
+  var session_excel3_1 = await req.session.re3_car_excel;
+  
   console.log("세션1"+session_excel);
   console.log("세션2"+session_excel2);
   console.log("세션3"+session_excel3);
-  console.log("세션확인"+typeof(session_excel3[1]));
-  
-  res.render('car_inspect', {company: req.decoded.company, aclist, session_excel, session_excel2, session_excel3});
+  if(session_excel) {
+    if(typeof(session_excel[1]) == 'string') {
+      session_excel_1 = session_excel;
+      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel2, session_excel3, session_excel_1});
+    }
+    else{
+      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel, session_excel2, session_excel3});
+    }
+  }
+  else if(session_excel2) {
+    if(typeof(session_excel2[1]) == 'string') {
+      session_excel2_1 = session_excel2;
+      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel, session_excel3, session_excel2_1});
+    }
+    else{
+      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel, session_excel2, session_excel3});
+    }
+  }
+  else if(session_excel3) {
+    if(typeof(session_excel3[1]) == 'string') {
+      session_excel3_1 = session_excel3;
+      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel, session_excel2, session_excel3_1});
+    }
+    else{
+      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel, session_excel2, session_excel3});
+    }
+  }
+  else {
+    res.render('car_inspect', {company: req.decoded.company, aclist, session_excel, session_excel2, session_excel3});
+  }
 });
 
 //차량 수정
@@ -756,75 +800,34 @@ router.get('/receipt', isNotLoggedIn, DataSet, async(req, res, next) => {
 
 
 //----------------------------------------------------------------------------//
-//                                  SMS                                       //
+//                                   Point                                    //
 //----------------------------------------------------------------------------//
 
-router.get('/sms_send', isNotLoggedIn, DataSet, async(req, res, next) => {
-        const historyid = req.body._id;
-        const number = req.body.number;
-       
-      // const historyid = '6046d067b1d64326737c82bd'
-       //const number = '01021128228'
-       
-        const apiKey = 'NCS3UVB461GJGRSG'
-        const apiSecret = '8YWUASVQUCDISORWHRPD6JNITLZKTPCO'
-        
-        const historyone = await History.findOne({'_id' : historyid});
-        const companyone = await Company.findOne({'_id' : historyone.CID})
-        var companypoint = companyone.SPO;
-        
-        if(companypoint > 0) {
-        
-            config.init({ apiKey, apiSecret })
-             
-             
-              async function send (params = {}) {
-                try {
-                  const response = await Group.sendSimpleMessage(params)
-                  console.log(response)
-                  Group.deleteGroup(response.groupId);
-                  
-                } catch (e) {
-                  console.log(e)
-                }
-              }
-              
-              
-              const params = [{
-                text: '안녕하세요. www.cleanoasis.net/publish?HID=' + historyid, // 문자 내용
-                type: 'SMS', // 발송할 메시지 타입 (SMS, LMS, MMS, ATA, CTA)
-                to: number, // 수신번호 (받는이)
-                from: '16443486' // 발신번호 (보내는이)
-              }]
-              
-              
-              
-              for(var i =0; i < params.length; i ++) {
-              companypoint = companypoint - 1;
-                send(params[i])
-              }
-            
-              
-            const companyone =  await Company.where({'_id' : historyone.CID})
-            .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
-            .exec();
-        }
-        
-});
-
-router.get('/kakao_send', isNotLoggedIn, DataSet, async(req, res, next) => {
+//포인트 사용 목록
+router.get('/point_list', isNotLoggedIn, DataSet, async(req, res, next) => {
+  
   const CID = req.decoded.CID;
-  const CNU = req.decoded.CNU;
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
-
+  const aclist = await Worker.find({ "CID" : CID, "AC" : false });
+  const imp_code = process.env.imp_code;
+  let page = req.query.page;
+  const GN = req.query.GN;
+  const IP = process.env.IP;
+  
   try {
-    res.render('repair', { company: req.decoded.company, aclist });
+    const point = await Point.find({ "CID" : CID});
+
+        const totalNum = await Point.countDocuments({ "CID": CID });
+        let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
+        const points = await Point.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
+        console.log(points);
+  
+        res.render('point_list', { company: req.decoded.company, aclist, totalNum, currentPage, totalPage, startPage, endPage,IP, points });
+
   }
-  catch (err) {
+  catch(err) {
     console.error(err);
     next(err);
   }
-  
 });
 
 
@@ -922,11 +925,11 @@ router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
         
     
 });
-
 router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
         
-        const historyid = '60596b85e6449d194e5bb8a7';
-        const number = '01023452379';
+        const historyid = '605aec074164b23448038c2d';
+        const number = '01021128228';
+        const comname = '롯데렌터카';
     
         let apiSecret = process.env.sol_secret;
         let apiKey = process.env.sol_key;
@@ -950,6 +953,7 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
         const companyone = await Company.findOne({'_id' : historyone.CID})
         var companypoint = companyone.SPO;
         
+        var msgID = ""
         var options = {
             headers: {
               Authorization:
@@ -961,18 +965,17 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
                   to: number,
                   from: '16443486',
                   text:
-                    companyone.CNA + "에서 소독이 완료되었음을 알려드립니다. 자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
+                    comname+ "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
                   type: 'ATA',
                   kakaoOptions: {
-                    disableSms: true,
                     pfId: 'KA01PF210319072804501wAicQajTRe4',
                     templateId: 'KA01TP210319074611283wL0AjgZVdog',
                     buttons: [
                       {
                         buttonType: 'WL',
                         buttonName: '확인하기',
-                        linkMo: 'http://www.cleanoasis.net/publish?cat=1&hid=' + historyid,
-                        linkPc: 'http://www.cleanoasis.net/publish?cat=1&hid=' + historyid
+                        linkMo: process.env.IP +'/publish?cat=1&hid=' + historyid,
+                        linkPc: process.env.IP +'/publish?cat=1&hid=' + historyid
                       }
                     ]
                   }
@@ -983,21 +986,28 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
             json: true,
             url: 'http://api.solapi.com/messages/v4/send-many'
           };
-
-        
-        
-         request(options, function(error, response, body) {
+          
+        request(options, function(error, response, body) {
           if (error) throw error;
           console.log('result :', body);
-        });     
+        });  
+        
+        const pointone = await Point.insertMany({
+          "CID" : companyone._id,
+          "PN" : "알림톡 전송",
+          "PO" : 20,
+        });
               
           console.log(companypoint);
-         companypoint = companypoint - 20;
+        // companypoint = companypoint - 20;
           console.log(companypoint);
               
-           companyone =  await Company.where({'_id' : historyone.CID})
+         await Company.where({'_id' : historyone.CID})
             .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
             .exec();
+            
+            
+          
     
 });
 

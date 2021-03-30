@@ -151,22 +151,6 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
                     re3_excel4[d] = resData.Sheet1[j].차대번호;
                     d += 1;
                   }
-                  // if(!carone && !carone2) {
-                  //   resData[sheetnames[0]][j].CID = CID;
-                    
-                  //   add_excel1[j] = resData.Sheet1[j].CID;
-                  //   add_excel2[j] = resData.Sheet1[j].차종;
-                  //   add_excel3[j] = resData.Sheet1[j].차량번호;
-                  //   add_excel4[j] = resData.Sheet1[j].차대번호;
-                  // }
-                  // else {
-                  //   resData[sheetnames[0]][j].CID = CID;
-                    
-                  //   re_excel1[j] = resData.Sheet1[j].CID;
-                  //   re_excel2[j] = resData.Sheet1[j].차종;
-                  //   re_excel3[j] = resData.Sheet1[j].차량번호;
-                  //   re_excel4[j] = resData.Sheet1[j].차대번호;
-                  // }
                 }
                 else {
                   return res.redirect('/car_join?excelType=true');
@@ -179,30 +163,6 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
             else {
               return res.redirect('/car_join?excelCC=true');
             }
-             
-            // if (carone || carone2) {
-            //   return res.redirect('/car_join?excelCN=true');
-            // }    // 엑셀 파일이 잘 되어있는지 확인
-            // if (7 > resData.Sheet1[j].차량번호.length || 8 < resData.Sheet1[j].차량번호.length) {
-            //     return res.redirect('/car_join?length=true');
-            //   }
-            // if (check.test(resData.Sheet1[j].차량번호) == false) 
-            //   {
-            //   return res.redirect('/car_join?type=true');
-            //   }
-            // if (!(resData.Sheet1[j].차종 == 1 || resData.Sheet1[j].차종 == 2 || resData.Sheet1[j].차종 == 3 || resData.Sheet1[j].차종 == 4 || resData.Sheet1[j].차종 == 5 || resData.Sheet1[j].차종 == 6 )) {
-                
-            //     return res.redirect('/car_join?CCtype=true');
-            //   }
-            // else {
-            //   resData[sheetnames[0]][j].CID = CID;
-            //   Car.insertMany({
-            //   "CID": resData.Sheet1[j].CID,
-            //   "CC" : resData.Sheet1[j].차종,
-            //   "CN": resData.Sheet1[j].차량번호,
-            //   "SN": resData.Sheet1[j].차대번호,
-            //   });
-            // }       
           }
           a = 0;
           b = 0;
@@ -277,7 +237,7 @@ router.post('/car_overwrite_all', isNotLoggedIn, async(req, res, next) => {
       const exCar2 = await Car.findOne({ "SN" : SN });
       
       if (!exCar && !exCar2) {
-        await Car.where({"CN" : exCN})
+        await Car.where({ $or : [ { "CN" : exCN }, { "SN" : exSN } ] })
           .updateMany({
             "CID" : CID,
             "CC" : CC,
@@ -298,8 +258,7 @@ router.post('/car_overwrite_all', isNotLoggedIn, async(req, res, next) => {
               .exec();
         }
         else {
-          var re_excel = [CID, CC, CN, SN];
-          // return res.redirect('/car_inspect?exist=true');
+          var re_excel = [CID, CC, CN, SN, exCN, exSN];
         }
       }
       else if (!exCar && exCar2) {
@@ -314,89 +273,148 @@ router.post('/car_overwrite_all', isNotLoggedIn, async(req, res, next) => {
               .exec();
         }
         else {
-          var re2_excel = [CID, CC, CN, SN];
+          var re2_excel = [CID, CC, CN, SN, exCN, exSN];
         }
       }
       else {
-        var re3_excel = [[CID], [CC], [CN], [SN]];
-        console.log("알이쓰리"+re3_excel);
+        var re3_excel = [CID, CC, CN, SN, exCN, exSN];
       }
       
       req.session.re_car_excel = await null;
       req.session.re2_car_excel = await null;
       req.session.re3_car_excel = await null;
-      console.log("널쎄션"+req.session.re3_car_excel);
       req.session.re_car_excel = await re_excel;
       req.session.re2_car_excel = await re2_excel;
       req.session.re3_car_excel = await re3_excel;
-      console.log("담은쎄션"+req.session.re3_car_excel);
       
-      return res.redirect('/car_join?inspect=true');
-      // else {
-      //   if (CN === exCN && SN === exSN) {
-      //     await Car.where({"CN" : exCN})
-      //       .updateMany({
-      //         "CID" : CID,
-      //         "CC" : CC,
-      //         "CN" : CN,
-      //         "SN" : SN,
-      //       }).setOptions({runValidators : true})
-      //         .exec();
-      //   }
-      //   else if (CN === exCN && SN != exSN) {
-      //     if(!exCar2) {
-      //       await Car.where({"CN" : exCN})
-      //         .updateMany({
-      //           "CID" : CID,
-      //           "CC" : CC,
-      //           "CN" : CN,
-      //           "SN" : SN,
-      //         }).setOptions({runValidators : true})
-      //           .exec();
-      //     }
-      //     else {
-      //       return res.redirect('/car_inspect?exist=true');
-      //     }
-      //   }
-      //   else if (CN != exCN && SN === exSN) {
-      //     if(!exCar) {
-      //       await Car.where({"CN" : exCN})
-      //         .updateMany({
-      //           "CID" : CID,
-      //           "CC" : CC,
-      //           "CN" : CN,
-      //           "SN" : SN,
-      //         }).setOptions({runValidators : true})
-      //           .exec();
-      //     }
-      //     else {
-      //       return res.redirect('/car_inspect?exist=true');
-      //     }
-      //   }
-      //   else {
-      //     return res.redirect('/car_inspect?exist=true');
-      //   }
-      // }
+      return res.redirect('/car_inspect');
       
     }
     else {
       
+      var re_excel1 = [];
+      var re_excel2 = [];
+      var re_excel3 = [];
+      var re_excel4 = [];
+      var re_excel5 = [];
+      var re_excel6 = [];
+      
+      var re2_excel1 = [];
+      var re2_excel2 = [];
+      var re2_excel3 = [];
+      var re2_excel4 = [];
+      var re2_excel5 = [];
+      var re2_excel6 = [];
+      
+      var re3_excel1 = [];
+      var re3_excel2 = [];
+      var re3_excel3 = [];
+      var re3_excel4 = [];
+      var re3_excel5 = [];
+      var re3_excel6 = [];
+      
+      var a = 0;
+      var b = 0;
+      var c = 0;
+      
       for (var i = 0; i < CN.length; i ++) {
-        //// 여기서부터@@@@@@@@@@@@@@@@@@@
-        await Car.where({"CN" : CN[i]})
-          .updateMany({
-            "CID" : CID,
-            "CC" : parseInt(CC[i]),
-            "CN" : CN[i].toString(),
-            "SN" : SN[i].toString(),
-          }).setOptions({runValidators : true})
-            .exec();
-            
+        
+        const exCar = await Car.findOne({ "CN" : CN[i] });
+        const exCar2 = await Car.findOne({ "SN" : SN[i] });
+        
+        if (!exCar && !exCar2) {
+          await Car.where({ $or : [ { "CN" : exCN[i] }, { "SN" : exSN[i] } ] })
+            .updateMany({
+              "CID" : CID,
+              "CC" : parseInt(CC[i]),
+              "CN" : CN[i].toString(),
+              "SN" : SN[i].toString(),
+            }).setOptions({runValidators : true})
+              .exec();
+        }
+        else if (exCar && !exCar2) {
+          if (CN[i] === exCN[i]) {
+            await Car.where({"CN" : exCN[i]})
+              .updateMany({
+                "CID" : CID,
+                "CC" : parseInt(CC[i]),
+                "CN" : CN[i].toString(),
+                "SN" : SN[i].toString(),
+              }).setOptions({runValidators : true})
+                .exec();
+          }
+          else {
+            re_excel1[a] = CID;
+            re_excel2[a] = CC[i];
+            re_excel3[a] = CN[i];
+            re_excel4[a] = SN[i];
+            re_excel5[a] = exCN[i];
+            re_excel6[a] = exSN[i];
+            a += 1;
+          }
+        }
+        else if (!exCar && exCar2) {
+          if (SN[i] === exSN[i]) {
+            await Car.where({"SN" : exSN[i]})
+              .updateMany({
+                "CID" : CID,
+                "CC" : parseInt(CC[i]),
+                "CN" : CN[i].toString(),
+                "SN" : SN[i].toString(),
+              }).setOptions({runValidators : true})
+                .exec();
+          }
+          else {
+            re2_excel1[b] = CID;
+            re2_excel2[b] = CC[i];
+            re2_excel3[b] = CN[i];
+            re2_excel4[b] = SN[i];
+            re2_excel5[b] = exCN[i];
+            re2_excel6[b] = exSN[i];
+            b += 1;
+          }
+        }
+        else {
+          re3_excel1[c] = CID;
+          re3_excel2[c] = CC[i];
+          re3_excel3[c] = CN[i];
+          re3_excel4[c] = SN[i];
+          re3_excel5[c] = exCN[i];
+          re3_excel6[c] = exSN[i];
+          c += 1;
+        }
+        
       }
       
+      a = 0;
+      b = 0;
+      c = 0;
+             
+      req.session.re_car_excel = await null;
+      req.session.re2_car_excel = await null;
+      req.session.re3_car_excel = await null;
+      
+      var re_excel = [];
+      var re2_excel = [];
+      var re3_excel = [];
+      
+      for (var h = 0; h < re_excel1.length; h ++) {
+        re_excel[h] = [re_excel1[h], re_excel2[h], re_excel3[h], re_excel4[h], re_excel5[h], re_excel6[h]];
+      }
+      for (var k = 0; k < re2_excel1.length; k ++) {
+        re2_excel[k] = [re2_excel1[k], re2_excel2[k], re2_excel3[k], re2_excel4[k], re2_excel5[k], re2_excel6[k]];
+      }
+      for (var z = 0; z < re3_excel1.length; z ++) {
+        re3_excel[z] = [re3_excel1[z], re3_excel2[z], re3_excel3[z], re3_excel4[z], re3_excel5[z], re3_excel6[z]];
+      }
+      
+      req.session.re_car_excel = await re_excel;
+      req.session.re2_car_excel = await re2_excel;
+      req.session.re3_car_excel = await re3_excel;
+      
+      return res.redirect('/car_inspect');
     }
-    req.session.re_car_excel = null;
-    return res.redirect('/car_inspect?overwrite=true');
+    
   } catch (err) {
     console.error(err);
     next(err);
@@ -404,35 +422,204 @@ router.post('/car_overwrite_all', isNotLoggedIn, async(req, res, next) => {
 });
 
   //선택
-router.post('/device_overwrite_check', isNotLoggedIn, async(req, res, next) => {
-  const { ck, CC, CN, SN } = req.body;
+router.post('/car_overwrite_check', isNotLoggedIn, async(req, res, next) => {
+  const { ck, CC, CN, SN, exCN, exSN } = req.body;
   const CID = req.decoded.CID;
   
   try {
     if (typeof(ck) == 'string') {
-      await Car.where({"CN" : CN})
-        .updateMany({
-          "CID" : CID,
-          "CC" : CC,
-          "CN" : CN,
-          "SN" : SN,
-        }).setOptions({runValidators : true})
-          .exec();
-    }
-    else {
-      for (var i = 0; i < ck.length; i ++) {
-        await Car.where({"CN" : ck[i]})
+      
+      const exCar = await Car.findOne({ "CN" : CN });
+      const exCar2 = await Car.findOne({ "SN" : SN });
+      
+      if (!exCar && !exCar2) {
+        await Car.where({ $or : [ { "CN" : exCN }, { "SN" : exSN } ] })
           .updateMany({
             "CID" : CID,
-            "CC" : parseInt(CC[i]),
-            "CN" : CN[i].toString(),
-            "SN" : SN[i].toString(),
+            "CC" : CC,
+            "CN" : CN,
+            "SN" : SN,
           }).setOptions({runValidators : true})
             .exec();
       }
+      else if (exCar && !exCar2) {
+        if (CN === exCN) {
+          await Car.where({"CN" : exCN})
+            .updateMany({
+              "CID" : CID,
+              "CC" : CC,
+              "CN" : CN,
+              "SN" : SN,
+            }).setOptions({runValidators : true})
+              .exec();
+        }
+        else {
+          var re_excel = [CID, CC, CN, SN, exCN, exSN];
+        }
+      }
+      else if (!exCar && exCar2) {
+        if (SN === exSN) {
+          await Car.where({"SN" : exSN})
+            .updateMany({
+              "CID" : CID,
+              "CC" : CC,
+              "CN" : CN,
+              "SN" : SN,
+            }).setOptions({runValidators : true})
+              .exec();
+        }
+        else {
+          var re2_excel = [CID, CC, CN, SN, exCN, exSN];
+        }
+      }
+      else {
+        var re3_excel = [CID, CC, CN, SN, exCN, exSN];
+      }
+      
+      req.session.re_car_excel = await null;
+      req.session.re2_car_excel = await null;
+      req.session.re3_car_excel = await null;
+      req.session.re_car_excel = await re_excel;
+      req.session.re2_car_excel = await re2_excel;
+      req.session.re3_car_excel = await re3_excel;
+      
+      return res.redirect('/car_inspect');
+      
     }
-    req.session.re_car_excel = null;
-    return res.redirect('/car_inspect?overwrite=true');
+    else {
+      
+      var re_excel1 = [];
+      var re_excel2 = [];
+      var re_excel3 = [];
+      var re_excel4 = [];
+      var re_excel5 = [];
+      var re_excel6 = [];
+      
+      var re2_excel1 = [];
+      var re2_excel2 = [];
+      var re2_excel3 = [];
+      var re2_excel4 = [];
+      var re2_excel5 = [];
+      var re2_excel6 = [];
+      
+      var re3_excel1 = [];
+      var re3_excel2 = [];
+      var re3_excel3 = [];
+      var re3_excel4 = [];
+      var re3_excel5 = [];
+      var re3_excel6 = [];
+      
+      var a = 0;
+      var b = 0;
+      var c = 0;
+      
+      for (var i = 0; i < ck.length; i ++) {
+        
+        const exCar = await Car.findOne({ "CN" : CN[i] });
+        const exCar2 = await Car.findOne({ "SN" : SN[i] });
+        
+        if (!exCar && !exCar2) {
+          await Car.where({ $or : [ { "CN" : exCN[i] }, { "SN" : exSN[i] } ] })
+            .updateMany({
+              "CID" : CID,
+              "CC" : parseInt(CC[i]),
+              "CN" : CN[i].toString(),
+              "SN" : SN[i].toString(),
+            }).setOptions({runValidators : true})
+              .exec();
+        }
+        else if (exCar && !exCar2) {
+          if (CN[i] === exCN[i]) {
+            await Car.where({"CN" : exCN[i]})
+              .updateMany({
+                "CID" : CID,
+                "CC" : parseInt(CC[i]),
+                "CN" : CN[i].toString(),
+                "SN" : SN[i].toString(),
+              }).setOptions({runValidators : true})
+                .exec();
+          }
+          else {
+            re_excel1[a] = CID;
+            re_excel2[a] = CC[i];
+            re_excel3[a] = CN[i];
+            re_excel4[a] = SN[i];
+            re_excel5[a] = exCN[i];
+            re_excel6[a] = exSN[i];
+            a += 1;
+          }
+        }
+        else if (!exCar && exCar2) {
+          if (SN[i] === exSN[i]) {
+            await Car.where({"SN" : exSN[i]})
+              .updateMany({
+                "CID" : CID,
+                "CC" : parseInt(CC[i]),
+                "CN" : CN[i].toString(),
+                "SN" : SN[i].toString(),
+              }).setOptions({runValidators : true})
+                .exec();
+          }
+          else {
+            re2_excel1[b] = CID;
+            re2_excel2[b] = CC[i];
+            re2_excel3[b] = CN[i];
+            re2_excel4[b] = SN[i];
+            re2_excel5[b] = exCN[i];
+            re2_excel6[b] = exSN[i];
+            b += 1;
+          }
+        }
+        else {
+          re3_excel1[c] = CID;
+          re3_excel2[c] = CC[i];
+          re3_excel3[c] = CN[i];
+          re3_excel4[c] = SN[i];
+          re3_excel5[c] = exCN[i];
+          re3_excel6[c] = exSN[i];
+          c += 1;
+        }
+        
+        // await Car.where({"CN" : ck[i]})
+        //   .updateMany({
+        //     "CID" : CID,
+        //     "CC" : parseInt(CC[i]),
+        //     "CN" : CN[i].toString(),
+        //     "SN" : SN[i].toString(),
+        //   }).setOptions({runValidators : true})
+        //     .exec();
+      }
+      
+      a = 0;
+      b = 0;
+      c = 0;
+      
+      req.session.re_car_excel = await null;
+      req.session.re2_car_excel = await null;
+      req.session.re3_car_excel = await null;
+      
+      var re_excel = [];
+      var re2_excel = [];
+      var re3_excel = [];
+      
+      for (var h = 0; h < re_excel1.length; h ++) {
+        re_excel[h] = [re_excel1[h], re_excel2[h], re_excel3[h], re_excel4[h], re_excel5[h], re_excel6[h]];
+      }
+      for (var k = 0; k < re2_excel1.length; k ++) {
+        re2_excel[k] = [re2_excel1[k], re2_excel2[k], re2_excel3[k], re2_excel4[k], re2_excel5[k], re2_excel6[k]];
+      }
+      for (var z = 0; z < re3_excel1.length; z ++) {
+        re3_excel[z] = [re3_excel1[z], re3_excel2[z], re3_excel3[z], re3_excel4[z], re3_excel5[z], re3_excel6[z]];
+      }
+      
+      req.session.re_car_excel = await re_excel;
+      req.session.re2_car_excel = await re2_excel;
+      req.session.re3_car_excel = await re3_excel;
+      
+      return res.redirect('/car_inspect');
+      
+    }
+    
   } catch (err) {
     console.error(err);
     next(err);

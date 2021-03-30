@@ -43,13 +43,20 @@
     									</tr>
     								</thead>
     								<tbody>
-                                        {% if ((session_excel == "") and (session_excel2 == "") and (session_excel3 == "")) %}
+                                        {% if ((session_excel == "") and (session_excel2 == "") and (session_excel3 == "")) or ((session_excel_1 == "") and (session_excel2_1 == "") and (session_excel3_1 == "")) %}
+                                        <tr>
+                                            <td colspan="5">중복된 목록이 없습니다.</td>
+                                        </tr>
+                                        {% elseif ((session_excel == null) and (session_excel2 == null) and (session_excel3 == null) and (session_excel_1 == null) and (session_excel2_1 == null) and (session_excel3_1 == null)) %}
                                         <tr>
                                             <td colspan="5">중복된 목록이 없습니다.</td>
                                         </tr>
                                         {% else %}
+                                            <script>
+                                                alert("중복된 목록이 존재합니다.");
+                                            </script>
                                             {% for item in session_excel %}
-                                            <tr>
+                                            <tr onload="reinspect();">
                                                 <td class="with-btn" nowrap>
     												<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{item[2]}} onChange="eachCheckedBox(this);"/>
     			    							</td>
@@ -60,12 +67,20 @@
                                                     <input class="form-control border-danger" type="text" name="CN" value="{{item[2]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
                                                     <input type="hidden" name="exCN" value="{{item[2]}}">
                                                 </td>
+                                                {% if (item[3] == undefined) %}
                                                 <td>
-                                                    <input class="form-control" type="text" name="SN" value="{{item[3]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                    <input class="form-control" type="text" name="SN" value="{{item[3]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." placeholder="선택안됨">
                                                     <input type="hidden" name="exSN" value="{{item[3]}}">
                                                 </td>
+                                                {% else %}
+                                                <td>
+                                                    <input class="form-control" type="text" name="SN" value="{{item[3]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." readonly>
+                                                    <input type="hidden" name="exSN" value="{{item[3]}}">
+                                                </td>
+                                                {% endif %}
                                             </tr>
                                             {% endfor %}
+                                            
                                             {% for item in session_excel2 %}
                                             <tr>
                                                 <td class="with-btn" nowrap>
@@ -75,7 +90,7 @@
                                                     <input class="form-control" type="text" name="CC" value="{{item[1]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
                                                 </td>
                                                 <td>
-                                                    <input class="form-control" type="text" name="CN" value="{{item[2]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                    <input class="form-control" type="text" name="CN" value="{{item[2]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." readonly>
                                                     <input type="hidden" name="exCN" value="{{item[2]}}">
                                                 </td>
                                                 <td>
@@ -84,8 +99,8 @@
                                                 </td>
                                             </tr>
                                             {% endfor %}
+                                            
                                             {% for item in session_excel3 %}
-                                            {{item}}
                                             <tr>
                                                 <td class="with-btn" nowrap>
     												<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{item[2]}} onChange="eachCheckedBox(this);"/>
@@ -97,17 +112,105 @@
                                                     <input class="form-control border-danger" type="text" name="CN" value="{{item[2]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
                                                     <input type="hidden" name="exCN" value="{{item[2]}}">
                                                 </td>
+                                                {% if (item[3] == undefined) %}
+                                                <td>
+                                                    <input class="form-control" type="text" name="SN" value="{{item[3]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." placeholder="선택안됨">
+                                                    <input type="hidden" name="exSN" value="{{item[3]}}">
+                                                </td>
+                                                {% else %}
                                                 <td>
                                                     <input class="form-control border-danger" type="text" name="SN" value="{{item[3]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
                                                     <input type="hidden" name="exSN" value="{{item[3]}}">
                                                 </td>
+                                                {% endif %}
                                             </tr>
                                             {% endfor %}
+                                            
+                                            {% if session_excel_1 %}
+                                            <tr>
+                                                <td class="with-btn" nowrap>
+    												<input id ="ck" type="checkbox" name = "ck" class="neHeros" value="{{session_excel_1[2]}}" onChange="eachCheckedBox(this);"/>
+    			    							</td>
+                                                <td>
+                                                    <input class="form-control" type="text" name="CC" value="{{session_excel_1[1]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control border-danger" type="text" name="CN" value="{{session_excel_1[2]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                    <input type="hidden" name="exCN" value="{{session_excel_1[4]}}">
+                                                </td>
+                                                {% if (session_excel_1[3] == "") %}
+                                                <td>
+                                                    <input class="form-control" type="text" name="SN" value="{{session_excel_1[3]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." placeholder="선택안됨">
+                                                    <input type="hidden" name="exSN" value="{{session_excel_1[5]}}">
+                                                </td>
+                                                {% else %}
+                                                <td>
+                                                    <input class="form-control border" type="text" name="SN" value="{{session_excel_1[3]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." readonly>
+                                                    <input type="hidden" name="exSN" value="{{session_excel_1[5]}}">
+                                                </td>
+                                                {% endif %}
+                                            </tr>
+                                            {% endif %}
+                                            
+                                            {% if session_excel2_1 %}
+                                            <tr>
+                                                <td class="with-btn" nowrap>
+    												<input id ="ck" type="checkbox" name = "ck" class="neHeros" value="{{session_excel2_1[2]}}" onChange="eachCheckedBox(this);"/>
+    			    							</td>
+                                                <td>
+                                                    <input class="form-control" type="text" name="CC" value="{{session_excel2_1[1]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control border-danger" type="text" name="CN" value="{{session_excel2_1[2]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                    <input type="hidden" name="exCN" value="{{session_excel2_1[4]}}">
+                                                </td>
+                                                {% if (session_excel2_1[3] == "") %}
+                                                <td>
+                                                    <input class="form-control" type="text" name="SN" value="{{session_excel2_1[3]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." placeholder="선택안됨">
+                                                    <input type="hidden" name="exSN" value="{{session_excel2_1[5]}}">
+                                                </td>
+                                                {% else %}
+                                                <td>
+                                                    <input class="form-control border-danger" type="text" name="SN" value="{{session_excel2_1[3]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                    <input type="hidden" name="exSN" value="{{session_excel2_1[5]}}">
+                                                </td>
+                                                {% endif %}
+                                            </tr>
+                                            {% endif %}
+                                            
+                                            {% if session_excel3_1 %}
+                                            <tr>
+                                                <td class="with-btn" nowrap>
+    												<input id ="ck" type="checkbox" name = "ck" class="neHeros" value="{{session_excel3_1[2]}}" onChange="eachCheckedBox(this);"/>
+    			    							</td>
+                                                <td>
+                                                    <input class="form-control" type="text" name="CC" value="{{session_excel3_1[1]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control border-danger" type="text" name="CN" value="{{session_excel3_1[2]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                    <input type="hidden" name="exCN" value="{{session_excel3_1[4]}}">
+                                                </td>
+                                                {% if (session_excel3_1[3] == "") %}
+                                                <td>
+                                                    <input class="form-control" type="text" name="SN" value="{{session_excel3_1[3]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." placeholder="선택안됨">
+                                                    <input type="hidden" name="exSN" value="{{session_excel3_1[5]}}">
+                                                </td>
+                                                {% else %}
+                                                <td>
+                                                    <input class="form-control border-danger" type="text" name="SN" value="{{session_excel3_1[3]}}" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
+                                                    <input type="hidden" name="exSN" value="{{session_excel3_1[5]}}">
+                                                </td>
+                                                {% endif %}
+                                            </tr>
+                                            {% endif %}
+                                            
                                         {% endif %}
     								</tbody>
                                 </table>
                                 <div class="d-flex justify-content-between align-item-center">
-                                    {% if ((session_excel == "") and (session_excel2 == "") and (session_excel3 == "")) %}
+                                    {% if ((session_excel == "") and (session_excel2 == "") and (session_excel3 == "")) or ((session_excel_1 == "") and (session_excel2_1 == "") and (session_excel3_1 == "")) %}
+                                    <input class="btn btn-primary mx-auto" type="button" value="확인" onclick="winClose();">
+                                    {% elseif ((session_excel == null) and (session_excel2 == null) and (session_excel3 == null) and (session_excel_1 == null) and (session_excel2_1 == null) and (session_excel3_1 == null)) %}
                                     <input class="btn btn-primary mx-auto" type="button" value="확인" onclick="winClose();">
         							{% else %}
         							<input class="btn btn-primary" type="button" value='선택항목만 덮어쓰기' onclick="return overwrite_check(this.form);">
@@ -130,16 +233,6 @@
     
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
     <script>
-        // 에러 링크 기능
-    	window.onload = () => {
-    	    if (new URL(location.href).searchParams.get('exist')) {
-    			alert('수정한 차량 번호 혹은 차대 번호가 이미 존재합니다.');
-    		}
-    		if (new URL(location.href).searchParams.get('overwrite')) {
-    			window.opener.location.href='/car_list';
-                window.close();
-    		}
-    	};
     	
         // 건너뛰기 기능
         function pass() {
@@ -174,6 +267,8 @@
                         frm.elements['CC'].disabled = true;
                         frm.elements['CN'].disabled = true;
                         frm.elements['SN'].disabled = true;
+                        frm.elements['exCN'].disabled = true;
+                        frm.elements['exSN'].disabled = true;
                     }
                     else {
                         checktest = true;
@@ -185,12 +280,17 @@
                             frm.elements['CC'][i].disabled = true;
                             frm.elements['CN'][i].disabled = true;
                             frm.elements['SN'][i].disabled = true;
+                            frm.elements['exCN'][i].disabled = true;
+                            frm.elements['exSN'][i].disabled = true;
                         }
                         else {
                             checktest = true;
                         }
                     }
                 }
+                
+                console.log(frm.elements['exCN']);
+                        console.log(frm.elements['exSN']);
                 
                 if(!checktest) {
                     return alert("항목을 선택해주세요.");
