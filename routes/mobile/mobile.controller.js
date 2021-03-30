@@ -15,6 +15,7 @@ const UNKOWN = "UNKOWN";
 const NO_SUCH_DATA = "NO_SUCH_DATA";
 const FAIL = "FAIL";
 const TOKEN_ERROR = "TOKEN_ERROR";
+const NO_POINT = "NO_POINT"
 
 const { config, Group } = require('solapi')
 
@@ -351,14 +352,13 @@ exports.deleteCar = async(req, res) => {
 exports.createHistory = async(req, res) => {
     try {
         console.log(req.body);
-        const { WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD, COS } = req.body;
+        const { WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD } = req.body;
 
-        var result = await History.create({ WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD, COS });
+        var result = await History.create({ WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD });
         console.log(result);
 
         res.json({
             result: true,
-            data: result._id,
         });
     }
     catch (exception) {
@@ -527,185 +527,186 @@ exports.root = (req, res) => {
 
 exports.registerSMS = async(req, res) => {
     try {
-
-        const { _id, num } = req.body;
-
-        const historyid = _id;
-        const number = num;
-
-        let apiSecret = process.env.sol_secret;
-        let apiKey = process.env.sol_key;
-
-        const moment = require('moment')
-        const nanoidGenerate = require('nanoid/generate')
-        const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32)
-        const HmacSHA256 = require('crypto-js/hmac-sha256')
-        const fs = require('fs')
-        const path = require('path')
-
-        const date = moment.utc().format()
-        const salt = generate()
-        const hmacData = date + salt
-        const signature = HmacSHA256(hmacData, apiSecret).toString()
-        const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
-
-        var request = require('request');
-
-
-        const historyone = await History.findOne({ '_id': historyid });
-        const companyone = await Company.findOne({ '_id': historyone.CID })
-        var companypoint = companyone.SPO;
-
-        if (companypoint > 0) {
-
+        
+            const { _id, num } = req.body;
+            
+            const historyid = _id;
+            const number = num;
+            
+            let apiSecret = process.env.sol_secret;
+            let apiKey = process.env.sol_key;
+      
+            const moment = require('moment')
+            const nanoidGenerate = require('nanoid/generate')
+            const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32)
+            const HmacSHA256 = require('crypto-js/hmac-sha256')
+            const fs = require('fs')
+            const path = require('path')
+      
+            const date = moment.utc().format()
+            const salt = generate()
+            const hmacData = date + salt
+            const signature = HmacSHA256(hmacData, apiSecret).toString()
+            const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
+        
+            var request = require('request');
+           
+            
+            const historyone = await History.findOne({'_id' : historyid});
+            const companyone = await Company.findOne({'_id' : historyone.CID})
+            var companypoint = companyone.SPO;
+            
+            if(companypoint > 0) {
+            
             var options = {
-                headers: {
-                    Authorization: autori,
-                    'Content-Type': 'application/json'
+              headers: {
+                Authorization:
+                  autori,'Content-Type': 'application/json'
+              },
+              body: {
+                message: {
+                  to: num,
+                  from: '16443486',
+                  text: '안녕하세요. ' + companyone.CNA + '입니다. 소독이 완료되었습니다. 아래 링크로 확인해주세요 www.cleanoasis.net/publish?HID=' + historyid,
+                  type: "SMS"
                 },
-                body: {
-                    message: {
-                        to: num,
-                        from: '16443486',
-                        text: '안녕하세요. ' + companyone.CNA + '입니다. 소독이 완료되었습니다. 아래 링크로 확인해주세요 www.cleanoasis.net/publish?HID=' + historyid,
-                        type: "SMS"
-                    },
-                },
-                method: 'POST',
-                json: true,
-                url: 'http://api.solapi.com/messages/v4/send'
+              },
+              method: 'POST',
+              json: true,
+              url: 'http://api.solapi.com/messages/v4/send'
             };
-
-
-            request(options, function(error, response, body) {
-                if (error) throw error;
-                console.log('result :', body);
-            });
-
-            console.log(companypoint);
+            
+            
+             request(options, function(error, response, body) {
+              if (error) throw error;
+              console.log('result :', body);
+            });     
+                  
+              console.log(companypoint);
             //  companypoint = companypoint - 20;
-            console.log(companypoint);
-
-            const companyone = await Company.where({ '_id': historyone.CID })
-                .updateMany({ "SPO": companypoint }).setOptions({ runValidators: true })
+              console.log(companypoint);
+                  
+                const companyone =  await Company.where({'_id' : historyone.CID})
+                .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
                 .exec();
+            }
+            
+            else {
+                res.json({
+                result: false,
+                error: UNKOWN,
+                });
+            }
+        
+        
         }
-
-        else {
+        catch (exception) {
             res.json({
                 result: false,
                 error: UNKOWN,
             });
         }
-
-
-    }
-    catch (exception) {
-        res.json({
-            result: false,
-            error: UNKOWN,
-        });
-    }
 };
 
 exports.registerKAKAO = async(req, res) => {
     try {
-
-        const { _id, num } = req.body;
-
-
-
-        const historyid = _id;
-        const number = num;
-
-        let apiSecret = process.env.sol_secret;
-        let apiKey = process.env.sol_key;
-
-        const moment = require('moment');
-        const nanoidGenerate = require('nanoid/generate');
-        const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32);
-        const HmacSHA256 = require('crypto-js/hmac-sha256');
-        // const fs = require('fs');
-        // const path = require('path');
-
-
-        const date = moment.utc().format();
-        const salt = generate();
-        const hmacData = date + salt;
-        const signature = HmacSHA256(hmacData, apiSecret).toString();
-        const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`;
-
-        var request = require('request');
-
-
-        const historyone = await History.findOne({ '_id': historyid });
-        const companyone = await Company.findOne({ '_id': historyone.CID });
-        var companypoint = companyone.SPO;
-
-
-        if (companypoint > 0) {
+        
+            const { _id, num } = req.body;
+            
+            const historyid = _id;
+            const number = num;
+            
+            let apiSecret = process.env.sol_secret;
+            let apiKey = process.env.sol_key;
+      
+            const moment = require('moment')
+            const nanoidGenerate = require('nanoid/generate')
+            const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32)
+            const HmacSHA256 = require('crypto-js/hmac-sha256')
+            const fs = require('fs')
+            const path = require('path')
+      
+            const date = moment.utc().format()
+            const salt = generate()
+            const hmacData = date + salt
+            const signature = HmacSHA256(hmacData, apiSecret).toString()
+            const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
+        
+            var request = require('request');
+           
+            
+            const historyone = await History.findOne({'_id' : historyid});
+            const companyone = await Company.findOne({'_id' : historyone.CID})
+            var companypoint = companyone.SPO;
+            
+            if(companypoint > 0) {
+            
             var options = {
                 headers: {
-                    Authorization: autori,
-                    'Content-Type': 'application/json'
+                  Authorization:
+                    autori,'Content-Type': 'application/json'
                 },
                 body: {
-                    messages: [{
-                        to: number,
-                        from: '16443486',
-                        text: companyone.CNA + "에서 소독이 완료되었음을 알려드립니다. 자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
-                        type: 'ATA',
-                        kakaoOptions: {
-                            pfId: 'KA01PF210319072804501wAicQajTRe4',
-                            templateId: 'KA01TP210319074611283wL0AjgZVdog',
-                            buttons: [{
-                                buttonType: 'WL',
-                                buttonName: '확인하기',
-                                linkMo: process.env.IP +'/publish?cat=1&hid=' + historyid,
-                                linkPc: process.env.IP +'/publish?cat=1&hid=' + historyid
-                            }]
-                        }
-                    }]
+                  messages: [
+                    {
+                      to: number,
+                      from: '16443486',
+                      text:
+                        companyone.CNA + "에서 소독이 완료되었음을 알려드립니다. 자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
+                      type: 'ATA',
+                      kakaoOptions: {
+                        pfId: 'KA01PF210319072804501wAicQajTRe4',
+                        templateId: 'KA01TP210319074611283wL0AjgZVdog',
+                        buttons: [
+                          {
+                            buttonType: 'WL',
+                            buttonName: '확인하기',
+                            linkMo: 'http://www.cleanoasis.net/publish?cat=1&hid=' + historyid,
+                            linkPc: 'http://www.cleanoasis.net/publish?cat=1&hid=' + historyid
+                          }
+                        ]
+                      }
+                    }
+                  ]
                 },
                 method: 'POST',
                 json: true,
                 url: 'http://api.solapi.com/messages/v4/send-many'
             };
-
-
-            request(options, function(error, response, body) {
-                if (error) throw error;
-                console.log('result :', body);
-            });
-
-            await Point.insertMany({
-                "CID": companyone._id,
-                "PN": "알림톡 전송",
-                "PO": 20,
-            });
-
-            console.log(companypoint);
-            // companypoint = companypoint - 20;
-            console.log(companypoint);
-
-            companyone = await Company.where({ '_id': historyone.CID })
-                .updateMany({ "SPO": companypoint }).setOptions({ runValidators: true })
+            
+                
+                request(options, function(error, response, body) {
+                    if (error) throw error;
+                    console.log('result :', body);
+                });     
+            
+                const pointone = await Point.insertMany({
+                    "CID" : companyone._id,
+                    "PN" : "알림톡 전송",
+                     "PO" : 50,
+                });
+                
+                console.log(companypoint);
+                companypoint = companypoint - 50;
+                console.log(companypoint);
+                  
+                const companyone =  await Company.where({'_id' : historyone.CID})
+                .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
                 .exec();
+            }
+            else {
+                res.json({
+                result: false,
+                error: NO_POINT,
+                });
+            }
+        
+        
         }
-        else {
+        catch (exception) {
             res.json({
                 result: false,
                 error: UNKOWN,
             });
         }
-
-
-    }
-    catch (exception) {
-        console.log(exception);
-        res.json({
-            result: false,
-            error: UNKOWN,
-        });
-    }
 };
