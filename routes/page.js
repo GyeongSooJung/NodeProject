@@ -132,12 +132,12 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
   const cars = await Car.find({ "CID": req.decoded.CID });
   const workers = await Worker.find({ "CID": req.decoded.CID });
   const publishs = await Publish.find({});
-  
+
   var psum = 0;
-  for(var i = 0; i < publishs.length; i++) {
+  for (var i = 0; i < publishs.length; i++) {
     var pcount = publishs[i].PUN;
-    console.log("카운트"+pcount);
-    
+    console.log("카운트" + pcount);
+
     psum += pcount;
   }
 
@@ -152,7 +152,8 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
   const history_count = await [h1, h2, h3, h4, h5, h6, h7];
 
   const historys = await History.find({ "CID": req.decoded.CID });
-  const history_array = await History.findOne({ "CID": req.decoded.CID }).sort({ '_id': -1 }).limit(1);
+  console.log(historys);
+  const history_array = await History.findOne({ "CID": req.decoded.CID }).sort({ 'CA': -1 });
   console.log(history_array);
   console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" + aclist);
   if (history_array) {
@@ -281,8 +282,8 @@ router.get('/history_static', isNotLoggedIn, DataSet, async(req, res, nex) => {
 router.get('/device_join', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-  
-  res.render('device_join', {company: req.decoded.company, aclist});
+
+  res.render('device_join', { company: req.decoded.company, aclist });
 });
 
 //장비 수정
@@ -347,8 +348,8 @@ router.get('/device_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.get('/car_join', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-  
-  res.render('car_join', {company: req.decoded.company, aclist});
+
+  res.render('car_join', { company: req.decoded.company, aclist });
 });
 
 //차량 수정
@@ -553,7 +554,7 @@ router.get('/history_chart/:_id', isNotLoggedIn, DataSet, async(req, res, next) 
   try {
     const historyone = await History.findOne({ "_id": req.params._id });
     const history_array = historyone.PD;
-    console.log("길이"+history_array.length);
+    console.log("길이" + history_array.length);
     res.render('history_chart', { company: req.decoded.company, aclist, historyone, history_array });
   }
   catch (err) {
@@ -570,16 +571,16 @@ router.get('/history_chart/:_id', isNotLoggedIn, DataSet, async(req, res, next) 
 router.get('/pay_point', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
-  const aclist = await Worker.find({ "CID" : CID, "AC" : false });
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
   const imp_code = process.env.imp_code;
   const HOME = process.env.IP;
-  
+
   const service = await Service.find({});
 
   try {
     res.render('pay_point', { company: req.decoded.company, aclist, imp_code, HOME, service });
   }
-  catch(err) {
+  catch (err) {
     console.error(err);
     next(err);
   }
@@ -588,10 +589,10 @@ router.get('/pay_point', isNotLoggedIn, DataSet, async(req, res, next) => {
 //알림톡 라디오 버튼 클릭 ajax
 router.post('/ajax/check', isNotLoggedIn, DataSet, async(req, res, next) => {
   var SN = req.body.SN;
-  if(SN) {
-    const serviceone = await Service.findOne({"SN" : SN});
+  if (SN) {
+    const serviceone = await Service.findOne({ "SN": SN });
     console.log(serviceone);
-    
+
     res.json({ result: true, serviceone: serviceone });
   }
   else {
@@ -602,10 +603,10 @@ router.post('/ajax/check', isNotLoggedIn, DataSet, async(req, res, next) => {
 //알림톡 결제 ajax
 router.post('/ajax/payment', isNotLoggedIn, DataSet, async(req, res, next) => {
   var SN = req.body.SN;
-  if(SN) {
-    const serviceone = await Service.findOne({"SN" : SN});
+  if (SN) {
+    const serviceone = await Service.findOne({ "SN": SN });
     console.log(serviceone);
-    
+
     res.json({ result: true, serviceone: serviceone, check: true });
   }
   else {
@@ -617,10 +618,10 @@ router.post('/ajax/payment', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.get('/pay_confirm', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
-  const aclist = await Worker.find({ "CID" : CID, "AC" : false });
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
   const imp_uid = req.query.imp_uid;
   const imp_code = process.env.imp_code;
-  
+
   // 엑세스 토큰 발급 받기
   const getToken = await axios({
     url: "https://api.iamport.kr/users/getToken",
@@ -632,22 +633,22 @@ router.get('/pay_confirm', isNotLoggedIn, DataSet, async(req, res, next) => {
     }
   });
   const { access_token } = getToken.data.response; // 인증 토큰
-  
+
   // imp_uid로 아임포트 서버에서 결제 정보 조회
   const getPaymentData = await axios({
-    url: 'https://api.iamport.kr/payments/'+imp_uid, // imp_uid 전달
+    url: 'https://api.iamport.kr/payments/' + imp_uid, // imp_uid 전달
     method: "get", // GET method
     headers: { "Authorization": access_token } // 인증 토큰 Authorization header에 추가
   });
   const paymentData = getPaymentData.data.response; // 조회한 결제 정보
-  
-  const serviceone = await Service.findOne({"SN" : paymentData.name});
+
+  const serviceone = await Service.findOne({ "SN": paymentData.name });
   console.log(serviceone);
-  
+
   try {
     res.render('pay_confirm', { company: req.decoded.company, aclist, imp_code, paymentData, serviceone });
   }
-  catch(err) {
+  catch (err) {
     console.error(err);
     next(err);
   }
@@ -655,22 +656,22 @@ router.get('/pay_confirm', isNotLoggedIn, DataSet, async(req, res, next) => {
 
 //결제 목록
 router.get('/pay_list', isNotLoggedIn, DataSet, async(req, res, next) => {
-  
+
   const CID = req.decoded.CID;
-  const aclist = await Worker.find({ "CID" : CID, "AC" : false });
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
   const imp_code = process.env.imp_code;
   let page = req.query.page;
   const GN = req.query.GN;
   const IP = process.env.IP;
-  
+
   try {
-    const order = await Order.find({ "CID" : CID});
+    const order = await Order.find({ "CID": CID });
     if (GN) {
-      const orderone = await Order.find({"GN" : GN});
+      const orderone = await Order.find({ "GN": GN });
       const totalNum = await Order.countDocuments({ "GN": GN });
       let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
       const orders = await Order.find({ "GN": GN }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-      res.render('pay_list', { company: req.decoded.company, aclist, totalNum, currentPage, totalPage, startPage, endPage, imp_code,IP, orders, GN});
+      res.render('pay_list', { company: req.decoded.company, aclist, totalNum, currentPage, totalPage, startPage, endPage, imp_code, IP, orders, GN });
     }
     else {
       try {
@@ -678,8 +679,8 @@ router.get('/pay_list', isNotLoggedIn, DataSet, async(req, res, next) => {
         let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
         const orders = await Order.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
         console.log(orders);
-  
-        res.render('pay_list', { company: req.decoded.company, aclist, totalNum, currentPage, totalPage, startPage, endPage,IP, orders });
+
+        res.render('pay_list', { company: req.decoded.company, aclist, totalNum, currentPage, totalPage, startPage, endPage, IP, orders });
       }
       catch (err) {
         console.error(err);
@@ -687,7 +688,7 @@ router.get('/pay_list', isNotLoggedIn, DataSet, async(req, res, next) => {
       }
     }
   }
-  catch(err) {
+  catch (err) {
     console.error(err);
     next(err);
   }
@@ -695,38 +696,38 @@ router.get('/pay_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 
 // 영수증
 router.get('/receipt', isNotLoggedIn, DataSet, async(req, res, next) => {
-  
+
   const CID = req.decoded.CID;
-  const aclist = await Worker.find({ "CID" : CID, "AC" : false });
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
   const imp_code = process.env.imp_code;
   const imp_uid = req.query.imp_uid;
-  
-   const getToken = await axios({
-            url: "https://api.iamport.kr/users/getToken",
-            method: "post", // POST method
-            headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
-            data: {
-              imp_key: process.env.imp_key, // REST API키
-              imp_secret: process.env.imp_secret // REST API Secret
-            }
-        });
-        const { access_token } = getToken.data.response; // 인증 토큰
-        
-        // imp_uid로 아임포트 서버에서 결제 정보 조회
-        const getPaymentData = await axios({
-            url: 'https://api.iamport.kr/payments/'+imp_uid, // imp_uid 전달
-            method: "get", // GET method
-            headers: { "Authorization": access_token } // 인증 토큰 Authorization header에 추가
-        });
-        const paymentData = getPaymentData.data.response; // 조회한 결제 정보
-        
-        console.log(paymentData);
-        
-        
-        const orderone = await Order.find({"IID" : imp_uid});
 
-  res.render('receipt', { company: req.decoded.company, aclist, paymentData, orderone,moment });
-  
+  const getToken = await axios({
+    url: "https://api.iamport.kr/users/getToken",
+    method: "post", // POST method
+    headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
+    data: {
+      imp_key: process.env.imp_key, // REST API키
+      imp_secret: process.env.imp_secret // REST API Secret
+    }
+  });
+  const { access_token } = getToken.data.response; // 인증 토큰
+
+  // imp_uid로 아임포트 서버에서 결제 정보 조회
+  const getPaymentData = await axios({
+    url: 'https://api.iamport.kr/payments/' + imp_uid, // imp_uid 전달
+    method: "get", // GET method
+    headers: { "Authorization": access_token } // 인증 토큰 Authorization header에 추가
+  });
+  const paymentData = getPaymentData.data.response; // 조회한 결제 정보
+
+  console.log(paymentData);
+
+
+  const orderone = await Order.find({ "IID": imp_uid });
+
+  res.render('receipt', { company: req.decoded.company, aclist, paymentData, orderone, moment });
+
 })
 
 
@@ -736,26 +737,26 @@ router.get('/receipt', isNotLoggedIn, DataSet, async(req, res, next) => {
 
 //포인트 사용 목록
 router.get('/point_list', isNotLoggedIn, DataSet, async(req, res, next) => {
-  
+
   const CID = req.decoded.CID;
-  const aclist = await Worker.find({ "CID" : CID, "AC" : false });
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
   const imp_code = process.env.imp_code;
   let page = req.query.page;
   const GN = req.query.GN;
   const IP = process.env.IP;
-  
-  try {
-    const point = await Point.find({ "CID" : CID});
 
-        const totalNum = await Point.countDocuments({ "CID": CID });
-        let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-        const points = await Point.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-        console.log(points);
-  
-        res.render('point_list', { company: req.decoded.company, aclist, totalNum, currentPage, totalPage, startPage, endPage,IP, points });
+  try {
+    const point = await Point.find({ "CID": CID });
+
+    const totalNum = await Point.countDocuments({ "CID": CID });
+    let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
+    const points = await Point.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
+    console.log(points);
+
+    res.render('point_list', { company: req.decoded.company, aclist, totalNum, currentPage, totalPage, startPage, endPage, IP, points });
 
   }
-  catch(err) {
+  catch (err) {
     console.error(err);
     next(err);
   }
@@ -788,158 +789,153 @@ router.get('/repair', isNotLoggedIn, DataSet, async(req, res, next) => {
 
 
 router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
-  
-        const historyid = '6046d067b1d64326737c82bd';
-        const number = '01021128228';
-   
-    
-        let apiSecret = process.env.sol_secret;
-        let apiKey = process.env.sol_key;
-  
-        const moment = require('moment')
-        const nanoidGenerate = require('nanoid/generate')
-        const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32)
-        const HmacSHA256 = require('crypto-js/hmac-sha256')
-        const fs = require('fs')
-        const path = require('path')
-  
-        const date = moment.utc().format()
-        const salt = generate()
-        const hmacData = date + salt
-        const signature = HmacSHA256(hmacData, apiSecret).toString()
-        const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
-    
-        var request = require('request');
-       
-      // const historyid = '6046d067b1d64326737c82bd'
-       //const number = '01021128228'
-       
-        
-        const historyone = await History.findOne({'_id' : historyid});
-        const companyone = await Company.findOne({'_id' : historyone.CID})
-        var companypoint = companyone.SPO;
-        
-        if(companypoint > 0) {
-        
-        var options = {
-          headers: {
-            Authorization:
-              autori,'Content-Type': 'application/json'
-          },
-          body: {
-            message: {
-              to: '01021128228',
-              from: '16443486',
-              text: '내용',
-              type: "SMS"
-            },
-          },
-          method: 'POST',
-          json: true,
-          url: 'http://api.solapi.com/messages/v4/send'
-        };
-        
-        
-         request(options, function(error, response, body) {
-          if (error) throw error;
-          console.log('result :', body);
-        });     
-              
-          console.log(companypoint);
-         companypoint = companypoint - 20;
-          console.log(companypoint);
-              
-            const companyone =  await Company.where({'_id' : historyone.CID})
-            .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
-            .exec();
-        }
-        
-    
+
+  const historyid = '6046d067b1d64326737c82bd';
+  const number = '01021128228';
+
+
+  let apiSecret = process.env.sol_secret;
+  let apiKey = process.env.sol_key;
+
+  const moment = require('moment')
+  const nanoidGenerate = require('nanoid/generate')
+  const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32)
+  const HmacSHA256 = require('crypto-js/hmac-sha256')
+  const fs = require('fs')
+  const path = require('path')
+
+  const date = moment.utc().format()
+  const salt = generate()
+  const hmacData = date + salt
+  const signature = HmacSHA256(hmacData, apiSecret).toString()
+  const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
+
+  var request = require('request');
+
+  // const historyid = '6046d067b1d64326737c82bd'
+  //const number = '01021128228'
+
+
+  const historyone = await History.findOne({ '_id': historyid });
+  const companyone = await Company.findOne({ '_id': historyone.CID })
+  var companypoint = companyone.SPO;
+
+  if (companypoint > 0) {
+
+    var options = {
+      headers: {
+        Authorization: autori,
+        'Content-Type': 'application/json'
+      },
+      body: {
+        message: {
+          to: '01021128228',
+          from: '16443486',
+          text: '내용',
+          type: "SMS"
+        },
+      },
+      method: 'POST',
+      json: true,
+      url: 'http://api.solapi.com/messages/v4/send'
+    };
+
+
+    request(options, function(error, response, body) {
+      if (error) throw error;
+      console.log('result :', body);
+    });
+
+    console.log(companypoint);
+    companypoint = companypoint - 20;
+    console.log(companypoint);
+
+    const companyone = await Company.where({ '_id': historyone.CID })
+      .updateMany({ "SPO": companypoint }).setOptions({ runValidators: true })
+      .exec();
+  }
+
+
 });
 router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
-        
-        const historyid = '605aec074164b23448038c2d';
-        const number = '01021128228';
-        const comname = '롯데렌터카';
-    
-        let apiSecret = process.env.sol_secret;
-        let apiKey = process.env.sol_key;
-  
-        const moment = require('moment')
-        const nanoidGenerate = require('nanoid/generate')
-        const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32)
-        const HmacSHA256 = require('crypto-js/hmac-sha256')
-        const fs = require('fs')
-        const path = require('path')
-  
-        const date = moment.utc().format()
-        const salt = generate()
-        const hmacData = date + salt
-        const signature = HmacSHA256(hmacData, apiSecret).toString()
-        const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
-    
-        var request = require('request');
-        
-        const historyone = await History.findOne({'_id' : historyid});
-        const companyone = await Company.findOne({'_id' : historyone.CID})
-        var companypoint = companyone.SPO;
-        
-        var msgID = ""
-        var options = {
-            headers: {
-              Authorization:
-                autori,'Content-Type': 'application/json'
-            },
-            body: {
-              messages: [
-                {
-                  to: number,
-                  from: '16443486',
-                  text:
-                    comname+ "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
-                  type: 'ATA',
-                  kakaoOptions: {
-                    pfId: 'KA01PF210319072804501wAicQajTRe4',
-                    templateId: 'KA01TP210319074611283wL0AjgZVdog',
-                    buttons: [
-                      {
-                        buttonType: 'WL',
-                        buttonName: '확인하기',
-                        linkMo: process.env.IP +'/publish?cat=1&hid=' + historyid,
-                        linkPc: process.env.IP +'/publish?cat=1&hid=' + historyid
-                      }
-                    ]
-                  }
-                }
-              ]
-            },
-            method: 'POST',
-            json: true,
-            url: 'http://api.solapi.com/messages/v4/send-many'
-          };
-          
-        request(options, function(error, response, body) {
-          if (error) throw error;
-          console.log('result :', body);
-        });  
-        
-        const pointone = await Point.insertMany({
-          "CID" : companyone._id,
-          "PN" : "알림톡 전송",
-          "PO" : 50,
-        });
-              
-          console.log(companypoint);
-        companypoint = companypoint - 50;
-          console.log(companypoint);
-              
-         await Company.where({'_id' : historyone.CID})
-            .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
-            .exec();
-            
-            
-          
-    
+
+  const historyid = '605aec074164b23448038c2d';
+  const number = '01021128228';
+  const comname = '롯데렌터카';
+
+  let apiSecret = process.env.sol_secret;
+  let apiKey = process.env.sol_key;
+
+  const moment = require('moment')
+  const nanoidGenerate = require('nanoid/generate')
+  const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32)
+  const HmacSHA256 = require('crypto-js/hmac-sha256')
+  const fs = require('fs')
+  const path = require('path')
+
+  const date = moment.utc().format()
+  const salt = generate()
+  const hmacData = date + salt
+  const signature = HmacSHA256(hmacData, apiSecret).toString()
+  const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
+
+  var request = require('request');
+
+  const historyone = await History.findOne({ '_id': historyid });
+  const companyone = await Company.findOne({ '_id': historyone.CID })
+  var companypoint = companyone.SPO;
+
+  var msgID = ""
+  var options = {
+    headers: {
+      Authorization: autori,
+      'Content-Type': 'application/json'
+    },
+    body: {
+      messages: [{
+        to: number,
+        from: '16443486',
+        text: comname + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
+        type: 'ATA',
+        kakaoOptions: {
+          pfId: 'KA01PF210319072804501wAicQajTRe4',
+          templateId: 'KA01TP210319074611283wL0AjgZVdog',
+          buttons: [{
+            buttonType: 'WL',
+            buttonName: '확인하기',
+            linkMo: process.env.IP + '/publish?cat=1&hid=' + historyid,
+            linkPc: process.env.IP + '/publish?cat=1&hid=' + historyid
+          }]
+        }
+      }]
+    },
+    method: 'POST',
+    json: true,
+    url: 'http://api.solapi.com/messages/v4/send-many'
+  };
+
+  request(options, function(error, response, body) {
+    if (error) throw error;
+    console.log('result :', body);
+  });
+
+  const pointone = await Point.insertMany({
+    "CID": companyone._id,
+    "PN": "알림톡 전송",
+    "PO": 50,
+  });
+
+  console.log(companypoint);
+  companypoint = companypoint - 50;
+  console.log(companypoint);
+
+  await Company.where({ '_id': historyone.CID })
+    .updateMany({ "SPO": companypoint }).setOptions({ runValidators: true })
+    .exec();
+
+
+
+
 });
 
 
@@ -958,8 +954,8 @@ router.get('/aboutapp', async(req, res, next) => {
 router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-  
-  res.render('ozone_spread', {company: req.decoded.company, aclist});
+
+  res.render('ozone_spread', { company: req.decoded.company, aclist });
 });
 
 
