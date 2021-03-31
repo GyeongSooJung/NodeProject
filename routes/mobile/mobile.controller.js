@@ -359,6 +359,7 @@ exports.createHistory = async(req, res) => {
 
         res.json({
             result: true,
+            data: result._id,
         });
     }
     catch (exception) {
