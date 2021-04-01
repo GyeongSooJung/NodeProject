@@ -807,27 +807,6 @@ router.get('/point_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   }
 });
 
-
-
-//----------------------------------------------------------------------------//
-//                                  A/S                                       //
-//----------------------------------------------------------------------------//
-
-//A/S 처리
-router.get('/repair', isNotLoggedIn, DataSet, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const CNU = req.decoded.CNU;
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
-
-  try {
-    res.render('repair', { company: req.decoded.company, aclist });
-  }
-  catch (err) {
-    console.error(err);
-    next(err);
-  }
-});
-
 //----------------------------------------------------------------------------//
 //                                  SOLAPI                                    //
 //----------------------------------------------------------------------------//
@@ -999,5 +978,12 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
   res.render('ozone_spread', { company: req.decoded.company, aclist });
 });
 
+//----------------------------------------------------------------------------//
+//                                  Test                                      //
+//----------------------------------------------------------------------------//
+
+router.get('/test', (req, res, next) => {
+  res.render('test');
+});
 
 module.exports = router;

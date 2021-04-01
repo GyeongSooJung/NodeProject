@@ -14,9 +14,11 @@
 	<link href="../assets/plugins/flag-icon-css/css/flag-icon.min.css" rel="stylesheet" />
 	<!-- ================== END BASE CSS STYLE ================== -->
 	
-	<!--<link href="../assets/css/fullpage/fullpage.css" rel="stylesheet" />-->
+	<link href="../assets/css/fullpage/fullpage.css" rel="stylesheet" />
 	<link href="../assets/index_custom.css" rel="stylesheet" />
 	<link href="../assets/img/favicon.png" rel="icon">
+	
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 </head>
 <body data-spy="scroll" data-target="#header" data-offset="51">
 	<!-- begin #page-container -->
@@ -29,20 +31,13 @@
 				<a href="/" class="navbar-brand">
 					<img src="../assets/img/oasis.png" alt="OASIS">
 				</a>
-				<!-- end navbar-brand -->
-				<!-- begin navbar-toggle -->
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-navbar">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<!-- end navbar-header -->
-				<!-- begin navbar-collapse -->
+				 <!--end navbar-brand -->
+				 <!--begin navbar-collapse -->
 				<div class="collapse navbar-collapse" id="header-navbar">
 					<ul class="nav navbar-nav navbar-right">
-						<li class="nav-item"><a class="nav-link active" href="#home" data-click="scroll-to-target">OASIS</a></li>
-						<li class="nav-item"><a class="nav-link" href="#about" data-click="scroll-to-target">{{__('index_about')}}</a></li>
-						<li class="nav-item"><a class="nav-link" href="#web" data-click="scroll-to-target">{{__('web')}}</a></li>
+						<li class="nav-item"><a class="nav-link active" href="#home" data-menuanchor="home" data-click="scroll-to-target">OASIS</a></li>
+						<li class="nav-item"><a class="nav-link" href="#about" data-menuanchor="about" data-click="scroll-to-target">{{__('index_about')}}</a></li>
+						<li class="nav-item"><a class="nav-link" href="#web" data-menuanchor="web" data-click="scroll-to-target">{{__('web')}}</a></li>
 						<li class="nav-item"><a class="nav-link" href="#app" data-click="scroll-to-target">{{__('app')}}</a></li>
 						<li class="nav-item"><a class="nav-link" href="#qr" data-click="scroll-to-target">{{__('qr')}}</a></li>
 						<li class="nav-item"><a class="nav-link" href="#how" data-click="scroll-to-target">{{__('index_how')}}</a></li>
@@ -104,25 +99,25 @@
 							<h1 class="mb-4 index-h1">OASIS</h1>
 							<h2 class="mb-5 index-h2">소독의 새로운 패러다임</h2>
 							<div class="d-flex justify-content-between align-items-center">
-								<div class="service service-block mr-auto mb-0">
+								<div class="service service-block mr-auto">
 									<div class="iconbox mb-3" data-animation="true" data-animation-type="bounceIn"><i class="fas fa-coins"></i></div>
 									<div class="info">
 										<p class="index-p-bold mb-2">경제성</p>
-										<p class="small font-weight-bold mb-0">자동화된 시스템<br>으로 비용 절감</p>
+										<p class="small font-weight-bold">자동화된 시스템<br>으로 비용 절감</p>
 									</div>
 								</div>
-								<div class="service service-block mr-auto mb-0">
+								<div class="service service-block mr-auto">
 									<div class="iconbox mb-3" data-animation="true" data-animation-type="bounceIn"><i class="fas fa-pump-medical"></i></div>
 									<div class="info">
 										<p class="index-p-bold mb-2">살균력</p>
-										<p class="small font-weight-bold mb-0">오존을 통한<br>99% 살균</p>
+										<p class="small font-weight-bold">오존을 통한<br>99% 살균</p>
 									</div>
 								</div>
-								<div class="service service-block mr-auto mb-0">
+								<div class="service service-block mr-auto">
 									<div class="iconbox mb-3" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-heart"></i></div>
 									<div class="info">
 										<p class="index-p-bold mb-2">신뢰성</p>
-										<p class="small font-weight-bold mb-0">QR코드를 통한<br>소독 이력 확인</p>
+										<p class="small font-weight-bold">QR코드를 통한<br>소독 이력 확인</p>
 									</div>
 								</div>
 							</div>
@@ -130,7 +125,7 @@
 						<!-- end col-5 -->
 						<!-- begin col-5 -->
 						<div class="col-lg-5">
-							<div class="index-img d-flex flex-column justify-content-center mx-auto">
+							<div class="index-img mx-auto">
 								<img src="../assets/img/quote1.png" class="img-responsive quote-img quote-left mr-auto mb-3">
 								<img src="../assets/img/quote2.png" class="img-responsive quote-img quote-right ml-auto mb-3">
 								<img src="../assets/img/quote3.png" class="img-responsive quote-img quote-left mr-auto">
@@ -275,8 +270,41 @@
 							<div class="service">
 								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-file"></i></div>
 								<div class="info">
-									<h4 class="title">안전성</h4>
-									<p class="desc">오존은 산소와 닿으면 빠르게 산소로 환원되어 어떤 잔여물도 남기지 않음.</p>
+									<h4 class="title">경제성</h4>
+									<p class="desc">자동화된 시스템으로 인력비가 절감되고, 소모품이 필요하지 않아 소모비가 절감됨.</p>
+								</div>
+							</div>
+						</div>
+						<!-- end col-4 -->
+						<!-- begin col-4 -->
+						<div class="col-lg-4 col-md-6">
+							<div class="service">
+								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-code"></i></div>
+								<div class="info">
+									<h4 class="title">효율성</h4>
+									<p class="desc">어플 작동과 편리한 타이머 기능으로 효율적인 소독 업무 가능.</p>
+								</div>
+							</div>
+						</div>
+						<!-- end col-4 -->
+						<!-- begin col-4 -->
+						<div class="col-lg-4 col-md-6">
+							<div class="service">
+								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-shopping-cart"></i></div>
+								<div class="info">
+									<h4 class="title">데이터 관리</h4>
+									<p class="desc">자동차, 장치 등 소독 시스템과 관련된 정보를 직접 관리할 수 있음.</p>
+								</div>
+							</div>
+						</div>
+						<!-- end col-4 -->
+						<!-- begin col-4 -->
+						<div class="col-lg-4 col-md-6">
+							<div class="service">
+								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-heart"></i></div>
+								<div class="info">
+									<h4 class="title">신뢰성</h4>
+									<p class="desc">자세한 소독 이력을 QR코드를 통해 직접 확인 가능하여, 소비자들에게 안전에 대한 신뢰 제공.</p>
 								</div>
 							</div>
 						</div>
@@ -309,7 +337,7 @@
 	</div>
 	<!-- end #page-container -->
 	
-	<!--<script src="../assets/js/fullpage/fullpage.js"></script>-->
+	<script src="../assets/js/fullpage/fullpage.js"></script>
 	<script>
 		window.addEventListener('load', function() {
 			// 언어 변경시 국기 변환 기능
@@ -333,11 +361,12 @@
 			}
 		});
 		
-		// new fullpage('#fullpage', {
-		// 	//options here
-		// 	autoScrolling:true,
-		// 	scrollHorizontally: true
-		// });
+		new fullpage('#fullpage', {
+			//options here
+			anchors: ['home', 'about', 'web'],
+			autoScrolling:true,
+			scrollHorizontally: true
+		});
 	</script>
 	
 	<!-- ================== BEGIN BASE JS ================== -->
