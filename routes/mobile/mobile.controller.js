@@ -359,6 +359,7 @@ exports.createHistory = async(req, res) => {
 
         res.json({
             result: true,
+            data: result._id,
         });
     }
     catch (exception) {
@@ -636,7 +637,7 @@ exports.registerKAKAO = async(req, res) => {
            
             
             const historyone = await History.findOne({'_id' : historyid});
-            const companyone = await Company.findOne({'_id' : historyone.CID})
+            var companyone = await Company.findOne({'_id' : historyone.CID})
             var companypoint = companyone.SPO;
             
             if(companypoint > 0) {
@@ -690,7 +691,7 @@ exports.registerKAKAO = async(req, res) => {
                 companypoint = companypoint - 50;
                 console.log(companypoint);
                   
-                const companyone =  await Company.where({'_id' : historyone.CID})
+               companyone =  await Company.where({'_id' : historyone.CID})
                 .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
                 .exec();
             }

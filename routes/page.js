@@ -148,8 +148,8 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
   var history_count2 = [0,0,0,0,0,0,0];
   const Days = 24 * 60 * 60 * 1000;
   
-  const history_date = await History.find({ "CID": req.decoded.CID, "CA": { $lte: Date.now(), $gte: (Date.now() - Days * 7) } });
-
+  const history_date = await History.find({ "CID": req.decoded.CID, "CA": { $lte: Date.now(), $gte: (Date.now() - Days * 7) } },{_id:0,CA:1});
+console.log(history_date);
     for (var i =  0; i < 7 ; i ++) {
         console.log(history_date[i]);
         for(var j = await 0; j < history_date.length; j ++) {
@@ -158,6 +158,33 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
           }
         } 
       }
+      
+//   const history_date2 = await History.aggregate([
+//   {
+//     $match : {
+//       CID : req.decoded.CID
+//     }
+//   },
+// 	{
+// 		$group : {
+// 		  _id : {month: { $month: "$CA" },day : {$dayOfMonth : "$CA"}},
+// 		  count : { $sum: 1},
+// 		},
+// 	},
+// 	{
+// 	  $sort : { _id : -1}
+// 	},
+// 		{
+// 	  $project : {
+// 	    _id : 0
+// 	  }
+// 	}
+
+// ],function(rr,ra){
+// 	if(ra){
+// 		console.log(ra);   
+// 	} 
+// });
 
   const history_count = await history_count2;
   console.log(history_count);
@@ -182,6 +209,7 @@ router.get('/company_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
+  var totalNum = 0;
 
   let page = req.query.page;
 
@@ -198,7 +226,7 @@ router.get('/company_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   if (DEVICE) {
     const companyone = await Company.findOne({ "_id": DEVICE });
 
-    const totalNum = await Device.countDocuments({ "CID": DEVICE });
+    totalNum = await Device.countDocuments({ "CID": DEVICE });
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const devices = await Device.find({ "CID": DEVICE }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
@@ -207,7 +235,7 @@ router.get('/company_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   else if (CAR) {
     const companyone = await Company.findOne({ "_id": CAR });
 
-    const totalNum = await Car.countDocuments({ "CID": CAR });
+    totalNum = await Car.countDocuments({ "CID": CAR });
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const cars = await Car.find({ "CID": CAR }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
@@ -216,7 +244,7 @@ router.get('/company_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   else if (WORKER) {
     const companyone = await Company.findOne({ "_id": WORKER });
 
-    const totalNum = await Worker.countDocuments({ "CID": WORKER });
+     totalNum = await Worker.countDocuments({ "CID": WORKER });
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const workers = await Worker.find({ "CID": WORKER }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
@@ -225,14 +253,14 @@ router.get('/company_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   else if (HISTORY) {
     const companyone = await Company.findOne({ "_id": HISTORY });
 
-    const totalNum = await History.countDocuments({ "CID": HISTORY });
+    totalNum = await History.countDocuments({ "CID": HISTORY });
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const historys = await History.find({ "CID": HISTORY }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
     res.render('company_list', { company: req.decoded.company, companyone, aclist, historys, totalNum, currentPage, totalPage, startPage, endPage });
   }
   else {
-    const totalNum = await Company.countDocuments({ "AH": false });
+    totalNum = await Company.countDocuments({ "AH": false });
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const companys = await Company.find({ "AH": false }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
@@ -337,8 +365,6 @@ router.get('/device_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   let page = req.query.page;
 
   if (NN) {
-    const deviceone = await Device.find({ "NN": NN });
-
     const totalNum = await Device.countDocuments({ "NN": NN });
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const devices = await Device.find({ "NN": NN }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
@@ -421,7 +447,6 @@ router.get('/car_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   let page = req.query.page;
 
   if (CN) {
-    const carone = await Car.findOne({ "CN": CN });
     const totalNum = await Car.countDocuments({ "CN": CN });
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const cars = await Car.find({ "CN": CN }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
@@ -460,25 +485,11 @@ router.get('/worker_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 
   let page = req.query.page;
   if (WN) {
-    const workerone = await Worker.find({ "WN": WN });
-    if (workerone[0]) {
-      console.log(workerone);
-      const totalNum = await Worker.countDocuments({ "WN": WN });
-      let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-      const workers = await Worker.find({ "WN": WN }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-
-      res.render('worker_list', { company: req.decoded.company, aclist, workers, totalNum, currentPage, totalPage, startPage, endPage, WN });
-
-    }
-    else {
       const totalNum = await Worker.countDocuments({ "WN": WN });
       let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
       const workers = await Worker.find({ "WN": WN, }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
       res.render('worker_list', { company: req.decoded.company, aclist, workers, totalNum, currentPage, totalPage, startPage, endPage, WN });
-
-    }
-
 
   }
   else {
@@ -616,10 +627,10 @@ router.get('/history_chart/:_id', isNotLoggedIn, DataSet, async(req, res, next) 
 router.get('/pay_point', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
   const imp_code = process.env.imp_code;
   const HOME = process.env.IP;
 
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
   const service = await Service.find({});
 
   try {
@@ -904,6 +915,7 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
   const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
 
   var request = require('request');
+  
 
   const historyone = await History.findOne({ '_id': historyid });
   const companyone = await Company.findOne({ '_id': historyone.CID })

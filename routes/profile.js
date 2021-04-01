@@ -7,9 +7,15 @@ const {isLoggedIn,isNotLoggedIn,DataSet} = require('./middleware');
 
 router.post('/pfupdate',isNotLoggedIn,DataSet,async(req,res,next)=>{
     const{ CNA, PN, MN, PW} = await req.body;
+    console.log("CNA : " + CNA);
+    console.log("PN : " + PN);
+    console.log("PW : " + PW);
+    console.log(req.decoded.company.PW);
+    console.log(PW);
+    
     try{
         
-    if(bcrypt.compareSync( PW,req.decoded.PW)){
+    if(bcrypt.compareSync( PW,req.decoded.company.PW)){
         await Company.update({"_id" : req.decoded._id},{CNA, PN});
         return res.redirect('/profile?update=true');
     }else{
@@ -25,7 +31,7 @@ router.post('/pfupdate',isNotLoggedIn,DataSet,async(req,res,next)=>{
 router.post('/pwchange',isNotLoggedIn,DataSet,async(req,res,next)=>{
     const {PW,PWc1,PWc2} = await req.body
     try{
-        if(bcrypt.compareSync( PW,req.decoded.PW)){
+        if(bcrypt.compareSync(PW,req.decoded.company.PW)){
             if(PW !==PWc1){
                 if(8 <= PWc1.length){
                     if(PWc1 === PWc2){
