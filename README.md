@@ -20,6 +20,7 @@ https://github.com/here4you81/mk_dokenly
   - 테스트개발서버(허병철)
     + 18.140.74.102
     + 18.140.74.102:9002 (cloud9)
+    + 18.140.74.102:9003 (
 
 http://52.79.245.187:9005/
 http://13.125.32.71:8008/
@@ -34,25 +35,25 @@ pw : root
 서버 시스템 개발과 관련한 공지사항은 하단의 공지 사항 부분에, 그리고 소스코드의 주요 변경 사항은 하단의 주요 변경 사항에 추가하시기 바랍니다.
 * README 마크다운 작성법: https://gist.github.com/ihoneymon/652be052a0727ad59601
 * .env 파일 설정법
-  // 기본설정
-    - SESSION_SECRET = 세션 비밀키
-    - COOKIE_SECRET = 쿠키 비밀키
-    - PORT = 기본 웹포트 (ex. 80)
-    - IP = 홈페이지 주소  (ex. http://1.23.45.678)
-    - MONGO_IP = mongodb://각 개발IP/admin (ex. mongodb://1.23.45.678:1111/admin)
-  // 아임포트
-    - imp_code = 아임포트 식별자 코드
-    - imp_key = 아임포트 REST API 키
-    - imp_secret = 아임포트 REST API 비밀키
-  // 카카오 Developers
-    - KAKAO = 카카오 개발자 API
-  // 솔라피(SMS)
-    - sol_key = 솔라피 REST API 키
-    - sol_secret = 솔라피 REST API 비밀키
-  // GMAIL
-    - gmail = 구글 앱 비밀번호(app에서 구글 계정 사용을 위해)
-  // QR코드 버전
-    - publish_cat = QR코드 카테고리(버전)
+  - 기본설정
+    + SESSION_SECRET = 세션 비밀키
+    + COOKIE_SECRET = 쿠키 비밀키
+    + PORT = 기본 웹포트 (ex. 80)
+    + IP = 홈페이지 주소  (ex. http://1.23.45.678)
+    + MONGO_IP = mongodb://각 개발IP/admin (ex. mongodb://1.23.45.678:1111/admin)
+  - 아임포트
+    + imp_code = 아임포트 식별자 코드
+    + imp_key = 아임포트 REST API 키
+    + imp_secret = 아임포트 REST API 비밀키
+  - 카카오 Developers
+    + KAKAO = 카카오 개발자 API
+  - 솔라피(SMS)
+    + sol_key = 솔라피 REST API 키
+    + sol_secret = 솔라피 REST API 비밀키
+  - GMAIL
+    + gmail = 구글 앱 비밀번호(app에서 구글 계정 사용을 위해)
+  - QR코드 버전
+    + publish_cat = QR코드 카테고리(버전)
 
 ### 공지 사항
 * Cloug9 소스의 README.md 파일을 자주 확인하세요.
