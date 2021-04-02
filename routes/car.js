@@ -8,7 +8,7 @@ const path = require('path');
 const router = express.Router();
 const Company = require('../schemas/company');
 
-// let CARcheck;
+// let CARcheck;3
 // global.CARcheck = CARcheck;
 
 //자동차 등록
@@ -17,18 +17,19 @@ router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
   const { CC, CN, SN} = req.body;
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
+  // const CA = moment().format('YYYY-MM-DD hh:mm:ss');
   
   
   try {
       const exCar = await Car.findOne({ "CN" :  CN });
       const exCar2 = await Car.findOne({ "SN" : SN  });
       const check = /^[0-9]{2,3}[하,허,호]{1}[0-9]{4}/gi;
-      
+
       if (CN.length >= 7 && CN.length <= 8) {
         if (check.test(CN) == true) {
           if (!exCar && !exCar2) {
             await Car.create({
-              CID, CC, CN, SN
+              CID, CC, CN, SN, 
             });
             
             const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
