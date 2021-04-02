@@ -16,6 +16,7 @@ router.get('/', async (req, res, next) => {
   const CN = req.query.cn;
   const HID = req.query.hid;
   const cat = req.query.cat;
+  // const cid = req.query.cid;
   const timenow = moment().format('YYYY-MM-DD HH:mm');
   const kakao = process.env.KAKAO;
   

@@ -162,7 +162,22 @@
                     }
                 }
                 
-    			frm.action='/car/car_overwrite_check'; frm.submit(); return true;
+                if(!checktest) {
+                    alert('항목을 선택해주세요.');
+                    if(typeof(frm.elements['ck'].length) == 'undefined') {
+                            frm.elements['CN'].disabled = false;
+                            frm.elements['exCN'].disabled = false;
+                    }
+                    else {
+                        for (var i = 0; i < frm.elements['ck'].length; i ++) {
+                            frm.elements['CN'][i].disabled = false;
+                            frm.elements['exCN'][i].disabled = false;
+                        }
+                    }
+                }
+                else {
+    			    frm.action='/car/car_overwrite_check'; frm.submit(); return true;
+                }
     		}
     		else {
     			return false;

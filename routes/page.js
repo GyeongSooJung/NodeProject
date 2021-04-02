@@ -12,6 +12,7 @@ const Publish = require('../schemas/publish');
 const Point = require('../schemas/point');
 
 const moment = require('moment');
+const qrcode = require('qrcode');
 const session = require('express-session');
 //Router or MiddleWare
 const router = express.Router();
@@ -819,9 +820,58 @@ router.get('/point_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 //----------------------------------------------------------------------------//
-//                                  SOLAPI                                    //
+//                                   QR                                       //
 //----------------------------------------------------------------------------//
 
+//QR코드 관리
+router.get('/publish_manage', isNotLoggedIn, DataSet, async(req, res, next) => {
+  
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  const HOME = process.env.IP;
+  const cat = process.env.publish_cat;
+  
+  try {
+    res. render('publish_manage', { company: req.decoded.company, aclist, HOME, cat })
+  }
+  catch(err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+//QR Code Create
+router.get('/create', isNotLoggedIn, DataSet, async (req, res, next) => {
+  
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  
+  var main = req.query.main;
+  var cid = req.query.cid;
+  var cat = req.query.cat;
+  var url;
+  
+  try {
+    if(cat == 1) {
+      url = main+"/inflow?cat="+cat;
+    }
+    else {
+      url = main+"/inflow?cat="+cat+"&cid="+cid;
+    }
+    console.log("유알엘"+url);
+    const cr_qrcode = await qrcode.toDataURL(url);
+    
+    res.render('code_img', { company: req.decoded.company, aclist, cr_qrcode });
+  }
+  catch(err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+//----------------------------------------------------------------------------//
+//                                  SOLAPI                                    //
+//----------------------------------------------------------------------------//
 
 router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
 
@@ -972,7 +1022,7 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
 
 
 //----------------------------------------------------------------------------//
-//                                  App About                                 //
+//                                  About App                                 //
 //----------------------------------------------------------------------------//
 router.get('/aboutapp', async(req, res, next) => {
   res.render('aboutapp');

@@ -21,6 +21,7 @@
 	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 </head>
 <body data-spy="scroll" data-target="#header" data-offset="51">
+	<div id="fullpage">
 	<!-- begin #page-container -->
 	<div id="page-container" class="fade">
 		<!-- begin #header -->
@@ -56,266 +57,264 @@
 			<!-- end container -->
 		</div>
 		<!-- end #header -->
-		
-		<div id="fullpage">
-			<!-- begin #home -->
-			<div id="home" class="content has-bg home">
-				<!-- begin content-bg -->
-				<div class="content-bg" style="background-image: url(../assets/img/main2.png);" 
-					data-paroller="true" 
-					data-paroller-factor="0.5"
-					data-paroller-factor-xs="0.25">
-				</div>
-				<!-- end content-bg -->
-				<!-- begin container -->
-				<div class="container home-content">
-					<h1>Welcome to <b class="text-primary">OASIS</b></h1>
-					<h3>
-						<b class="text-primary">O</b>zone
-						<b class="text-primary">A</b>ir
-						<b class="text-primary">S</b>terilization
-						<b class="text-primary">I</b>ntelligence
-						<b class="text-primary">S</b>ystem
-					</h3>
-					<p>
-						{{__('index_text')}}
-					</p>
-					<a href="/login" class="btn btn-theme btn-primary">&nbsp;&nbsp;{{__('login')}}&nbsp;&nbsp;</a> <a href="/register" class="btn btn-theme btn-outline-white">{{__('signup')}}</a><br />
-					<br />
-					by <a href="http://mklc.co.kr/kor/main/" target="_blank"><b>MK</b></a>
-				</div>
-				<!-- end container -->
+
+		<!-- begin #home -->
+		<div id="home" class="content has-bg home">
+			<!-- begin content-bg -->
+			<div class="content-bg" style="background-image: url(../assets/img/main2.png);" 
+				data-paroller="true" 
+				data-paroller-factor="0.5"
+				data-paroller-factor-xs="0.25">
 			</div>
-			<!-- end #home -->
-			
-			<!-- begin #about -->
-			<div id="about" class="content" data-scrollview="true">
-				<!-- begin container -->
-				<div class="container" data-animation="true" data-animation-type="fadeInDown">
-					<!-- begin row -->
-					<div class="row justify-content-md-center align-items-md-center">
-						<!-- begin col-5 -->
-						<div class="col-lg-5">
-							<h1 class="mb-4 index-h1">OASIS</h1>
-							<h2 class="mb-5 index-h2">소독의 새로운 패러다임</h2>
-							<div class="d-flex justify-content-between align-items-center">
-								<div class="service service-block mr-auto">
-									<div class="iconbox mb-3" data-animation="true" data-animation-type="bounceIn"><i class="fas fa-coins"></i></div>
-									<div class="info">
-										<p class="index-p-bold mb-2">경제성</p>
-										<p class="small font-weight-bold">자동화된 시스템<br>으로 비용 절감</p>
-									</div>
-								</div>
-								<div class="service service-block mr-auto">
-									<div class="iconbox mb-3" data-animation="true" data-animation-type="bounceIn"><i class="fas fa-pump-medical"></i></div>
-									<div class="info">
-										<p class="index-p-bold mb-2">살균력</p>
-										<p class="small font-weight-bold">오존을 통한<br>99% 살균</p>
-									</div>
-								</div>
-								<div class="service service-block mr-auto">
-									<div class="iconbox mb-3" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-heart"></i></div>
-									<div class="info">
-										<p class="index-p-bold mb-2">신뢰성</p>
-										<p class="small font-weight-bold">QR코드를 통한<br>소독 이력 확인</p>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- end col-5 -->
-						<!-- begin col-5 -->
-						<div class="col-lg-5">
-							<div class="index-img mx-auto">
-								<img src="../assets/img/quote1.png" class="img-responsive quote-img quote-left mr-auto mb-3">
-								<img src="../assets/img/quote2.png" class="img-responsive quote-img quote-right ml-auto mb-3">
-								<img src="../assets/img/quote3.png" class="img-responsive quote-img quote-left mr-auto">
-							</div>
-						</div>
-						<!-- end col-5 -->
-					</div>
-					<!-- end row -->
-				</div>
-				<!-- end container -->
+			<!-- end content-bg -->
+			<!-- begin container -->
+			<div class="container home-content">
+				<h1>Welcome to <b class="text-primary">OASIS</b></h1>
+				<h3>
+					<b class="text-primary">O</b>zone
+					<b class="text-primary">A</b>ir
+					<b class="text-primary">S</b>terilization
+					<b class="text-primary">I</b>ntelligence
+					<b class="text-primary">S</b>ystem
+				</h3>
+				<p>
+					{{__('index_text')}}
+				</p>
+				<a href="/login" class="btn btn-theme btn-primary">&nbsp;&nbsp;{{__('login')}}&nbsp;&nbsp;</a> <a href="/register" class="btn btn-theme btn-outline-white">{{__('signup')}}</a><br />
+				<br />
+				by <a href="http://mklc.co.kr/kor/main/" target="_blank"><b>MK</b></a>
 			</div>
-			<!-- end #about -->
-			
-			<!-- begin #web -->
-			<div id="web" class="content index-bg" data-scrollview="true">
-				<!-- begin container -->
-				<div class="container">
-					<!-- begin row -->
-					<div class="row justify-content-md-center align-items-md-center">
-						<!-- begin col-5 -->
-						<div class="col-lg-5">
-							<h1 class="mb-4 index-h1">Web</h1>
-							<h2 class="mb-5 index-h2">편리한 작업관리 시스템</h2>
-							<h5 class="index-h3">Web Management System을 제공하여<br>소독기, 차량, 작업자, 소독이력 등 통합 관리</h5>
-						</div>
-						<!-- end col-5 -->
-						<!-- begin col-5 -->
-						<div class="col-lg-5">
-							<img src="../assets/img/oasis_web.png" class="img-responsive index-img mx-auto">
-						</div>
-						<!-- end col-5 -->
-					</div>
-					<!-- end row -->
-				</div>
-				<!-- end container -->
-			</div>
-			<!-- end #web -->
-			
-			<!-- begin #app -->
-			<div id="app" class="content" data-scrollview="true">
-				<!-- begin container -->
-				<div class="container">
-					<!-- begin row -->
-					<div class="row justify-content-md-center align-items-md-center">
-						<!-- begin col-5 -->
-						<div class="col-lg-5">
-							<h1 class="mb-4 index-h1">App</h1>
-							<h2 class="mb-5 index-h2">안전하고 편리한 소독</h2>
-							<h5 class="mb-5 index-h3">전용 Mobile App을 제공하여<br>원격제어를 통한 자동화된 소독 솔루션</h5>
-							<a href="https://play.google.com/store/apps/details?id=com.mk.oasis_app" target="_blank" class="link_store">
-					          <img src="../assets/appabout/google_play.png" alt="HTML tutorial" style="border:0;">
-					        </a>
-						</div>
-						<!-- end col-5 -->
-						<!-- begin col-5 -->
-						<div class="col-lg-5">
-							<img src="../assets/img/oasis_app.png" class="img-responsive index-img mx-auto">
-						</div>
-						<!-- end col-5 -->
-					</div>
-					<!-- end row -->
-				</div>
-				<!-- end container -->
-			</div>
-			<!-- end #app -->
-			
-			<!-- begin #qr -->
-			<div id="qr" class="content index-bg" data-scrollview="true">
-				<!-- begin container -->
-				<div class="container">
-					<!-- begin row -->
-					<div class="row justify-content-md-center align-items-md-center">
-						<!-- begin col-5 -->
-						<div class="col-lg-5">
-							<h1 class="mb-4 index-h1">QR Code</h1>
-							<h2 class="mb-5 index-h2">보이는 소독 플랫폼</h2>
-							<h5 class="mb-5 index-h3">QR코드를 통해 App 설치 없이<br>누구나 쉽고 빠르게 투명하게 소독 정보 확인</h5>
-						</div>
-						<!-- end col-5 -->
-						<!-- begin col-5 -->
-						<div class="col-lg-5">
-							<img src="../assets/img/oasis_qr.png" class="img-responsive index-img mx-auto">
-						</div>
-						<!-- end col-5 -->
-					</div>
-					<!-- end row -->
-				</div>
-				<!-- end container -->
-			</div>
-			<!-- end #qr -->
-			
-			<!-- begin #how -->
-			<div id="how" class="content" data-scrollview="true">
-				<!-- begin container -->
-				<div class="container">
-					<h2 class="content-title index-h1">How To?</h2>
-					<!-- begin row -->
-					<div class="row">
-						<!-- begin col-12 -->
-						<div class="col-lg-12">
-							<img src="../assets/img/oasis_flow.png" class="img-responsive flow-img mx-auto">
-						</div>
-						<!-- end col-12 -->
-					</div>
-					<!-- end row -->
-				</div>
-				<!-- end container -->
-			</div>
-			<!-- end #how -->
-			
-			<!-- begin #ozone -->
-			<div id="ozone" class="content index-bg" data-scrollview="true">
-				<!-- begin container -->
-				<div class="container">
-					<h2 class="content-title index-h1">Ozone</h2>
-					<!-- begin row -->
-					<div class="row">
-						<!-- begin col-4 -->
-						<div class="col-lg-4 col-md-6">
-							<div class="service">
-								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-cog"></i></div>
-								<div class="info">
-									<h4 class="title">살균력</h4>
-									<p class="desc">단백질 구성물(세균류)에 가장 빠르게 반응(살균)하며 99%의 살균 가능, 광범위한 살균에 효과적.</p>
-								</div>
-							</div>
-						</div>
-						<!-- end col-4 -->
-						<!-- begin col-4 -->
-						<div class="col-lg-4 col-md-6">
-							<div class="service">
-								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-paint-brush"></i></div>
-								<div class="info">
-									<h4 class="title">탈취력</h4>
-									<p class="desc">공기 중의 악취성분을 변화, 파괴시켜 단시간에 악취를 제거함.</p>
-								</div>
-							</div>
-						</div>
-						<!-- end col-4 -->
-						<!-- begin col-4 -->
-						<div class="col-lg-4 col-md-6">
-							<div class="service">
-								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-file"></i></div>
-								<div class="info">
-									<h4 class="title">경제성</h4>
-									<p class="desc">자동화된 시스템으로 인력비가 절감되고, 소모품이 필요하지 않아 소모비가 절감됨.</p>
-								</div>
-							</div>
-						</div>
-						<!-- end col-4 -->
-						<!-- begin col-4 -->
-						<div class="col-lg-4 col-md-6">
-							<div class="service">
-								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-code"></i></div>
-								<div class="info">
-									<h4 class="title">효율성</h4>
-									<p class="desc">어플 작동과 편리한 타이머 기능으로 효율적인 소독 업무 가능.</p>
-								</div>
-							</div>
-						</div>
-						<!-- end col-4 -->
-						<!-- begin col-4 -->
-						<div class="col-lg-4 col-md-6">
-							<div class="service">
-								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-shopping-cart"></i></div>
-								<div class="info">
-									<h4 class="title">데이터 관리</h4>
-									<p class="desc">자동차, 장치 등 소독 시스템과 관련된 정보를 직접 관리할 수 있음.</p>
-								</div>
-							</div>
-						</div>
-						<!-- end col-4 -->
-						<!-- begin col-4 -->
-						<div class="col-lg-4 col-md-6">
-							<div class="service">
-								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-heart"></i></div>
-								<div class="info">
-									<h4 class="title">신뢰성</h4>
-									<p class="desc">자세한 소독 이력을 QR코드를 통해 직접 확인 가능하여, 소비자들에게 안전에 대한 신뢰 제공.</p>
-								</div>
-							</div>
-						</div>
-						<!-- end col-4 -->
-					</div>
-					<!-- end row -->
-				</div>
-				<!-- end container -->
-			</div>
-			<!-- end #ozone -->
+			<!-- end container -->
 		</div>
+		<!-- end #home -->
+		
+		<!-- begin #about -->
+		<div id="about" class="content" data-scrollview="true">
+			<!-- begin container -->
+			<div class="container" data-animation="true" data-animation-type="fadeInDown">
+				<!-- begin row -->
+				<div class="row justify-content-md-center align-items-md-center">
+					<!-- begin col-5 -->
+					<div class="col-lg-5">
+						<h1 class="mb-4 index-h1">OASIS</h1>
+						<h2 class="mb-5 index-h2">소독의 새로운 패러다임</h2>
+						<div class="d-flex justify-content-between align-items-center">
+							<div class="service service-block mr-auto">
+								<div class="iconbox mb-3" data-animation="true" data-animation-type="bounceIn"><i class="fas fa-coins"></i></div>
+								<div class="info">
+									<p class="index-p-bold mb-2">경제성</p>
+									<p class="small font-weight-bold">자동화된 시스템<br>으로 비용 절감</p>
+								</div>
+							</div>
+							<div class="service service-block mr-auto">
+								<div class="iconbox mb-3" data-animation="true" data-animation-type="bounceIn"><i class="fas fa-pump-medical"></i></div>
+								<div class="info">
+									<p class="index-p-bold mb-2">살균력</p>
+									<p class="small font-weight-bold">오존을 통한<br>99% 살균</p>
+								</div>
+							</div>
+							<div class="service service-block mr-auto">
+								<div class="iconbox mb-3" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-heart"></i></div>
+								<div class="info">
+									<p class="index-p-bold mb-2">신뢰성</p>
+									<p class="small font-weight-bold">QR코드를 통한<br>소독 이력 확인</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- end col-5 -->
+					<!-- begin col-5 -->
+					<div class="col-lg-5">
+						<div class="index-img mx-auto">
+							<img src="../assets/img/quote1.png" class="img-responsive quote-img quote-left mr-auto mb-3">
+							<img src="../assets/img/quote2.png" class="img-responsive quote-img quote-right ml-auto mb-3">
+							<img src="../assets/img/quote3.png" class="img-responsive quote-img quote-left mr-auto">
+						</div>
+					</div>
+					<!-- end col-5 -->
+				</div>
+				<!-- end row -->
+			</div>
+			<!-- end container -->
+		</div>
+		<!-- end #about -->
+		
+		<!-- begin #web -->
+		<div id="web" class="content index-bg" data-scrollview="true">
+			<!-- begin container -->
+			<div class="container">
+				<!-- begin row -->
+				<div class="row justify-content-md-center align-items-md-center">
+					<!-- begin col-5 -->
+					<div class="col-lg-5">
+						<h1 class="mb-4 index-h1">Web</h1>
+						<h2 class="mb-5 index-h2">편리한 작업관리 시스템</h2>
+						<h5 class="index-h3">Web Management System을 제공하여<br>소독기, 차량, 작업자, 소독이력 등 통합 관리</h5>
+					</div>
+					<!-- end col-5 -->
+					<!-- begin col-5 -->
+					<div class="col-lg-5">
+						<img src="../assets/img/oasis_web.png" class="img-responsive index-img mx-auto">
+					</div>
+					<!-- end col-5 -->
+				</div>
+				<!-- end row -->
+			</div>
+			<!-- end container -->
+		</div>
+		<!-- end #web -->
+		
+		<!-- begin #app -->
+		<div id="app" class="content" data-scrollview="true">
+			<!-- begin container -->
+			<div class="container">
+				<!-- begin row -->
+				<div class="row justify-content-md-center align-items-md-center">
+					<!-- begin col-5 -->
+					<div class="col-lg-5">
+						<h1 class="mb-4 index-h1">App</h1>
+						<h2 class="mb-5 index-h2">안전하고 편리한 소독</h2>
+						<h5 class="mb-5 index-h3">전용 Mobile App을 제공하여<br>원격제어를 통한 자동화된 소독 솔루션</h5>
+						<a href="https://play.google.com/store/apps/details?id=com.mk.oasis_app" target="_blank" class="link_store">
+				          <img src="../assets/appabout/google_play.png" alt="HTML tutorial" style="border:0;">
+				        </a>
+					</div>
+					<!-- end col-5 -->
+					<!-- begin col-5 -->
+					<div class="col-lg-5">
+						<img src="../assets/img/oasis_app.png" class="img-responsive index-img mx-auto">
+					</div>
+					<!-- end col-5 -->
+				</div>
+				<!-- end row -->
+			</div>
+			<!-- end container -->
+		</div>
+		<!-- end #app -->
+		
+		<!-- begin #qr -->
+		<div id="qr" class="content index-bg" data-scrollview="true">
+			<!-- begin container -->
+			<div class="container">
+				<!-- begin row -->
+				<div class="row justify-content-md-center align-items-md-center">
+					<!-- begin col-5 -->
+					<div class="col-lg-5">
+						<h1 class="mb-4 index-h1">QR Code</h1>
+						<h2 class="mb-5 index-h2">보이는 소독 플랫폼</h2>
+						<h5 class="mb-5 index-h3">QR코드를 통해 App 설치 없이<br>누구나 쉽고 빠르게 투명하게 소독 정보 확인</h5>
+					</div>
+					<!-- end col-5 -->
+					<!-- begin col-5 -->
+					<div class="col-lg-5">
+						<img src="../assets/img/oasis_qr.png" class="img-responsive index-img mx-auto">
+					</div>
+					<!-- end col-5 -->
+				</div>
+				<!-- end row -->
+			</div>
+			<!-- end container -->
+		</div>
+		<!-- end #qr -->
+		
+		<!-- begin #how -->
+		<div id="how" class="content" data-scrollview="true">
+			<!-- begin container -->
+			<div class="container">
+				<h2 class="content-title index-h1">How To?</h2>
+				<!-- begin row -->
+				<div class="row">
+					<!-- begin col-12 -->
+					<div class="col-lg-12">
+						<img src="../assets/img/oasis_flow.png" class="img-responsive flow-img mx-auto">
+					</div>
+					<!-- end col-12 -->
+				</div>
+				<!-- end row -->
+			</div>
+			<!-- end container -->
+		</div>
+		<!-- end #how -->
+		
+		<!-- begin #ozone -->
+		<div id="ozone" class="content index-bg" data-scrollview="true">
+			<!-- begin container -->
+			<div class="container">
+				<h2 class="content-title index-h1">Ozone</h2>
+				<!-- begin row -->
+				<div class="row">
+					<!-- begin col-4 -->
+					<div class="col-lg-4 col-md-6">
+						<div class="service">
+							<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-cog"></i></div>
+							<div class="info">
+								<h4 class="title">살균력</h4>
+								<p class="desc">단백질 구성물(세균류)에 가장 빠르게 반응(살균)하며 99%의 살균 가능, 광범위한 살균에 효과적.</p>
+							</div>
+						</div>
+					</div>
+					<!-- end col-4 -->
+					<!-- begin col-4 -->
+					<div class="col-lg-4 col-md-6">
+						<div class="service">
+							<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-paint-brush"></i></div>
+							<div class="info">
+								<h4 class="title">탈취력</h4>
+								<p class="desc">공기 중의 악취성분을 변화, 파괴시켜 단시간에 악취를 제거함.</p>
+							</div>
+						</div>
+					</div>
+					<!-- end col-4 -->
+					<!-- begin col-4 -->
+					<div class="col-lg-4 col-md-6">
+						<div class="service">
+							<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-file"></i></div>
+							<div class="info">
+								<h4 class="title">경제성</h4>
+								<p class="desc">자동화된 시스템으로 인력비가 절감되고, 소모품이 필요하지 않아 소모비가 절감됨.</p>
+							</div>
+						</div>
+					</div>
+					<!-- end col-4 -->
+					<!-- begin col-4 -->
+					<div class="col-lg-4 col-md-6">
+						<div class="service">
+							<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-code"></i></div>
+							<div class="info">
+								<h4 class="title">효율성</h4>
+								<p class="desc">어플 작동과 편리한 타이머 기능으로 효율적인 소독 업무 가능.</p>
+							</div>
+						</div>
+					</div>
+					<!-- end col-4 -->
+					<!-- begin col-4 -->
+					<div class="col-lg-4 col-md-6">
+						<div class="service">
+							<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-shopping-cart"></i></div>
+							<div class="info">
+								<h4 class="title">데이터 관리</h4>
+								<p class="desc">자동차, 장치 등 소독 시스템과 관련된 정보를 직접 관리할 수 있음.</p>
+							</div>
+						</div>
+					</div>
+					<!-- end col-4 -->
+					<!-- begin col-4 -->
+					<div class="col-lg-4 col-md-6">
+						<div class="service">
+							<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-heart"></i></div>
+							<div class="info">
+								<h4 class="title">신뢰성</h4>
+								<p class="desc">자세한 소독 이력을 QR코드를 통해 직접 확인 가능하여, 소비자들에게 안전에 대한 신뢰 제공.</p>
+							</div>
+						</div>
+					</div>
+					<!-- end col-4 -->
+				</div>
+				<!-- end row -->
+			</div>
+			<!-- end container -->
+		</div>
+		<!-- end #ozone -->
 		
 		<!-- begin #footer -->
 		<div id="footer" class="footer">
@@ -336,6 +335,7 @@
 		<!-- end #footer -->
 	</div>
 	<!-- end #page-container -->
+	</div>
 	
 	<script src="../assets/js/fullpage/fullpage.js"></script>
 	<script>
