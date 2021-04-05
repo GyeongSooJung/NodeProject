@@ -14,12 +14,6 @@
 				<!-- begin panel-heading -->
 				<div class="panel-heading d-flex justify-content-between">
 					<h4 class="panel-title">소독기</h4>
-					<p class="m-0">첨부파일 : </p>
-						<span class="text-green font-weight-bold d-flex align-items-center">
-							<a class="text-green" href="../assets/upload/장치 등록 양식.xlsx" download>
-								<i class="far fa-lg fa-file-excel ml-2 mr-1"></i> 장치 등록 양식.xlsx
-							</a>
-						</span>
 				</div>
 				<!-- end panel-heading -->
 				<!-- begin panel-body -->
@@ -59,17 +53,6 @@
 						</div>
 					</form>
 				</div>
-				<!-- Excel 파일 업로드 -->
-				<div class="panel-body bg-grey pb-0">
-					<form id="device-xlsx-form" action="/device/device_join_xlsx" method="post" enctype="multipart/form-data" class="form-horizontal" name="device-xlsx-form">
-						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label text-green" for="file"><b># Excel 파일로 등록</b> :</label>
-							<div class="col-md-8 col-sm-8">
-								<input type="file" id="file" name="xlsx" /><button type="submit" class="btn btn-primary width-80">등록</button>
-							</div>
-						</div>
-					</form>
-				</div>
 				<!-- end panel-body -->
 			</div>
 			<!-- end panel -->
@@ -99,18 +82,6 @@
 		}
 		if (new URL(location.href).searchParams.get('type')) {
 			alert('MAC 주소를 정확히 입력해주세요.');
-		}
-		if (new URL(location.href).searchParams.get('nofile')) {
-			alert('파일을 선택해주세요.');
-		}
-		if (new URL(location.href).searchParams.get('excel')) {
-			alert('잘못된 파일입니다. 파일 형식을 확인해주세요');
-		}
-		if (new URL(location.href).searchParams.get('excelType')) {
-			alert('파일 내 잘못된 MAC 주소가 존재합니다.');
-		}
-		if (new URL(location.href).searchParams.get('inspect')) {
-			window.open('/device_inspect', 'pop', "width=620, height=700, scrollbars=yes, resizable=yes");
 		}
 	};
 </script>

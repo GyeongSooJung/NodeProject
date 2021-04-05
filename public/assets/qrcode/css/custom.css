@@ -1,0 +1,56 @@
+/* Start Custom */
+
+/* amchart */
+#chartdiv {
+  width: 100%;
+  height: 300px;
+  margin: 20px auto;
+  /*margin-left: -12%;*/
+}
+
+/* toast message */
+.toast {
+  display: none;
+  width: 250px;
+  height: 20px;
+  height:auto;
+  position: fixed;
+  left: 50%;
+  margin-left:-125px;
+  bottom: 50px;
+  z-index: 9999;
+  background-color: #383838;
+  color: #F0F0F0;
+  font-family: Calibri;
+  font-size: 15px;
+  padding: 10px;
+  text-align:center;
+  border-radius: 2px;
+  -webkit-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
+  -moz-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
+  box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
+}
+
+/*SNS 공유*/
+.sns-go {
+  text-align:center;
+  padding: 20px 0;
+}
+.sns-go li {
+  display:inline-block;
+  margin: 0 5px;
+}
+.sns-go li img {
+  border-radius:50%;
+}
+
+@media screen and (max-width: 1024px) {
+  #chartdiv {
+      width: 120%;
+      height: 300px;
+      margin-top: 20px;
+      margin-left: -12%;
+    }
+}
+
+/* End Custom */

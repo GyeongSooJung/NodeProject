@@ -8,7 +8,7 @@
   <meta property="og:description" content="즐거운 드라이브를 위해 정기적으로 실시된 방역관리를 확인해보세요.">
   <meta property="og:image" content="../assets/img/oasis.png">
   <title>OASIS 보이는 소독 시스템</title>
-  <link rel="stylesheet" href="../public/assets/qrcode/css/main.css" class="css">
+  <link rel="stylesheet" href="../assets/qrcode/css/main.css" class="css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
   <link href="../assets/img/favicon.png" rel="icon">
   <script src="https://kit.fontawesome.com/71839e8cce.js" crossorigin="anonymous"></script>
@@ -18,7 +18,7 @@
     <header class="wrap-header is-white">
       <!-- 메뉴 구조 변경 될 수 있음 -->
       <nav class="navbar is-transparent">
-        <a href="publish.html" class="button back"><i class="fas fa-chevron-left"></i></a>
+        <a href="/publish?cat={{cat}}&cn={{CN}}&hid={{HID}}" class="button back"><i class="fas fa-chevron-left"></i></a>
       </nav>
     </header>
     
@@ -32,7 +32,7 @@
             마음이 놓이는 공간<span class="has-text-weight-light">을</span><br><span class="has-text-weight-light">만들어가는</span> 오아시스
           </h4>
           <p class="is-size-6 has-text-grey mb-4">공간의 방역 정보를 간편하게<br>확인할 수 있는 소독 서비스</p>
-          <img src="../public/assets/qrcode/assets/images/brand_info.svg" alt="소독에 관해 불안해하는 질문 이미지" width="220">
+          <img src="../assets/qrcode/assets/images/brand_info.svg" alt="소독에 관해 불안해하는 질문 이미지" width="220">
         </div>
       </section>
       <h3 class="screen-out">오아시스의 소독 절차 및 우수성</h3>
@@ -49,10 +49,10 @@
                 <p class="is-size-6 has-text-grey">오존은 살균력이 강해<br>세균부터 바이러스까지 제거해요.</p>
                 <figure class="img-process">
                   <figcaption class="screen-out">오존이 세균에 달라붙는 이미지</figcaption>
-                  <img src="../public/assets/qrcode/assets/images/process_step01_center.svg" alt="">
-                  <img src="../public/assets/qrcode/assets/images/process_step01_top.svg" alt="">
-                  <img src="../public/assets/qrcode/assets/images/process_step01_right.svg" alt="">
-                  <img src="../public/assets/qrcode/assets/images/process_step01_left.svg" alt="">
+                  <img src="../assets/qrcode/assets/images/process_step01_center.svg" alt="">
+                  <img src="../assets/qrcode/assets/images/process_step01_top.svg" alt="">
+                  <img src="../assets/qrcode/assets/images/process_step01_right.svg" alt="">
+                  <img src="../assets/qrcode/assets/images/process_step01_left.svg" alt="">
                 </figure>
                 <!-- trigger button -->
                 <span class="button is-light is-small is-rounded modal-button" data-target="modal-normal">검사성적서 확인하기<i class="fas fa-chevron-right fa-xs ml-1"></i></span>
@@ -63,9 +63,9 @@
                 <p class="is-size-6 has-text-grey">살균 작용이 끝나면<br>오존은 산소로 되돌아가요.</p>
                 <figure class="img-process">
                   <figcaption class="screen-out">공간에 산소가 가득차고 있는 이미지</figcaption>
-                  <img src="../public/assets/qrcode/assets/images/process_step02_space.svg" alt="">
-                  <img src="../public/assets/qrcode/assets/images/process_step02_o2.svg" alt="">
-                  <img src="../public/assets/qrcode/assets/images/process_step02_mark.svg" alt="">
+                  <img src="../assets/qrcode/assets/images/process_step02_space.svg" alt="">
+                  <img src="../assets/qrcode/assets/images/process_step02_o2.svg" alt="">
+                  <img src="../assets/qrcode/assets/images/process_step02_mark.svg" alt="">
                 </figure>
               </article>
               <article class="tile is-child box py-6 has-text-centered">
@@ -74,9 +74,9 @@
                 <p class="is-size-6 has-text-grey">스캔 하나로 소독 정보가 쏙쏙<br>깨끗해진 공간을 확인해 보세요!</p>
                 <figure class="img-process">
                   <figcaption class="screen-out">오아시스 QR 코드를 스캔하는 이미지</figcaption>
-                  <img src="../public/assets/qrcode/assets/images/process_step03_scan.svg" alt="">
-                  <img src="../public/assets/qrcode/assets/images/process_step03_phone.svg" alt="">
-                  <img src="../public/assets/qrcode/assets/images/process_step03_scanbar.svg" alt="">
+                  <img src="../assets/qrcode/assets/images/process_step03_scan.svg" alt="">
+                  <img src="../assets/qrcode/assets/images/process_step03_phone.svg" alt="">
+                  <img src="../assets/qrcode/assets/images/process_step03_scanbar.svg" alt="">
                 </figure>
               </article>
             </div>
@@ -90,7 +90,7 @@
             오존에 대해<br>더 알아볼까요?
           </h4>
           <p class="is-size-6 has-text-grey">자연적으로 발생되는 오존은<br>우리의 일상에 늘 함께 있어요.</p>
-          <img src="../public/assets/qrcode/assets/images/safety_o3.svg" alt="대기 중 오존농도 보통 0.09ppm" width="260">
+          <img src="../assets/qrcode/assets/images/safety_o3.svg" alt="대기 중 오존농도 보통 0.09ppm" width="260">
         </div>
       </section>
       <section class="section useful">
@@ -100,19 +100,19 @@
           </h4>
           <div class="columns is-mobile mt-1">
             <figure class="column is-3 image is-rounded">
-              <img class="is-rounded" src="../public/assets/qrcode/assets/images/useful_clean.jpg">
+              <img class="is-rounded" src="../assets/qrcode/assets/images/useful_clean.jpg">
               <figcaption class="is-block has-text-centered has-text-grey">악취성분<br>제거 및 탈취</figcaption>
             </figure>
             <figure class="column is-3 image is-rounded">
-              <img class="is-rounded" src="../public/assets/qrcode/assets/images/useful_food.jpg">
+              <img class="is-rounded" src="../assets/qrcode/assets/images/useful_food.jpg">
               <figcaption class="is-block has-text-centered has-text-grey">잔류농약<br>분해 및 소독</figcaption>
             </figure>
             <figure class="column is-3 image is-rounded">
-              <img class="is-rounded" src="../public/assets/qrcode/assets/images/useful_water.jpg">
+              <img class="is-rounded" src="../assets/qrcode/assets/images/useful_water.jpg">
               <figcaption class="is-block has-text-centered has-text-grey">생활 오수/<br>폐수 정화</figcaption>
             </figure>
             <figure class="column is-3 image is-rounded">
-              <img class="is-rounded" src="../public/assets/qrcode/assets/images/useful_grow.jpg">
+              <img class="is-rounded" src="../assets/qrcode/assets/images/useful_grow.jpg">
               <figcaption class="is-block has-text-centered has-text-grey">식물 성장<br>유해세균사멸</figcaption>
             </figure>
           </div>
@@ -128,7 +128,7 @@
           <div class="columns is-multiline is-mobile">
             <div class="column is-12">
               <p class="is-size-7 has-text-grey mb-4">오존 (ppm)</p>
-              <img src="../public/assets/qrcode/assets/images/manage_chart.svg" alt="소독 공정 완료 후 오존 측정 농도 0.09ppm">
+              <img src="../assets/qrcode/assets/images/manage_chart.svg" alt="소독 공정 완료 후 오존 측정 농도 0.09ppm">
               <p class="is-size-7 has-text-right has-text-grey">시간 (초)</p>
             </div>
             <div class="column is-6 mb-0">
@@ -151,12 +151,12 @@
           <h4 class="title is-2 has-text-centered mb-8">
             <span class="has-text-weight-light">안전하지 않으면</span><br>소독이 끝나지 않습니다.
           </h4>
-          <img src="../public/assets/qrcode/assets/images/phone.png" alt="오아시스 웹화면 이미지">
+          <img src="../assets/qrcode/assets/images/phone.png" alt="오아시스 웹화면 이미지">
         </div>
       </section>
     </main>
     <footer class="footer">
-        <p>롯데랜터카</p>
+        <p>{{companyone.CNA}}</p>
     </footer>
 
     <!-- modal -->
@@ -164,7 +164,7 @@
       <div class="modal-background"></div>
       <div class="modal-content">
         <div class="box py-6">
-          <img src="../public/assets/qrcode/assets/images/process_step01_test.jpg" alt="">
+          <img src="../assets/qrcode/assets/images/process_step01_test.jpg" alt="">
           <p class="is-size-4 has-text-centered mt-4 mb-2">오아시스 병원균 살균 시험 보고서</p>
           <p class="is-size-6 has-text-grey has-text-centered">소독 후 병원균이 운전석과 보조석<br>모두 <span class="has-text-success has-text-weight-bold">99.999% 감소</span>했어요!</p>
         </div>
@@ -172,11 +172,11 @@
       <button class="modal-close is-large" aria-label="close"></button>
     </div>
   </div>
-  <script type="text/javascript" src="../public/assets/qrcode/js/accordion.js"></script>
+  <script type="text/javascript" src="../assets/qrcode/js/accordion.js"></script>
   <script>
     var accordions = bulmaAccordion.attach();
   </script>
-  <script src="../public/assets/qrcode/js/modal-fx.js"></script>
+  <script src="../assets/qrcode/js/modal-fx.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script>
       // highlight.js

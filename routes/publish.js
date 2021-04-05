@@ -12,6 +12,7 @@ const moment = require('moment');
 
 
 //Mobile QR Code Page
+  //publish_main
 router.get('/', async (req, res, next) => {
   const CN = req.query.cn;
   const HID = req.query.hid;
@@ -50,7 +51,7 @@ router.get('/', async (req, res, next) => {
           const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
           const term = await moment(timenow).diff(et, 'hours');
           
-          res.render('publish', {companyone, historyone, history_array, term, kakao});
+          res.render('publish', {companyone, historyone, history_array, term, kakao, cat});
         }
         else {
           res.redirect('/inflow?cat='+cat+'&nodata=true');
@@ -60,6 +61,18 @@ router.get('/', async (req, res, next) => {
         console.error(err);
         next(err);
     }
+});
+
+  //publish_detail
+router.get('/brand', async (req, res, next) => {
+  const CN = req.query.cn;
+  const HID = req.query.hid;
+  const cat = req.query.cat;
+  
+  const historyone = await History.findOne({"_id" : HID});
+  const companyone = await Company.findOne({"_id" : historyone.CID});
+  
+  res.render('publish_brand', {CN, HID, cat, companyone});
 });
 
 // 바로 넘어갈 경우

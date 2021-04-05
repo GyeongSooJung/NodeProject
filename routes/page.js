@@ -321,26 +321,6 @@ router.get('/device_join', isNotLoggedIn, DataSet, async(req, res, next) => {
   res.render('device_join', { company: req.decoded.company, aclist });
 });
 
-//장비 검증
-router.get('/device_inspect', isNotLoggedIn, DataSet, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
-  var session_excel = await req.session.re_device_excel;
-  
-  if(session_excel) {
-    if(typeof(session_excel[1]) == 'string') {
-      var session_excel_1 = session_excel;
-      res.render('device_inspect', {company: req.decoded.company, aclist, session_excel_1});
-    }
-    else{
-      res.render('device_inspect', {company: req.decoded.company, aclist, session_excel});
-    }
-  }
-  else {
-    res.render('device_inspect', {company: req.decoded.company, aclist, session_excel});
-  }
-});
-
 //장비 수정
 router.get('/device_edit/:MAC', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
@@ -409,18 +389,15 @@ router.get('/car_join', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.get('/car_inspect', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-  var session_excel = await req.session.re_car_excel;
-  if(session_excel) {
-    if(typeof(session_excel[1]) == 'string') {
-      var session_excel_1 = session_excel;
-      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel_1});
-    }
-    else{
-      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel});
-    }
+  var session_car = await req.session.excelCar;
+  // req.session.excelCar = null;
+  
+  if(typeof(session_car[1]) == 'string') {
+    var session_car_1 = session_car;
+    res.render('car_inspect', {company: req.decoded.company, aclist, session_car_1});
   }
-  else {
-    res.render('car_inspect', {company: req.decoded.company, aclist, session_excel});
+  else{
+    res.render('car_inspect', {company: req.decoded.company, aclist, session_car});
   }
 });
 

@@ -111,6 +111,9 @@
 		if (new URL(location.href).searchParams.get('excel')) {
 			alert('잘못된 파일입니다. 파일 형식을 확인해주세요');
 		}
+		if (new URL(location.href).searchParams.get('excelSize')) {
+			alert('파일 내 목록은 100개 이하만 가능합니다.');
+		}
 		if (new URL(location.href).searchParams.get('excelLength')) {
 			alert('파일 내 차량 번호 자릿수를 확인해주세요.');
 		}
@@ -118,6 +121,7 @@
 			alert('파일 내 잘못된 차량 번호가 존재합니다.');
 		}
 		if (new URL(location.href).searchParams.get('inspect')) {
+			alert('중복된 차량이 존재합니다.');
 			window.open('/car_inspect', 'pop', "width=620, height=700, scrollbars=yes, resizable=yes");
 		}
 	};
