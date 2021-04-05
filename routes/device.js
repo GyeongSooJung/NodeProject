@@ -156,7 +156,7 @@ router.post('/device_overwrite_all', isNotLoggedIn, async(req, res, next) => {
       
       if (!exDevice) {
         await Device.where({"MAC" : exMAC})
-          .updateMany({
+          .update({
             "CID" : CID,
             "MD" : "엑셀등록",
             "VER" : NaN,
@@ -168,7 +168,7 @@ router.post('/device_overwrite_all', isNotLoggedIn, async(req, res, next) => {
       else {
         if (MAC === exMAC) {
           await Device.where({"MAC" : exMAC})
-            .updateMany({
+            .update({
               "CID" : CID,
               "MD" : "엑셀등록",
               "VER" : NaN,
@@ -203,7 +203,7 @@ router.post('/device_overwrite_all', isNotLoggedIn, async(req, res, next) => {
         
         if (!exDevice) {
           await Device.where({"MAC" : exMAC[i]})
-            .updateMany({
+            .update({
               "CID" : CID,
               "MD" : "엑셀등록",
               "VER" : NaN,
@@ -215,7 +215,7 @@ router.post('/device_overwrite_all', isNotLoggedIn, async(req, res, next) => {
         else {
           if (MAC[i] === exMAC[i]) {
             await Device.where({"MAC" : exMAC[i]})
-              .updateMany({
+              .update({
                 "CID" : CID,
                 "MD" : "엑셀등록",
                 "VER" : NaN,
@@ -268,7 +268,7 @@ router.post('/device_overwrite_check', isNotLoggedIn, async(req, res, next) => {
       
       if (!exDevice) {
         await Device.where({"MAC" : exMAC})
-          .updateMany({
+          .update({
             "CID" : CID,
             "MD" : "엑셀등록",
             "VER" : NaN,
@@ -280,7 +280,7 @@ router.post('/device_overwrite_check', isNotLoggedIn, async(req, res, next) => {
       else {
         if (MAC === exMAC) {
           await Device.where({"MAC" : exMAC})
-            .updateMany({
+            .update({
               "CID" : CID,
               "MD" : "엑셀등록",
               "VER" : NaN,
@@ -315,7 +315,7 @@ router.post('/device_overwrite_check', isNotLoggedIn, async(req, res, next) => {
         
         if (!exDevice) {
           await Device.where({"MAC" : exMAC[i]})
-            .updateMany({
+            .update({
               "CID" : CID,
               "MD" : "엑셀등록",
               "VER" : NaN,
@@ -327,7 +327,7 @@ router.post('/device_overwrite_check', isNotLoggedIn, async(req, res, next) => {
         else {
           if (MAC[i] === exMAC[i]) {
             await Device.where({"MAC" : exMAC[i]})
-              .updateMany({
+              .update({
                 "CID" : CID,
                 "MD" : "엑셀등록",
                 "VER" : NaN,
@@ -380,7 +380,7 @@ router.post('/device_edit/upreg/:MAC', isNotLoggedIn, async (req, res, next) => 
       console.log(exDevice);
 
       const deviceone = await Device.where({"MAC" : req.params.MAC})
-      .updateMany({ "CID" : CID,
+      .update({ "CID" : CID,
                     "MD" : MD,
                     "VER" : VER,
                     "NN" : NN,

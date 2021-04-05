@@ -28,11 +28,11 @@ const workerSchema = new Schema({
     },
     CA: { // Created At
         type: Date,
-        default: Date.now(),
+        default: Date.now,
     },
     UA: { // Updated At
         type: Date,
-        default: Date.now(),
+        default: Date.now,
     },
     AU: { // Auth, 0: MK 관리자, 1: 사업주, 2: 직업
         type: Number,

@@ -22,19 +22,19 @@ router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
   
   try {
       const exCar = await Car.findOne({ "CN" :  CN });
-      const exCar2 = await Car.findOne({ "SN" : SN  });
+      // const exCar2 = await Car.findOne({ "SN" : SN  });
       const check = /^[0-9]{2,3}[하,허,호]{1}[0-9]{4}/gi;
 
       if (CN.length >= 7 && CN.length <= 8) {
         if (check.test(CN) == true) {
-          if (!exCar && !exCar2) {
+          if (!exCar) {
             await Car.create({
               CID, CC, CN, SN, 
             });
             
             const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
             await Company.where({ "CNU" : CNU })
-              .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
+              .update({ "CUA" : CUA }).setOptions({runValidators : true})
               .exec();
             return res.redirect('/car_list');
           }
@@ -150,7 +150,7 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
         }
       });
         await Company.where({"CNU" : CNU})
-          .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
+          .update({ "CUA" : CUA }).setOptions({runValidators : true})
           .exec();
 
       form.on('close', () => {});
@@ -176,7 +176,7 @@ router.post('/car_overwrite_all', isNotLoggedIn, async(req, res, next) => {
       
       if (!exCar) {
         await Car.where({ "CN" : exCN })
-          .updateMany({
+          .update({
             "CID" : CID,
             "CN" : CN,
             "SN" : "엑셀등록",
@@ -186,7 +186,7 @@ router.post('/car_overwrite_all', isNotLoggedIn, async(req, res, next) => {
       else {
         if (CN === exCN) {
           await Car.where({"CN" : exCN})
-            .updateMany({
+            .update({
               "CID" : CID,
               "CN" : CN,
               "SN" : "엑셀등록",
@@ -218,7 +218,7 @@ router.post('/car_overwrite_all', isNotLoggedIn, async(req, res, next) => {
         
         if (!exCar) {
           await Car.where({ "CN" : exCN[i] })
-            .updateMany({
+            .update({
               "CID" : CID,
               "CN" : CN[i].toString(),
               "SN" : "엑셀등록",
@@ -228,7 +228,7 @@ router.post('/car_overwrite_all', isNotLoggedIn, async(req, res, next) => {
         else {
           if (CN[i] === exCN[i]) {
             await Car.where({"CN" : exCN[i]})
-              .updateMany({
+              .update({
                 "CID" : CID,
                 "CN" : CN[i].toString(),
                 "SN" : "엑셀등록",
@@ -278,7 +278,7 @@ router.post('/car_overwrite_check', isNotLoggedIn, async(req, res, next) => {
       
       if (!exCar) {
         await Car.where({ "CN" : exCN })
-          .updateMany({
+          .update({
             "CID" : CID,
             "CN" : CN,
             "SN" : "엑셀등록",
@@ -288,7 +288,7 @@ router.post('/car_overwrite_check', isNotLoggedIn, async(req, res, next) => {
       else {
         if (CN === exCN) {
           await Car.where({"CN" : exCN})
-            .updateMany({
+            .update({
               "CID" : CID,
               "CN" : CN,
               "SN" : "엑셀등록",
@@ -320,7 +320,7 @@ router.post('/car_overwrite_check', isNotLoggedIn, async(req, res, next) => {
         
         if (!exCar) {
           await Car.where({ "CN" : exCN[i] })
-            .updateMany({
+            .update({
               "CID" : CID,
               "CN" : CN[i].toString(),
               "SN" : "엑셀등록",
@@ -330,7 +330,7 @@ router.post('/car_overwrite_check', isNotLoggedIn, async(req, res, next) => {
         else {
           if (CN[i] === exCN[i]) {
             await Car.where({"CN" : exCN[i]})
-              .updateMany({
+              .update({
                 "CID" : CID,
                 "CN" : CN[i].toString(),
                 "SN" : "엑셀등록",
@@ -378,45 +378,22 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn,async (req, res, next) => {
     const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
     
     try {
-      const exCar = await Car.findOne({ "CN" :  CN });
-      const exCar2 = await Car.findOne({ "SN" : SN  });
-      const check = /^[0-9]{2,3}[하,허,호]{1}[0-9]{4}/gi;
+      // const exCar = await Car.findOne({ "CN" :  CN });
+      // const exCar2 = await Car.findOne({ "SN" : SN  });
+      // const check = /^[0-9]{2,3}[하,허,호]{1}[0-9]{4}/gi;
       
-      if (!exCar2) {
-        const carone = await Car.where({"CN" : req.params.CN})
-          .updateMany({ "CID" : CID,
-                        "CC" : CC,
-                        "CN" : CN,
-                        "SN" : SN,
-          }).setOptions({runValidators : true})
-          .exec();
-          console.log(carone);
-          
-        const companyone = await Company.where({"CNU" : CNU})
-          .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
-          .exec();
-      }
-      else {
-        if(SN === exCar.SN) {
-          
-          const carone = await Car.where({"CN" : req.params.CN})
-            .updateMany({ "CID" : CID,
-                          "CC" : CC,
-                          "CN" : CN,
-                          "SN" : SN,
-            }).setOptions({runValidators : true})
-            .exec();
-            console.log(carone);
-          
-        const companyone = await Company.where({"CNU" : CNU})
-          .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
-          .exec();
-          
-        }
-        else{
-          return res.redirect('/car_list?exist=true');
-        }
-      }
+      await Car.where({"CN" : req.params.CN})
+        .update({ "CID" : CID,
+                      "CC" : CC,
+                      "CN" : CN,
+                      "SN" : SN,
+        }).setOptions({runValidators : true})
+        .exec();
+        
+      await Company.where({"CNU" : CNU})
+        .update({ "CUA" : CUA }).setOptions({runValidators : true})
+        .exec();
+      
     } catch (error) {
     console.error(error);
     return next(error);
@@ -434,7 +411,7 @@ router.get('/car_delete/:CN',isNotLoggedIn, async (req, res, next) => {
     res.redirect('/car_list');
     
   const companyone = await Company.where({"CNU" : CNU})
-    .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
+    .update({ "CUA" : CUA }).setOptions({runValidators : true})
     .exec();
   } catch (err) {
     console.error(err);
@@ -471,7 +448,7 @@ router.post('/car_select_delete',isNotLoggedIn ,async (req, res, next) => {
           }
           
       const companyone = await Company.where({"CNU" : CNU})
-        .updateMany({ "CUA" : CUA }).setOptions({runValidators : true})
+        .update({ "CUA" : CUA }).setOptions({runValidators : true})
         .exec();
           res.redirect('/car_list');
         }

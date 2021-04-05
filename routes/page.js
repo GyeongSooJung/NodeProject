@@ -936,7 +936,7 @@ router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
     console.log(companypoint);
 
     const companyone = await Company.where({ '_id': historyone.CID })
-      .updateMany({ "SPO": companypoint }).setOptions({ runValidators: true })
+      .update({ "SPO": companypoint }).setOptions({ runValidators: true })
       .exec();
   }
 
@@ -1016,7 +1016,7 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
   console.log(companypoint);
 
   await Company.where({ '_id': historyone.CID })
-    .updateMany({ "SPO": companypoint }).setOptions({ runValidators: true })
+    .update({ "SPO": companypoint }).setOptions({ runValidators: true })
     .exec();
 });
 
