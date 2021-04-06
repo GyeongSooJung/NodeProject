@@ -12,6 +12,7 @@ const Publish = require('../schemas/publish');
 const Point = require('../schemas/point');
 
 const moment = require('moment');
+const qrcode = require('qrcode');
 const session = require('express-session');
 //Router or MiddleWare
 const router = express.Router();
@@ -165,25 +166,25 @@ console.log(history_date);
 //       CID : req.decoded.CID
 //     }
 //   },
-// 	{
-// 		$group : {
-// 		  _id : {month: { $month: "$CA" },day : {$dayOfMonth : "$CA"}},
-// 		  count : { $sum: 1},
-// 		},
-// 	},
-// 	{
-// 	  $sort : { _id : -1}
-// 	},
-// 		{
-// 	  $project : {
-// 	    _id : 0
-// 	  }
-// 	}
+//    {
+//       $group : {
+//         _id : {month: { $month: "$CA" },day : {$dayOfMonth : "$CA"}},
+//         count : { $sum: 1},
+//       },
+//    },
+//    {
+//      $sort : { _id : -1}
+//    },
+//       {
+//      $project : {
+//        _id : 0
+//      }
+//    }
 
 // ],function(rr,ra){
-// 	if(ra){
-// 		console.log(ra);   
-// 	} 
+//    if(ra){
+//       console.log(ra);   
+//    } 
 // });
 
   const history_count = await history_count2;
@@ -320,26 +321,6 @@ router.get('/device_join', isNotLoggedIn, DataSet, async(req, res, next) => {
   res.render('device_join', { company: req.decoded.company, aclist });
 });
 
-//장비 검증
-router.get('/device_inspect', isNotLoggedIn, DataSet, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
-  var session_excel = await req.session.re_device_excel;
-  
-  if(session_excel) {
-    if(typeof(session_excel[1]) == 'string') {
-      var session_excel_1 = session_excel;
-      res.render('device_inspect', {company: req.decoded.company, aclist, session_excel_1});
-    }
-    else{
-      res.render('device_inspect', {company: req.decoded.company, aclist, session_excel});
-    }
-  }
-  else {
-    res.render('device_inspect', {company: req.decoded.company, aclist, session_excel});
-  }
-});
-
 //장비 수정
 router.get('/device_edit/:MAC', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
@@ -408,18 +389,15 @@ router.get('/car_join', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.get('/car_inspect', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-  var session_excel = await req.session.re_car_excel;
-  if(session_excel) {
-    if(typeof(session_excel[1]) == 'string') {
-      var session_excel_1 = session_excel;
-      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel_1});
-    }
-    else{
-      res.render('car_inspect', {company: req.decoded.company, aclist, session_excel});
-    }
+  var session_car = await req.session.excelCar;
+  // req.session.excelCar = null;
+  
+  if(typeof(session_car[1]) == 'string') {
+    var session_car_1 = session_car;
+    res.render('car_inspect', {company: req.decoded.company, aclist, session_car_1});
   }
-  else {
-    res.render('car_inspect', {company: req.decoded.company, aclist, session_excel});
+  else{
+    res.render('car_inspect', {company: req.decoded.company, aclist, session_car});
   }
 });
 
@@ -818,22 +796,51 @@ router.get('/point_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   }
 });
 
-
-
 //----------------------------------------------------------------------------//
-//                                  A/S                                       //
+//                                   QR                                       //
 //----------------------------------------------------------------------------//
 
-//A/S 처리
-router.get('/repair', isNotLoggedIn, DataSet, async(req, res, next) => {
+//QR코드 관리
+router.get('/publish_manage', isNotLoggedIn, DataSet, async(req, res, next) => {
+  
   const CID = req.decoded.CID;
-  const CNU = req.decoded.CNU;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-
+  const HOME = process.env.IP;
+  const cat = process.env.publish_cat;
+  
   try {
-    res.render('repair', { company: req.decoded.company, aclist });
+    res. render('publish_manage', { company: req.decoded.company, aclist, HOME, cat })
   }
-  catch (err) {
+  catch(err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+//QR Code Create
+router.get('/create', isNotLoggedIn, DataSet, async (req, res, next) => {
+  
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  
+  var main = req.query.main;
+  var cid = req.query.cid;
+  var cat = req.query.cat;
+  var url;
+  
+  try {
+    if(cat == 1) {
+      url = main+"/inflow?cat="+cat;
+    }
+    else {
+      url = main+"/inflow?cat="+cat+"&cid="+cid;
+    }
+    console.log("유알엘"+url);
+    const cr_qrcode = await qrcode.toDataURL(url);
+    
+    res.render('code_img', { company: req.decoded.company, aclist, cr_qrcode });
+  }
+  catch(err) {
     console.error(err);
     next(err);
   }
@@ -842,7 +849,6 @@ router.get('/repair', isNotLoggedIn, DataSet, async(req, res, next) => {
 //----------------------------------------------------------------------------//
 //                                  SOLAPI                                    //
 //----------------------------------------------------------------------------//
-
 
 router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
 
@@ -907,7 +913,7 @@ router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
     console.log(companypoint);
 
     const companyone = await Company.where({ '_id': historyone.CID })
-      .updateMany({ "SPO": companypoint }).setOptions({ runValidators: true })
+      .update({ "SPO": companypoint }).setOptions({ runValidators: true })
       .exec();
   }
 
@@ -952,7 +958,7 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
       messages: [{
         to: number,
         from: '16443486',
-        text: comname + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
+        text: comname + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 ",
         type: 'ATA',
         kakaoOptions: {
           pfId: 'KA01PF210319072804501wAicQajTRe4',
@@ -987,13 +993,13 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
   console.log(companypoint);
 
   await Company.where({ '_id': historyone.CID })
-    .updateMany({ "SPO": companypoint }).setOptions({ runValidators: true })
+    .update({ "SPO": companypoint }).setOptions({ runValidators: true })
     .exec();
 });
 
 
 //----------------------------------------------------------------------------//
-//                                  App About                                 //
+//                                  About App                                 //
 //----------------------------------------------------------------------------//
 router.get('/aboutapp', async(req, res, next) => {
   res.render('aboutapp');
@@ -1011,5 +1017,12 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
   res.render('ozone_spread', { company: req.decoded.company, aclist });
 });
 
+//----------------------------------------------------------------------------//
+//                                  Test                                      //
+//----------------------------------------------------------------------------//
+
+router.get('/test', (req, res, next) => {
+  res.render('test');
+});
 
 module.exports = router;

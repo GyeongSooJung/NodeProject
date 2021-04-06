@@ -17,7 +17,7 @@
 			<div class="panel panel-inverse" data-sortable-id="form-validation-1">
 				<!-- begin panel-heading -->
 				<div class="panel-heading">
-					<h4 class="panel-title">SMS 서비스 신청</h4>
+					<h4 class="panel-title">포인트 구매</h4>
 					<p class="m-0"></p>
 				</div>
 				<!-- end panel-heading -->
@@ -57,6 +57,7 @@
     			        </div>
     				    <div class="d-flex justify-content-center align-items-center">
     				        <a href="javascript:payments('sms')" class="btn btn-primary text-white px-4"><i class="fas fa-credit-card mr-2"></i>결제</a>
+    				        <a href="javascript:payments2('sms')" class="btn btn-primary text-white px-4"><i class="fas fa-credit-card mr-2"></i>정기 결제</a>
                         </div>
     		        </form>
                 </div>
@@ -185,6 +186,66 @@
                 });
             } else {
                 return alert("결제에 실패하였습니다. " +  rsp.error_msg);
+                amount : 10000
+            }
+        });
+    }
+    
+    //정기 결제 기능
+    function payments2(objName) {
+        
+    var IMP = window.IMP;
+        IMP.init('{{imp_code}}');
+        
+        IMP.request_pay({
+            pg : 'inicis', // version 1.1.0부터 지원.
+            pay_method : 'card',
+            merchant_uid : 'merchant_' + new Date().getTime(),
+            name : "정기결제1",
+            amount : "10000",
+            buyer_name : '정경수',
+            buyer_email : 'gsjung06@naver.com',
+            // buyer_tel : '{{company.PN}}',
+            // buyer_addr : '{{company.ADR}}',
+            // m_redirect_url : '{{HOME}}/payments/complete/mobile'
+        }, function(rsp) {
+            if (rsp.success) {
+                $.ajax({
+                    url: "/payments/regular",
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        imp_uid: rsp.imp_uid,
+                        merchant_uid: rsp.merchant_uid
+                    }
+                }).done(function (data) {
+                    switch(data.status) {
+                        // case "vbankIssued":
+                        //     var msg = "가상계좌가 생성되었습니다.";
+                        //     msg += '\n가상계좌명' + rsp.vbank_name;
+                        //     msg += '\n가상계좌번호' + rsp.vbank_num;
+                        //     msg += '\n생성일' + rsp.vbank_date;
+                        //     break;
+                        case "success":
+                            var msg = "결제가 완료되었습니다.";
+                            alert(msg);
+                            window.location.href = '/pay_confirm?imp_uid='+rsp.imp_uid;
+                            break;
+                        case "cancelled":
+                            var msg = "결제가 취소되었습니다.";
+                            break;
+                        case "failed":
+                            var msg = "결제에 실패하였습니다.";
+                            break;
+                        case "forgery":
+                            var msg = "위조된 결제시도입니다.";
+                            break;
+                    }
+                    return alert(msg);
+                });
+            } else {
+                return alert("결제에 실패하였습니다. " +  rsp.error_msg);
+                amount : 10000
             }
         });
     }
