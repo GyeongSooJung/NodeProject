@@ -71,10 +71,7 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
         const extname = path.extname(file.path);
         console.log("확장자명"+extname);
         
-<<<<<<< HEAD
         // 엑셀 파일인 경우
-=======
->>>>>>> ee759a589eb72eca0f717138052382532359e72b
         if(extname == '.xlsx') {
           
           // 중복이 안된 값들을 넣는 배열
@@ -95,17 +92,13 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
           var b = 0;
           var c = 0;
           
-<<<<<<< HEAD
           // 항목이 100개 이하인 경우
-=======
->>>>>>> ee759a589eb72eca0f717138052382532359e72b
           if (resData.Sheet1.length <= 100) {
             for(var j = 0; j < resData.Sheet1.length;  j++) {
               const carone = await Car.findOne({"CN": resData.Sheet1[j].차량번호});
               
               const check = /^[0-9]{2,3}[하,허,호]{1}[0-9]{4}/gi;
               
-<<<<<<< HEAD
               // 차량번호 길이가 7,8자리인 경우
               if (resData.Sheet1[j].차량번호.length >= 7 && resData.Sheet1[j].차량번호.length <= 8) {
                 
@@ -113,12 +106,6 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
                 if(check.test(resData.Sheet1[j].차량번호) == true) {
                   
                   // 차량번호가 중복되지 않는 경우
-=======
-              if (resData.Sheet1[j].차량번호.length >= 7 && resData.Sheet1[j].차량번호.length <= 8) {
-                
-                if(check.test(resData.Sheet1[j].차량번호) == true) {
-                  
->>>>>>> ee759a589eb72eca0f717138052382532359e72b
                   if (!carone) {
                     resData[sheetnames[0]][j].CID = CID;
                     
@@ -126,13 +113,9 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
                     add_excel2[a] = resData.Sheet1[j].차량번호;
                     a += 1;
                   }
-<<<<<<< HEAD
                   // 차량번호가 중복되는 경우
                   else {
                     // 등록 업체와 중복 차량 업체가 같은 경우
-=======
-                  else {
->>>>>>> ee759a589eb72eca0f717138052382532359e72b
                     if (CID == carone.CID) {
                       resData[sheetnames[0]][j].CID = CID;
                 
@@ -140,10 +123,7 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
                       re_excel2[b] = resData.Sheet1[j].차량번호;
                       b += 1;
                     }
-<<<<<<< HEAD
                     // 등록 업체와 중복 차량 업체가 다른 경우
-=======
->>>>>>> ee759a589eb72eca0f717138052382532359e72b
                     else {
                       re_di_excel1[c] = resData.Sheet1[j].차량번호;
                       c += 1;
