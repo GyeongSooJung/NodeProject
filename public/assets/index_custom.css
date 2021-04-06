@@ -1,0 +1,69 @@
+.content {
+    position: relative;
+    padding: 9% 0;
+}
+
+.index-bg {
+    background-color: #FBF7F2;
+}
+
+.index-h1 {
+    color : rgb(255, 175, 0, 0.8);
+    font-size : 3.5em;
+    font-weight: bolder;
+}
+
+.index-h2 {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.index-h3 {
+    color: gray;
+    line-height: 1.5;
+}
+
+.index-p-bold {
+    font-size: 1.15em;
+    font-weight: bold;
+}
+
+.service-block {
+    width: 33%;
+}
+
+.iconbox {
+    width:3.125rem;
+    height:3.125rem;
+    background:rgb(255, 175, 0, 0.6);
+    color:#fff;
+    text-align:center;
+    line-height:3.125rem;
+    font-size:1.2rem;
+    -webkit-border-radius:30px;
+    border-radius:30px
+}
+
+.quote-img {
+    width: 75%;
+}
+
+.flow-img {
+    width: 80%;
+}
+
+.index-img {
+    width: 475px;
+    height: 475px;
+}
+
+@media (max-width:1199.98px) {
+    .quote-img {
+        width: 90%;
+    }
+    
+    .index-img {
+        width: 300px;
+        height: 300px;
+    }
+}

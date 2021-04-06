@@ -14,6 +14,8 @@
 	<link href="../assets/plugins/flag-icon-css/css/flag-icon.min.css" rel="stylesheet" />
 	<!-- ================== END BASE CSS STYLE ================== -->
 	
+	<!--<link href="../assets/css/fullpage/fullpage.css" rel="stylesheet" />-->
+	<link href="../assets/index_custom.css" rel="stylesheet" />
 	<link href="../assets/img/favicon.png" rel="icon">
 </head>
 <body data-spy="scroll" data-target="#header" data-offset="51">
@@ -26,10 +28,6 @@
 				<!-- begin navbar-brand -->
 				<a href="/" class="navbar-brand">
 					<img src="../assets/img/oasis.png" alt="OASIS">
-					<!--<span class="brand-logo"></span>-->
-					<!--<span class="brand-text">-->
-					<!--	<span class="text-primary">OASIS</span>-->
-					<!--</span>-->
 				</a>
 				<!-- end navbar-brand -->
 				<!-- begin navbar-toggle -->
@@ -44,9 +42,11 @@
 					<ul class="nav navbar-nav navbar-right">
 						<li class="nav-item"><a class="nav-link active" href="#home" data-click="scroll-to-target">OASIS</a></li>
 						<li class="nav-item"><a class="nav-link" href="#about" data-click="scroll-to-target">{{__('index_about')}}</a></li>
-						<li class="nav-item"><a class="nav-link" href="#team" data-click="scroll-to-target">{{__('index_team')}}</a></li>
-						<li class="nav-item"><a class="nav-link" href="#service" data-click="scroll-to-target">{{__('index_service')}}</a></li>
-						<!--<li class="nav-item"><a class="nav-link" href="#pricing" data-click="scroll-to-target">제품 가격</a></li>-->
+						<li class="nav-item"><a class="nav-link" href="#web" data-click="scroll-to-target">{{__('web')}}</a></li>
+						<li class="nav-item"><a class="nav-link" href="#app" data-click="scroll-to-target">{{__('app')}}</a></li>
+						<li class="nav-item"><a class="nav-link" href="#qr" data-click="scroll-to-target">{{__('qr')}}</a></li>
+						<li class="nav-item"><a class="nav-link" href="#how" data-click="scroll-to-target">{{__('index_how')}}</a></li>
+						<li class="nav-item"><a class="nav-link" href="#ozone" data-click="scroll-to-target">{{__('ozone')}}</a></li>
 						<li class="dropdown nav-item">
 							<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" id="select-lang"></a>
 							<div class="dropdown-menu dropdown-menu-right">
@@ -62,482 +62,232 @@
 		</div>
 		<!-- end #header -->
 		
-		<!-- begin #home -->
-		<div id="home" class="content has-bg home">
-			<!-- begin content-bg -->
-			<div class="content-bg" style="background-image: url(../assets/img/main2.png);" 
-				data-paroller="true" 
-				data-paroller-factor="0.5"
-				data-paroller-factor-xs="0.25">
+		<div id="fullpage">
+			<!-- begin #home -->
+			<div id="home" class="content has-bg home">
+				<!-- begin content-bg -->
+				<div class="content-bg" style="background-image: url(../assets/img/main2.png);" 
+					data-paroller="true" 
+					data-paroller-factor="0.5"
+					data-paroller-factor-xs="0.25">
+				</div>
+				<!-- end content-bg -->
+				<!-- begin container -->
+				<div class="container home-content">
+					<h1>Welcome to <b class="text-primary">OASIS</b></h1>
+					<h3>
+						<b class="text-primary">O</b>zone
+						<b class="text-primary">A</b>ir
+						<b class="text-primary">S</b>terilization
+						<b class="text-primary">I</b>ntelligence
+						<b class="text-primary">S</b>ystem
+					</h3>
+					<p>
+						{{__('index_text')}}
+					</p>
+					<a href="/login" class="btn btn-theme btn-primary">&nbsp;&nbsp;{{__('login')}}&nbsp;&nbsp;</a> <a href="/register" class="btn btn-theme btn-outline-white">{{__('signup')}}</a><br />
+					<br />
+					by <a href="http://mklc.co.kr/kor/main/" target="_blank"><b>MK</b></a>
+				</div>
+				<!-- end container -->
 			</div>
-			<!-- end content-bg -->
-			<!-- begin container -->
-			<div class="container home-content">
-				<h1>Welcome to <b class="text-primary">OASIS</b></h1>
-				<h3>
-					<b class="text-primary">O</b>zone
-					<b class="text-primary">A</b>ir
-					<b class="text-primary">S</b>terilization
-					<b class="text-primary">I</b>ntelligence
-					<b class="text-primary">S</b>ystem
-				</h3>
-				<p>
-					{{__('index_text')}}
-				</p>
-				<a href="/login" class="btn btn-theme btn-primary">&nbsp;&nbsp;{{__('login')}}&nbsp;&nbsp;</a> <a href="/register" class="btn btn-theme btn-outline-white">{{__('signup')}}</a><br />
-				<br />
-				by <a href="http://mklc.co.kr/kor/main/" target="_blank"><b>MK</b></a>
-			</div>
-			<!-- end container -->
-		</div>
-		<!-- end #home -->
-		
-		<!-- begin #about -->
-		<div id="about" class="content" data-scrollview="true">
-			<!-- begin container -->
-			<div class="container" data-animation="true" data-animation-type="fadeInDown">
-				<h2 class="content-title">{{__('index_about')}}</h2>
-				<h4 class="content-desc">
-					{{__('mk')}}
-				</h4>
-				<!-- begin row -->
-				<div class="row">
-					<!-- begin col-4 -->
-					<div class="col-lg-4">
-						<!-- begin about -->
-						<div class="about">
-							<h3 class="mb-3">{{__('index_vision')}}</h3>
-							<p>{{__('index_vision_text1')}}</p>
-							<p>{{__('index_vision_text2')}}</p>
-						</div>
-						<!-- end about -->
-					</div>
-					<!-- end col-4 -->
-					<!-- begin col-4 -->
-					<div class="col-lg-4">
-						<h3 class="mb-3">{{__('index_philosophy')}}</h3>
-						<!-- begin about-author -->
-						<div class="about-author">
-							<div class="quote">
-								<i class="fa fa-quote-left"></i>
-								<h3>{{__('index_philosophy_text1')}}<br>{{__('index_philosophy_text2')}}</h3>
-								<i class="fa fa-quote-right"></i>
-							</div>
-							<div class="author">
-								<div class="image">
-									<img src="../assets/img/ceo.jpg" alt="ceo" />
+			<!-- end #home -->
+			
+			<!-- begin #about -->
+			<div id="about" class="content" data-scrollview="true">
+				<!-- begin container -->
+				<div class="container" data-animation="true" data-animation-type="fadeInDown">
+					<!-- begin row -->
+					<div class="row justify-content-md-center align-items-md-center">
+						<!-- begin col-5 -->
+						<div class="col-lg-5">
+							<h1 class="mb-4 index-h1">OASIS</h1>
+							<h2 class="mb-5 index-h2">소독의 새로운 패러다임</h2>
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="service service-block mr-auto mb-0">
+									<div class="iconbox mb-3" data-animation="true" data-animation-type="bounceIn"><i class="fas fa-coins"></i></div>
+									<div class="info">
+										<p class="index-p-bold mb-2">경제성</p>
+										<p class="small font-weight-bold mb-0">자동화된 시스템<br>으로 비용 절감</p>
+									</div>
 								</div>
+								<div class="service service-block mr-auto mb-0">
+									<div class="iconbox mb-3" data-animation="true" data-animation-type="bounceIn"><i class="fas fa-pump-medical"></i></div>
+									<div class="info">
+										<p class="index-p-bold mb-2">살균력</p>
+										<p class="small font-weight-bold mb-0">오존을 통한<br>99% 살균</p>
+									</div>
+								</div>
+								<div class="service service-block mr-auto mb-0">
+									<div class="iconbox mb-3" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-heart"></i></div>
+									<div class="info">
+										<p class="index-p-bold mb-2">신뢰성</p>
+										<p class="small font-weight-bold mb-0">QR코드를 통한<br>소독 이력 확인</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- end col-5 -->
+						<!-- begin col-5 -->
+						<div class="col-lg-5">
+							<div class="index-img d-flex flex-column justify-content-center mx-auto">
+								<img src="../assets/img/quote1.png" class="img-responsive quote-img quote-left mr-auto mb-3">
+								<img src="../assets/img/quote2.png" class="img-responsive quote-img quote-right ml-auto mb-3">
+								<img src="../assets/img/quote3.png" class="img-responsive quote-img quote-left mr-auto">
+							</div>
+						</div>
+						<!-- end col-5 -->
+					</div>
+					<!-- end row -->
+				</div>
+				<!-- end container -->
+			</div>
+			<!-- end #about -->
+			
+			<!-- begin #web -->
+			<div id="web" class="content index-bg" data-scrollview="true">
+				<!-- begin container -->
+				<div class="container">
+					<!-- begin row -->
+					<div class="row justify-content-md-center align-items-md-center">
+						<!-- begin col-5 -->
+						<div class="col-lg-5">
+							<h1 class="mb-4 index-h1">Web</h1>
+							<h2 class="mb-5 index-h2">편리한 작업관리 시스템</h2>
+							<h5 class="index-h3">Web Management System을 제공하여<br>소독기, 차량, 작업자, 소독이력 등 통합 관리</h5>
+						</div>
+						<!-- end col-5 -->
+						<!-- begin col-5 -->
+						<div class="col-lg-5">
+							<img src="../assets/img/oasis_web.png" class="img-responsive index-img mx-auto">
+						</div>
+						<!-- end col-5 -->
+					</div>
+					<!-- end row -->
+				</div>
+				<!-- end container -->
+			</div>
+			<!-- end #web -->
+			
+			<!-- begin #app -->
+			<div id="app" class="content" data-scrollview="true">
+				<!-- begin container -->
+				<div class="container">
+					<!-- begin row -->
+					<div class="row justify-content-md-center align-items-md-center">
+						<!-- begin col-5 -->
+						<div class="col-lg-5">
+							<h1 class="mb-4 index-h1">App</h1>
+							<h2 class="mb-5 index-h2">안전하고 편리한 소독</h2>
+							<h5 class="mb-5 index-h3">전용 Mobile App을 제공하여<br>원격제어를 통한 자동화된 소독 솔루션</h5>
+							<a href="https://play.google.com/store/apps/details?id=com.mk.oasis_app" target="_blank" class="link_store">
+					          <img src="../assets/appabout/google_play.png" alt="HTML tutorial" style="border:0;">
+					        </a>
+						</div>
+						<!-- end col-5 -->
+						<!-- begin col-5 -->
+						<div class="col-lg-5">
+							<img src="../assets/img/oasis_app.png" class="img-responsive index-img mx-auto">
+						</div>
+						<!-- end col-5 -->
+					</div>
+					<!-- end row -->
+				</div>
+				<!-- end container -->
+			</div>
+			<!-- end #app -->
+			
+			<!-- begin #qr -->
+			<div id="qr" class="content index-bg" data-scrollview="true">
+				<!-- begin container -->
+				<div class="container">
+					<!-- begin row -->
+					<div class="row justify-content-md-center align-items-md-center">
+						<!-- begin col-5 -->
+						<div class="col-lg-5">
+							<h1 class="mb-4 index-h1">QR Code</h1>
+							<h2 class="mb-5 index-h2">보이는 소독 플랫폼</h2>
+							<h5 class="mb-5 index-h3">QR코드를 통해 App 설치 없이<br>누구나 쉽고 빠르게 투명하게 소독 정보 확인</h5>
+						</div>
+						<!-- end col-5 -->
+						<!-- begin col-5 -->
+						<div class="col-lg-5">
+							<img src="../assets/img/oasis_qr.png" class="img-responsive index-img mx-auto">
+						</div>
+						<!-- end col-5 -->
+					</div>
+					<!-- end row -->
+				</div>
+				<!-- end container -->
+			</div>
+			<!-- end #qr -->
+			
+			<!-- begin #how -->
+			<div id="how" class="content" data-scrollview="true">
+				<!-- begin container -->
+				<div class="container">
+					<h2 class="content-title index-h1">How To?</h2>
+					<!-- begin row -->
+					<div class="row">
+						<!-- begin col-12 -->
+						<div class="col-lg-12">
+							<img src="../assets/img/oasis_flow.png" class="img-responsive flow-img mx-auto">
+						</div>
+						<!-- end col-12 -->
+					</div>
+					<!-- end row -->
+				</div>
+				<!-- end container -->
+			</div>
+			<!-- end #how -->
+			
+			<!-- begin #ozone -->
+			<div id="ozone" class="content index-bg" data-scrollview="true">
+				<!-- begin container -->
+				<div class="container">
+					<h2 class="content-title index-h1">Ozone</h2>
+					<!-- begin row -->
+					<div class="row">
+						<!-- begin col-4 -->
+						<div class="col-lg-4 col-md-6">
+							<div class="service">
+								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-cog"></i></div>
 								<div class="info">
-									{{__('mk_ceo')}}
-									<small>CEO</small>
+									<h4 class="title">살균력</h4>
+									<p class="desc">단백질 구성물(세균류)에 가장 빠르게 반응(살균)하며 99%의 살균 가능, 광범위한 살균에 효과적.</p>
 								</div>
 							</div>
 						</div>
-						<!-- end about-author -->
-					</div>
-					<!-- end col-4 -->
-					<!-- begin col-4 -->
-					<div class="col-lg-4">
-						<h3 class="mb-3">{{__('index_strength')}}</h3>
-						<!-- begin skills -->
-						<div class="skills">
-							<div class="skills-name">효율성</div>
-							<div class="progress mb-3">
-								<div class="progress-bar progress-bar-striped progress-bar-animated bg-theme" style="width: 100%">
-									<span class="progress-number">100%</span>
-								</div>
-							</div>
-							<div class="skills-name">고품질</div>
-							<div class="progress mb-3">
-								<div class="progress-bar progress-bar-striped progress-bar-animated bg-theme" style="width: 100%">
-									<span class="progress-number">100%</span>
-								</div>
-							</div>
-							<div class="skills-name">합리적인 가격</div>
-							<div class="progress mb-3">
-								<div class="progress-bar progress-bar-striped progress-bar-animated bg-theme" style="width: 100%">
-									<span class="progress-number">100%</span>
-								</div>
-							</div>
-							<div class="skills-name">서비스</div>
-							<div class="progress mb-3">
-								<div class="progress-bar progress-bar-striped progress-bar-animated bg-theme" style="width: 100%">
-									<span class="progress-number">100%</span>
+						<!-- end col-4 -->
+						<!-- begin col-4 -->
+						<div class="col-lg-4 col-md-6">
+							<div class="service">
+								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-paint-brush"></i></div>
+								<div class="info">
+									<h4 class="title">탈취력</h4>
+									<p class="desc">공기 중의 악취성분을 변화, 파괴시켜 단시간에 악취를 제거함.</p>
 								</div>
 							</div>
 						</div>
-						<!-- end skills -->
+						<!-- end col-4 -->
+						<!-- begin col-4 -->
+						<div class="col-lg-4 col-md-6">
+							<div class="service">
+								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-file"></i></div>
+								<div class="info">
+									<h4 class="title">안전성</h4>
+									<p class="desc">오존은 산소와 닿으면 빠르게 산소로 환원되어 어떤 잔여물도 남기지 않음.</p>
+								</div>
+							</div>
+						</div>
+						<!-- end col-4 -->
 					</div>
-					<!-- end col-4 -->
+					<!-- end row -->
 				</div>
-				<!-- end row -->
+				<!-- end container -->
 			</div>
-			<!-- end container -->
+			<!-- end #ozone -->
 		</div>
-		<!-- end #about -->
-		
-		<!-- beign #action-box -->
-		<div id="action-box" class="content has-bg" data-scrollview="true">
-			<!-- begin content-bg -->
-			<div class="content-bg" style="background-image: url(../assets/img/bg/bg-action.jpg)"
-				data-paroller-factor="0.5"
-				data-paroller-factor-md="0.01"
-				data-paroller-factor-xs="0.01">
-			</div>
-			<!-- end content-bg -->
-			<!-- begin container -->
-			<div class="container" data-animation="true" data-animation-type="fadeInRight">
-				<!-- begin row -->
-				<div class="row action-box">
-					<!-- begin col-9 -->
-					<div class="col-lg-9 d-flex align-items-center">
-						<div class="icon-large text-primary">
-							<img src="../assets/img/mk_logo4.png" alt="mk" class="img-responsive">
-						</div>
-						<div>
-							<h3>회사 홈페이지로 방문하세요!</h3>
-							<p>
-								소독기 OASIS 개발 회사인 MK 메인 홈페이지입니다.
-							</p>
-						</div>
-					</div>
-					<!-- end col-9 -->
-					<!-- begin col-3 -->
-					<div class="col-lg-3">
-						<a href="http://mklc.co.kr/kor/main/" target="_blank" class="btn btn-outline-white btn-theme btn-block">바로 가기</a>
-					</div>
-					<!-- end col-3 -->
-				</div>
-				<!-- end row -->
-			</div>
-			<!-- end container -->
-		</div>
-		<!-- end #action-box -->
-		
-		<!-- begin #milestone -->
-		<!--<div id="milestone" class="content bg-black-darker has-bg" data-scrollview="true">-->
-			<!-- begin content-bg -->
-		<!--	<div class="content-bg" style="background-image: url(../assets/img/bg/bg-milestone.jpg)"-->
-		<!--		data-paroller="true" -->
-		<!--		data-paroller-factor="0.5"-->
-		<!--		data-paroller-factor-md="0.01"-->
-		<!--		data-paroller-factor-xs="0.01"></div>-->
-			<!-- end content-bg -->
-			<!-- begin container -->
-		<!--	<div class="container">-->
-				<!-- begin row -->
-		<!--		<div class="row">-->
-					<!-- begin col-3 -->
-		<!--			<div class="col-lg-3 milestone-col">-->
-		<!--				<div class="milestone">-->
-		<!--					<div class="number" data-animation="true" data-animation-type="number" data-final-number="312">312</div>-->
-		<!--					<div class="title">구매 업체</div>-->
-		<!--				</div>-->
-		<!--			</div>-->
-					<!-- end col-3 -->
-					<!-- begin col-3 -->
-		<!--			<div class="col-lg-3 milestone-col">-->
-		<!--				<div class="milestone">-->
-		<!--					<div class="number" data-animation="true" data-animation-type="number" data-final-number="2123">2,123</div>-->
-		<!--					<div class="title">판매 장치</div>-->
-		<!--				</div>-->
-		<!--			</div>-->
-					<!-- end col-3 -->
-					<!-- begin col-3 -->
-		<!--			<div class="col-lg-3 milestone-col">-->
-		<!--				<div class="milestone">-->
-		<!--					<div class="number" data-animation="true" data-animation-type="number" data-final-number="24561">24,561</div>-->
-		<!--					<div class="title">소독 차량</div>-->
-		<!--				</div>-->
-		<!--			</div>-->
-					<!-- end col-3 -->
-					<!-- begin col-3 -->
-		<!--			<div class="col-lg-3 milestone-col">-->
-		<!--				<div class="milestone">-->
-		<!--					<div class="number" data-animation="true" data-animation-type="number" data-final-number="89291">89,291</div>-->
-		<!--					<div class="title">누적 소독 이력</div>-->
-		<!--				</div>-->
-		<!--			</div>-->
-					<!-- end col-3 -->
-		<!--		</div>-->
-				<!-- end row -->
-		<!--	</div>-->
-			<!-- end container -->
-		<!--</div>-->
-		<!-- end #milestone -->
-		
-		<!-- begin #team -->
-		<div id="team" class="content" data-scrollview="true">
-			<!-- begin container -->
-			<div class="container">
-				<h2 class="content-title">팀원</h2>
-				<!-- begin row -->
-				<div class="row">
-					<!-- begin col-4 -->
-					<div class="col-lg-4">
-						<!-- begin team -->
-						<div class="team">
-							<div class="image" data-animation="true" data-animation-type="flipInX">
-								<img src="../assets/img/sw_tl.png" alt="SW_Team Leader" class="img-responsive" />
-							</div>
-							<div class="info">
-								<h3 class="name">박충범</h3>
-								<div class="title text-primary">S/W</div>
-							</div>
-						</div>
-						<!-- end team -->
-					</div>
-					<!-- end col-4 -->
-					<!-- begin col-4 -->
-					<div class="col-lg-4">
-						<!-- begin team -->
-						<div class="team">
-							<div class="image" data-animation="true" data-animation-type="flipInX">
-								<img src="../assets/img/ceo.jpg" alt="ceo" />
-							</div>
-							<div class="info">
-								<h3 class="name">변무영</h3>
-								<div class="title text-primary">CEO</div>
-							</div>
-						</div>
-						<!-- end team -->
-					</div>
-					<!-- end col-4 -->
-					<!-- begin col-4 -->
-					<div class="col-lg-4">
-						<!-- begin team -->
-						<div class="team">
-							<div class="image" data-animation="true" data-animation-type="flipInX">
-								<img src="../assets/img/user/user-3.jpg" alt="Mia Donovan" />
-							</div>
-							<div class="info">
-								<h3 class="name">정찬효</h3>
-								<div class="title text-primary">Manager</div>
-							</div>
-						</div>
-						<!-- end team -->
-					</div>
-					<!-- end col-4 -->
-				</div>
-				<!-- end row -->
-			</div>
-			<!-- end container -->
-		</div>
-		<!-- end #team -->
-		
-		<!-- begin #quote -->
-		<div id="quote" class="content bg-black-darker has-bg" data-scrollview="true">
-			<!-- begin content-bg -->
-			<div class="content-bg" style="background-image: url(../assets/img/bg/bg-quote.jpg)"
-				data-paroller-factor="0.5"
-				data-paroller-factor-md="0.01"
-				data-paroller-factor-xs="0.01">
-			</div>
-			<!-- end content-bg -->
-			<!-- begin container -->
-			<div class="container" data-animation="true" data-animation-type="fadeInLeft">
-				<!-- begin row -->
-				<div class="row">
-					<!-- begin col-12 -->
-					<div class="col-lg-12 quote">
-						<h1 class="text-primary">OASIS</h1>
-						<i class="fa fa-quote-left"></i>오존 살균을 통해 청결하고 안전한 공간을 이용하세요!  
-						<i class="fa fa-quote-right"></i>
-					</div>
-					<!-- end col-12 -->
-				</div>
-				<!-- end row -->
-			</div>
-			<!-- end container -->
-		</div>
-		<!-- end #quote -->
-		
-		<!-- beign #service -->
-		<div id="service" class="content" data-scrollview="true">
-			<!-- begin container -->
-			<div class="container">
-				<h2 class="content-title">제품 장점</h2>
-				<!-- begin row -->
-				<div class="row">
-					<!-- begin col-4 -->
-					<div class="col-lg-4 col-md-6">
-						<div class="service">
-							<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-cog"></i></div>
-							<div class="info">
-								<h4 class="title">살균력</h4>
-								<p class="desc">단백질 구성물(세균류)에 가장 빠르게 반응(살균)하며 99%의 살균 가능, 광범위한 살균에 효과적.</p>
-							</div>
-						</div>
-					</div>
-					<!-- end col-4 -->
-					<!-- begin col-4 -->
-					<div class="col-lg-4 col-md-6">
-						<div class="service">
-							<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-paint-brush"></i></div>
-							<div class="info">
-								<h4 class="title">탈취력</h4>
-								<p class="desc">공기 중의 악취성분을 변화, 파괴시켜 단시간에 악취를 제거함.</p>
-							</div>
-						</div>
-					</div>
-					<!-- end col-4 -->
-					<!-- begin col-4 -->
-					<div class="col-lg-4 col-md-6">
-						<div class="service">
-							<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-file"></i></div>
-							<div class="info">
-								<h4 class="title">경제성</h4>
-								<p class="desc">자동화된 시스템으로 인력비가 절감되고, 소모품이 필요하지 않아 소모비가 절감됨.</p>
-							</div>
-						</div>
-					</div>
-					<!-- end col-4 -->
-					<!-- begin col-4 -->
-					<div class="col-lg-4 col-md-6">
-						<div class="service">
-							<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-code"></i></div>
-							<div class="info">
-								<h4 class="title">효율성</h4>
-								<p class="desc">어플 작동과 편리한 타이머 기능으로 효율적인 소독 업무 가능.</p>
-							</div>
-						</div>
-					</div>
-					<!-- end col-4 -->
-					<!-- begin col-4 -->
-					<div class="col-lg-4 col-md-6">
-						<div class="service">
-							<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-shopping-cart"></i></div>
-							<div class="info">
-								<h4 class="title">데이터 관리</h4>
-								<p class="desc">자동차, 장치 등 소독 시스템과 관련된 정보를 직접 관리할 수 있음.</p>
-							</div>
-						</div>
-					</div>
-					<!-- end col-4 -->
-					<!-- begin col-4 -->
-					<div class="col-lg-4 col-md-6">
-						<div class="service">
-							<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-heart"></i></div>
-							<div class="info">
-								<h4 class="title">신뢰성</h4>
-								<p class="desc">자세한 소독 이력을 QR코드를 통해 직접 확인 가능하여, 소비자들에게 안전에 대한 신뢰 제공.</p>
-							</div>
-						</div>
-					</div>
-					<!-- end col-4 -->
-				</div>
-				<!-- end row -->
-			</div>
-			<!-- end container -->
-		</div>
-		<!-- end #about -->
-		
-		<!-- begin #quote -->
-		<div id="quote" class="content bg-black-darker has-bg" data-scrollview="true">
-			<!-- begin content-bg -->
-			<div class="content-bg" style="background-image: url(../assets/img/bg/bg-milestone.jpg)"
-				data-paroller-factor="0.5"
-				data-paroller-factor-md="0.01"
-				data-paroller-factor-xs="0.01">
-			</div>
-			<!-- end content-bg -->
-			<!-- begin container -->
-			<div class="container" data-animation="true" data-animation-type="fadeInRight">
-				<!-- begin row -->
-				<div class="row">
-					<!-- begin col-12 -->
-					<div class="col-lg-12 quote">
-						<img src="../assets/img/oasis_logo.png" alt="oasis_logo" class="img-responsive mx-auto mb-2">
-						<i class="fa fa-quote-left"></i>QR코드를 통해 직접 확인하는 내 안전
-						<i class="fa fa-quote-right"></i>
-					</div>
-					<!-- end col-12 -->
-				</div>
-				<!-- end row -->
-			</div>
-			<!-- end container -->
-		</div>
-		<!-- end #quote -->
-		
-		<!-- begin #pricing -->
-		<!--<div id="pricing" class="content" data-scrollview="true">-->
-			<!-- begin container -->
-		<!--	<div class="container">-->
-		<!--		<h2 class="content-title">제품 가격</h2>-->
-		<!--		<p class="content-desc">-->
-		<!--			소독기와 UV램프로 구성되어 있습니다.-->
-		<!--		</p>-->
-				<!-- begin pricing-table -->
-		<!--		<ul class="pricing-table pricing-col-4 d-flex justify-content-center">-->
-		<!--			<li class="mx-3" data-animation="true" data-animation-type="fadeInUp">-->
-		<!--				<div class="pricing-container">-->
-		<!--					<h3>오존 측정 센서</h3>-->
-		<!--					<div class="price py-3">-->
-		<!--						<div class="price-figure">-->
-		<!--							<span class="price-number">&#8361; 26,000</span>-->
-		<!--							<span class="price-tenure">(2년 주기)</span>-->
-		<!--						</div>-->
-		<!--					</div>-->
-		<!--					<ul class="features">-->
-		<!--						<li>규격 : 23mm*25.5mm*6.3mm</li>-->
-		<!--						<li>탐지거리 : 0~10PPM</li>-->
-		<!--						<li>작동온도 : -10℃～55℃</li>-->
-		<!--					</ul>-->
-		<!--					<div class="footer">-->
-		<!--						<a href="#" class="btn btn-inverse btn-theme btn-block">구매하기</a>-->
-		<!--					</div>-->
-		<!--				</div>-->
-		<!--			</li>-->
-		<!--			<li class="highlight mx-3" data-animation="true" data-animation-type="fadeInUp">-->
-		<!--				<div class="pricing-container">-->
-		<!--					<h3>소독기</h3>-->
-		<!--					<div class="price py-3">-->
-		<!--						<div class="price-figure">-->
-		<!--							<span class="price-number">&#8361; 24,430</span>-->
-		<!--						</div>-->
-		<!--					</div>-->
-		<!--					<ul class="features">-->
-		<!--						<li>규격 : 145mm*57mm*100mm</li>-->
-		<!--						<li>스펙2</li>-->
-		<!--						<li>스펙3</li>-->
-		<!--						<li>스펙4</li>-->
-		<!--						<li>스펙5</li>-->
-		<!--						<li>스펙6</li>-->
-		<!--					</ul>-->
-		<!--					<div class="footer">-->
-		<!--						<a href="#" class="btn btn-primary btn-theme btn-block">구매하기</a>-->
-		<!--					</div>-->
-		<!--				</div>-->
-		<!--			</li>-->
-		<!--			<li class="mx-3" data-animation="true" data-animation-type="fadeInUp">-->
-		<!--				<div class="pricing-container">-->
-		<!--					<h3>UV 램프</h3>-->
-		<!--					<div class="price py-3">-->
-		<!--						<div class="price-figure">-->
-		<!--							<span class="price-number">&#8361;</span>-->
-		<!--							<span class="price-tenure">(1년 주기)</span>-->
-		<!--						</div>-->
-		<!--					</div>-->
-		<!--					<ul class="features">-->
-		<!--						<li>스펙1</li>-->
-		<!--						<li>스펙2</li>-->
-		<!--						<li>스펙3</li>-->
-		<!--						<li>스펙4</li>-->
-		<!--						<li>스펙5</li>-->
-		<!--						<li>스펙6</li>-->
-		<!--					</ul>-->
-		<!--					<div class="footer">-->
-		<!--						<a href="#" class="btn btn-inverse btn-theme btn-block">구매하기</a>-->
-		<!--					</div>-->
-		<!--				</div>-->
-		<!--			</li>-->
-		<!--		</ul>-->
-		<!--	</div>-->
-			<!-- end container -->
-		<!--</div>-->
-		<!-- end #pricing -->
-		
-	
 		
 		<!-- begin #footer -->
 		<div id="footer" class="footer">
@@ -559,6 +309,7 @@
 	</div>
 	<!-- end #page-container -->
 	
+	<!--<script src="../assets/js/fullpage/fullpage.js"></script>-->
 	<script>
 		window.addEventListener('load', function() {
 			// 언어 변경시 국기 변환 기능
@@ -581,6 +332,12 @@
 				sl.innerHTML = "한국어";
 			}
 		});
+		
+		// new fullpage('#fullpage', {
+		// 	//options here
+		// 	autoScrolling:true,
+		// 	scrollHorizontally: true
+		// });
 	</script>
 	
 	<!-- ================== BEGIN BASE JS ================== -->
