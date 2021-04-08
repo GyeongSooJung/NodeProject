@@ -89,7 +89,7 @@
 									{% if (totalNum==0) %}
 									{% else %}
 										{% for i in range(startPage, endPage) %}
-										<a href="/pay_list/?page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
+										<a href="/point_list/?page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
 										{% endfor %}
 									{% endif %}
 									<a href="javascript:pageBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>

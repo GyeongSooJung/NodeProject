@@ -19,6 +19,7 @@ const router = express.Router();
 const { isLoggedIn, isNotLoggedIn, DataSet, emailcontrol } = require('./middleware');
 const { pagination, timeset } = require('./modulebox');
 const axios = require('axios');
+var request = require('request');
 
 //----------------------------------------------------------------------------//
 //                                  기본라우터                                //
@@ -850,7 +851,7 @@ router.get('/create', isNotLoggedIn, DataSet, async (req, res, next) => {
 //                                  SOLAPI                                    //
 //----------------------------------------------------------------------------//
 
-router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
+router.get('/sendsms', isNotLoggedIn, DataSet, async(req, res, next) => {
 
   const historyid = '6046d067b1d64326737c82bd';
   const number = '01021128228';
@@ -1023,6 +1024,58 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
 
 router.get('/test', (req, res, next) => {
   res.render('test');
+});
+
+
+// 사업자 정보 조회
+router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = "3388800960"
+  const searchname= "상호"
+  // 통신판매번호
+  // 신고현황
+  // 상호
+  // 대표자명
+  // 판매방식
+  // 전자우편(E-mail)
+  // 사업장소재지
+  // 사업장소재지(도로명)
+  // 인터넷도메인
+  // 통신판매업 신고기관명
+  // 사업자등록번호
+  // 법인여부
+  // 대표 전화번호
+  // 취급품목
+  // 신고일자
+  var url =  'https://www.ftc.go.kr/bizCommPop.do?wrkr_no='+CID
+  
+  request(url,function(error, response, body) {
+    if (error) throw error;
+    var start = body.indexOf(searchname+'</th>');
+    var end = body.indexOf('</td>',start+1);
+    console.log("start = " + start);
+    console.log("end = " + end);
+    
+    var string = "";
+    
+    for ( var i = start; i < end; i ++)
+    {
+      string += body[i];
+    }
+    
+    var string2 = ""
+    var start2 = string.indexOf('>',20);
+    
+    for ( var i = start2; i < string.length-1; i ++)
+    {
+        string2 += string[i+1];
+    }
+    
+    string2 = string2.trim();
+    
+    console.log("string2 = "+string2)
+    
+    
+  });
 });
 
 module.exports = router;

@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 // const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const Device = require('../schemas/device');
+const Devicedelete = require('../schemas/device_delete')
 var moment = require('moment');
 const {isNotLoggedIn} = require('./middleware');
 const multiparty = require('multiparty');
@@ -71,6 +72,14 @@ router.post('/device_edit/upreg/:MAC', isNotLoggedIn, async (req, res, next) => 
 //장비 삭제
 router.get('/device_delete/:MAC', async (req, res, next) => {
   try {
+    const deviceone = await Device.findOne({ "MAC" : req.params.MAC });
+    await Devicedelete.create({
+                   "CID" : deviceone.CID,
+                    "MD" : deviceone.MD,
+                    "VER" : deviceone.VER,
+                    "NN" : deviceone.NN,
+                    "MAC" : deviceone.MAC
+    });
     await Device.remove({ "MAC" : req.params.MAC });
     res.redirect('/device_list');
   } catch (err) {
@@ -83,23 +92,36 @@ router.get('/device_delete/:MAC', async (req, res, next) => {
 router.post('/device_select_delete',isNotLoggedIn ,async (req, res, next) => {
     try {
         const {ck} = req.body;
+        console.log("21323"+ck);
 
         if(!ck) {
           return res.redirect('/device_list?null=true');
         }
         else {
-          const deviceone = await Device.findOne({"MAC" : ck});
-          console.log("zzzzzzzzz : "+deviceone);
-          const MACc = deviceone.MAC;
-          console.log("MAC: " + ck);
-          console.log("MACc: " + MACc);
-
-          for(var i = 0; i < ck.length; i++){
-            if(ck[i] == MACc){
-                await Device.remove({ "MAC" : ck });
-            }
-            else if(!(ck instanceof Object)) {
-                await Device.remove({ "MAC" : ck });
+          
+          if(typeof(ck) == 'string') {
+            const deviceone = await Device.findOne({"MAC" : ck});
+            await Devicedelete.create({
+                  "CID" : deviceone.CID,
+                  "MD" : deviceone.MD,
+                  "VER" : deviceone.VER,
+                  "NN" : deviceone.NN,
+                  "MAC" : deviceone.MAC
+            });
+            await Device.remove({ "MAC" : ck });
+            
+          }
+          else {
+            for(var i = 0; i < ck.length; i++){
+              var deviceone = await Device.findOne({"MAC" : ck[i]});   
+              await Devicedelete.create({
+                     "CID" : deviceone.CID,
+                      "MD" : deviceone.MD,
+                      "VER" : deviceone.VER,
+                      "NN" : deviceone.NN,
+                      "MAC" : deviceone.MAC
+              });
+              await Device.remove({ "MAC" : ck[i] });
             }
           }
           res.redirect('/device_list');
