@@ -692,7 +692,7 @@ exports.registerKAKAO = async(req, res) => {
                 console.log(companypoint);
                   
                companyone =  await Company.where({'_id' : historyone.CID})
-                .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
+                .updat({ "SPO" : companypoint }).setOptions({runValidators : true})
                 .exec();
             }
             else {

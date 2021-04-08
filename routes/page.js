@@ -19,6 +19,7 @@ const router = express.Router();
 const { isLoggedIn, isNotLoggedIn, DataSet, emailcontrol } = require('./middleware');
 const { pagination, timeset } = require('./modulebox');
 const axios = require('axios');
+var request = require('request');
 
 //----------------------------------------------------------------------------//
 //                                  기본라우터                                //
@@ -166,25 +167,25 @@ console.log(history_date);
 //       CID : req.decoded.CID
 //     }
 //   },
-// 	{
-// 		$group : {
-// 		  _id : {month: { $month: "$CA" },day : {$dayOfMonth : "$CA"}},
-// 		  count : { $sum: 1},
-// 		},
-// 	},
-// 	{
-// 	  $sort : { _id : -1}
-// 	},
-// 		{
-// 	  $project : {
-// 	    _id : 0
-// 	  }
-// 	}
+//    {
+//       $group : {
+//         _id : {month: { $month: "$CA" },day : {$dayOfMonth : "$CA"}},
+//         count : { $sum: 1},
+//       },
+//    },
+//    {
+//      $sort : { _id : -1}
+//    },
+//       {
+//      $project : {
+//        _id : 0
+//      }
+//    }
 
 // ],function(rr,ra){
-// 	if(ra){
-// 		console.log(ra);   
-// 	} 
+//    if(ra){
+//       console.log(ra);   
+//    } 
 // });
 
   const history_count = await history_count2;
@@ -850,7 +851,7 @@ router.get('/create', isNotLoggedIn, DataSet, async (req, res, next) => {
 //                                  SOLAPI                                    //
 //----------------------------------------------------------------------------//
 
-router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
+router.get('/sendsms', isNotLoggedIn, DataSet, async(req, res, next) => {
 
   const historyid = '6046d067b1d64326737c82bd';
   const number = '01021128228';
@@ -958,7 +959,7 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
       messages: [{
         to: number,
         from: '16443486',
-        text: comname + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
+        text: comname + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 ",
         type: 'ATA',
         kakaoOptions: {
           pfId: 'KA01PF210319072804501wAicQajTRe4',
@@ -1023,6 +1024,58 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
 
 router.get('/test', (req, res, next) => {
   res.render('test');
+});
+
+
+// 사업자 정보 조회
+router.get('/send', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = "3388800960"
+  const searchname= "상호"
+  // 통신판매번호
+  // 신고현황
+  // 상호
+  // 대표자명
+  // 판매방식
+  // 전자우편(E-mail)
+  // 사업장소재지
+  // 사업장소재지(도로명)
+  // 인터넷도메인
+  // 통신판매업 신고기관명
+  // 사업자등록번호
+  // 법인여부
+  // 대표 전화번호
+  // 취급품목
+  // 신고일자
+  var url =  'https://www.ftc.go.kr/bizCommPop.do?wrkr_no='+CID
+  
+  request(url,function(error, response, body) {
+    if (error) throw error;
+    var start = body.indexOf(searchname+'</th>');
+    var end = body.indexOf('</td>',start+1);
+    console.log("start = " + start);
+    console.log("end = " + end);
+    
+    var string = "";
+    
+    for ( var i = start; i < end; i ++)
+    {
+      string += body[i];
+    }
+    
+    var string2 = ""
+    var start2 = string.indexOf('>',20);
+    
+    for ( var i = start2; i < string.length-1; i ++)
+    {
+        string2 += string[i+1];
+    }
+    
+    string2 = string2.trim();
+    
+    console.log("string2 = "+string2)
+    
+    
+  });
 });
 
 module.exports = router;

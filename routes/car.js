@@ -1,5 +1,6 @@
 const express = require('express');
 const Car = require('../schemas/car');
+const Cardelete = require('../schemas/car_delete')
 var moment = require('moment');
 const {isNotLoggedIn} = require('./middleware');
 const multiparty = require('multiparty');
@@ -71,6 +72,7 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
         const extname = path.extname(file.path);
         console.log("확장자명"+extname);
         
+        // 엑셀 파일인 경우
         if(extname == '.xlsx') {
           
           // 중복이 안된 값들을 넣는 배열
@@ -91,16 +93,20 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
           var b = 0;
           var c = 0;
           
+          // 항목이 100개 이하인 경우
           if (resData.Sheet1.length <= 100) {
             for(var j = 0; j < resData.Sheet1.length;  j++) {
               const carone = await Car.findOne({"CN": resData.Sheet1[j].차량번호});
               
               const check = /^[0-9]{2,3}[하,허,호]{1}[0-9]{4}/gi;
               
+              // 차량번호 길이가 7,8자리인 경우
               if (resData.Sheet1[j].차량번호.length >= 7 && resData.Sheet1[j].차량번호.length <= 8) {
                 
+                // 차량번호가 유효한 경우
                 if(check.test(resData.Sheet1[j].차량번호) == true) {
                   
+                  // 차량번호가 중복되지 않는 경우
                   if (!carone) {
                     resData[sheetnames[0]][j].CID = CID;
                     
@@ -108,7 +114,9 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
                     add_excel2[a] = resData.Sheet1[j].차량번호;
                     a += 1;
                   }
+                  // 차량번호가 중복되는 경우
                   else {
+                    // 등록 업체와 중복 차량 업체가 같은 경우
                     if (CID == carone.CID) {
                       resData[sheetnames[0]][j].CID = CID;
                 
@@ -116,12 +124,14 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
                       re_excel2[b] = resData.Sheet1[j].차량번호;
                       b += 1;
                     }
+                    // 등록 업체와 중복 차량 업체가 다른 경우
                     else {
                       re_di_excel1[c] = resData.Sheet1[j].차량번호;
                       c += 1;
                     }
                   }
                 }
+                // 
                 else {
                   return res.redirect('/car_join?excelType=true');
                 }
@@ -170,12 +180,15 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
           }
           
         }
+        // 파일이 없을 경우
         else if (extname == "") {
           return res.redirect('/car_join?nofile=true');
         }
+        // 엑셀 파일이 아닌 경우
         else {
           return res.redirect('/car_join?excel=true');
         }
+        
       });
         await Company.where({"CNU" : CNU})
           .update({ "CUA" : CUA }).setOptions({runValidators : true})
@@ -435,6 +448,13 @@ router.get('/car_delete/:CN',isNotLoggedIn, async (req, res, next) => {
   const CNU = req.decoded.CNU;
   const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
   try {
+    const carone = await Car.findOne({ "CN" : req.params.CN });
+    await Cardelete.create({
+                   "CID" : carone.CID,
+                    "CC" : carone.CC,
+                    "CN" : carone.CN,
+                    "SN" : carone.SN,
+    });
     await Car.remove({ "CN" : req.params.CN });
     res.redirect('/car_list');
     
@@ -459,26 +479,34 @@ router.post('/car_select_delete',isNotLoggedIn ,async (req, res, next) => {
           return res.redirect('/car_list?null=true');
         }
         else {
-          const carone = await Car.findOne({"CN" : ck});
-          console.log("zzzzzzzzz : "+carone);
-          const CNc = carone.CN;
-          var i;
-          console.log("CN: " + ck);
-          console.log("CNc: " + CNc);
           
-          for(i=0; i < ck.length; i++){
-            if(ck[i] == CNc){
-                await Car.remove({ "CN" : ck });
-            }
-            else if(!(ck instanceof Object)) {
-                await Car.remove({ "CN" : ck });
-            }
+          if (typeof(ck) == 'string') {
+            const carone = await Car.findOne({"CN" : ck});
+                await Cardelete.create({
+                   "CID" : carone.CID,
+                    "CC" : carone.CC,
+                    "CN" : carone.CN,
+                    "SN" : carone.SN,
+                });
+            await Car.remove({ "CN" : ck });
+          }
+          else {
+             for(var i = 0; i < ck.length; i++){
+               var carone = await Car.findOne({"CN" : ck[i]});  
+                 await Cardelete.create({
+                   "CID" : carone.CID,
+                    "CC" : carone.CC,
+                    "CN" : carone.CN,
+                    "SN" : carone.SN,
+                });
+                await Car.remove({ "CN" : ck[i] });
+             }
           }
           
-      const companyone = await Company.where({"CNU" : CNU})
-        .update({ "CUA" : CUA }).setOptions({runValidators : true})
-        .exec();
-          res.redirect('/car_list');
+          const companyone = await Company.where({"CNU" : CNU})
+            .update({ "CUA" : CUA }).setOptions({runValidators : true})
+            .exec();
+              res.redirect('/car_list');
         }
     }   catch (err) {
         console.error(err);
