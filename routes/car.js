@@ -71,6 +71,7 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
         const extname = path.extname(file.path);
         console.log("확장자명"+extname);
         
+        // 엑셀 파일인 경우
         if(extname == '.xlsx') {
           
           // 중복이 안된 값들을 넣는 배열
@@ -91,16 +92,20 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
           var b = 0;
           var c = 0;
           
+          // 항목이 100개 이하인 경우
           if (resData.Sheet1.length <= 100) {
             for(var j = 0; j < resData.Sheet1.length;  j++) {
               const carone = await Car.findOne({"CN": resData.Sheet1[j].차량번호});
               
               const check = /^[0-9]{2,3}[하,허,호]{1}[0-9]{4}/gi;
               
+              // 차량번호 길이가 7,8자리인 경우
               if (resData.Sheet1[j].차량번호.length >= 7 && resData.Sheet1[j].차량번호.length <= 8) {
                 
+                // 차량번호가 유효한 경우
                 if(check.test(resData.Sheet1[j].차량번호) == true) {
                   
+                  // 차량번호가 중복되지 않는 경우
                   if (!carone) {
                     resData[sheetnames[0]][j].CID = CID;
                     
@@ -108,7 +113,9 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
                     add_excel2[a] = resData.Sheet1[j].차량번호;
                     a += 1;
                   }
+                  // 차량번호가 중복되는 경우
                   else {
+                    // 등록 업체와 중복 차량 업체가 같은 경우
                     if (CID == carone.CID) {
                       resData[sheetnames[0]][j].CID = CID;
                 
@@ -116,12 +123,14 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
                       re_excel2[b] = resData.Sheet1[j].차량번호;
                       b += 1;
                     }
+                    // 등록 업체와 중복 차량 업체가 다른 경우
                     else {
                       re_di_excel1[c] = resData.Sheet1[j].차량번호;
                       c += 1;
                     }
                   }
                 }
+                // 
                 else {
                   return res.redirect('/car_join?excelType=true');
                 }
@@ -170,12 +179,15 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
           }
           
         }
+        // 파일이 없을 경우
         else if (extname == "") {
           return res.redirect('/car_join?nofile=true');
         }
+        // 엑셀 파일이 아닌 경우
         else {
           return res.redirect('/car_join?excel=true');
         }
+        
       });
         await Company.where({"CNU" : CNU})
           .update({ "CUA" : CUA }).setOptions({runValidators : true})
@@ -190,212 +202,6 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
       next(err);
     }
 });
-
-// // 차량 중복 목록 덮어쓰기
-
-//   //전체
-// router.post('/car_overwrite_all', isNotLoggedIn, async(req, res, next) => {
-//   const { CN, exCN } = req.body;
-//   const CID = req.decoded.CID;
-  
-//   try {
-//     if (typeof(CN) == 'string') {
-//       const exCar = await Car.findOne({ "CN" : CN });
-      
-//       if (!exCar) {
-//         await Car.where({ "CN" : exCN })
-//           .update({
-//             "CID" : CID,
-//             "CN" : CN,
-//             "SN" : "엑셀등록",
-//           }).setOptions({runValidators : true})
-//             .exec();
-//       }
-//       else {
-//         if (CN === exCN) {
-//           await Car.where({"CN" : exCN})
-//             .update({
-//               "CID" : CID,
-//               "CN" : CN,
-//               "SN" : "엑셀등록",
-//             }).setOptions({runValidators : true})
-//               .exec();
-//         }
-//         else {
-//           var re_excel = [CID, CN, exCN];
-//         }
-//       }
-      
-//       req.session.re_car_excel = await null;
-//       req.session.re_car_excel = await re_excel;
-      
-//       return res.redirect('/car_inspect');
-      
-//     }
-//     else {
-      
-//       var re_excel1 = [];
-//       var re_excel2 = [];
-//       var re_excel3 = [];
-      
-//       var a = 0;
-      
-//       for (var i = 0; i < CN.length; i ++) {
-        
-//         const exCar = await Car.findOne({ "CN" : CN[i] });
-        
-//         if (!exCar) {
-//           await Car.where({ "CN" : exCN[i] })
-//             .update({
-//               "CID" : CID,
-//               "CN" : CN[i].toString(),
-//               "SN" : "엑셀등록",
-//             }).setOptions({runValidators : true})
-//               .exec();
-//         }
-//         else {
-//           if (CN[i] === exCN[i]) {
-//             await Car.where({"CN" : exCN[i]})
-//               .update({
-//                 "CID" : CID,
-//                 "CN" : CN[i].toString(),
-//                 "SN" : "엑셀등록",
-//               }).setOptions({runValidators : true})
-//                 .exec();
-//           }
-//           else {
-//             re_excel1[a] = CID;
-//             re_excel2[a] = CN[i];
-//             re_excel3[a] = exCN[i];
-//             a += 1;
-//           }
-//         }
-        
-//       }
-      
-//       a = 0;
-             
-//       req.session.re_car_excel = await null;
-      
-//       var re_excel = [];
-      
-//       for (var h = 0; h < re_excel1.length; h ++) {
-//         re_excel[h] = [re_excel1[h], re_excel2[h], re_excel3[h]];
-//       }
-      
-//       req.session.re_car_excel = await re_excel;
-      
-//       return res.redirect('/car_inspect');
-//     }
-    
-//   } catch (err) {
-//     console.error(err);
-//     next(err);
-//   }
-// });
-
-//   //선택
-// router.post('/car_overwrite_check', isNotLoggedIn, async(req, res, next) => {
-//   const { ck, CN, exCN } = req.body;
-//   const CID = req.decoded.CID;
-  
-//   try {
-//     if (typeof(ck) == 'string') {
-      
-//       const exCar = await Car.findOne({ "CN" : CN });
-      
-//       if (!exCar) {
-//         await Car.where({ "CN" : exCN })
-//           .update({
-//             "CID" : CID,
-//             "CN" : CN,
-//             "SN" : "엑셀등록",
-//           }).setOptions({runValidators : true})
-//             .exec();
-//       }
-//       else {
-//         if (CN === exCN) {
-//           await Car.where({"CN" : exCN})
-//             .update({
-//               "CID" : CID,
-//               "CN" : CN,
-//               "SN" : "엑셀등록",
-//             }).setOptions({runValidators : true})
-//               .exec();
-//         }
-//         else {
-//           var re_excel = [CID, CN, exCN];
-//         }
-//       }
-      
-//       req.session.re_car_excel = await null;
-//       req.session.re_car_excel = await re_excel;
-      
-//       return res.redirect('/car_inspect');
-      
-//     }
-//     else {
-      
-//       var re_excel1 = [];
-//       var re_excel2 = [];
-//       var re_excel3 = [];
-      
-//       var a = 0;
-      
-//       for (var i = 0; i < ck.length; i ++) {
-        
-//         const exCar = await Car.findOne({ "CN" : CN[i] });
-        
-//         if (!exCar) {
-//           await Car.where({ "CN" : exCN[i] })
-//             .update({
-//               "CID" : CID,
-//               "CN" : CN[i].toString(),
-//               "SN" : "엑셀등록",
-//             }).setOptions({runValidators : true})
-//               .exec();
-//         }
-//         else {
-//           if (CN[i] === exCN[i]) {
-//             await Car.where({"CN" : exCN[i]})
-//               .update({
-//                 "CID" : CID,
-//                 "CN" : CN[i].toString(),
-//                 "SN" : "엑셀등록",
-//               }).setOptions({runValidators : true})
-//                 .exec();
-//           }
-//           else {
-//             re_excel1[a] = CID;
-//             re_excel2[a] = CN[i];
-//             re_excel3[a] = exCN[i];
-//             a += 1;
-//           }
-//         }
-        
-//       }
-      
-//       a = 0;
-      
-//       req.session.re_car_excel = await null;
-      
-//       var re_excel = [];
-      
-//       for (var h = 0; h < re_excel1.length; h ++) {
-//         re_excel[h] = [re_excel1[h], re_excel2[h], re_excel3[h]];
-//       }
-      
-//       req.session.re_car_excel = await re_excel;
-      
-//       return res.redirect('/car_inspect');
-      
-//     }
-    
-//   } catch (err) {
-//     console.error(err);
-//     next(err);
-//   }
-// });
 
 //차량 수정
   //DB

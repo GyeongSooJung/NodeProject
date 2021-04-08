@@ -57,38 +57,50 @@ router.get('/login', isLoggedIn, (req, res) => {
   res.render('login', { title: 'Login Website - OASIS' });
 });
 
-router.get('/adress', (req, res) => {
-  res.render('adress_pop');
+router.get('/address', (req, res) => {
+  res.render('address_pop');
 });
 
-//회원 가입
-router.get('/register', isLoggedIn, emailcontrol, async(req, res) => {
-  const current_time = req.body.current_time;
-  await res.cookie('ADR', null);
-  console.log("사업자 이름" + req.body.CNA);
-  console.log('cokigahglkhqlghaklshdgkla')
-  console.log(req.cookies)
+router.post('/address', (req, res) => {
+  const locals = req.body;
+  console.log(locals.inputYn);
+  
+  res.render('address_pop', {locals});
+});
 
-  var roadAddrPart1 = null
-  var roadAddrPart2 = null
-  var addrDetail = null
-  if (await req.decoded.ADR) {
-    roadAddrPart1 = String(req.decoded.ADR.roadAddrPart1);
-    roadAddrPart2 = String(req.decoded.ADR.roadAddrPart2);
-    addrDetail = String(req.decoded.ADR.addrDetail);
-    console.log("where is the places " + roadAddrPart1);
-  }
-  const authNum = parseInt(req.decoded.authNum);
-  const email = req.decoded.email;
-  console.log("email = " + email);
-  console.log("authNum = " + authNum);
+// //회원 가입
+// router.get('/register', isLoggedIn, emailcontrol, async(req, res) => {
+//   const current_time = req.body.current_time;
+//   await res.cookie('ADR', null);
+//   console.log("사업자 이름" + req.body.CNA);
+//   console.log('cokigahglkhqlghaklshdgkla')
+//   console.log(req.cookies)
 
-  if (authNum) {
-    return res.render('register', { email, roadAddrPart1, roadAddrPart2, addrDetail });
-  }
-  else {
-    return res.render('register', { roadAddrPart1, roadAddrPart2, addrDetail });
-  }
+//   var roadAddrPart1 = null
+//   var roadAddrPart2 = null
+//   var addrDetail = null
+//   if (await req.decoded.ADR) {
+//     roadAddrPart1 = String(req.decoded.ADR.roadAddrPart1);
+//     roadAddrPart2 = String(req.decoded.ADR.roadAddrPart2);
+//     addrDetail = String(req.decoded.ADR.addrDetail);
+//     console.log("where is the places " + roadAddrPart1);
+//   }
+//   const authNum = parseInt(req.decoded.authNum);
+//   const email = req.decoded.email;
+//   console.log("email = " + email);
+//   console.log("authNum = " + authNum);
+
+//   if (authNum) {
+//     return res.render('register', { email, roadAddrPart1, roadAddrPart2, addrDetail });
+//   }
+//   else {
+//     return res.render('register', { roadAddrPart1, roadAddrPart2, addrDetail });
+//   }
+// });
+
+// 회원가입 테스트
+router.get('/register', isLoggedIn, async(req, res, next) => {
+  res.render('register2');
 });
 
 //회원정보 수정
