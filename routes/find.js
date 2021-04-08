@@ -54,16 +54,16 @@ router.post('/sendmail', async (req, res, next) => {
             html: "<div style='font-family: 'Apple SD Gothic Neo', 'sans-serif' !important; width: 540px; height: 600px; border-top: 4px solid #348fe2; margin: 100px auto; padding: 30px 0; box-sizing: border-box;'>"+
                   "  <h1 style='margin: 0; padding: 0 5px; font-size: 28px; font-weight: 400;'>"+
                   "		<span style='font-size: 15px; margin: 0 0 10px 3px;'>MK_</span><br />"+
-                  "		<span style='color: #348fe2;'>임시 비밀번호</span> 안내입니다."+
+                  "		<span style='color: #348fe2;'>인증 번호</span> 안내입니다."+
                   "	</h1>"+
                   "	<p style='font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;'>"+
                   "		안녕하세요.<br />"+
-                  "		요청하신 임시 비밀번호가 생성되었습니다.<br />"+
+                  "		요청하신 인증 번호가 생성되었습니다.<br />"+
                   "		감사합니다."+
                   "	</p>"+
                   
                   "	<p style='font-size: 16px; margin: 40px 5px 20px; line-height: 28px;'>"+
-                  "		임시 비밀번호: <br />"+
+                  "		인증 번호 : <br />"+
                   "		<span style='font-size: 24px;'>"+authNum+"</span>"+
                   "	</p>"+
                   "	<div style='border-top: 1px solid #DDD; padding: 5px;'>"+
@@ -126,16 +126,17 @@ router.post('/email_cert' ,async (req, res, next) => {
 
 router.post('/change',async function(req,res){
     const {PW1,PW2,CNU} = req.body;
-    
-    if(PW1 ==! PW2){
-        return res.render('find?pwe=true',{CNU,Change : true, }) 
+    console.log(PW1);
+    console.log(PW2);
+    if(PW1 != PW2){
+     res.redirect('/find?pwe=true') 
     }
     else{
     try{
     const hash = await bcrypt.hash(PW1, 12);
     await console.log(CNU);
     await Company.update({CNU},{PW : hash, UA : Date.now()});
-    return res.redirect('/login?pwc=true')
+     res.redirect('/login?pwc=true')
         
     }catch(err){
         console.error(err);

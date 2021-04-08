@@ -1,5 +1,6 @@
 const express = require('express');
 const Car = require('../schemas/car');
+const Cardelete = require('../schemas/car_delete')
 var moment = require('moment');
 const {isNotLoggedIn} = require('./middleware');
 const multiparty = require('multiparty');
@@ -241,6 +242,13 @@ router.get('/car_delete/:CN',isNotLoggedIn, async (req, res, next) => {
   const CNU = req.decoded.CNU;
   const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
   try {
+    const carone = await Car.findOne({ "CN" : req.params.CN });
+    await Cardelete.create({
+                   "CID" : carone.CID,
+                    "CC" : carone.CC,
+                    "CN" : carone.CN,
+                    "SN" : carone.SN,
+    });
     await Car.remove({ "CN" : req.params.CN });
     res.redirect('/car_list');
     
@@ -265,26 +273,34 @@ router.post('/car_select_delete',isNotLoggedIn ,async (req, res, next) => {
           return res.redirect('/car_list?null=true');
         }
         else {
-          const carone = await Car.findOne({"CN" : ck});
-          console.log("zzzzzzzzz : "+carone);
-          const CNc = carone.CN;
-          var i;
-          console.log("CN: " + ck);
-          console.log("CNc: " + CNc);
           
-          for(i=0; i < ck.length; i++){
-            if(ck[i] == CNc){
-                await Car.remove({ "CN" : ck });
-            }
-            else if(!(ck instanceof Object)) {
-                await Car.remove({ "CN" : ck });
-            }
+          if (typeof(ck) == 'string') {
+            const carone = await Car.findOne({"CN" : ck});
+                await Cardelete.create({
+                   "CID" : carone.CID,
+                    "CC" : carone.CC,
+                    "CN" : carone.CN,
+                    "SN" : carone.SN,
+                });
+            await Car.remove({ "CN" : ck });
+          }
+          else {
+             for(var i = 0; i < ck.length; i++){
+               var carone = await Car.findOne({"CN" : ck[i]});  
+                 await Cardelete.create({
+                   "CID" : carone.CID,
+                    "CC" : carone.CC,
+                    "CN" : carone.CN,
+                    "SN" : carone.SN,
+                });
+                await Car.remove({ "CN" : ck[i] });
+             }
           }
           
-      const companyone = await Company.where({"CNU" : CNU})
-        .update({ "CUA" : CUA }).setOptions({runValidators : true})
-        .exec();
-          res.redirect('/car_list');
+          const companyone = await Company.where({"CNU" : CNU})
+            .update({ "CUA" : CUA }).setOptions({runValidators : true})
+            .exec();
+              res.redirect('/car_list');
         }
     }   catch (err) {
         console.error(err);

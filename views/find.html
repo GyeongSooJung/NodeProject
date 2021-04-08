@@ -61,6 +61,7 @@
         						        <div class="col-md-12 mb-2" name = "password">  
         						            <input id="PW2" name = "PW2" type="password" class="form-control form-control-lg inverse-mode"
         						            placeholder="비밀번호 재입력" required minlength= 8 maxlength= 16  />
+        						            <font id="chkNotice" size="2">비밀번호는 8 ~ 16자로 입력해주세요.<br><br></font>
         						        </div>
         							    <div class="col-md-6">      
         								    <button type="submit" class="btn btn-primary btn-block btn-lg" name = "PW_change" >보내기</button> 
@@ -131,7 +132,38 @@
 		    if (new URL(location.href).searchParams.get('false')) {
 		         alert('인증번호가 틀립니다. 다시 시도해 주세요');
 		    }
+		    if (new URL(location.href).searchParams.get('pwe')) {
+			alert('비밀번호가 틀립니다.');
+	     	}
+	     	
+	     $(function(){
+		    $('#PW1').keyup(function(){
+		      $('#chkNotice').html('');
+		    });
+		
+		    $('#PW2').keyup(function(){
+		    	
+		    	if($('#PW1').val().length < 8 || $('#PW1').val().length > 16 )
+		    	{
+		    	      $('#chkNotice').html('비밀번호는 8 ~ 16자로 입력해주세요.<br><br>');
+			          $('#chkNotice').attr('color', '#f82a2aa3');
+		    	}
+		        else {
+			        if($('#PW1').val() == $('#PW2').val()){
+			          $('#chkNotice').html('비밀번호 일치함<br><br>');
+			          $('#chkNotice').attr('color', '#199894b3');
+			          
+			        } else{
+			          $('#chkNotice').html('비밀번호 일치하지 않음<br><br>');
+			          $('#chkNotice').attr('color', '#f82a2aa3');
+			        }
+		        }
+		
+		    });
+		});
 		}
+		
+
 		
 		var authNum = document.getElementById("authNum").value;    
 		var TimeSet = 180

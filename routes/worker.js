@@ -1,5 +1,6 @@
 const express = require('express');
 const Worker = require('../schemas/worker');
+const Workerdelete = require('../schemas/worker_delete')
 const moment = require('moment');
 const {isLoggedIn,isNotLoggedIn,DataSet} = require('./middleware');
 const router = express.Router();
@@ -169,6 +170,19 @@ router.post('/worker_select_manager',isNotLoggedIn ,async (req, res, next) => {
 //작업자 삭제
 router.get('/worker_delete/:EM',isNotLoggedIn ,async (req, res, next) => {
   try {
+    
+    const workerone = await Worker.findOne({ "EM" : req.params.EM });
+    await Workerdelete.create({
+                   "CID" : workerone.CID,
+                    "WN" : workerone.WN,
+                    "PN" : workerone.PN,
+                    "GID" : workerone.GID,
+                    "EM" : workerone.EM,
+                    "PU" : workerone.PU,
+                    "AU" : workerone.AU,
+                    "AC" :workerone.AC
+    });
+    
     await Worker.remove({ "EM" : req.params.EM });
     res.redirect('/worker_list');
   } catch (err) {
@@ -186,19 +200,35 @@ router.post('/worker_select_delete',isNotLoggedIn ,async (req, res, next) => {
           return res.redirect('/worker_list?null=true');
         }
         else {
-          const workerone = await Worker.findOne({"EM" : ck});
-          console.log("zzzzzzzzz : "+workerone);
-          const EMc = workerone.EM;
-          var i;
-          console.log("EM: " + ck);
-          console.log("EMc: " + EMc)
-
-          for(i=0; i < ck.length; i++){
-            if(ck[i] == EMc){
-                await Worker.remove({ "EM" : ck });
-            }
-            else if(!(ck instanceof Object)) {
-                await Worker.remove({ "EM" : ck });
+          
+          if(typeof(ck) == 'string') {
+            const workerone = await Worker.findOne({"EM" : ck});
+            await Workerdelete.create({
+                           "CID" : workerone.CID,
+                            "WN" : workerone.WN,
+                            "PN" : workerone.PN,
+                            "GID" : workerone.GID,
+                            "EM" : workerone.EM,
+                            "PU" : workerone.PU,
+                            "AU" : workerone.AU,
+                            "AC" :workerone.AC
+            });
+            await Worker.remove({ "EM" : ck });
+          }
+          else {
+            for(var i=0; i < ck.length; i++){
+             const workerone = await Worker.findOne({"EM" : ck[i]});
+                await Workerdelete.create({
+                 "CID" : workerone.CID,
+                  "WN" : workerone.WN,
+                  "PN" : workerone.PN,
+                  "GID" : workerone.GID,
+                  "EM" : workerone.EM,
+                  "PU" : workerone.PU,
+                  "AU" : workerone.AU,
+                  "AC" :workerone.AC
+                });
+                await Worker.remove({ "EM" : ck[i] });                
             }
           }
           res.redirect('/worker_list');

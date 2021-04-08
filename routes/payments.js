@@ -390,5 +390,11 @@ router.get("/complete/mobile", isNotLoggedIn, DataSet, async(req, res, next) => 
 
 
 
+router.get("/regular", isNotLoggedIn, DataSet, async(req, res, next) => {
+    
+    
+});
+
+
 
 module.exports = router;
