@@ -17,7 +17,7 @@
 			<div class="panel panel-inverse" data-sortable-id="form-validation-1">
 				<!-- begin panel-heading -->
 				<div class="panel-heading">
-					<h4 class="panel-title">포인트 구매</h4>
+					<h4 class="panel-title">포인트 일반 구매</h4>
 					<p class="m-0"></p>
 				</div>
 				<!-- end panel-heading -->
@@ -64,7 +64,80 @@
 				<!-- end panel-body -->
 			</div>
 			<!-- end panel -->
-			<div style="display:flex;">
+		</div>
+		<!--<div class="col-xl-12">-->
+		<!--	<div class="panel panel-inverse" data-sortable-id="form-validation-1">-->
+		<!--		<div class="panel-heading">-->
+		<!--			<h4 class="panel-title">포인트 정기 구매</h4>-->
+		<!--			<p class="m-0"></p>-->
+		<!--		</div>-->
+		<!--		<div class="panel-body">-->
+  <!--  		        <form method="post" data-parsley-validate="true">-->
+  <!--  		            <div class="d-flex justify-content-center align-items-center flex-wrap">-->
+  <!--  		                {% for goods in service %}-->
+  <!--  			            <div class="radio-tile">-->
+  <!--  			                <input type="radio" class="radio-btn" name="sms2" value="{{goods.PR}}" onclick="check2(this.value)" />-->
+  <!--  				            <div class="radio-text">-->
+  <!--  				                <i class="fas fa-4x fa-sms mb-2 icolor"></i>-->
+  <!--  				                <p class="mb-2 font-weight-bold">+ {{goods.PO}} point</p>-->
+  <!--  				                <div class="d-flex justify-content-center align-items-center">-->
+  <!--  				                    <h1 class="mb-0 mr-1">{{goods.PR}}</h1>-->
+  <!--      				                <h4 class="mb-0 mt-1">원</h4>-->
+  <!--  				                </div>-->
+  <!--  				            </div>-->
+  <!--  			            </div>-->
+  <!--  			            {% endfor %}-->
+  <!--  			        </div>-->
+  <!--  			        <div class="d-flex justify-content-center align-items-center flex-wrap">-->
+  <!--      			        <div class="col-md-4 mr-8 my-4 py-2 bg-gray-200 rounded border">-->
+  <!--      			            <table class="table table-borderless table-last table-td-valign-middle mb-0">-->
+  <!--      			                <tr>-->
+  <!--      			                    <th width=60% class="text-left">선택 상품</th>-->
+  <!--      			                    <td width=40% id="check_name2" class="text-right h5 mb-0"></td>-->
+  <!--      			                </tr>-->
+  <!--      			                <tr>-->
+  <!--      			                    <th class="text-left">획득 예정 포인트</th>-->
+  <!--      			                    <td id="check_point2" class="text-right h5 mb-0"></td>-->
+  <!--      			                </tr>-->
+  <!--      			                <tr>-->
+  <!--      			                    <th class="text-left">상품 금액</th>-->
+  <!--      			                    <td id="check_amount2" class="text-right h5 mb-0"></td>-->
+  <!--      			                </tr>-->
+  <!--      			            </table>-->
+        			            
+  <!--      			        </div>-->
+  <!--      			        <div class="col-md-6 ml-4 my-4 py-2 bg-white-200 rounded border">-->
+  <!--      			            <table class="table table-borderless  table-td-valign-middle mb-0">-->
+  <!--      			                <tr>-->
+  <!--      			                    <th width=60% class="text-left">카드 번호</th>-->
+  <!--      			                    <td><input class="text-right h5 mb-0" type="String" id="Cnum" name="Cnum" placeholder="XXXX-XXXX-XXXX-XXXX" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." data-parsley-trim-value="true" /></td>-->
+  <!--      			                </tr>-->
+  <!--      			                <tr>-->
+  <!--      			                    <th class="text-left">카드 유효기간</th>-->
+  <!--      			                    <td><input class="text-right h5 mb-0" type="String" id="Cday" name="Cday" placeholder="YYYY-MM" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." data-parsley-trim-value="true" /></td></td>-->
+  <!--      			                </tr>-->
+  <!--      			                <tr>-->
+  <!--      			                    <th class="text-left">생년 월일</th>-->
+  <!--      			                    <td> <input class="text-right h5 mb-0" type="String" id="Bday" name="Bday" placeholder="YYMMDD" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." data-parsley-trim-value="true" /></td>-->
+  <!--      			                </tr>-->
+  <!--      			                <tr>-->
+  <!--      			                    <th class="text-left">카드 비밀번호 앞 두자리</th>-->
+  <!--      			                    <td><input class="text-right h5 mb-0" type="String" id="PFnum" name="PFnum" placeholder="XX" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." data-parsley-trim-value="true" /></td>-->
+  <!--      			                </tr>-->
+  <!--      			            </table>-->
+  <!--      			        </div>-->
+  <!--      			    </div>-->
+  <!--  				    <div class="d-flex justify-content-center align-items-center">-->
+  <!--  				        <button id="regular_button" class="btn btn-primary text-white px-4"><i class="fas fa-credit-card mr-2"></i>카드 확인</button>-->
+  <!--  				        <button style="display:none;" id="regular_pay" onclick="payments2('sms2')" class="btn btn-primary text-white px-4"><i class="fas fa-credit-card mr-2"></i>결제 하기</button>-->
+  <!--                      </div>-->
+  <!--  		        </form>-->
+  <!--              </div>-->
+		<!--	</div>-->
+			
+			
+		<!--</div>-->
+		<div style="display:flex;">
 			    <div >
 			       본 서비스는 소독공정 완료 후 업체 고객들에게 SMS 알림을 주는 서비스입니다. </br>
     			※ 환불 규정 및 민원 처리</br>
@@ -73,7 +146,6 @@
                     - 환불 요청 및 민원 처리는 mk@mklc.co.kr 로 메일 부탁드립니다.
                 </div>
             </div>
-		</div>
 	</div>
 	<!-- end row -->
 </div>
@@ -82,6 +154,8 @@
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 
 <script>
+
+   
     // 체크 시 텍스트 반영 기능
     function check(value) {
         const ckn = document.getElementById("check_name");
@@ -92,11 +166,11 @@
         var goods_point;
         
         if(value == 10000)
-        goods_name = "문자전송 포인트";
+        goods_name = "포인트 10000";
         else if(value == 50000)
-        goods_name = "문자전송 포인트2";
+        goods_name = "포인트 50000";
         else if(value == 100000)
-        goods_name = "문자전송 포인트3";
+        goods_name = "포인트 100000";
         
         goods_amount = value;
         goods_point = value;
@@ -105,6 +179,7 @@
         cka.innerHTML = "<span class='text-realred h2 mb-0'>"+goods_amount+"</span>"+" 원";
         ckp.innerHTML = goods_point+" p";
     }
+    
     // $(".radio-btn").on("click", function() {
     //     var goods_amount = $('input[name=sms]').val();
     //     $.ajax({
@@ -128,17 +203,17 @@
         for (var i=0; i<goods.length; i++) {
             if (goods[i].checked == true) {
                 if(goods[i].value == 10000) {
-                  goods_name = "문자전송 포인트";
+                  goods_name = "포인트 10000";
                   goods_amount = 10000;
                   checktest = true;
                 }
                 else if(goods[i].value == 50000) {
-                  goods_name = "문자전송 포인트2";
+                  goods_name = "포인트 50000";
                   goods_amount = 50000;
                   checktest = true;
                 }
                 else if(goods[i].value == 100000) {
-                  goods_name = "문자전송 포인트3";
+                  goods_name = "포인트 100000";
                   goods_amount = 100000;
                   checktest = true;
                 }
@@ -205,63 +280,192 @@
         });
     }
     
+    // $("#regular_button").on("click", function() {
+        
+    //     console.log("@@@");
+                 
+    //     const card_number = document.getElementsByName('Cnum');
+    //     const expiry = document.getElementsByName('Cday');
+    //     const birth = document.getElementsByName('Bday');
+    //     const pwd_2digit = document.getElementsByName('PFnum');
+         
+    //         $.ajax({
+    //         url : "/paments/regular",
+    //         type: "POST",
+    //         dataType: 'json',
+    //         data: {
+    //             card_number : card_number,
+    //             expiry : expiry,
+    //             birth : birth,
+    //             pwd_2digit : pwd_2digit,
+    //             customer_uid : "mk_" + card_number + new Date().getTime()
+    //         }
+    //     }).done(function (data) {
+    //         console.log(data)
+    //         });
+    // });
+    
+   $('#reqular_card').click(function () {  
+        
+        var goods = document.getElementsByName('sms2');
+        var checktest;
+        var goods_name;
+        var goods_amount;
+        
+        for (var i=0; i<goods.length; i++) {
+            if (goods[i].checked == true) {
+                if(goods[i].value == 10000) {
+                  goods_name = "포인트 10000";
+                  goods_amount = 10000;
+                  checktest = true;
+                }
+                else if(goods[i].value == 50000) {
+                  goods_name = "포인트 50000";
+                  goods_amount = 50000;
+                  checktest = true;
+                }
+                else if(goods[i].value == 100000) {
+                  goods_name = "포인트 100000";
+                  goods_amount = 100000;
+                  checktest = true;
+                }
+            }
+        }
+        
+        if(!checktest) {
+            return alert("항목을 선택해주세요.");
+        }
+        
+        const card_number = document.getElementsByName('Cnum');
+        const expiry = document.getElementsByName('Cday');
+        const birth = document.getElementsByName('Bday');
+        const pwd_2digit = document.getElementsByName('PFnum');
+        
+        console.log(card_number);
+        console.log(expiry);
+        console.log(birth);
+        console.log(pwd_2digit);
+        
+        
+    if($("#id").css("display") == "none"){   
+        jQuery('#id').css("display", "block");   
+    } else {  
+        jQuery('#id').css("display", "none");   
+    }  
+});  
+
+    
+    
+    function check2(value) {
+        const ckn = document.getElementById("check_name2");
+        const cka = document.getElementById("check_amount2");
+        const ckp = document.getElementById("check_point2");
+        var goods_name;
+        var goods_amount;
+        var goods_point;
+        
+        if(value == 10000)
+        goods_name = "포인트 10000";
+        else if(value == 50000)
+        goods_name = "포인트 50000";
+        else if(value == 100000)
+        goods_name = "포인트 100000";
+        
+        goods_amount = value;
+        goods_point = value;
+        
+        ckn.innerHTML = goods_name;
+        cka.innerHTML = "<span class='text-realred h2 mb-0'>"+goods_amount+"</span>"+" 원";
+        ckp.innerHTML = goods_point+" p";
+    }
+    
     //정기 결제 기능
     function payments2(objName) {
         
-    var IMP = window.IMP;
-        IMP.init('{{imp_code}}');
+        // var goods = document.getElementsByName(objName);
+        // var checktest;
+        // var goods_name;
+        // var goods_amount;
         
-        IMP.request_pay({
-            pg : 'inicis', // version 1.1.0부터 지원.
-            pay_method : 'card',
-            merchant_uid : 'merchant_' + new Date().getTime(),
-            name : "정기결제1",
-            amount : "10000",
-            buyer_name : '정경수',
-            buyer_email : 'gsjung06@naver.com',
-            // buyer_tel : '{{company.PN}}',
-            // buyer_addr : '{{company.ADR}}',
-            // m_redirect_url : '{{HOME}}/payments/complete/mobile'
-        }, function(rsp) {
-            if (rsp.success) {
-                $.ajax({
-                    url: "/payments/regular",
-                    type: "POST",
-                    dataType: 'json',
-                    data: {
-                        imp_uid: rsp.imp_uid,
-                        merchant_uid: rsp.merchant_uid
-                    }
-                }).done(function (data) {
-                    switch(data.status) {
-                        // case "vbankIssued":
-                        //     var msg = "가상계좌가 생성되었습니다.";
-                        //     msg += '\n가상계좌명' + rsp.vbank_name;
-                        //     msg += '\n가상계좌번호' + rsp.vbank_num;
-                        //     msg += '\n생성일' + rsp.vbank_date;
-                        //     break;
-                        case "success":
-                            var msg = "결제가 완료되었습니다.";
-                            alert(msg);
-                            window.location.href = '/pay_confirm?imp_uid='+rsp.imp_uid;
-                            break;
-                        case "cancelled":
-                            var msg = "결제가 취소되었습니다.";
-                            break;
-                        case "failed":
-                            var msg = "결제에 실패하였습니다.";
-                            break;
-                        case "forgery":
-                            var msg = "위조된 결제시도입니다.";
-                            break;
-                    }
-                    return alert(msg);
-                });
-            } else {
-                return alert("결제에 실패하였습니다. " +  rsp.error_msg);
-                amount : 10000
-            }
-        });
+        // for (var i=0; i<goods.length; i++) {
+        //     if (goods[i].checked == true) {
+        //         if(goods[i].value == 10000) {
+        //           goods_name = "포인트 10000";
+        //           goods_amount = 10000;
+        //           checktest = true;
+        //         }
+        //         else if(goods[i].value == 50000) {
+        //           goods_name = "포인트 50000";
+        //           goods_amount = 50000;
+        //           checktest = true;
+        //         }
+        //         else if(goods[i].value == 100000) {
+        //           goods_name = "포인트 100000";
+        //           goods_amount = 100000;
+        //           checktest = true;
+        //         }
+        //     }
+        // }
+        
+        // if(!checktest) {
+        //     return alert("항목을 선택해주세요.");
+        // }
+        
+        
+        // var IMP = window.IMP;
+        // IMP.init('{{imp_code}}');
+        
+        // IMP.request_pay({
+        //     pg : 'inicis', // version 1.1.0부터 지원.
+        //     pay_method : 'card',
+        //     merchant_uid : 'merchant_' + new Date().getTime(),
+        //     name : goods_name,
+        //     amount : goods_amount,
+        //     buyer_name : '{{company.CNA}}',
+        //     buyer_email : '{{company.EA}}',
+        //     buyer_tel : '{{company.PN}}',
+        //     buyer_addr : '{{company.ADR}}',
+        //     m_redirect_url : '{{HOME}}/payments/complete/mobile'
+        // }, function(rsp) {
+        //     if (rsp.success) {
+        //         $.ajax({
+        //             url: "/payments/complete",
+        //             type: "POST",
+        //             dataType: 'json',
+        //             data: {
+        //                 imp_uid: rsp.imp_uid,
+        //                 merchant_uid: rsp.merchant_uid
+        //             }
+        //         }).done(function (data) {
+        //             switch(data.status) {
+        //                 // case "vbankIssued":
+        //                 //     var msg = "가상계좌가 생성되었습니다.";
+        //                 //     msg += '\n가상계좌명' + rsp.vbank_name;
+        //                 //     msg += '\n가상계좌번호' + rsp.vbank_num;
+        //                 //     msg += '\n생성일' + rsp.vbank_date;
+        //                 //     break;
+        //                 case "success":
+        //                     var msg = "결제가 완료되었습니다.";
+        //                     alert(msg);
+        //                     window.location.href = '/pay_confirm?imp_uid='+rsp.imp_uid;
+        //                     break;
+        //                 case "cancelled":
+        //                     var msg = "결제가 취소되었습니다.";
+        //                     break;
+        //                 case "failed":
+        //                     var msg = "결제에 실패하였습니다.";
+        //                     break;
+        //                 case "forgery":
+        //                     var msg = "위조된 결제시도입니다.";
+        //                     break;
+        //             }
+        //             return alert(msg);
+        //         });
+        //     } else {
+        //         return alert("결제에 실패하였습니다. " +  rsp.error_msg);
+        //         amount : 10000
+        //     }
+        // });
     }
 </script>
 {% endblock %}

@@ -620,24 +620,22 @@ exports.registerKAKAO = async(req, res) => {
             let apiSecret = process.env.sol_secret;
             let apiKey = process.env.sol_key;
       
-            const moment = require('moment')
-            const nanoidGenerate = require('nanoid/generate')
-            const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32)
-            const HmacSHA256 = require('crypto-js/hmac-sha256')
-            const fs = require('fs')
-            const path = require('path')
+            const moment = require('moment');
+            const nanoidGenerate = require('nanoid/generate');
+            const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32);
+            const HmacSHA256 = require('crypto-js/hmac-sha256');
       
-            const date = moment.utc().format()
-            const salt = generate()
-            const hmacData = date + salt
-            const signature = HmacSHA256(hmacData, apiSecret).toString()
-            const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
+            const date = moment.utc().format();
+            const salt = generate();
+            const hmacData = date + salt;
+            const signature = HmacSHA256(hmacData, apiSecret).toString();
+            const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`;
         
             var request = require('request');
            
             
             const historyone = await History.findOne({'_id' : historyid});
-            var companyone = await Company.findOne({'_id' : historyone.CID})
+            var companyone = await Company.findOne({'_id' : historyone.CID});
             var companypoint = companyone.SPO;
             
             if(companypoint > 0) {
@@ -683,6 +681,7 @@ exports.registerKAKAO = async(req, res) => {
             
                 const pointone = await Point.insertMany({
                     "CID" : companyone._id,
+                    "WNM" : historyone.WNM,
                     "PN" : "알림톡 전송",
                      "PO" : 50,
                 });

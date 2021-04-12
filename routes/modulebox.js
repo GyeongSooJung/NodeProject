@@ -20,11 +20,9 @@ exports.pagination = async(page, totalNum) => {
         if(skipPost < 0) { // skip에는 음수가 포함되면 안됨. 페이지 파라미터가 0으로 받기 때문에 -1이 되는 경우가 발생. 이 때 에러를 방지하기 위해 0으로 반환
             skipPost = 0;
         }
-        console.log("44444444444"+skipPost);
     
     const startPage = Math.floor(((currentPage) / pageNum)) * pageNum; // 시작 페이지(ex. 1~5라면 1)
     let endPage = startPage + pageNum; // 끝 페이지(ex. 1~5라면 5)
-    console.log("!!!!!!!!!!!!!!"+startPage+endPage);
     
     if (endPage > totalPage) { // 끝 페이지가 총 페이지 수보다 많다면 같게끔 처리
         endPage = totalPage;
