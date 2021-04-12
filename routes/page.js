@@ -73,7 +73,7 @@ router.post('/address', (req, res) => {
 
 // 회원가입
 router.get('/register', isLoggedIn, async(req, res, next) => {
-  res.render('register2', { title: 'OASIS Admin | Sign Up'});
+  res.render('register', { title: 'OASIS Admin | Sign Up'});
 });
 
 //회원정보 수정
