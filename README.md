@@ -54,6 +54,8 @@ pw : root
     + gmail = 구글 앱 비밀번호(app에서 구글 계정 사용을 위해)
   - QR코드 버전
     + publish_cat = QR코드 카테고리(버전)
+  - 도로명주소api
+    + juso = 도로명주소 API 승인키
 
 ### 공지 사항
 * Cloug9 소스의 README.md 파일을 자주 확인하세요.
