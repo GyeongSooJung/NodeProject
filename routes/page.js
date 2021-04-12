@@ -993,24 +993,23 @@ router.get('/sendkko2', isNotLoggedIn, DataSet, async(req, res, next) => {
   
   const historyid = '605aec074164b23448038c2d';
   const number = '01021128228';
-  const comname = '롯데렌터카';
   
-  const { config, Group, msg } = require('solapi')
+  let apiSecret = process.env.sol_secret;
+  let apiKey = process.env.sol_key;
+  
+  const { config, Group, msg } = require('solapi');
   
   const historyone = await History.findOne({ '_id': historyid });
-  const companyone = await Company.findOne({ '_id': historyone.CID })
+  const companyone = await Company.findOne({ '_id': historyone.CID });
   var companypoint = companyone.SPO;
 
 // 인증을 위해 발급받은 본인의 API Key를 사용합니다.
-  let apiSecret = process.env.sol_secret;
-  let apiKey = process.env.sol_key;
+
   config.init({ apiKey, apiSecret })
-  async function send (params = {}) {
+  
+  var fn = async function send (params = {}) {
     try {
-      const response = await Group.sendSimpleMessage(params)
-      console.log(response)
-      
-      
+      const response = await Group.sendSimpleMessage(params);
       const pointone = await Point.insertMany({
         "CID": companyone._id,
         "PN": "알림톡 전송",
@@ -1029,13 +1028,13 @@ router.get('/sendkko2', isNotLoggedIn, DataSet, async(req, res, next) => {
         .exec();
       
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
   }
   
   const params = {
     autoTypeDetect: true,
-    text: comname + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다",
+    text: companyone.CNA + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
     to: '01021128228', // 수신번호 (받는이)
     from: '16443486', // 발신번호 (보내는이)
     type: 'ATA',
@@ -1051,7 +1050,7 @@ router.get('/sendkko2', isNotLoggedIn, DataSet, async(req, res, next) => {
     }
   }
   
-  send(params)
+  fn(params)
 
 
 
