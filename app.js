@@ -22,7 +22,6 @@ const workerRouter = require('./routes/worker');
 const emailRouter = require('./routes/email');
 const mobileRouter = require('./routes/mobile/'); // mobile 뒤에 슬래쉬 삭제 금지
 const findRouter = require('./routes/find');
-// const addressRouter = require('./routes/address');
 const inflowRouter = require('./routes/inflow');
 const publishRouter = require('./routes/publish');
 const paymentsRouter = require('./routes/payments');
@@ -66,7 +65,6 @@ app.use('/history', historyRouter);
 app.use('/worker', workerRouter);
 app.use('/email', emailRouter);
 app.use('/mobile', mobileRouter);
-// app.use('/address', addressRouter);
 app.use('/inflow', inflowRouter);
 app.use('/publish', publishRouter);
 app.use('/payments', paymentsRouter);

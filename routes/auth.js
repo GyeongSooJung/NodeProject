@@ -11,10 +11,9 @@ const Company = require('../schemas/company');
 const Device = require('../schemas/device');
 const Car = require('../schemas/car');
 const Worker = require('../schemas/worker');
-const History = require('../schemas/history');
 
 //middleware
-const {isLoggedIn, isNotLoggedIn, DataSet, emailcontrol} = require('./middleware');
+const {isLoggedIn, isNotLoggedIn, DataSet} = require('./middleware');
 
 
 const TokenMake = async function(req,res,next){
