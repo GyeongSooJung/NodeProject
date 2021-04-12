@@ -310,6 +310,8 @@
 	<!-- end #page-container -->
 	
 	<!--<script src="../assets/js/fullpage/fullpage.js"></script>-->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 	<script>
 		window.addEventListener('load', function() {
 			// 언어 변경시 국기 변환 기능
@@ -338,6 +340,12 @@
 		// 	autoScrolling:true,
 		// 	scrollHorizontally: true
 		// });
+		if(document.getElementById('header').classList.add('navbar-sm')) {
+			alert('hi');
+		}
+		else {
+			alert('hidid');
+		}
 	</script>
 	
 	<!-- ================== BEGIN BASE JS ================== -->
