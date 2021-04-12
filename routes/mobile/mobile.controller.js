@@ -610,6 +610,7 @@ exports.registerSMS = async(req, res) => {
 };
 
 exports.registerKAKAO = async(req, res) => {
+    var request = require('request');
     try {
         
             const { _id, num } = req.body;
@@ -619,81 +620,64 @@ exports.registerKAKAO = async(req, res) => {
             
             let apiSecret = process.env.sol_secret;
             let apiKey = process.env.sol_key;
-      
-            const moment = require('moment')
-            const nanoidGenerate = require('nanoid/generate')
-            const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32)
-            const HmacSHA256 = require('crypto-js/hmac-sha256')
-            const fs = require('fs')
-            const path = require('path')
-      
-            const date = moment.utc().format()
-            const salt = generate()
-            const hmacData = date + salt
-            const signature = HmacSHA256(hmacData, apiSecret).toString()
-            const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
-        
-            var request = require('request');
+            
+            const { config, Group, msg } = require('solapi');
            
             
             const historyone = await History.findOne({'_id' : historyid});
-            var companyone = await Company.findOne({'_id' : historyone.CID})
+            var companyone = await Company.findOne({'_id' : historyone.CID});
             var companypoint = companyone.SPO;
             
+            
+            
             if(companypoint > 0) {
-            
-            var options = {
-                headers: {
-                  Authorization:
-                    autori,'Content-Type': 'application/json'
-                },
-                body: {
-                  messages: [
-                    {
-                      to: number,
-                      from: '16443486',
-                      text:
-                        companyone.CNA + "에서 소독이 완료되었음을 알려드립니다. 자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
-                      type: 'ATA',
-                      kakaoOptions: {
-                        pfId: 'KA01PF210319072804501wAicQajTRe4',
-                        templateId: 'KA01TP210319074611283wL0AjgZVdog',
-                        buttons: [
-                          {
-                            buttonType: 'WL',
-                            buttonName: '확인하기',
-                            linkMo: 'http://www.cleanoasis.net/publish?cat=1&hid=' + historyid,
-                            linkPc: 'http://www.cleanoasis.net/publish?cat=1&hid=' + historyid
-                          }
-                        ]
-                      }
+                
+                config.init({ apiKey, apiSecret })
+                
+                var fn = async function send (params = {}) {
+                    try {
+                      const response = await Group.sendSimpleMessage(params);
+                      const pointone = await Point.insertMany({
+                        "CID": companyone._id,
+                        "PN": "알림톡 전송",
+                        "PO": 50,
+                        "MID" : response.messageId,
+                        "WNM" : historyone.WNM,
+                      });
+                      console.log(pointone);
+                    
+                      console.log(companypoint);
+                      companypoint = companypoint - 50;
+                      console.log(companypoint);
+                    
+                      await Company.where({ '_id': historyone.CID })
+                        .update({ "SPO": companypoint }).setOptions({ runValidators: true })
+                        .exec();
+                      
+                    } catch (e) {
+                      console.log(e);
                     }
-                  ]
-                },
-                method: 'POST',
-                json: true,
-                url: 'http://api.solapi.com/messages/v4/send-many'
-            };
-            
-                
-                request(options, function(error, response, body) {
-                    if (error) throw error;
-                    console.log('result :', body);
-                });     
-            
-                const pointone = await Point.insertMany({
-                    "CID" : companyone._id,
-                    "PN" : "알림톡 전송",
-                     "PO" : 50,
-                });
-                
-                console.log(companypoint);
-                companypoint = companypoint - 50;
-                console.log(companypoint);
+                  }
                   
-               companyone =  await Company.where({'_id' : historyone.CID})
-                .updat({ "SPO" : companypoint }).setOptions({runValidators : true})
-                .exec();
+                  const params = {
+                    autoTypeDetect: true,
+                    text: companyone.CNA + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
+                    to: '01021128228', // 수신번호 (받는이)
+                    from: '16443486', // 발신번호 (보내는이)
+                    type: 'ATA',
+                    kakaoOptions: {
+                      pfId: 'KA01PF210319072804501wAicQajTRe4',
+                      templateId: 'KA01TP210319074611283wL0AjgZVdog',
+                            buttons: [{
+                              buttonType: 'WL',
+                              buttonName: '확인하기',
+                              linkMo: process.env.IP + '/publish?cat=1&hid=' + historyid,
+                              linkPc: process.env.IP + '/publish?cat=1&hid=' + historyid
+                            }]
+                    }
+                  }
+                  
+                  fn(params)
             }
             else {
                 res.json({

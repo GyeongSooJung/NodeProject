@@ -10,6 +10,7 @@ const Order = require('../schemas/order');
 const Service = require('../schemas/service');
 const Publish = require('../schemas/publish');
 const Point = require('../schemas/point');
+const Alarm = require('../schemas/alarm_complete')
 
 const moment = require('moment');
 const qrcode = require('qrcode');
@@ -20,6 +21,9 @@ const { isLoggedIn, isNotLoggedIn, DataSet } = require('./middleware');
 const { pagination, timeset } = require('./modulebox');
 const axios = require('axios');
 var request = require('request');
+
+//메세지 조회 사용
+const { msg } = require('solapi'); 
 
 //----------------------------------------------------------------------------//
 //                                  기본라우터                                //
@@ -943,7 +947,8 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
       messages: [{
         to: number,
         from: '16443486',
-        text: comname + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 ",
+        text:
+          comname + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
         type: 'ATA',
         kakaoOptions: {
           pfId: 'KA01PF210319072804501wAicQajTRe4',
@@ -981,6 +986,226 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
     .update({ "SPO": companypoint }).setOptions({ runValidators: true })
     .exec();
 });
+
+// 알림톡 테스트
+
+router.get('/sendkko2', isNotLoggedIn, DataSet, async(req, res, next) => {
+  
+  const historyid = '605aec074164b23448038c2d';
+  const number = '01021128228';
+  
+  let apiSecret = process.env.sol_secret;
+  let apiKey = process.env.sol_key;
+  
+  const { config, Group, msg } = require('solapi');
+  
+  const historyone = await History.findOne({ '_id': historyid });
+  const companyone = await Company.findOne({ '_id': historyone.CID });
+  var companypoint = companyone.SPO;
+
+// 인증을 위해 발급받은 본인의 API Key를 사용합니다.
+
+  config.init({ apiKey, apiSecret })
+  
+  var fn = async function send (params = {}) {
+    try {
+      const response = await Group.sendSimpleMessage(params);
+      const pointone = await Point.insertMany({
+        "CID": companyone._id,
+        "PN": "알림톡 전송",
+        "PO": 50,
+        "MID" : response.messageId,
+        "WNM" : historyone.WNM,
+      });
+      console.log(pointone);
+    
+      console.log(companypoint);
+      companypoint = companypoint - 50;
+      console.log(companypoint);
+    
+      await Company.where({ '_id': historyone.CID })
+        .update({ "SPO": companypoint }).setOptions({ runValidators: true })
+        .exec();
+      
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  
+  const params = {
+    autoTypeDetect: true,
+    text: companyone.CNA + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
+    to: '01021128228', // 수신번호 (받는이)
+    from: '16443486', // 발신번호 (보내는이)
+    type: 'ATA',
+    kakaoOptions: {
+      pfId: 'KA01PF210319072804501wAicQajTRe4',
+      templateId: 'KA01TP210319074611283wL0AjgZVdog',
+            buttons: [{
+              buttonType: 'WL',
+              buttonName: '확인하기',
+              linkMo: process.env.IP + '/publish?cat=1&hid=' + historyid,
+              linkPc: process.env.IP + '/publish?cat=1&hid=' + historyid
+            }]
+    }
+  }
+  
+  fn(params)
+
+
+
+
+
+});
+
+// 알림톡 리스트
+router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  let page = req.query.page;
+  const WNM = req.query.WNM;
+  
+  
+  let apiSecret = process.env.sol_secret;
+  let apiKey = process.env.sol_key;
+
+  const moment = require('moment');
+  const nanoidGenerate = require('nanoid/generate');
+  const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32);
+  const HmacSHA256 = require('crypto-js/hmac-sha256');
+  if(WNM)
+  console.log("WNM : " + WNM);
+
+
+  
+  
+  const messageIds = []; //메세지 ID 담을 배열 선언
+  
+  //포인트에 있는 내용 중 CID를 비교해서 MID 배열에 넣음
+  const pointaggregate = await Point.aggregate([
+      
+    { $match : {CID : CID} },
+    { $group : { _id : "$MID" } }
+       
+    ], function (err,result) {
+      if(err) throw err;
+    });
+    
+    //_id 키의 값들을 배열에 담음(mid들만)
+    for (var i = 0; i < pointaggregate.length; i++) {
+      messageIds[i] = await pointaggregate[i]._id;
+    }
+    
+    
+    for (var i = 0; i < messageIds.length; i++) {
+      //signature 키 반복 방지를 위해 date가 생성될 때마다 i초씩 더해주었음
+      
+      const date = moment().add(i,'s').format();
+      const salt = generate();
+      const hmacData = date + salt;
+      const signature = HmacSHA256(hmacData, apiSecret).toString();
+      const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`;
+      
+      
+      var options = {
+        headers: { Authorization: autori },
+        method: 'GET',
+        json: true,
+        url:
+          'http://api.solapi.com/messages/v4/list?criteria=messageId&value='+ messageIds[i]+'&cond=eq'
+      };
+      
+      
+      
+      request(options, async function(error, response, body) {
+        try {
+          for(var key in body.messageList) {
+            const pointone = await Point.findOne({"MID" : body.messageList[key]._id});
+            const alarmone = await Alarm.findOne({"MID" : body.messageList[key]._id});
+            
+            
+            if(body.messageList[key].status == "COMPLETE")
+            {
+              if(!alarmone) {
+                await Alarm.insertMany({
+                  "MID" : body.messageList[key]._id,
+                  "WNM" : pointone.WNM,
+                  "CID" : pointone.CID,
+                  "CA" : pointone.CA,
+                  "RE" : "성공"
+                });
+              }
+              else {
+                if(alarmone.RE == "성공") {
+                }
+                else {
+                   await Alarm.where({"MID" : body.messageList[key]._id}).update({
+                    "RE" : "성공"
+                  }).setOptions({runValidators : true}).exec();
+                }
+                
+                
+              }
+            }
+            else if(body.messageList[key].status == "PENDING") {
+              if(!alarmone) {
+                await Alarm.insertMany({
+                  "MID" : body.messageList[key]._id,
+                  "WNM" : pointone.WNM,
+                  "CID" : pointone.CID,
+                  "CA" : pointone.CA,
+                  "RE" : "보내는중"
+                });
+              }
+            }
+            else {
+              if(!alarmone) {
+                await Alarm.insertMany({
+                  "MID" : body.messageList[key]._id,
+                  "WNM" : pointone.WNM,
+                  "CID" : pointone.CID,
+                  "CA" : pointone.CA,
+                  "RE" : "실패"
+                });
+              }
+              else {
+              }
+            }
+            
+          }
+          
+          if (error) throw error;
+        }catch(e) {
+          console.log(e)
+        }
+      });
+    }
+
+  try {
+    
+      if (WNM) {
+        const totalNum = await Alarm.countDocuments({ "WNM": WNM });
+        console.log(totalNum);
+        let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
+        const alarms = await Alarm.find({ "WNM": WNM }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
+        res.render('alarmtalk_list', { company: req.decoded.company, aclist, totalNum, currentPage, totalPage, startPage, endPage, alarms, WNM });
+    
+      }
+      else {
+        const totalNum = await Alarm.countDocuments({ "CID": CID });
+        let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
+        const alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
+        res.render('alarmtalk_list', { company: req.decoded.company, aclist, totalNum, currentPage, totalPage, startPage, endPage, alarms });
+      }
+  }
+  catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+
+
 
 
 //----------------------------------------------------------------------------//
