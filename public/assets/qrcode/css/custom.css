@@ -38,10 +38,15 @@
 }
 .sns-go li {
   display:inline-block;
-  margin: 0 5px;
+  margin: 0 1rem;
 }
 .sns-go li img {
   border-radius:50%;
+}
+
+.sns-go li p {
+  font-size: 14px;
+  color: #363636;
 }
 
 @media screen and (max-width: 1024px) {
