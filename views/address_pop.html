@@ -2,9 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Insert title here</title>
 </head>
 
 <script language="javascript">
@@ -13,16 +12,12 @@
 
 function init(){
 	var url = location.href;
-	var confmKey = "U01TX0FVVEgyMDIwMTIyMzEzMDkzMTExMDU4NTU= ";//승인키
+	var confmKey = "{{juso}}";//승인키
 	// resultType항목 추가(2016.10.06)
 	var resultType = "4"; // 도로명주소 검색결과 화면 출력유형, 1 : 도로명, 2 : 도로명+지번+상세보기(관련지번, 관할주민센터), 3 : 도로명+상세보기(상세건물명), 4 : 도로명+지번+상세보기(관련지번, 관할주민센터, 상세건물명)
-	var inputYn= "<%=inputYn%>";
+	
+	var inputYn = '{{locals.inputYn}}';
 
-            //인증번호 인증이 성공했을 때
-    if (new URL(location.href).searchParams.get('success')) {
-        opener.parent.location.replace('./register');
-        window.close();
-    }
 	if(inputYn != "Y"){
 		document.form.confmKey.value = confmKey;
 		document.form.returnUrl.value = url;
@@ -30,11 +25,35 @@ function init(){
 		document.form.action="https://www.juso.go.kr/addrlink/addrLinkUrl.do"; // 인터넷망
 		//document.form.action="https://www.juso.go.kr/addrlink/addrMobileLinkUrl.do"; //모바일 웹인 경우, 인터넷망
 		document.form.submit();
+		
 	}else{
+		var roadFullAddr = '{{locals.roadFullAddr}}';
+		var roadAddrPart1 = '{{locals.roadAddrPart1}}';
+		var addrDetail = '{{locals.addrDetail}}';
+		var roadAddrPart2 = '{{locals.roadAddrPart2}}';
+		var engAddr = '{{locals.engAddr}}';
+		var jibunAddr = '{{locals.jibunAddr}}';
+		var zipNo = '{{locals.zipNo}}';
+		var admCd = '{{locals.admCd}}';
+		var rnMgtSn = '{{locals.rnMgtSn}}';
+		var bdMgtSn = '{{locals.bdMgtSn}}';
 		/** API 서비스 제공항목 확대 (2017.02) **/
-		alert('')
+		opener.parent.jusoCallBack(
+			roadFullAddr,
+			roadAddrPart1,
+			addrDetail,
+			roadAddrPart2,
+			engAddr,
+			jibunAddr,
+			zipNo,
+			admCd,
+			rnMgtSn,
+			bdMgtSn
+		);
 		window.close();
 	}
+	
+	
 }
 
 
@@ -54,4 +73,3 @@ function init(){
 	</form>
 </body>
 </html>
-			

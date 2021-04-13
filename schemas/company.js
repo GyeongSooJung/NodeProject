@@ -6,7 +6,6 @@ const CompanySchema = new Schema({
     NA: {
         type: String,
         required: true,
-        unique: false
     },
     //Company_Number
     CNU: {
