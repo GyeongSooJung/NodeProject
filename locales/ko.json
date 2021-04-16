@@ -62,5 +62,69 @@
 	
     "main_title" : "OASIS | 관리자 페이지",
     "main_point" : "보유 포인트",
-	"main_company" : "사업자"
+	"main_company" : "사업자",
+	"main_indetail" : "자세히",
+	"main_dashboard" : "대쉬 보드",
+	"main_recent_sterilization" : "최근 소독 이력",
+	"main_recent_sterilization_no" : "최근 공정 데이터가 없습니다.",
+	"main_recent_sterilization_count" : "최근 소독 횟수",
+	
+    "layout_modify": "프로필 수정",
+	"layout_signout" :"로그아웃",
+    "layout_signout_confirm": "로그아웃을 하시겠습니까?",
+    "layout_withdrawal" : "회원탈퇴",
+    "layout_withdrawal_confirm": "회원탈퇴를 하시겠습니까?",
+    "layout_device_register" : "장비 등록",
+    "layout_device_list" : "장비 목록",
+    "layout_car_register" : "차량 등록",
+    "layout_car_list" : "차량 목",
+    "layout_worker_list" : "작업자 목록",
+    "layout_history_list" : "소독 이",
+    "layout_payment_point_purchase" : "포인트 구매",
+    "layout_payment_point_usage" : "포인트 사용 내역",
+    "layout_payment_alarmtalk" : "알림톡 전송 내역",
+    "layout_payment_list" : "결제 목록",
+    "layout_qrcode_man" : "QR 관리",
+    "layout_qrcode_con" : "QR 접속",
+
+    "search" : "검색",
+    "required_detail" : "필수 입력 사항입니다.",
+    "registration" : "등록",
+    "reset" : "초기화",
+    "modify" : "수정",
+    "delete" : "삭제",
+    "delete_selection" : "선택항목 삭제",
+    "delete_comfirm" : "데이터를 삭제하시겠습니까?",
+    
+	"company": "사업자",
+	
+	"device":"소독기",
+	"device_model" : "모델명",
+	"device_model_enter" : "모델명을 입력하세요",
+	"device_version" : "버전",
+	"device_version_enter" : "버전을 입력하세요",
+	"device_mac" : "맥 주소",
+	"device_mac_enter" : "맥 주소를 형식대로 입력하세요 (11:22:33:44:55:66)",
+	"device_nick" : "별칭",
+	"device_nick_enter" : "별칭을 원하는대로 입력하세요.",
+	"device_duplicated" : "이미 존재하는 MAC 입니다.",
+	"device_mac_wrong" : "MAC 주소를 정확히 입력해주세요.",
+	"device_error1" : "항목을 선택해주세요.",
+	"device_error2" : "검색어를 다시 확인해주세요.",
+	
+	"car": "자동차",
+	"car_number": "차량 번호",
+	
+	"worker": "작업자",
+	
+	"history": "소독 이력",
+	"history_date" : "소독 일시",
+	"history_register_date" : "등록 일시",
+	"hitory_result" : "소독 결과",
+	"history_result_success" : "성공",
+	"history_result_failed" : "실패",
+	
+	"payment": "결제",
+	
+	"qrcode": "QR 코드"
 }

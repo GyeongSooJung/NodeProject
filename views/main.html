@@ -28,7 +28,7 @@
 		<!-- begin #content -->
 		<div id="content" class="content">
 			<!-- begin page-header -->
-			<h1 class="page-header">대쉬보드</h1>
+			<h1 class="page-header">{{__('main_dashboard')}}</h1>
 			<!-- end page-header -->
 			
 			<!-- begin row -->
@@ -38,11 +38,11 @@
 					<div class="widget widget-stats bg-blue">
 						<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-microchip"></i></div>
 						<div class="stats-info">
-							<h4>소독기</h4>
+							<h4>{{__('device')}}</h4>
 							<p id="p1">{{devices.length}}</p>	
 						</div>
 						<div class="stats-link">
-							<a href="/device_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
+							<a href="/device_list">{{__('main_indetail')}} <i class="fa fa-arrow-alt-circle-right"></i></a>
 						</div>
 					</div>
 				</div>
@@ -52,11 +52,11 @@
 					<div class="widget widget-stats bg-info">
 						<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-car"></i></div>
 						<div class="stats-info">
-							<h4>자동차</h4>
+							<h4>{{__('car')}}</h4>
 							<p id="p2">{{cars.length}}</p>	
 						</div>
 						<div class="stats-link">
-							<a href="/car_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
+							<a href="/car_list">{{__('main_indetail')}} <i class="fa fa-arrow-alt-circle-right"></i></a>
 						</div>
 					</div>
 				</div>
@@ -66,11 +66,11 @@
 					<div class="widget widget-stats bg-orange">
 						<div class="stats-icon"><i class="fa fa-users"></i></div>
 						<div class="stats-info">
-							<h4>작업자</h4>
+							<h4>{{__('worker')}}</h4>
 							<p id="p3">{{workers.length}}</p>	
 						</div>
 						<div class="stats-link">
-							<a href="/worker_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
+							<a href="/worker_list">{{__('main_indetail')}} <i class="fa fa-arrow-alt-circle-right"></i></a>
 						</div>
 					</div>
 				</div>
@@ -80,11 +80,11 @@
 					<div class="widget widget-stats bg-red">
 						<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-history"></i></div>
 						<div class="stats-info">
-							<h4>소독이력</h4>
+							<h4>{{__('history')}}</h4>
 							<p id="p4">{{historys.length}}</p>	
 						</div>
 						<div class="stats-link">
-							<a href="/history_list">자세히 <i class="fa fa-arrow-alt-circle-right"></i></a>
+							<a href="/history_list">{{__('main_indetail')}} <i class="fa fa-arrow-alt-circle-right"></i></a>
 						</div>
 					</div>
 				</div>
@@ -100,7 +100,7 @@
                 	<div class="panel panel-inverse">
                 		<!-- begin panel-heading -->
                 		<div class="panel-heading">
-                			<h4 class="panel-title">최근 소독이력</h4>
+                			<h4 class="panel-title">{{__('main_recent_sterilization')}}</h4>
                 		</div>
                 		<!-- end panel-heading -->
                 		<!-- begin panel-body -->
@@ -109,10 +109,10 @@
                         		    <table class="table table-striped table-bordered table-td-valign-middle">
                         				<thead>
                         					<tr>
-                        						<th class="text-nowrap">차량번호</th>
-                        					    <th class="text-nowrap">소독일시</th>
-                        						<th class="text-nowrap">등록일시</th>
-                        						<th class="text-nowrap">소독결과</th>
+                        						<th class="text-nowrap">{{__('car_number')}}</th>
+                        					    <th class="text-nowrap">{{__('history_date')}}</th>
+                        						<th class="text-nowrap">{{__('history_register_date')}}</th>
+                        						<th class="text-nowrap">{{__('hitory_result')}}</th>
                         					</tr>
                         				</thead>
                         				<tbody>
@@ -137,7 +137,7 @@
                         			
                                 	<div id="chartdiv"></div>
                 			{% else %}
-                				<h3>최근 공정데이터가 없습니다.</h3>
+                				<h3>{{__('main_recent_sterilization_no')}}</h3>
   			                {% endif %}
                 		</div>
                 		<!-- end panel-body -->
@@ -154,7 +154,7 @@
 					<!-- 막대그래프 만들곳 시작점 -->
 					<div class="panel panel-inverse" data-sortable-id="index-6">
 						<div class="panel-heading">
-							<h4 class="panel-title">최근 일주일간 소독 횟수</h4>
+							<h4 class="panel-title">{{__('main_recent_sterilization_count')}}</h4>
 						</div>
 						<div class="panel-body">
 							<div id="first week" class="height-sm"></div>

@@ -15,7 +15,7 @@
 <!-- begin #content -->
 <div id="content" class="content">
 	<!-- begin page-header -->
-	<h1 class="page-header">장치 목록</h1>
+	<h1 class="page-header">{{__('layout_device_list')}}</h1>
 	<!-- end page-header -->
 	<!-- begin row -->
 	<div class="row">
@@ -24,16 +24,16 @@
 			<div class="panel panel-inverse">
 				<!-- begin panel-heading -->
 				<div class="panel-heading">
-					<h4 class="panel-title">소독기</h4>
+					<h4 class="panel-title">{{__('device')}}</h4>
 				</div>
 				<!-- end panel-heading -->
 				<!-- begin panel-body -->
 				<div class="panel-body" >
 					
 					<div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
-	            	<div class="mr-2">검색 : </div>
+	            	<div class="mr-2">{{__('search')}} : </div>
 				<div>
-					<input type="text" id="NNkeyword" class="form-control" placeholder ="별칭" />
+					<input type="text" id="NNkeyword" class="form-control" placeholder ="{{__('device_nick')}}" />
 				</div>
 				<div>
 					<button class="ml-2 btn btn-primary text-white px-1" onclick="searchbutton()">{% if NN %} <i class="mx-1 fas fa-lg fa-fw m-r-10 fa-chevron-left"></i> {% else %}<i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i> {% endif %}</button></div>
@@ -56,10 +56,10 @@
 											<input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/>
 										</th>
 										<th width="2.5%"></th>
-										<th>모델명</th>
-										<th>버전</th>
-										<th>맥 주소</th>
-										<th>별칭</th>
+										<th>{{__('device_model')}}</th>
+										<th>{{__('device_version')}}</th>
+										<th>{{__('device_mac')}}</th>
+										<th>{{__('device_nick')}}</th>
 										<th width="1%"></th>
 									</tr>
 								</thead>
@@ -82,8 +82,10 @@
 											<td>{{device.MAC}}</td>
 											<td>{{device.NN}}</td>
 											<td class="with-btn" nowrap>
-												<a href="/device_edit/{{device.MAC}}" class="btn btn-sm btn-primary width-60 m-r-2 edit-btn">수정</a>
-												<a href="javascript:delete_one('{{device.MAC}}')" class="btn btn-sm btn-white width-60">삭제</a>
+												
+												
+												<a href="/device_edit/{{device.MAC}}" class="btn btn-sm btn-primary width-60 m-r-2 edit-btn">{{__('modify')}}</a>
+												<a href="javascript:delete_one('{{device.MAC}}')" class="btn btn-sm btn-white width-60">{{__('delete')}}</a>
 											</td>
 										</tr>
 										{% endfor %}
@@ -91,7 +93,7 @@
 								</tbody>
 							</table>
 							<div class="d-flex justify-content-between align-item-center">
-								<input class="btn btn-primary" type='button' value='선택항목 삭제' onclick="return delete_check(this.form);">
+								<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="return delete_check(this.form);">
 								
 								<div class="d-flex justify-content-around align-item-center">
 									<a href="javascript:pageDoubleBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
@@ -162,7 +164,7 @@
 		var ckc = ck;
 		//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
 		//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
-		answer = confirm("데이터를 삭제하시겠습니까?");
+		answer = confirm("{{__('delete_comfirm')}}");
 		//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
 		if(answer == true){
 			location = '/device/device_delete/' + ckc;
@@ -175,7 +177,7 @@
 	// 선택항목 삭제 기능
 	function delete_check(frm) {
 		var answer;
-		answer = confirm("데이터를 삭제하시겠습니까?");
+		answer = confirm("{{__('delete_comfirm')}}");
 		if(answer == true){
 			frm.action='/device/device_select_delete/'; frm.submit(); return true;
 		}
@@ -223,13 +225,13 @@
     // 에러 링크 기능
 	window.onload = () => {
 		if (new URL(location.href).searchParams.get('error')) {
-			alert('이미 존재하는 MAC 입니다.');
+			alert("{{__('device_duplicated')}}");
 		}
 		if (new URL(location.href).searchParams.get('null')) {
-			alert('항목을 선택해주세요.');
+			alert("{{__('device_error1')}}");
 		}
 		if (new URL(location.href).searchParams.get('searcherror')) {
-			alert('검색어를 다시 확인해주세요');
+			alert("{{__('device_error2')}}");
 		}
 	};
 </script>

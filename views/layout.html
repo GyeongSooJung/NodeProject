@@ -51,11 +51,11 @@
 						<b class="caret"></b>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right">
-						<a href="/profile" class="dropdown-item">프로필 수정</a>
+						<a href="/profile" class="dropdown-item">{{__('layout_modify')}}</a>
 						<div class="dropdown-divider"></div>
-						<a href="/pay_point" class="dropdown-item">포인트 충전</a>
-						<a href="javascript:logout()" class="dropdown-item">로그아웃</a>
-						<a href="javascript:withdrawal()" class="dropdown-item">회원탈퇴</a>
+						<a href="/pay_point" class="dropdown-item">{{__('layout_payment_point_purchase')}}</a>
+						<a href="javascript:logout()" class="dropdown-item">{{__('layout_signout')}}</a>
+						<a href="javascript:withdrawal()" class="dropdown-item">{{__('layout_withdrawal')}}</a>
 					</div>
 				</li>
 				<li class="dropdown navbar-user">
@@ -84,7 +84,7 @@
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-fw m-r-10 fa-building"></i>
-							<span> {{__('main_company')}} </span> 
+							<span> {{__('company')}} </span> 
 						</a>
 						<ul class="sub-menu">
 							<li><a href="/company_list">사업자 목록</a></li>
@@ -118,29 +118,29 @@
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-fw m-r-10 fa-microchip"></i>
-							<span> 소독기 </span> 
+							<span> {{__('device')}} </span> 
 						</a>
 						<ul class="sub-menu">
-							<li><a href="/device_join">장치 등록</a></li>
-							<li><a href="/device_list">장치 목록</a></li>
+							<li><a href="/device_join">{{__('layout_device_register')}}</a></li>
+							<li><a href="/device_list">{{__('layout_device_list')}}</a></li>
 						</ul>
 					</li>
 					<li class="has-sub">
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-fw m-r-10 fa-car"></i>
-							<span> 자동차 </span> 
+							<span> {{__('car')}} </span> 
 						</a>
 						<ul class="sub-menu">
-							<li><a href="/car_join">차량 등록</a></li>
-							<li><a href="/car_list">차량 목록</a></li>
+							<li><a href="/car_join">{{__('layout_car_register')}}</a></li>
+							<li><a href="/car_list">{{__('layout_car_list')}}</a></li>
 						</ul>
 					</li>
 					<li class="has-sub">
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-fw m-r-10 fa-user"></i>
-							<span> 작업자 
+							<span> {{__('worker')}}
 								
 								{% if (aclist.length >= 1) %}
 								<span class="label label-theme">NEW</span>
@@ -149,7 +149,7 @@
 							</span>
 						</a>
 						<ul class="sub-menu">
-							<li><a href="/worker_list">작업자 목록 
+							<li><a href="/worker_list">{{__('layout_worker_list')}}
 							{% if aclist.length >=1 %}
 							<span class="label label-theme">{{ aclist.length }}</span>
 							{% else %}
@@ -161,23 +161,23 @@
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-fw m-r-10 fa-history"></i>
-							<span> 소독 이력 </span> 
+							<span> {{__('history')}} </span> 
 						</a>
 						<ul class="sub-menu">
-							<li><a href="/history_list">소독 이력</a></li>
+							<li><a href="/history_list">{{__('layout_history_list')}}</a></li>
 						</ul>
 					</li>
 					<li class="has-sub">
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-shopping-cart m-r-10 fa-qrcode"></i>
-							<span> 결제 </span> 
+							<span> {{__('payment')}} </span> 
 						</a>
 						<ul class="sub-menu">
-							<li><a href="/pay_point">포인트 구매</a></li>
-							<li><a href="/point_list">포인트 사용내역</a></li>
-							<li><a href="/alarmtalk_list">알림톡 전송내역</a></li>
-							<li><a href="/pay_list">결제 목록</a></li>
+							<li><a href="/pay_point">{{__('layout_payment_point_purchase')}}</a></li>
+							<li><a href="/point_list">{{__('layout_payment_point_usage')}}</a></li>
+							<li><a href="/alarmtalk_list">{{__('layout_payment_alarmtalk')}}</a></li>
+							<li><a href="/pay_list">{{__('layout_payment_list')}}</a></li>
 							
 						</ul>
 					</li>
@@ -195,11 +195,11 @@
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-fw m-r-10 fa-qrcode"></i>
-							<span> QR 코드 </span> 
+							<span> {{__('qrcode')}} </span> 
 						</a>
 						<ul class="sub-menu">
-							<li><a href="/publish_manage">QR 관리</a></li>
-							<li><a href="/inflow?cat=1">QR 접속</a></li>
+							<li><a href="/publish_manage">{{__('layout_qrcode_man')}}</a></li>
+							<li><a href="/inflow?cat=1">{{__('layout_qrcode_con')}}</a></li>
 						</ul>
 					</li>
 				
@@ -251,7 +251,6 @@
 		// 메뉴 active 기능
 		var path = document.location.pathname.toString();
 		var cut =  path.split('/');
-		console.log("패스"+path+" 컷"+cut);
 		if (cut[1] == 'car_edit') {
 			cut[1] = 'car_list';
 		}
@@ -272,7 +271,7 @@
 		var answer;
 		//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
 		//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
-		answer = confirm("회원탈퇴를 하시겠습니까?");
+		answer = confirm("{{__('layout_signout_confirm')}}");
 		//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
 		if(answer == true){
 			location = '/auth/withdrawal';
@@ -287,7 +286,7 @@
 		var answer;
 		//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
 		//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
-		answer = confirm("로그아웃을 하시겠습니까?");
+		answer = confirm("{{__('layout_withdrawal_confirm')}}");
 		//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
 		if(answer == true){
 			location = '/auth/logout';

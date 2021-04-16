@@ -62,5 +62,68 @@
 	
     "main_title": "OASIS | Admin Page",
     "main_point": "point",
-	"main_company": "Company"
+    "main_indetail" : "In detail",
+    "main_dashboard" : "DashBoard",
+    "main_recent_sterilization" : "Recent sterilization history",
+    "main_recent_sterilization_no" : "No recent process data.",
+    "main_recent_sterilization_count" : "Recent Sterilization Count",
+    
+    "layout_modify" : "Modify Profile",
+    "layout_signout" : "Signout",
+    "layout_signout_confirm": "Do you want to sign out?",
+    "layout_withdrawal" : "Withdrawal",
+    "layout_withdrawal_confirm": "Do you want to withdrawal?",
+    "layout_device_register" : "Device Registration",
+    "layout_device_list" : "Device List",
+    "layout_car_register" : "Car Registration",
+    "layout_car_list" : "Car List",
+    "layout_worker_list" : "Worker List",
+    "layout_history_list" : "History List",
+    "layout_payment_point_purchase" : "Point Purchase",
+    "layout_payment_point_usage" : "Point Usage History",
+    "layout_payment_alarmtalk" : "ATA Transmission History",
+    "layout_payment_list" : "Payment List",
+    "layout_qrcode_man" : "QR Management",
+    "layout_qrcode_con" : "QR Connection",
+
+    "search" : "search",
+    "required_detail" : "This is a required detail.",
+    "registration" : "Register",
+    "reset" : "Reset",
+    "modify" : "Modify",
+    "delete" : "Delete",
+    "delete_selection" : "Delete selection",
+    "delete_comfirm" : "Are you sure you want to delete the data?",
+    
+	"company": "Company",
+	
+	"device":"Device",
+	"device_model" : "Model Name",
+	"device_model_enter" : "Please enter model name of the model.",
+	"device_version" : "Version",
+	"device_version_enter" : "Please enter a version",
+	"device_mac" : "MAC address",
+	"device_mac_enter" : "Enter Mac address in format (11:22:33:44:55:66)",
+	"device_nick" : "NickName",
+	"device_nick_enter" : "Please enter your alias as desired.",
+	"device_duplicated" : "MAC already exists.",
+	"device_mac_wrong" : "Please enter the MAC address correctly.",
+	"device_error1" : "Please select an item.",
+	"device_error2" : "Please check the search term again.",
+	
+	"car": "Car",
+	"car_number": "Car Number",
+	
+	"worker": "Worker",
+	
+	"history": "History",
+	"history_date" : "Sterilization Date",
+	"history_register_date" : "Registration Date",
+	"hitory_result" : "Sterilization Result",
+	"history_result_success" : "success",
+	"history_result_failed" : "failed",
+	
+	"payment": "Payment",
+	
+	"qrcode": "QRcode"
 }
