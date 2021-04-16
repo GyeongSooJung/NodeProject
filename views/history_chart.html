@@ -24,13 +24,13 @@
 <!-- begin #content -->
 <div id="content" class="content">
 	<!-- begin page-header -->
-	<h1 class="page-header">소독 정보</h1>
+	<h1 class="page-header">{{__('history_info')}}</h1>
 	<!-- end page-header -->
 	<!-- begin panel -->
 	<div class="panel panel-inverse">
 		<!-- begin panel-heading -->
 		<div class="panel-heading">
-			<h4 class="panel-title">그래프</h4>
+			<h4 class="panel-title">{{__('history_graph')}}</h4>
 		</div>
 		<!-- end panel-heading -->
 		<!-- begin panel-body -->
@@ -50,11 +50,11 @@
 				<table class="table m-b-0 text-center">
 					<thead>
 						<tr class="bg-grey">
-							<th width="15%">업체명</th>
-							<th width="20%">차량번호</th>
-							<th width="20%">장비모델</th>
-							<th width="20%">작업자</th>
-							<th width="25%">소독일시</th>
+							<th width="15%">{{__('company_name')}}</th>
+							<th width="20%">{{__('car_number')}}</th>
+							<th width="20%">{{__('device_model')}}</th>
+							<th width="20%">{{__('worker')}}</th>
+							<th width="25%">{{__('history_date')}}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -83,11 +83,11 @@
 				<table class="table m-b-0 text-center">
 					<thead>
 						<tr class="bg-grey">
-							<th width="15%">소독시간</th>
-							<th width="20%">최고농도</th>
-							<th width="20%">최종농도</th>
-							<th width="20%">소독결과</th>
-							<th width="25%">등록일시</th>
+							<th width="15%">{{__('history_time')}}</th>
+							<th width="20%">{{__('history_max')}}</th>
+							<th width="20%">{{__('history_end')}}</th>
+							<th width="20%">{{__('history_result')}}</th>
+							<th width="25%">{{__('register_date')}}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -100,9 +100,9 @@
 			              <td>{{historyone.MP}}</td>
 			              <td>{{historyone.FP}}</td>
 						{% if historyone.RC == 1 %}
-							<td>성공</td>
+							<td>{{__('success')}}</td>
 						{% else %}
-							<td>실패</td>
+							<td>{{__('failed')}}</td>
 						{% endif %}
 			              <td>
 			              	<script>
@@ -119,8 +119,8 @@
 		<!-- end panel-body -->
 		<center>
             <div class="d-flex justify-content-center align-item-center py-3">
-    			<a href="/publish?cat=1&hid={{historyone._id}}" class="btn btn-primary text-white px-3 mx-2">QR코드 확인</a>
-				<a href="/history_list" class="btn btn-primary text-white px-4 mx-2">목록으로</a>
+    			<a href="/publish?cat=1&hid={{historyone._id}}" class="btn btn-primary text-white px-3 mx-2">{{__('qrcode')}} {{__('link')}}</a>
+				<a href="/history_list" class="btn btn-primary text-white px-4 mx-2">{{__('return_list')}}</a>
             </div>
         </center>
 	</div>
@@ -170,8 +170,8 @@ am4core.ready(function() {
 	
 	// Create series
 	var series = chart.series.push(new am4charts.LineSeries());
-	ssAxis.title.text = "시간(s)";
-	ppmAxis.title.text = "오존(ppm)";
+	ssAxis.title.text = "{{__('time')}} (s)";
+	ppmAxis.title.text = "{{__('ozone')}} (ppm)";
 	series.dataFields.valueY = "ppm";
 	series.dataFields.valueX = "ss";
 	series.tooltipText = "{ppm}"

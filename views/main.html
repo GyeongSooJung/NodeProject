@@ -111,7 +111,7 @@
                         					<tr>
                         						<th class="text-nowrap">{{__('car_number')}}</th>
                         					    <th class="text-nowrap">{{__('history_date')}}</th>
-                        						<th class="text-nowrap">{{__('history_register_date')}}</th>
+                        						<th class="text-nowrap">{{__('register_date')}}</th>
                         						<th class="text-nowrap">{{__('hitory_result')}}</th>
                         					</tr>
                         				</thead>
@@ -127,9 +127,9 @@
                         						<td id="ET"></td>
                         						<td id="CA"></td>
                         						{% if recent_history.RC == 1 %}
-													<td>성공</td>
+													<td>{{__('success')}}</td>
 												{% else %}
-													<td>실패</td>
+													<td>{{__('failed')}}</td>
 												{% endif %}
                         					</tr>
                         				</tbody>
@@ -165,7 +165,7 @@
 					{% if(company.AH == true) %}
 					<div class="panel panel-inverse" data-sortable-id="index-6">
 						<div class="panel-heading">
-							<h4 class="panel-title">QR코드 총 접속 수<h4>
+							<h4 class="panel-title">{{__('main_qr_count')}}<h4>
 						</div>
 						<div class="panel-body">
 							<h3 id="socket_qr" class="ms-0 mb-3">{{psum}}</h3</h3>
@@ -302,8 +302,8 @@ am4core.ready(function() {
 	
 	// Create series
 	var series = chart.series.push(new am4charts.LineSeries());
-	ssAxis.title.text = "시간(s)";
-	ppmAxis.title.text = "오존(ppm)";
+	ssAxis.title.text = "{{__('time')}}(s)";
+	ppmAxis.title.text = "{{__('ozone')}}(ppm)";
 	series.dataFields.valueY = "ppm";
 	series.dataFields.valueX = "ss";
 	series.tooltipText = "{ppm}"
@@ -372,32 +372,32 @@ am4core.ready(function() {
 	
 	var data = {
 	  "week1": [{
-	   "category": "1일 전",
+	   "category": "{{__('main_ago1')}}",
 	    "value": {{history_count[0]}},
 	    "color" : "#5AD2FF"
 	  }, {
-	    "category":"2일 전",
+	    "category":"{{__('main_ago2')}}",
 	    "value": {{history_count[1]}},
 	    "color" : "#50C8FF"
 	  }, {
-	    "category":"3일 전",
+	    "category":"{{__('main_ago3')}}",
 	    "value": {{history_count[2]}},
 	    "color" : "#46BEFF"
 	  },
 	  {
-	    "category":"4일 전",
+	    "category":"{{__('main_ago4')}}",
 	    "value": {{history_count[3]}},
 	    "color" : "#3CB4FF"
 	  },{
-	    "category":"5일 전",
+	    "category":"{{__('main_ago5')}}",
 	    "value": {{history_count[4]}},
 	    "color" : "#32AAFF"
 	  },{
-	    "category":"6일 전",
+	    "category":"{{__('main_ago6')}}",
 	    "value": {{history_count[5]}},
 	    "color" : "#28A0FF"
 	  },{
-	   "category": "7일 전",
+	   "category": "{{__('main_ago7')}}",
 	    "value": {{history_count[6]}},
 	    "color" : "#1E96FF"
 	  }],
@@ -415,7 +415,7 @@ am4core.ready(function() {
 	categoryAxis.renderer.grid.template.location = 0;
 	
 	var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-	valueAxis.title.text = "횟수(개)";
+	valueAxis.title.text = "{{__('main_count')}}";
 	
 	// Create series
 	var series = chart.series.push(new am4charts.ColumnSeries());

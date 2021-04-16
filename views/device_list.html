@@ -164,7 +164,7 @@
 		var ckc = ck;
 		//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
 		//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
-		answer = confirm("{{__('delete_comfirm')}}");
+		answer = confirm("{{__('delete_confirm')}}");
 		//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
 		if(answer == true){
 			location = '/device/device_delete/' + ckc;
@@ -228,10 +228,10 @@
 			alert("{{__('device_duplicated')}}");
 		}
 		if (new URL(location.href).searchParams.get('null')) {
-			alert("{{__('device_error1')}}");
+			alert("{{__('choice_error')}}");
 		}
 		if (new URL(location.href).searchParams.get('searcherror')) {
-			alert("{{__('device_error2')}}");
+			alert("{{__('search_error')}}");
 		}
 	};
 </script>

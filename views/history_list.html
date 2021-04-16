@@ -15,23 +15,23 @@
 <!-- begin #content -->
 <div id="content" class="content">
 	<!-- begin page-header -->
-	<h1 class="page-header">소독 이력</h1>
+	<h1 class="page-header">{{__('history')}}</h1>
 	<!-- end page-header -->
 	<!-- begin panel -->
 	<div class="panel panel-inverse">
 		<!-- begin panel-heading -->
 		<div class="panel-heading">
-			<h4 class="panel-title">기록</h4>
+			<h4 class="panel-title">{{__('history_record')}}</h4>
 		</div>
 		<!-- end panel-heading -->
 		<!-- begin panel-body -->
 		<div class="panel-body">
 			<center>
 	            <div class="btn-group m-b-5 mx-3">
-	               <a href="/history_list" class="btn btn-primary text-white px-4">전체</a>
+	               <a href="/history_list" class="btn btn-primary text-white px-4">{{__('all')}}</a>
 	            </div>
 	            <div class="btn-group m-b-5 mx-3">
-	               <a href="javascript:;" class="btn btn-primary text-white px-5">차량</a>
+	               <a href="javascript:;" class="btn btn-primary text-white px-5">{{__('car')}}</a>
 	               <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle text-white"><b class="caret"></b></a>
 	               <div class="dropdown-menu dropdown-menu-right">
 	                  {% for car in cars %}
@@ -41,7 +41,7 @@
 	               </div>
 	            </div>
 	            <div class="btn-group m-b-5 mx-3">
-	               <a href="javascript:;" class="btn btn-primary text-white px-5">장비</a>
+	               <a href="javascript:;" class="btn btn-primary text-white px-5">{{__('device')}}</a>
 	               <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle text-white"><b class="caret"></b></a>
 	               <div class="dropdown-menu dropdown-menu-right">
 	                  {% for device in devices %}
@@ -53,8 +53,8 @@
 			</center>
          
  	       <div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
-	        	<div class="mr-2">검색 : </div>
-				<div><input type="text" id="CNkeyword" class="form-control" placeholder ="차량번호" /></div>
+	        	<div class="mr-2">{{__('search')}} : </div>
+				<div><input type="text" id="CNkeyword" class="form-control" placeholder ="{{__('car_number')}}" /></div>
 				<div><button class="ml-2 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
 			</div>
 
@@ -67,13 +67,13 @@
 									<input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/>
 								</th>
 								<th width="2.5%"></th>
-								<th class="text-nowrap">차량 번호</th>
-								<th class="text-nowrap">장비 명</th>
-							    <th class="text-nowrap">소독 일시</th>
-								<th class="text-nowrap">등록 일시</th>
-								<th class="text-nowrap">소독 시간</th>
-								<th class="text-nowrap">소독 결과</th>
-								<th class="text-nowrap">작업자</th>
+								<th class="text-nowrap">{{__('car_number')}}</th>
+								<th class="text-nowrap">{{__('device_model')}}</th>
+							    <th class="text-nowrap">{{__('history_date')}}</th>
+								<th class="text-nowrap">{{__('register_date')}}</th>
+								<th class="text-nowrap">{{__('history_time')}}</th>
+								<th class="text-nowrap">{{__('history_result')}}</th>
+								<th class="text-nowrap">{{__('worker')}}</th>
 								<th width="1%"></th>
 							</tr>
 						</thead>
@@ -126,9 +126,9 @@
 										{% endif %}
 										
 										{% if history.RC == 1 %}
-										<td>성공</td>
+										<td>{{__('success')}}</td>
 										{% else %}
-										<td>실패</td>
+										<td>{{__('failed')}}</td>
 										{% endif %}
 										<td>
 									    	{% if history.WNM %}
@@ -138,7 +138,7 @@
 											{% endif %}
 										</td>
 				  						<td>
-				  							<a href="javascript:delete_one('{{history._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
+				  							<a href="javascript:delete_one('{{history._id}}')" class="btn btn-sm btn-white width-60">{{__('delete')}}</a>
 				  						</td>
 									</tr>
 								{% endfor %}
@@ -148,7 +148,7 @@
 						</tbody>
 					</table>
 					<div class="d-flex justify-content-between align-item-center">
-						<input class="btn btn-primary" type='button' value='선택항목 삭제' onclick="return delete_check(this.form);">
+						<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="return delete_check(this.form);">
 						
 						<div class="d-flex justify-content-around align-item-center">
 							<a href="javascript:pageDoubleBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
@@ -216,7 +216,7 @@
 			var idc = _id;
 			//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
 			//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
-			answer = confirm("데이터를 삭제하시겠습니까?");
+			answer = confirm("{{__('delete_confirm')}}");
 			//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
 			if(answer == true){
 				location = '/history/history_delete/' + idc;
@@ -229,7 +229,7 @@
 		// 선택항목 삭제 기능
 		function delete_check(frm) {
 			var answer;
-			answer = confirm("데이터를 삭제하시겠습니까?");
+			answer = confirm("{{__('delete_confirm')}}");
 			if(answer == true){
 				frm.action='/history/history_select_delete/'; frm.submit(); return true;
 			}
@@ -273,6 +273,13 @@
 	            }
 	        }
 	    }
+	    
+	    // 에러 링크 기능
+		window.onload = () => {
+			if (new URL(location.href).searchParams.get('null')) {
+				alert("{{__('choice_error')}}");
+			}
+		}
  </script>
 
 

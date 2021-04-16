@@ -24,7 +24,7 @@ router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
   try {
       const exCar = await Car.findOne({ "CN" :  CN });
       // const exCar2 = await Car.findOne({ "SN" : SN  });
-      const check = /^[0-9]{2,3}[하,허,호]{1}[0-9]{4}/gi;
+      const check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
 
       if (CN.length >= 7 && CN.length <= 8) {
         if (check.test(CN) == true) {
@@ -98,7 +98,7 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
             for(var j = 0; j < resData.Sheet1.length;  j++) {
               const carone = await Car.findOne({"CN": resData.Sheet1[j].차량번호});
               
-              const check = /^[0-9]{2,3}[하,허,호]{1}[0-9]{4}/gi;
+              const check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
               
               // 차량번호 길이가 7,8자리인 경우
               if (resData.Sheet1[j].차량번호.length >= 7 && resData.Sheet1[j].차량번호.length <= 8) {
@@ -215,7 +215,7 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn,async (req, res, next) => {
     try {
       // const exCar = await Car.findOne({ "CN" :  CN });
       // const exCar2 = await Car.findOne({ "SN" : SN  });
-      // const check = /^[0-9]{2,3}[하,허,호]{1}[0-9]{4}/gi;
+      // const check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
       
       await Car.where({"CN" : req.params.CN})
         .update({ "CID" : CID,

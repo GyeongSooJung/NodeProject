@@ -3,7 +3,7 @@
 {% block content %}
 <div id="content" class="content">
 	<!-- begin page-header -->
-	<h1 class="page-header">차량 등록</h1>
+	<h1 class="page-header">{{__('car_register')}}</h1>
 	<!-- end page-header -->
 	<!-- begin row -->
 	<div class="row">
@@ -13,11 +13,11 @@
 			<div class="panel panel-inverse" data-sortable-id="form-validation-1">
 				<!-- begin panel-heading -->
 				<div class="panel-heading">
-					<h4 class="panel-title">자동차</h4>
-					<p class="m-0">첨부파일 : </p>
+					<h4 class="panel-title">{{__('car')}}</h4>
+					<p class="m-0">{{__('attachments')}} : </p>
 					<span class="text-green font-weight-bold d-flex align-items-center">
 						<a class="text-green" href="../assets/upload/차량 등록 양식.xlsx" download>
-							<i class="far fa-lg fa-file-excel ml-2 mr-1"></i> 차량 등록 양식.xlsx
+							<i class="far fa-lg fa-file-excel ml-2 mr-1"></i> {{__('car_excel_form')}}.xlsx
 						</a>
 					</span>
 				</div>
@@ -28,43 +28,43 @@
 						<!--<div class="form-group row m-b-15">-->
 						<!--	<label class="col-md-4 col-sm-4 col-form-label" for="CC">차종 * :</label>-->
 						<!--	<div class="col-md-8 col-sm-8">-->
-						<!--		<input class="form-control" type="Number" id="CC" name="CC" placeholder="차종" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다."/>-->
+						<!--		<input class="form-control" type="Number" id="CC" name="CC" placeholder="차종" data-parsley-required="true" data-parsley-error-message="{{__('required_detail')}}"/>-->
 						<!--	</div>-->
 						<!--</div>-->
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="CC">차종 * :</label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="CC">{{__('car_type')}} * :</label>
 							<div class="col-md-8 col-sm-8">
-								<select class="form-control text-secondary" id="CC" name = "CC" placeholder="차종" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다.">
-									<option value="">차종을 선택하세요</option>
-									<option value="1">경차</option>
-									<option value="2">소형</option>
-									<option value="3">중형</option>
-									<option value="4">대형</option>
-									<option value="5">SUV</option>
-									<option value="6">승합</option>
-									<option value="7">상용</option>
-									<option value="8">전기</option>
-									<option value="9">외제</option>
+								<select class="form-control text-secondary" id="CC" name = "CC" placeholder="차종" data-parsley-required="true" data-parsley-error-message="{{__('required_detail')}}">
+									<option value="">{{__('car_type_select')}}</option>
+									<option value="1">{{__('car_type1')}}</option>
+									<option value="2">{{__('car_type2')}}</option>
+									<option value="3">{{__('car_type3')}}</option>
+									<option value="4">{{__('car_type4')}}</option>
+									<option value="5">{{__('car_type5')}}</option>
+									<option value="6">{{__('car_type6')}}</option>
+									<option value="7">{{__('car_type7')}}</option>
+									<option value="8">{{__('car_type8')}}</option>
+									<option value="9">{{__('car_type9')}}</option>
 								</select>
 							</div>
 						</div>
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="CN">차량 번호 * :</label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="CN">{{__('car_number')}} * :</label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" type="String" id="CN" name="CN" placeholder="띄어쓰기 없이 차량번호를 입력하세요(12가1234)" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." data-parsley-trim-value="true" />
+								<input class="form-control" type="String" id="CN" name="CN" placeholder="{{__('car_number_msg')}}" data-parsley-required="true" data-parsley-error-message="{{__('required_detail')}}" data-parsley-trim-value="true" />
 							</div>
 						</div>
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="SN">차대 번호 :</label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="SN">{{__('car_identification_number')}} :</label>
 							<div class="col-md-8 col-sm-8">
-								<input class="form-control" type="String" id="SN" name="SN" placeholder="차대 번호를 입력하세요"  />
+								<input class="form-control" type="String" id="SN" name="SN" placeholder="{{__('car_identification_msg')}}"  />
 							</div>
 						</div>
 						<div class="form-group row m-b-0">
 							<label class="col-md-4 col-sm-4 col-form-label">&nbsp;</label>
 							<div class="col-md-8 col-sm-8">
-								<button type="submit" class="btn btn-primary width-80" onclick ="Timeupdate()">등록</button>
-								<button type="reset" class="btn btn-primary width-80">초기화</button>
+								<button type="submit" class="btn btn-primary width-80" onclick ="Timeupdate()">{{__('registration')}}</button>
+								<button type="reset" class="btn btn-primary width-80">{{__('reset')}}</button>
 							</div>
 						</div>
 						<!--현재 시간 변수-->
@@ -76,9 +76,9 @@
 					<form id="car-xlsx-form" action="/car/car_join_xlsx" method="post" enctype="multipart/form-data" class="form-horizontal" name="car-xlsx-form">
 					   <!--현재 시간 변수-->
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label text-green" for="file"><b># Excel 파일로 등록</b> :</label>
+							<label class="col-md-4 col-sm-4 col-form-label text-green" for="file"><b># {{__('excel_register')}}</b> :</label>
 							<div class="col-md-8 col-sm-8">
-								<input type="file" id="xlsx" name="xlsx" /><button type="submit" class="btn btn-primary width-80" onclick ="Timeupdate()">등록</button>
+								<input type="file" id="xlsx" name="xlsx" /><button type="submit" class="btn btn-primary width-80" onclick ="Timeupdate()">{{__('registration')}}</button>
 							</div>
 						</div>
 						
@@ -97,31 +97,31 @@
 <script>
 	window.onload = () => {
 		if (new URL(location.href).searchParams.get('length')) {
-			alert('차량 번호 자릿수를 확인해주세요.');
+			alert("{{__('car_length_error')}}");
 		}
 		if (new URL(location.href).searchParams.get('type')) {
-			alert('차량 번호를 확인해주세요.');
+			alert("{{__('car_type_error')}}");
 		}
 		if (new URL(location.href).searchParams.get('exist')) {
-			alert('차량번호가 이미 존재합니다.');
+			alert("{{__('car_exist_error')}}");
 		}
 		if (new URL(location.href).searchParams.get('nofile')) {
-			alert('파일을 선택해주세요.');
+			alert("{{__('car_nofile_error')}}");
 		}
 		if (new URL(location.href).searchParams.get('excel')) {
-			alert('잘못된 파일입니다. 파일 형식을 확인해주세요');
+			alert("{{__('car_excel_error')}}");
 		}
 		if (new URL(location.href).searchParams.get('excelSize')) {
-			alert('파일 내 목록은 100개 이하만 가능합니다.');
+			alert("{{__('car_excelsize_error')}}");
 		}
 		if (new URL(location.href).searchParams.get('excelLength')) {
-			alert('파일 내 차량 번호 자릿수를 확인해주세요.');
+			alert("{{__('car_excellength_error')}}");
 		}
 		if (new URL(location.href).searchParams.get('excelType')) {
-			alert('파일 내 잘못된 차량 번호가 존재합니다.');
+			alert("{{__('car_exceltype_error')}}");
 		}
 		if (new URL(location.href).searchParams.get('inspect')) {
-			alert('중복된 차량이 존재합니다.');
+			alert("{{__('car_inspect_error')}}");
 			window.open('/car_inspect', 'pop', "width=620, height=700, scrollbars=yes, resizable=yes");
 		}
 	};

@@ -23,7 +23,7 @@ router.post('/history_select_delete',isNotLoggedIn ,async (req, res, next) => {
         const {_id} = req.body;
         
         if(!_id) {
-            res.redirect('/history_list');
+            res.redirect('/history_list?null=true');
         }
         else {
             const historyone = await History.findOne({"_id" : _id});

@@ -24,29 +24,29 @@
     			<div class="panel panel-inverse" data-sortable-id="form-validation-1">
     				<!-- begin panel-heading -->
     				<div class="panel-heading d-flex justify-content-between">
-    					<h4 class="panel-title">중복된 차량목록 확인 (차량번호)</h4>
+    					<h4 class="panel-title">{{__('car_inspect_confirm')}} ({{__('car_number')}})</h4>
     				</div>
     				<!-- end panel-heading -->
     				<!-- begin panel-body -->
     				<div class="panel-body">
     				    <div class="overflow-auto">
     				        <div class="mt-1 mb-3 ml-3">
-    				            <h5>다음 안내사항을 따라주세요.</h5>
+    				            <h5>{{__('car_inspect_guide')}}</h5>
     				            <ul class="list-unstyled mb-1">
-    				                <li class="mb-1">1. 아래 목록에 나타난 차량번호가 맞는지 확인해주세요.</li>
+    				                <li class="mb-1">1. {{__('car_inspect_guide1')}}</li>
         				                <ul class="list-unstyled ml-3 mb-1">
-        				                    <li>1-1. <b class="text-realred">엑셀 파일 내</b>에서 차량번호를 <b class="text-realred">수정</b>한 뒤, <b class="text-realred">다시 업로드</b>하세요.</li>
+        				                    <li class="text-realred font-weight-bold">1-1. {{__('car_inspect_guide1-1')}}</li>
         				                </ul>
-    				                <li class="mb-1">2. 잘못된 차량번호가 없다면, 타사 차량번호와 겹친 경우입니다.</li>
+    				                <li class="mb-1">2. {{__('car_inspect_guide2')}}</li>
         				                <ul class="list-unstyled ml-3 mb-1">
-        				                    <li>2-1. 중복된 <b class="text-realred">차량번호</b>와 그에 해당하는 <b class="text-realred">차량등록증</b>을 <b class="text-realred">mk@mklc.co.kr</b>로 보내주세요.</li>
+        				                    <li class="text-realred font-weight-bold">2-1. {{__('car_inspect_guide2-1')}}</li>
         				                </ul>
     				            </ul>
     				        </div>
         					<table id="data-table-combine" class="table table-bordered table-hover table-td-valign-middle text-center font-weight-bold">
                                 <thead class="thead-light">
 									<tr>
-										<th>엑셀 내 중복된 차량 번호</th>
+										<th>{{__('car_inspect_number')}}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -68,7 +68,7 @@
 								</tbody>
                             </table>
                             <div class="d-flex justify-content-between align-item-center">
-                                <input class="btn btn-primary mx-auto" type="button" value="확인" onclick="winClose();">
+                                <input class="btn btn-primary mx-auto" type="button" value="{{__('confirm')}}" onclick="winClose();">
 							</div>
     				    </div>
     				</div>
