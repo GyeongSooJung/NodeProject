@@ -13463,7 +13463,7 @@ body {
 
 .footer {
   position: fixed;
-  z-index: 999;
+  z-index: 10;
   bottom: 0;
   width: 100%;
   background-color: #ededed;
@@ -13473,6 +13473,19 @@ body {
 .footer p {
   font-size: .875rem;
   color: #7a7a7a;
+}
+
+.modal-card {
+  width: 80vw;
+}
+
+.modal-card-head {
+  border-bottom: 0;
+}
+
+.modal-card-body {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 
 .shape-hexagon {
