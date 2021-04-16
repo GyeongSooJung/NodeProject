@@ -93,6 +93,9 @@
 		if (new URL(location.href).searchParams.get('pwc')) {
 			alert('비밀번호 변경이 완료되었습니다.');
 		}
+		if (new URL(location.href).searchParams.get('findPW')) {
+			alert('임시 비밀번호가 이메일로 전송되었습니다.\n다시 로그인해주세요.\n보안을 위해 비밀번호는 추후에 변경해주세요.');
+		}
 	}
 </script>
 

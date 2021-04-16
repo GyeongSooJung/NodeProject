@@ -29,15 +29,18 @@ router.post('/pfupdate',isNotLoggedIn,DataSet,async(req,res,next)=>{
 
 
 router.post('/pwchange',isNotLoggedIn,DataSet,async(req,res,next)=>{
-    const {PW,PWc1,PWc2} = await req.body
+    const {PW,PWc1,PWc2} = await req.body;
+    const company = req.decoded.company;
     try{
-        if(bcrypt.compareSync(PW,req.decoded.company.PW)){
+        console.log('입력'+PW);
+        console.log('현재'+company.PW);
+        if(bcrypt.compareSync(PW, req.decoded.company.PW)){
             if(PW !==PWc1){
                 if(8 <= PWc1.length){
                     if(PWc1 === PWc2){
                         const hash = await bcrypt.hash(PWc1, 12);
                         await console.log(hash);
-                        await Company.update({"_id" : req.decoded._id},{PW : hash, UA : Date.now()});
+                        await Company.update({"_id" : company._id},{PW : hash, UA : Date.now()});
                         return res.redirect('/profile?success=true');
                     }
                     else{

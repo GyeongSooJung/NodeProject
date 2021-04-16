@@ -51,69 +51,69 @@
 								</thead>
 								<tbody>
 									<form id = 'Pfupdate' action = '/profile/pfupdate' method = 'post'>
-									<tr class="highlight">
-										<td class="field">사업자 등록번호</td>
-										<td name = "CNU" value = {{company.CNU}}><i class="fa fa-lg m-r-5" ></i>{{company.CNU}}</td>
-									</tr>
-									<tr class="highlight">
-										<td class="field valign-middle">상호</td>
-										<td><Input type = "text" name = "CNA"  class="form-control form-control-sm"value ={{company.CNA}}></td>
-									</tr>
-									<tr >
-										<td class="field">이름</td>
-										<td><i class="fa fa-lg m-r-5"></i>{{company.NA}}</td>
-									</tr>
-									<tr>
-										<td class="field">휴대폰 번호</td>
-										<td><i class="fa fa-lg m-r-5"></i>{{company.MN}}</td>
-									</tr>									
-
-									<tr>
-										<td class="field valign-middle">회사 전화번호</td>
-										<td><Input type = "text" name = "PN" class="form-control form-control-sm" value ={{company.PN}}></td>
-									</tr>
-									<tr>
-										<td class="field valign-middle">현재 비밀번호</td><span class="text-danger">* {{PWmsg}}</span>
-										<td><Input type = "password" name = "PW" class="form-control form-control-sm" ></td>
-									</tr>
 										<tr class="highlight">
-										<td class="field">&nbsp;</td>
-										<td class="p-t-10 p-b-10">
-											<button type="submit" class=" btn btn-primary width-150">회원정보 변경</button>
-											<button type="cancel" class="btn btn-white btn-white-without-border width-150 m-l-5">취소</button>
-										</td>
-									</tr>
+											<td class="field">사업자 등록번호</td>
+											<td name = "CNU" value = {{company.CNU}}><i class="fa fa-lg m-r-5" ></i>{{company.CNU}}</td>
+										</tr>
+										<tr class="highlight">
+											<td class="field valign-middle">상호</td>
+											<td><Input type = "text" name = "CNA"  class="form-control form-control-sm"value ={{company.CNA}}></td>
+										</tr>
+										<tr >
+											<td class="field">이름</td>
+											<td><i class="fa fa-lg m-r-5"></i>{{company.NA}}</td>
+										</tr>
+										<tr>
+											<td class="field">휴대폰 번호</td>
+											<td><i class="fa fa-lg m-r-5"></i>{{company.MN}}</td>
+										</tr>									
+	
+										<tr>
+											<td class="field valign-middle">회사 전화번호</td>
+											<td><Input type = "text" name = "PN" class="form-control form-control-sm" value ={{company.PN}}></td>
+										</tr>
+										<tr>
+											<td class="field valign-middle">현재 비밀번호</td><span class="text-danger">* {{PWmsg}}</span>
+											<td><Input type = "password" name = "PW" class="form-control form-control-sm" ></td>
+										</tr>
+											<tr class="highlight">
+											<td class="field">&nbsp;</td>
+											<td class="p-t-10 p-b-10">
+												<button type="submit" class=" btn btn-primary width-150">회원정보 변경</button>
+												<button type="cancel" class="btn btn-white btn-white-without-border width-150 m-l-5">취소</button>
+											</td>
+										</tr>
 									</form>
 									<form id = 'PWChange' action = '/profile/pwchange' method = 'post'>
-									<tr class="highlight"></tr>
-										<tr>
-										<th>
-											<h5>비밀번호 변경</h5>
-										</th>
+										<tr class="highlight"></tr>
+											<tr>
+											<th>
+												<h5>비밀번호 변경</h5>
+											</th>
+											</tr>
+										<tr class="highlight">
+											<tr>
+											<td class="field valign-middle">현재 비밀번호</td>
+											<td><Input type = "password" name = "PW" class="form-control form-control-sm" ></td>
 										</tr>
-									<tr class="highlight">
+										<tr class="highlight">
 										<tr>
-										<td class="field valign-middle">현재 비밀번호</td>
-										<td><Input type = "password" name = "PW" class="form-control form-control-sm" ></td>
-									</tr>
-									<tr class="highlight">
-									<tr>
-										<td class="field valign-middle">변경 비밀번호</td>
-										<td><Input type = "password" name = "PWc1" class="form-control form-control-sm" minlength= 8 maxlength= 16  ></td>
-									</tr>
-									<tr class="highlight">
-									<tr>
-										<td class="field valign-middle">재입력 비밀번호</td>
-										<td><Input type = "password" name = "PWc2" class="form-control form-control-sm" minlength= 8 maxlength= 16 ></td>
-									</tr>
-									</tr>
-										<td class="field">&nbsp;</td>
-										<td class="p-t-10 p-b-10">
-											<button type="submit" class="btn btn-primary width-150">비밀번호 변경</button>
-											<button type = "cancel" class="btn btn-white btn-white-without-border width-150 m-l-5">취소</button>
-										</td>
-										</form>
-									</tr>
+											<td class="field valign-middle">변경 비밀번호</td>
+											<td><Input type = "password" name = "PWc1" class="form-control form-control-sm" minlength= 8 maxlength= 16  ></td>
+										</tr>
+										<tr class="highlight">
+										<tr>
+											<td class="field valign-middle">재입력 비밀번호</td>
+											<td><Input type = "password" name = "PWc2" class="form-control form-control-sm" minlength= 8 maxlength= 16 ></td>
+										</tr>
+										</tr>
+											<td class="field">&nbsp;</td>
+											<td class="p-t-10 p-b-10">
+												<button type="submit" class="btn btn-primary width-150">비밀번호 변경</button>
+												<button type = "cancel" class="btn btn-white btn-white-without-border width-150 m-l-5">취소</button>
+											</td>
+										</tr>
+									</form>
 								</tbody>
 							</table>
 						</div>
