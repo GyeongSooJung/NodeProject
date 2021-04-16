@@ -14,112 +14,112 @@
 {% block content %}
 <!-- begin #content -->
 <div id="content" class="content">
-	<!-- begin page-header -->
-	<h1 class="page-header">알림톡 전송내역</h1>
-	<!-- end page-header -->
-	<!-- begin row -->
-	<div class="row">
-		<!-- begin col-12 -->
-		<div class="col-xl-12">
-			<div class="panel panel-inverse">
-				<!-- begin panel-heading -->
-				<div class="panel-heading">
-					<h4 class="panel-title">알림톡 전송내역</h4>
-				</div>
-				<!-- end panel-heading -->
-				<!-- begin panel-body -->
-				<div class="panel-body" >
-					
-					<div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
-	            	<div class="mr-2">검색 : </div>
-				<div>
-					<input type="text" id="WNMkeyword" class="form-control" placeholder ="보낸 사람" />
-				</div>
-				<div>
-					<button class="ml-2 btn btn-primary text-white px-1" onclick="searchbutton()">{% if WNM %} <i class="mx-1 fas fa-lg fa-fw m-r-10 fa-chevron-left"></i> {% else %}<i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i> {% endif %}</button></div>
-				</div>
-	               	
-	     <!--          	    <div class="col-xl-4">-->
-	     <!--          	    <button id ="CopyBTN" class="btn btn-secondary buttons-copy buttons-html5 btn-sm" tabindex="0" aria-controls="data-table-combine" type="button"><span>Copy</span></button>	-->
-	     <!--          	    <button id ="CSVBTN" class="btn btn-secondary buttons-csv buttons-html5 btn-sm" tabindex="0" aria-controls="data-table-combine" type="button"><span>CSV</span></button>-->
-	     <!--          	    <button id ="ExcelBTN" class="btn btn-secondary buttons-excel buttons-html5 btn-sm" tabindex="0" aria-controls="data-table-combine" type="button"><span>Excel</span></button>-->
-	     <!--          	    <button id ="PDF" class="btn btn-secondary buttons-pdf buttons-html5 btn-sm" tabindex="0" aria-controls="data-table-combine" type="button"><span>PDF</span></button>-->
-						<!--<button id ="Print" class="btn btn-secondary buttons-print btn-sm" tabindex="0" aria-controls="data-table-combine" type="button"><span>Print</span></button>-->
-						<!--</div>-->
-					
-					<div class="overflow-auto">
-						<!--<form action="/device/device_select_delete" method="post">-->
-							<table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle text-center">
-								<thead>
-									<tr>
-										<th width="2.5%"></th>
-										<th width="30.5%">보낸 사람</th>
-										<th width="24%">전송 일시</th>
-										<th width="21%">결과</th>
-									</tr>
-								</thead>
-								<tbody>
-									{% if (totalNum == 0) %}
-									<tr>
-										<td colspan="7">No Data</td>
-									</tr>
-									{% else %}
-									{% set count = 0 %}
-										{% for alarm in alarms %}
-										<tr>
-			    							<td class="font-weight-bold">{{totalNum - count - (currentPage*10)}} </td>
-				  							{% set totalNum = totalNum - 1 %}
-				  							{% if alarm.WNM %}
-											<td>{{alarm.WNM}}</td>
-											{% else %}
-											<td>선택 안됨</td>
-											{% endif %}
-											<td>
-											    <script>
-    											var pa = moment('{{alarm.CA}}').format('YYYY-MM-DD HH:mm:ss');
-    											document.write(pa);
-    											</script>
-											</td>
-											<td>{{alarm.RE}}</td>
-										</tr>
-										{% endfor %}
-									{% endif %}
-								</tbody>
-							</table>
-							<div class="d-flex justify-content-end align-item-center">
-								<div class="d-flex justify-content-around align-item-center">
-									<a href="javascript:pageDoubleBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
-									<a href="javascript:pageBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
-									{% if (totalNum==0) %}
-									{% else %}
-										{% for i in range(startPage, endPage) %}
-										<a href="/alarmtalk_list/?page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
-										{% endfor %}
-									{% endif %}
-									<a href="javascript:pageBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
-									<a href="javascript:pageDoubleBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
-								</div>
-							</div>
-						<!--</form>-->
-					</div>
-				</div>
-				<div>
-				<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-				<!-- Homepage Leaderboard -->
-				<ins class="adsbygoogle"
-				style="display:inline-block;width:728px;height:90px"
-				data-ad-client="ca-pub-1234567890123456"
-				data-ad-slot="1234567890"></ins>
-				<script>
-				(adsbygoogle = window.adsbygoogle || []).push({});
-				</script>
-				</div>
-				<!-- end panel-body -->
-			</div>
-		</div>
-		<!-- end col-10 -->
-	</div>
-	<!-- end row -->
+   <!-- begin page-header -->
+   <h1 class="page-header">{{__('payment_alarmtalk_list')}}</h1>
+   <!-- end page-header -->
+   <!-- begin row -->
+   <div class="row">
+      <!-- begin col-12 -->
+      <div class="col-xl-12">
+         <div class="panel panel-inverse">
+            <!-- begin panel-heading -->
+            <div class="panel-heading">
+               <h4 class="panel-title">{{__('payment_alarmtalk_list')}}</h4>
+            </div>
+            <!-- end panel-heading -->
+            <!-- begin panel-body -->
+            <div class="panel-body" >
+               
+               <div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
+                  <div class="mr-2">{{__('search')}} : </div>
+            <div>
+               <input type="text" id="WNMkeyword" class="form-control" placeholder ="{{__('payment_sender')}}" />
+            </div>
+            <div>
+               <button class="ml-2 btn btn-primary text-white px-1" onclick="searchbutton()">{% if WNM %} <i class="mx-1 fas fa-lg fa-fw m-r-10 fa-chevron-left"></i> {% else %}<i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i> {% endif %}</button></div>
+            </div>
+                     
+        <!--                 <div class="col-xl-4">-->
+        <!--                 <button id ="CopyBTN" class="btn btn-secondary buttons-copy buttons-html5 btn-sm" tabindex="0" aria-controls="data-table-combine" type="button"><span>Copy</span></button>   -->
+        <!--                 <button id ="CSVBTN" class="btn btn-secondary buttons-csv buttons-html5 btn-sm" tabindex="0" aria-controls="data-table-combine" type="button"><span>CSV</span></button>-->
+        <!--                 <button id ="ExcelBTN" class="btn btn-secondary buttons-excel buttons-html5 btn-sm" tabindex="0" aria-controls="data-table-combine" type="button"><span>Excel</span></button>-->
+        <!--                 <button id ="PDF" class="btn btn-secondary buttons-pdf buttons-html5 btn-sm" tabindex="0" aria-controls="data-table-combine" type="button"><span>PDF</span></button>-->
+                  <!--<button id ="Print" class="btn btn-secondary buttons-print btn-sm" tabindex="0" aria-controls="data-table-combine" type="button"><span>Print</span></button>-->
+                  <!--</div>-->
+               
+               <div class="overflow-auto">
+                  <!--<form action="/device/device_select_delete" method="post">-->
+                     <table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle text-center">
+                        <thead>
+                           <tr>
+                              <th width="2.5%"></th>
+                              <th width="30.5%">{{__('payment_sender')}}</th>
+                              <th width="24%">{{__('payment_point_Dateofuse')}}</th>
+                              <th width="21%">{{__('payment_result')}}</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           {% if (totalNum == 0) %}
+                           <tr>
+                              <td colspan="7">No Data</td>
+                           </tr>
+                           {% else %}
+                           {% set count = 0 %}
+                              {% for alarm in alarms %}
+                              <tr>
+                                  <td class="font-weight-bold">{{totalNum - count - (currentPage*10)}} </td>
+                                   {% set totalNum = totalNum - 1 %}
+                                   {% if alarm.WNM %}
+                                 <td>{{alarm.WNM}}</td>
+                                 {% else %}
+                                 <td>선택 안됨</td>
+                                 {% endif %}
+                                 <td>
+                                     <script>
+                                     var pa = moment('{{alarm.CA}}').format('YYYY-MM-DD HH:mm:ss');
+                                     document.write(pa);
+                                     </script>
+                                 </td>
+                                 <td>{{alarm.RE}}</td>
+                              </tr>
+                              {% endfor %}
+                           {% endif %}
+                        </tbody>
+                     </table>
+                     <div class="d-flex justify-content-end align-item-center">
+                        <div class="d-flex justify-content-around align-item-center">
+                           <a href="javascript:pageDoubleBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
+                           <a href="javascript:pageBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
+                           {% if (totalNum==0) %}
+                           {% else %}
+                              {% for i in range(startPage, endPage) %}
+                              <a href="/alarmtalk_list/?page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
+                              {% endfor %}
+                           {% endif %}
+                           <a href="javascript:pageBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
+                           <a href="javascript:pageDoubleBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
+                        </div>
+                     </div>
+                  <!--</form>-->
+               </div>
+            </div>
+            <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- Homepage Leaderboard -->
+            <ins class="adsbygoogle"
+            style="display:inline-block;width:728px;height:90px"
+            data-ad-client="ca-pub-1234567890123456"
+            data-ad-slot="1234567890"></ins>
+            <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+            </div>
+            <!-- end panel-body -->
+         </div>
+      </div>
+      <!-- end col-10 -->
+   </div>
+   <!-- end row -->
 </div>
 <!-- end #content -->
 
@@ -155,8 +155,8 @@
     </script>
   
     <script>
-	// 검색기능
-	$(document).ready(function() {
+   // 검색기능
+   $(document).ready(function() {
         $("#keyword").keyup(function() {
             var k = $(this).val();
             $("#data-table-combine > tbody > tr").hide();
@@ -167,42 +167,29 @@
     })
 
     function searchbutton() {
-		const keyword = document.getElementById('WNMkeyword').value;
-		location = '/alarmtalk_list/?WNM=' + keyword;
-	}
-	
-	// 페이지 기능
-	function pageBtn(dir) {
-		if(dir == 'left') {
-			location = '/alarmtalk_list/?page={{currentPage-1}}';
-		}
-		if(dir == 'right') {
-			location = '/alarmtalk_list/?page={{currentPage+1}}';
-		}
-	}
-	
-	function pageDoubleBtn(dir) {
-		if(dir == 'left') {
-			location = '/alarmtalk_list/?page={{startPage-1}}';
-		}
-		if(dir == 'right') {
-			location = '/alarmtalk_list/?page={{endPage+1}}';
-		}
-	}
-	
-    
-    // 에러 링크 기능
-	window.onload = () => {
-		if (new URL(location.href).searchParams.get('error')) {
-			alert('이미 존재하는 MAC 입니다.');
-		}
-		if (new URL(location.href).searchParams.get('null')) {
-			alert('항목을 선택해주세요.');
-		}
-		if (new URL(location.href).searchParams.get('searcherror')) {
-			alert('검색어를 다시 확인해주세요');
-		}
-	};
+      const keyword = document.getElementById('WNMkeyword').value;
+      location = '/alarmtalk_list/?WNM=' + keyword;
+   }
+   
+   // 페이지 기능
+   function pageBtn(dir) {
+      if(dir == 'left') {
+         location = '/alarmtalk_list/?page={{currentPage-1}}';
+      }
+      if(dir == 'right') {
+         location = '/alarmtalk_list/?page={{currentPage+1}}';
+      }
+   }
+   
+   function pageDoubleBtn(dir) {
+      if(dir == 'left') {
+         location = '/alarmtalk_list/?page={{startPage-1}}';
+      }
+      if(dir == 'right') {
+         location = '/alarmtalk_list/?page={{endPage+1}}';
+      }
+   }
+   
 </script>
 {% endblock %}
 

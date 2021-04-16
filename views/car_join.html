@@ -16,7 +16,7 @@
 					<h4 class="panel-title">{{__('car')}}</h4>
 					<p class="m-0">{{__('attachments')}} : </p>
 					<span class="text-green font-weight-bold d-flex align-items-center">
-						<a class="text-green" href="../assets/upload/차량 등록 양식.xlsx" download>
+						<a id="excel_file" class="text-green" href="../assets/upload/차량 등록 양식.xlsx" download>
 							<i class="far fa-lg fa-file-excel ml-2 mr-1"></i> {{__('car_excel_form')}}.xlsx
 						</a>
 					</span>
@@ -151,9 +151,28 @@
 //           })
 	
 // }
-		         
-            
-        
+
+window.addEventListener('load', function() {
+	var cookie = document.cookie;
+	var startIndexOf = cookie.indexOf('lang=');
+	var endIndexOf = cookie.indexOf(';',startIndexOf);
+	if(endIndexOf == -1)endIndexOf = cookie.length; //맨끝일경우;가 없으므로 맨마지막자리를 가져온다.
+	
+	const sl = document.getElementById('select-lang');
+	var lang = cookie.substring(startIndexOf+'lang='.length, endIndexOf);
+	
+	var excel_file = document.getElementById('excel_file');
+	
+	if(lang == 'ko') {
+		excel_file.href="../assets/upload/차량 등록 양식.xlsx";
+	}
+	else if(lang == 'en') {
+		excel_file.href="../assets/upload/Car Registration Form.xlsx";
+	}
+	else {
+		excel_file.href="../assets/upload/차량 등록 양식.xlsx";
+	}
+});
 
 </script>
 <script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>

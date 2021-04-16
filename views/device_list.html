@@ -177,7 +177,7 @@
 	// 선택항목 삭제 기능
 	function delete_check(frm) {
 		var answer;
-		answer = confirm("{{__('delete_comfirm')}}");
+		answer = confirm("{{__('delete_confirm')}}");
 		if(answer == true){
 			frm.action='/device/device_select_delete/'; frm.submit(); return true;
 		}
