@@ -17,6 +17,12 @@
 	<!--<link href="../assets/css/fullpage/fullpage.css" rel="stylesheet" />-->
 	<link href="../assets/css/index_custom.css" rel="stylesheet" />
 	<link href="../assets/img/favicon.png" rel="icon">
+	
+	<!--AOS-->
+	<!--<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">-->
+	<!--<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/ScrollTrigger.min.js"></script>
 </head>
 <body data-spy="scroll" data-target="#header" data-offset="51">
 	<!-- begin #page-container -->
@@ -62,6 +68,7 @@
 		</div>
 		<!-- end #header -->
 		
+		<!-- begin fullpage -->
 		<div id="fullpage">
 			<!-- begin #home -->
 			<div id="home" class="content has-bg home">
@@ -94,35 +101,35 @@
 			<!-- end #home -->
 			
 			<!-- begin #about -->
-			<div id="about" class="content" data-scrollview="true">
+			<div id="about" class="content">
 				<!-- begin container -->
-				<div class="container" data-animation="true" data-animation-type="fadeInDown">
+				<div class="container">
 					<!-- begin row -->
 					<div class="row justify-content-md-center align-items-md-center">
 						<!-- begin col-5 -->
 						<div class="col-lg-5">
 							<h1 class="mb-4 index-h1">OASIS</h1>
-							<h2 class="mb-5 index-h2">소독의 새로운 패러다임</h2>
+							<h2 class="mb-5 index-h2">{{__('index_about_text')}}</h2>
 							<div class="d-flex justify-content-between align-items-center">
 								<div class="service service-block mr-auto mb-0">
-									<div class="iconbox mb-3" data-animation="true" data-animation-type="bounceIn"><i class="fas fa-coins"></i></div>
+									<div class="iconbox mb-3"><i class="fas fa-coins"></i></div>
 									<div class="info">
-										<p class="index-p-bold mb-2">경제성</p>
-										<p class="small font-weight-bold mb-0">자동화된 시스템<br>으로 비용 절감</p>
+										<p class="index-p-bold mb-2">{{__('economic')}}</p>
+										<p class="small font-weight-bold mb-0">{{__('index_econmic_text1')}}<br>{{__('index_econmic_text2')}}</p>
 									</div>
 								</div>
 								<div class="service service-block mr-auto mb-0">
-									<div class="iconbox mb-3" data-animation="true" data-animation-type="bounceIn"><i class="fas fa-pump-medical"></i></div>
+									<div class="iconbox mb-3"><i class="fas fa-pump-medical"></i></div>
 									<div class="info">
-										<p class="index-p-bold mb-2">살균력</p>
-										<p class="small font-weight-bold mb-0">오존을 통한<br>99% 살균</p>
+										<p class="index-p-bold mb-2">{{__('sterilization')}}</p>
+										<p class="small font-weight-bold mb-0">{{__('index_ster_text1')}}<br>{{__('index_ster_text2')}}</p>
 									</div>
 								</div>
 								<div class="service service-block mr-auto mb-0">
-									<div class="iconbox mb-3" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-heart"></i></div>
+									<div class="iconbox mb-3"><i class="fa fa-heart"></i></div>
 									<div class="info">
-										<p class="index-p-bold mb-2">신뢰성</p>
-										<p class="small font-weight-bold mb-0">QR코드를 통한<br>소독 이력 확인</p>
+										<p class="index-p-bold mb-2">{{__('trust')}}</p>
+										<p class="small font-weight-bold mb-0">{{__('index_trust_text1')}}<br>{{__('index_trust_text2')}}</p>
 									</div>
 								</div>
 							</div>
@@ -131,9 +138,9 @@
 						<!-- begin col-5 -->
 						<div class="col-lg-5">
 							<div class="index-img d-flex flex-column justify-content-center mx-auto">
-								<img src="../assets/img/quote1.png" class="img-responsive quote-img quote-left mr-auto mb-3">
-								<img src="../assets/img/quote2.png" class="img-responsive quote-img quote-right ml-auto mb-3">
-								<img src="../assets/img/quote3.png" class="img-responsive quote-img quote-left mr-auto">
+								<img src="../assets/img/quote1.png" id="quote1" class="img-responsive quote-img quote-left mr-auto mb-3">
+								<img src="../assets/img/quote2.png" id="quote2" class="img-responsive quote-img quote-right ml-auto mb-3">
+								<img src="../assets/img/quote3.png" id="quote3" class="img-responsive quote-img quote-left mr-auto">
 							</div>
 						</div>
 						<!-- end col-5 -->
@@ -153,8 +160,8 @@
 						<!-- begin col-5 -->
 						<div class="col-lg-5">
 							<h1 class="mb-4 index-h1">Web</h1>
-							<h2 class="mb-5 index-h2">편리한 작업관리 시스템</h2>
-							<h5 class="index-h3">Web Management System을 제공하여<br>소독기, 차량, 작업자, 소독이력 등 통합 관리</h5>
+							<h2 class="mb-5 index-h2">{{__('index_web_text')}}</h2>
+							<h5 class="index-h3">{{__('index_web_text2')}}<br>{{__('index_web_text3')}}</h5>
 						</div>
 						<!-- end col-5 -->
 						<!-- begin col-5 -->
@@ -178,8 +185,8 @@
 						<!-- begin col-5 -->
 						<div class="col-lg-5">
 							<h1 class="mb-4 index-h1">App</h1>
-							<h2 class="mb-5 index-h2">안전하고 편리한 소독</h2>
-							<h5 class="mb-5 index-h3">전용 Mobile App을 제공하여<br>원격제어를 통한 자동화된 소독 솔루션</h5>
+							<h2 class="mb-5 index-h2">{{__('index_app_text')}}</h2>
+							<h5 class="mb-5 index-h3">{{__('index_app_text2')}}<br>{{__('index_app_text3')}}</h5>
 							<a href="https://play.google.com/store/apps/details?id=com.mk.oasis_app" target="_blank" class="link_store">
 					          <img src="../assets/appabout/google_play.png" alt="HTML tutorial" style="border:0;">
 					        </a>
@@ -206,8 +213,8 @@
 						<!-- begin col-5 -->
 						<div class="col-lg-5">
 							<h1 class="mb-4 index-h1">QR Code</h1>
-							<h2 class="mb-5 index-h2">보이는 소독 플랫폼</h2>
-							<h5 class="mb-5 index-h3">QR코드를 통해 App 설치 없이<br>누구나 쉽고 빠르게 투명하게 소독 정보 확인</h5>
+							<h2 class="mb-5 index-h2">{{__('index_qr_text')}}</h2>
+							<h5 class="mb-5 index-h3">{{__('index_qr_text2')}}<br>{{__('index_qr_text3')}}</h5>
 						</div>
 						<!-- end col-5 -->
 						<!-- begin col-5 -->
@@ -231,7 +238,7 @@
 					<div class="row">
 						<!-- begin col-12 -->
 						<div class="col-lg-12">
-							<img src="../assets/img/oasis_flow.png" class="img-responsive flow-img mx-auto">
+							<img src="../assets/img/oasis_flow.png" id="oasis_flow" class="img-responsive flow-img mx-auto">
 						</div>
 						<!-- end col-12 -->
 					</div>
@@ -245,7 +252,7 @@
 			<div id="ozone" class="content index-bg" data-scrollview="true">
 				<!-- begin container -->
 				<div class="container">
-					<h2 class="content-title index-h1">Ozone</h2>
+					<h2 class="content-title index-h1">{{__('index_ozone')}}</h2>
 					<!-- begin row -->
 					<div class="row">
 						<!-- begin col-4 -->
@@ -253,7 +260,7 @@
 							<div class="service">
 								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-cog"></i></div>
 								<div class="info">
-									<h4 class="title">살균력</h4>
+									<h4 class="title">{{__('index_ozone_point1')}}</h4>
 									<p class="desc">단백질 구성물(세균류)에 가장 빠르게 반응(살균)하며 99%의 살균 가능, 광범위한 살균에 효과적.</p>
 								</div>
 							</div>
@@ -264,7 +271,7 @@
 							<div class="service">
 								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-paint-brush"></i></div>
 								<div class="info">
-									<h4 class="title">탈취력</h4>
+									<h4 class="title">{{__('index_ozone_point2')}}</h4>
 									<p class="desc">공기 중의 악취성분을 변화, 파괴시켜 단시간에 악취를 제거함.</p>
 								</div>
 							</div>
@@ -275,7 +282,7 @@
 							<div class="service">
 								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-file"></i></div>
 								<div class="info">
-									<h4 class="title">안전성</h4>
+									<h4 class="title">{{__('index_ozone_point3')}}</h4>
 									<p class="desc">오존은 산소와 닿으면 빠르게 산소로 환원되어 어떤 잔여물도 남기지 않음.</p>
 								</div>
 							</div>
@@ -288,22 +295,22 @@
 			</div>
 			<!-- end #ozone -->
 		</div>
+		<!-- end fullpage -->
 		
 		<!-- begin #footer -->
 		<div id="footer" class="footer">
-				<p>
-					MK Co.,Ltd.</br>
-					&copy; COPYRIGHT 2018 MK CO.,LTD.. ALL RIGHTS RESERVED.
-				</p>
-				<p>
-					<span class="mr-3">주식회사 엠케이</span>
-					<span class="mr-3">경기도 용인시 기흥구 동백중앙로 191, 8층 엘818호</span>
-					<span class="mr-3">Tel 1644-3486</span>
-					<span class="mr-3">Fax +82-42-368-0224</span>
-					<span class="mr-3">사업자 등록번호 338-88-00960</span>
-					<span class="mr-3">대표자 변무영</span>
-				</p>
-			</div>
+			<p>
+				MK Co.,Ltd.</br>
+				&copy; COPYRIGHT 2018 MK CO.,LTD.. ALL RIGHTS RESERVED.
+			</p>
+			<p>
+				<span class="mr-3">{{__('mk')}}</span>
+				<span class="mr-3">{{__('mk_address')}}</span>
+				<span class="mr-3">Tel : 1644-3486</span>
+				<span class="mr-3">Fax : +82-42-368-0224</span>
+				<span class="mr-3">{{__('business_number')}} : 338-88-00960</span>
+				<span class="mr-3">{{__('ceo')}} : {{__('mk_ceo_name')}}</span>
+			</p>
 		</div>
 		<!-- end #footer -->
 	</div>
@@ -322,16 +329,34 @@
 			
 			const sl = document.getElementById('select-lang');
 			var lang = cookie.substring(startIndexOf+'lang='.length, endIndexOf);
+			var quote1 = document.getElementById('quote1');
+			var quote2 = document.getElementById('quote2');
+			var quote3 = document.getElementById('quote3');
+			var oasis_flow = document.getElementById('oasis_flow');
 			console.log("쿠키"+cookie);
 			console.log("언어"+lang);
 			if(lang == 'ko') {
 				sl.innerHTML = "한국어";
+				quote1.src = '../assets/img/quote1.png'
+				quote2.src = '../assets/img/quote2.png'
+				quote3.src = '../assets/img/quote3.png'
+				oasis_flow.src = '../assets/img/oasis_flow.png'
 			}
 			else if(lang == 'en') {
 				sl.innerHTML = "ENGLISH";
+				quote1.src = '../assets/img/quote1_en.png'
+				quote2.src = '../assets/img/quote2_en.png'
+				quote3.src = '../assets/img/quote3_en.png'
+				oasis_flow.src = '../assets/img/oasis_flow_en.png'
+				
+				// document.querySelectorAll('col-lg-5').style.setProperty('width', 5000, 'important');
 			}
 			else {
 				sl.innerHTML = "한국어";
+				quote1.src = '../assets/img/quote1.png'
+				quote2.src = '../assets/img/quote2.png'
+				quote3.src = '../assets/img/quote3.png'
+				oasis_flow.src = '../assets/img/oasis_flow.png'
 			}
 		});
 		
@@ -340,6 +365,64 @@
 		// 	autoScrolling:true,
 		// 	scrollHorizontally: true
 		// });
+		
+		// 애니메이션 기능 gsap
+		gsap.registerPlugin(ScrollTrigger);
+
+		// 기본 설정
+		ScrollTrigger.defaults({
+			toggleActions: "play reset play reset"
+			// play reset resume reset
+		});
+		
+		//about
+		gsap.to("#quote1", {
+			scrollTrigger: "#about", 
+			duration: 1.4, 
+			x: 100,
+			opacity: 1
+		});
+		
+		gsap.to("#quote2", {
+			scrollTrigger: "#about", 
+			duration: 1.4,
+			delay: 0.5,
+			x: -100,
+			opacity: 1
+		});
+		
+		gsap.to("#quote3", {
+			scrollTrigger: "#about", 
+			duration: 1.4,
+			delay: 1,
+			x: 100,
+			opacity: 1
+		});
+		
+		gsap.to(".iconbox", {
+			scrollTrigger: "#about",
+			delay: 0.5,
+			duration: 0.6,
+			scale: 1.1,
+			repeat: 2
+		});
+		
+		//web
+		gsap.to("img[src*='oasis_web.png']", {
+			scrollTrigger: "#web",
+			// delay: 0.5,
+			duration: 1.5,
+			y: 50,
+		});
+		
+		//app
+		gsap.to("img[src*='oasis_app.png']", {
+			scrollTrigger: "#app",
+			// delay: 0.5,
+			duration: 1.5,
+			y: -50,
+		});
+		
 	</script>
 	
 	<!-- ================== BEGIN BASE JS ================== -->

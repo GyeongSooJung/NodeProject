@@ -31,16 +31,34 @@ const smtpTransport = nodemailer.createTransport({
 
 
 
-router.post('/sendmail', async (req, res, next) => {
+router.post('/send', async (req, res, next) => {
     const {EA, CNU} = req.body
+    const {lang} = req.cookies;
+    console.log("랭귀지"+lang);
     try{
         const exCNU = await Company.findOne({CNU});
         const exEA = await Company.where({"CNU" : CNU}).findOne({EA});
         if(!exCNU){
-            return    res.render('find',{errmsg : "등록되지 않은 사업자 번호입니다."});
+            if(lang == 'ko') {
+                return res.render('find',{errmsg : "등록되지 않은 사업자 번호입니다."});
+            }
+            else if(lang == 'en') {
+                return res.render('find',{errmsg : "Unregistered Business License Number"});
+            }
+            else {
+                return res.render('find',{errmsg : "등록되지 않은 사업자 번호입니다."});
+            }
         }
         else if(!exEA){
-            return    res.render('find',{errmsg : "등록되지 않은 E-mail 입니다."});
+            if(lang == 'ko') {
+                return res.render('find',{errmsg : "등록되지 않은 E-mail 입니다."});
+            }
+            else if(lang == 'en') {
+                return res.render('find',{errmsg : "Unregistered Email"});
+            }
+            else {
+                return res.render('find',{errmsg : "등록되지 않은 E-mail 입니다."});
+            }
         }
         //인증번호 생성
         let authNum = Math.random().toString().substr(2,6);
@@ -91,7 +109,7 @@ router.post('/sendmail', async (req, res, next) => {
 
 
 
-router.post('/email_cert' ,async (req, res, next) => {
+router.post('/cert' ,async (req, res, next) => {
   try {
       
       const Enum = req.body.Enum;

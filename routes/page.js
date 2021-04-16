@@ -95,7 +95,7 @@ router.get('/profile', isNotLoggedIn, DataSet, async(req, res, next) => {
 
 //비밀번호 찾기
 router.get('/find', (req, res, next) => {
-  res.render('find');
+  res.render('pwfind');
 });
 
 //----------------------------------------------------------------------------//
