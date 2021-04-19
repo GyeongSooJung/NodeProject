@@ -16,7 +16,11 @@ router.post('/pfupdate',isNotLoggedIn,DataSet,async(req,res,next)=>{
     try{
         
     if(bcrypt.compareSync( PW,req.decoded.company.PW)){
-        await Company.update({"_id" : req.decoded._id},{CNA, PN});
+            console.log("CNA : " + CNA);
+    console.log("PN : " + PN);
+    console.log("PW : " + PW);
+       const companyone = await Company.where({"_id" : req.decoded.company._id}).update({ "CNA": CNA, "PN":PN }).setOptions({ runValidators: true }).exec();
+       console.log(companyone);
         return res.redirect('/profile?update=true');
     }else{
         return res.redirect('/profile?uperr=true');

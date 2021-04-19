@@ -46,6 +46,8 @@ router.post('/checkCNU', async(req, res, next) => {
 // 이메일 전송
 router.post('/send', async(req, res, next) => {
     const { EA, CNU } = req.body;
+    var cookie = res.cookie();
+  console.log(cookie);
     
     try {
         const exEA = await Company.where({ "CNU" : CNU }).findOne({ "EA" : EA });
