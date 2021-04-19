@@ -297,7 +297,7 @@
 		var personalModal = document.getElementById('personalModal');
 		if(lang == 'ko') {
 			personalModal.innerHTML = "<p></p>"+
-									"<p class='ls2 lh6 bs5 ts4'><em class='emphasis'>주식회사 엠케이{{__('register_agree_text1')}}</em>은(는) 개인정보보호법에 따라 이용자의 개인정보 보호 및 권익을 보호하고 개인정보와 관련한 이용자의 고충을 원활하게 처리할 수 있도록 다음과 같은 처리방침을 두고 있습니다.</p>"+
+									"<p class='ls2 lh6 bs5 ts4'><em class='emphasis'>주식회사 엠케이</em>은(는) 개인정보보호법에 따라 이용자의 개인정보 보호 및 권익을 보호하고 개인정보와 관련한 이용자의 고충을 원활하게 처리할 수 있도록 다음과 같은 처리방침을 두고 있습니다.</p>"+
 									"<p class='ls2 lh6 bs5 ts4'><em class='emphasis'>주식회사 엠케이('오아시스')</em> 은(는) 회사는 개인정보처리방침을 개정하는 경우 웹사이트 공지사항(또는 개별공지)을 통하여 공지할 것입니다.</p>"+
 									"<p class='ls2'>○ 본 방침은부터 <em class='emphasis'>2020</em>년 <em class='emphasis'>2</em>월 <em class='emphasis'>1</em>일부터 시행됩니다.</p><br>"+
 									"<p class='lh6 bs4'><strong>1. 개인정보의 처리 목적 <em class='emphasis'>주식회사 엠케이('www.cleanoasis.net'이하 '오아시스')</em>은(는) 개인정보를 다음의 목적을 위해 처리합니다. 처리한 개인정보는 다음의 목적이외의 용도로는 사용되지 않으며 이용 목적이 변경될 시에는 사전동의를 구할 예정입니다.</strong></p>"+
@@ -366,11 +366,85 @@
 									"<p></p>";
 		}
 		else if(lang =="en") {
-			personalModal.innerHTML = "";
+			personalModal.innerHTML = "<p></p>"+
+								    "<p class='ls2 lh6 bs5 ts4'>According to the Personal Information Protection Act, <em class='emphasis'>MK Co., Ltd.</em> has the following policies to protect users' personal information, protect their rights and interests, and to smoothly deal with their grievances related to personal information.</p>"+
+								    "<p class='ls2 lh6 bs5 ts4'> When <em class='emphasis'>MK Co., Ltd.('OASIS')</em> revises its personal information processing policy, it will announce it through website announcements (or individual announcements).</p>"+
+								    "<p class='ls2'>○ This policy will take effect on <em class='emphasis'>February 1, 2020.</em></p><br>"+
+								    "<p class='lh6 bs4'><strong>1. Purpose of processing personal information MK Co., Ltd. processes personal information for the following purposes: The processed personal information will not be used for any purpose other than the following purposes, and prior consent will be sought if the purpose of use is changed.</strong></p>"+
+								    "<ul class='list_indent2 mgt10'>"+
+								        "<p class='ls2'>A. Register and manage membership on the homepage</p>"+
+								        "<p class='ls2'>Personal information is processed for the purpose of confirming the intention of membership, identifying and certifying oneself according to the provision of membership service, and maintaining and managing membership.</p><br>"+
+								    "</ul>"+
+								    "<p class='sub_p mgt30'><strong>2. Privacy File Status <br></strong></p>"+
+								    "<ul class='list_indent2 mgt10'>"+
+								        "<li class='tt'><b>1. Personal information file name : OASIS</b></li>"+
+								        "<li>Personal Information Item : Email, mobile phone number, password, login ID, company phone number, department, company name, service usage record, access log, cookie, access IP information, business number and company address</li>"+
+								        "<li>Collection method : website</li>"+
+								        "<li>Grounds for holding : Records on the collection, etc. of membership information on the website</li>"+
+								        "<li>Retention period : 3years</li>"+
+								        "<li>Related Acts and subordinate statutes : Records on the collection, processing, use, etc. of credit information : 3years</li>"+
+								    "</ul><br><br>"+
+								    "<p class='lh6 bs4'><strong>3. Processing and retention period of personal information</strong><br><br>① MK Co., Ltd. ('OASIS') processes and retains personal information within the period of personal information retention and use under the Act or the period of personal information collected by the information subject.<br><br> The period of processing and holding each personal information is as follows.</p>"+
+								    "<ul class='list_indent2 mgt10'>"+
+								        "<li class='tt'>1.&lt;Register and manage membership on the homepage&gt;</li>"+
+								        "<li class='tt'>&lt;Personal information related to homepage membership registration and management &gt; is collected.Retained for the purpose of use up to three years from the date of consent for use.It's used.</li>"+
+								        "<li>Grounds for holding : Records on the collection, etc. of membership information on the website</li>"+
+								        "<li>Related Acts and subordinate statutes : Records on the collection, processing, use, etc. of credit information : 3years</li>"+
+								        "<li>Reasons for exception : </li>"+
+								    "</ul>"+
+								    "<p class='lh6 bs4'><strong>4. The rights and obligations of the information subject and the legal representative and the users of the method of exercise may exercise the following rights as a personal information entity:</strong></p>"+
+								    "<p class='ls2'>① The information subject may exercise the right to perusal, correction, deletion, and suspension of processing of personal time.</p>"+
+								    "<p class='sub_p'>② The exercise of rights under paragraph (1) may be carried out in writing, e-mail, simulation transmission (FAX), etc. under Article 41 (1) of the Enforcement Decree of the Personal Information Protection Act, and MK Co., Ltd. will take action without delay.</p>"+
+								    "<p class='sub_p'>③ The exercise of rights under paragraph (1) may be conducted through an agent, such as a legal representative of the information subject or a delegated person. In such cases, a letter of attorney under attached Form 11 of the Enforcement Rules of the Personal Information Protection Act shall be submitted.</p>"+
+								    "<p class='sub_p'>④ The right of the information subject may be restricted pursuant to Article 35 (5) and Article 37 (2) of the Personal Information Protection Act to request the suspension of personal information permission and processing.</p>"+
+								    "<p class='sub_p'>⑤ A request for correction or deletion of personal information shall not be requested if other statutes specify that personal information is collected.</p>"+
+								    "<p class='sub_p'>⑥ MK Co., Ltd. verifies whether the person who made the request is himself or his or her right to view the information subject, request for correction or deletion, and request for perusal upon request for suspension of processing.</p><br><br>"+
+								    "<p class='lh6 bs4'><strong>5. Creating items in your personal information that you process </strong><br><br> ① MK Co., Ltd. ('www.cleanoasis.net' and 'OASIS') processes the following personal information items:</p>"+
+								    "<ul class='list_indent2 mgt10'>"+
+								        "<li class='tt'>1&lt;Register and manage membership on the homepage&gt;</li>"+
+								        "<li>Required Items : e-mail, mobile phone number, password, login ID, name, company phone number, department, company name, service usage record, access log, cookie, access IP information, business number and company address</li>"+
+								    "</ul><br><br>"+
+								    "<p class='lh6 bs4'><strong>6. destruction of personal information In principle, MK Co., Ltd. ('OASIS') will destroy such personal information without delay if the purpose of processing personal information has been achieved. Procedure, due date, and method of destruction are as follows.</strong></p>"+
+								    "<p class='ls2'>-Destruction procedure<br>The information entered by the user is transferred to a separate DB after achieving the purpose (in case of paper, separate documents) and is stored for a certain period of time in accordance with the internal policy and other related laws and regulations. At this time, personal information transferred to DB is not used for any other purpose unless it is under the law.<br><br>"+
+								    "-Destruction Date<br>If the user's personal information has expired, the user's personal information shall be destroyed within 5 days from the end of the retention period, and if the personal information becomes unnecessary, such as achieving the purpose of personal information, abolition of the service, or termination of the project.</p>"+
+								    "<p class='sub_p mgt10'>-Destruction Method</p>"+
+								    "<p class='sub_p'>Information in the form of electronic files uses technological methods that cannot play records.Personal information printed on </p> paper is shredded with a shredder or destroyed through incineration.<p></p><br><br>"+
+								    "<p class='lh6 bs4'><strong>7. Installation of automated information collection operations and matters concerning the denial of individuals.</strong></p>"+
+								    "<p class='ls2'>① MK Co., Ltd. uses 'cookie' to store and recall information to provide individual customized services.② Cookies are a small amount of information that the server (http) used to run the website sends to the user's computer browser and can also be stored on the user's PC computer's hard disk."+
+								    "<br><br>A. Purpose of use of cookies : It is used to provide optimized information to users by identifying the types of visits and use, popular search terms, security access, etc. to each service and website visited by users.<br>B. Installation • Operation and Rejection of Cookies: Tools at the top of your web browser You can reject the save of cookies through the Options settings in the Internet Options Privacy menu.<br>C. Refusing to store cookies can cause difficulties in using customized services.</p>"+
+								    "<p class='sub_p mgt30'><strong>8. Preparation of a personal information protection officer </strong></p>"+
+								    "<p class='sub_p mgt10'> ① MK Co., Ltd. (www.cleanoasis.net) (OASIS) is responsible for the overall handling of personal information and designates a person in charge of personal information protection to handle complaints and remedy damages related to personal information processing.</p>"+
+								    "<ul class='list_indent2 mgt10'>"+
+								        "<li class='tt'>▶ Person in charge of personal information protection </li>"+
+								        "<li>Name : Mooyeong Byeon</li>"+
+								        "<li>official responsibilities :CEO</li>"+
+								        "<li>position : CEO</li>"+
+								        "<li>contact information :01023452379, bmyfile@gmail.com, </li>"+
+								    "</ul>"+
+								    "<p class='sub_p'>※ You are connected to the privacy department.</p>"+
+								    "<p> </p>"+
+								    "<ul class='list_indent2 mgt10'>"+
+								        "<li class='tt'>▶ Department in charge of personal information protection</li>"+
+								        "<li>Department name : R&D Team</li>"+
+								        "<li>The person in charge : Choong bum Back</li>"+
+								        "<li>contact information :01029206090, park.choongbum@gmail.com, </li>"+
+								    "</ul>"+
+								    "<p class='sub_p'>② The information subject may contact the personal information protection manager and the department in charge of personal information protection, handling complaints, and relief of damages caused by using the service (or business) of MK Co., Ltd. (www.cleanoasis.net)."+
+								    " MK Co., Ltd. (www.cleanoasis.net) and 'OASIS' will respond and process information subject inquiries without delay.</p>"+
+								    "<p class='sub_p mgt30'><strong>9. Change the privacy statement </strong></p>"+
+								    "<p class='sub_p mgt10'>①This personal information processing policy shall be applied from the date of implementation, and if there is an addition, deletion, or correction of the changes under the Act and the policy, it will be notified 7 days before the change is implemented.</p><br><br>"+
+								    "<p class='lh6 bs4'><strong>10. Measures to secure the safety of personal information<br> According to Article 29 of the Privacy Act, MK Co., Ltd. ('OASIS') takes technical, administrative and physical measures necessary to ensure safety as follows:</strong></p>"+
+								    "<p class='sub_p mgt10'>1. Conduct regular self-audits<br> Conduct regular self-audits<br><br>2. Minimize and educate employees handling personal information<br> Measures are implemented to manage personal information by designating employees who handle personal information and minimizing them only to those in charge."+
+								    "<br><br>3. Establishment and implementation of an internal management plan<br> Internal management plans are established and implemented to ensure safe processing of personal information.<br><br>4. Relative to the technical measures such as hacking. <br> MK Co., Ltd. installs security programs, updates, checks, and installs systems in areas where access is restricted from outside, technically and physically, to prevent personal information leakage or damage caused by hacking or computer viruses."+
+								    "<br><br>5. Encryption of personal information<br> The user's personal information is encrypted and stored and managed, so only he/she knows it, and important data uses separate security functions such as encrypting file and transfer data or using file locking."+
+								    "<br><br>6. Storage of access records and prevention of forgery<br> We keep and manage records accessed to the personal information processing system for at least six months, and use security features to prevent records from being tampered with, stolen, or lost."+
+								    "<br><br>7. Restrict access to personal information<br> By granting, changing, and canceling access to the database system that processes personal information, the company takes necessary measures to control access to personal information and controls unauthorized access from outside using the intrusion prevention system."+
+								    "<br><br>8. Using locks for document security<br> Documents containing personal information, auxiliary storage media, etc. are stored in a safe place with locks.<br><br>9. access control to unauthorized persons<br> The company establishes and operates access control procedures for the physical storage area where personal information is stored.<br><br></p>"+
+								    "<p></p>";
 		}
 		else {
 			personalModal.innerHTML = "<p></p>"+
-									"<p class='ls2 lh6 bs5 ts4'><em class='emphasis'>주식회사 엠케이{{__('register_agree_text1')}}</em>은(는) 개인정보보호법에 따라 이용자의 개인정보 보호 및 권익을 보호하고 개인정보와 관련한 이용자의 고충을 원활하게 처리할 수 있도록 다음과 같은 처리방침을 두고 있습니다.</p>"+
+									"<p class='ls2 lh6 bs5 ts4'><em class='emphasis'>주식회사 엠케이</em>은(는) 개인정보보호법에 따라 이용자의 개인정보 보호 및 권익을 보호하고 개인정보와 관련한 이용자의 고충을 원활하게 처리할 수 있도록 다음과 같은 처리방침을 두고 있습니다.</p>"+
 									"<p class='ls2 lh6 bs5 ts4'><em class='emphasis'>주식회사 엠케이('오아시스')</em> 은(는) 회사는 개인정보처리방침을 개정하는 경우 웹사이트 공지사항(또는 개별공지)을 통하여 공지할 것입니다.</p>"+
 									"<p class='ls2'>○ 본 방침은부터 <em class='emphasis'>2020</em>년 <em class='emphasis'>2</em>월 <em class='emphasis'>1</em>일부터 시행됩니다.</p><br>"+
 									"<p class='lh6 bs4'><strong>1. 개인정보의 처리 목적 <em class='emphasis'>주식회사 엠케이('www.cleanoasis.net'이하 '오아시스')</em>은(는) 개인정보를 다음의 목적을 위해 처리합니다. 처리한 개인정보는 다음의 목적이외의 용도로는 사용되지 않으며 이용 목적이 변경될 시에는 사전동의를 구할 예정입니다.</strong></p>"+

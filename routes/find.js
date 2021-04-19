@@ -30,12 +30,34 @@ router.post('/checkCNU', async(req, res, next) => {
     
     try {
         const exCNU = await Company.findOne({ "CNU" : CNU });
+        const exEmail = exCNU.EA;
+        console.log("이엑스이메일"+exEmail);
         
+        function maskingName(email) {
+            var maskingEmail = "";
+            var idx = email.indexOf('@');
+            var email1 = email.substring(0, idx);
+            var email2 = email.substring(idx+1);
+            // console.log("이메일1"+email1);
+            // console.log("이메일2"+email2);
+            
+            var mask1 = email1.replace(/(?<=.{2})./gi, "*");
+            var mask2 = email2.replace(/(?<=.{2})./gi, "*");
+            // console.log("마스킹1"+mask1);
+            // console.log("마스킹2"+mask2);
+            
+            maskingEmail = mask1+"@"+mask2;
+            
+            return maskingEmail;
+        }
+        
+        const mask = maskingName(exEmail);
+
         if(!exCNU) {
             return res.send({ status: 'fail' });
         }
         else {
-            return res.send({ status: 'success' });
+            return res.send({ status: 'success', mask: mask });
         }
     } catch(err) {
         console.error(err);
@@ -137,7 +159,7 @@ router.post('/findPW', async(req, res, next) => {
         }
         
         var arr = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-        var randomPW = createCode(arr, 8);
+        var randomPW = createCode(arr, 12);
         console.log("임시비번"+randomPW);
         const mailOptions = {
             from: "mk.manager2020@gmail.com",
