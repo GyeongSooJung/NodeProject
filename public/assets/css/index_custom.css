@@ -1,17 +1,17 @@
-html, body {
-    width: 100%;
-    height: 100%;
-}
+/*html, body {*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*}*/
 
-#page-container {
-    position: relative;
-    width: 100%;
-}
+/*#page-container {*/
+/*    position: relative;*/
+/*    width: 100%;*/
+/*}*/
 
-#fullpage {
-    min-height: 100%;
-    margin-bottom: -220px;
-}
+/*#fullpage {*/
+/*    min-height: 100%;*/
+/*    margin-bottom: -220px;*/
+/*}*/
 
 .content {
     /*min-height: 100%;*/
