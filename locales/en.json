@@ -200,6 +200,11 @@
 	"all" : "All",
     
 	"company": "Company",
+	"company_list" : "Company List",
+	
+	"statistics" : "Statistics",
+	"statistics_device" : "Device Statistics",
+	"statistics_history" : "History Statistics",
 	
 	"device":"Device",
 	"device_model" : "Model Name",

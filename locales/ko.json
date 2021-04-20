@@ -200,6 +200,11 @@
 	"all" : "전체",
     
 	"company": "사업자",
+	"company_list" : "사업자 목록",
+	
+	"statistics" : "통계",
+	"statistics_device" : "제품 통계",
+	"statistics_history" : "소독 통계",
 	
 	"device":"소독기",
 	"device_model" : "모델명",
