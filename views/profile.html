@@ -1,161 +1,267 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-		<div class="sidebar-bg"></div>
-		<div id="content" class="content content-full-width">
-			<!-- begin profile -->
-			<div class="profile">
-				<div class="profile-header">
-					<!-- BEGIN profile-header-cover -->
-					<div class="profile-header-cover"></div>
-					<!-- END profile-header-cover -->
-					<!-- BEGIN profile-header-content -->
-					<div class="profile-header-content d-flex justify-content-start align-items-center">
-						<!-- BEGIN profile-header-img -->
-						<div class="mr-3">
-							<!--<img src="../assets/img/user/user-13.jpg" alt="">-->
-							<i class="fas fa-6x fa-user-circle"></i>
-						</div>
-						<!-- END profile-header-img -->
-						<!-- BEGIN profile-header-info -->
-						<div class="profile-header-info">
-							<h3 class="my-1">{{company.CNA}}</h3>
-							<p class="my-1">{{__('business_number')}} : {{company.CNU}}</p>
-						</div>
-						<!-- END profile-header-info -->
+	<div class="sidebar-bg"></div>
+	<div id="content" class="content content-full-width">
+		<!-- begin profile -->
+		<div class="profile">
+			<div class="profile-header">
+				<!-- BEGIN profile-header-cover -->
+				<div class="profile-header-cover"></div>
+				<!-- END profile-header-cover -->
+				<!-- BEGIN profile-header-content -->
+				<div class="profile-header-content d-flex justify-content-start align-items-center">
+					<!-- BEGIN profile-header-img -->
+					<div class="mr-3">
+						<!--<img src="../assets/img/user/user-13.jpg" alt="">-->
+						<i class="fas fa-6x fa-user-circle"></i>
 					</div>
-					<!-- END profile-header-content -->
-					<!-- BEGIN profile-header-tab -->
-					<!--<ul class="profile-header-tab nav nav-tabs">-->
-					<!--	<li class="nav-item"><p class="nav-link active mb-0">EDIT</p></li>-->
-					<!--</ul>-->
-					<!-- END profile-header-tab -->
+					<!-- END profile-header-img -->
+					<!-- BEGIN profile-header-info -->
+					<div class="profile-header-info">
+						<h3 class="my-1">{{company.CNA}}</h3>
+						<p class="my-1">{{__('business_number')}} : {{company.CNU}}</p>
+					</div>
+					<!-- END profile-header-info -->
 				</div>
+				<!-- END profile-header-content -->
+				<!-- BEGIN profile-header-tab -->
+				<!--<ul class="profile-header-tab nav nav-tabs">-->
+				<!--	<li class="nav-item"><p class="nav-link active mb-0">EDIT</p></li>-->
+				<!--</ul>-->
+				<!-- END profile-header-tab -->
 			</div>
-			<!-- end profile -->
-			<!-- begin profile-content -->
-			<div class="profile-content">
+		</div>
+		<!-- end profile -->
+		<!-- begin profile-content -->
+		<div class="profile-content">
+			<!-- begin tab-content -->
+			<div class="tab-content p-0">
+				<!-- begin nav-tabs -->
+				<ul class="nav nav-tabs">
+					<li class="nav-item">
+						<a href="#editInfoBox" data-toggle="tab" class="nav-link active">
+							<span class="d-sm-none h5 mb-0">{{__('profile_modify')}}</span>
+							<span class="d-sm-block d-none h5 mb-0">{{__('profile_modify')}}</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="#editPwBox" data-toggle="tab" class="nav-link">
+							<span class="d-sm-none h5 mb-0">{{__('profile_password_modify2')}}</span>
+							<span class="d-sm-block d-none h5 mb-0">{{__('profile_password_modify2')}}</span>
+						</a>
+					</li>
+				</ul>
+				<!-- end nav-tabs -->
 				<!-- begin tab-content -->
-				<div class="tab-content p-0">
-					<!-- begin #profile-post tab -->
-					<div class="tab-pane fade show active" id="profile-edit">
-						<!-- begin table -->
-						<div class="table-responsive form-inline">
-							<table class="table table-profile">
-								<thead>
-									<tr>
-										<th>
-											<h5>{{__('profile_modify')}}</h5>
-										</th>
-									</tr>
-								</thead>
-								<tbody>
-									<form id = 'Pfupdate' action = '/profile/pfupdate' method = 'post'>
-										<tr class="highlight">
-											<td class="field">{{__('business_number')}}</td>
-											<td name = "CNU" value = {{company.CNU}}><i class="fa fa-lg m-r-5" ></i>{{company.CNU}}</td>
-										</tr>
-										<tr class="highlight">
-											<td class="field valign-middle">{{__('profile_company_name')}}</td>
-											<td><Input type = "text" name = "CNA"  class="form-control form-control-sm"value ={{company.CNA}}></td>
-										</tr>
-										<tr >
-											<td class="field">{{__('profile_company_ceo_name')}}</td>
-											<td><i class="fa fa-lg m-r-5"></i>{{company.NA}}</td>
-										</tr>
-										<tr>
-											<td class="field">{{__('profile_company_phone')}}</td>
-											<td><i class="fa fa-lg m-r-5"></i>{{company.MN}}</td>
-										</tr>									
-	
-										<tr>
-											<td class="field valign-middle">{{__('profile_company_tel')}}</td>
-											<td><Input type = "text" name = "PN" class="form-control form-control-sm" value ={{company.PN}}></td>
-										</tr>
-										<tr>
-											<td class="field valign-middle">{{__('profile_password_now')}}</td><span class="text-danger">* {{PWmsg}}</span>
-											<td><Input type = "password" name = "PW" class="form-control form-control-sm" ></td>
-										</tr>
-											<tr class="highlight">
-											<td class="field">&nbsp;</td>
-											<td class="p-t-10 p-b-10">
-												<button type="submit" class=" btn btn-primary width-150">{{__('profile_password_submit')}}</button>
-												<button type="cancel" class="btn btn-white btn-white-without-border width-150 m-l-5">{{__('profile_password_cancel')}}</button>
-											</td>
-										</tr>
-									</form>
-									<form id = 'PWChange' action = '/profile/pwchange' method = 'post'>
-										<tr class="highlight"></tr>
-											<tr>
-											<th>
-												<h5>{{__('profile_password_modify2')}}</h5>
-											</th>
-											</tr>
-										<tr class="highlight">
-											<tr>
-											<td class="field valign-middle">{{__('profile_password_now')}}</td>
-											<td><Input type = "password" name = "PW" class="form-control form-control-sm" ></td>
-										</tr>
-										<tr class="highlight">
-										<tr>
-											<td class="field valign-middle">{{__('profile_password_modify')}}</td>
-											<td><Input type = "password" name = "PWc1" class="form-control form-control-sm" minlength= 8 maxlength= 16  ></td>
-										</tr>
-										<tr class="highlight">
-										<tr>
-											<td class="field valign-middle">{{__('profile_password_re')}}</td>
-											<td><Input type = "password" name = "PWc2" class="form-control form-control-sm" minlength= 8 maxlength= 16 ></td>
-										</tr>
-										</tr>
-											<td class="field">&nbsp;</td>
-											<td class="p-t-10 p-b-10">
-												<button type="submit" class="btn btn-primary width-150">{{__('profile_password_submit')}}</button>
-												<button type = "cancel" class="btn btn-white btn-white-without-border width-150 m-l-5">{{__('profile_password_cancel')}}</button>
-											</td>
-										</tr>
-									</form>
-								</tbody>
-							</table>
-						</div>
-						<!-- end table -->
-					</div>
-					<!-- end #profile-post tab -->
+				<div class="tab-content">
+					<!-- begin tab-pane -->
+					<div class="tab-pane fade active show" id="editInfoBox">
+						<form action="" method="post" id="editInfo" class="margin-bottom-0" data-parsley-validate="true" onsubmit="editInfo();">
+							<table class="table table-borderless table-th-valign-middle w-50 mx-auto my-2">
+								<tr>
+									<th>{{__('business_number')}}</th>
+									<td>{{company.CNU}}</td>
+								</tr>
+								<tr>
+									<th>{{__('profile_company_name')}}</th>
+									<td><input type="text" id="CNA" name="CNA"  class="form-control form-control-sm" value="{{company.CNA}}" data-parsley-error-message="{{__('required_detail')}}" required /></td>
+								</tr>
+								<tr >
+									<th>{{__('profile_company_ceo_name')}}</th>
+									<td>{{company.NA}}</td>
+								</tr>
+								<tr>
+									<th>{{__('profile_company_phone')}}</th>
+									<td><input type="text" id="MN" name="MN"  class="form-control form-control-sm inverse-model" value="{{company.MN}}" data-parsley-type="digits" data-parsley-type-message="{{__('register_digits_error')}}" data-parsley-required-message="{{__('required_detail')}}" required /></td>
+								</tr>									
 
+								<tr>
+									<th>{{__('profile_company_tel')}}</th>
+									<td><input type="text" id="PN" name="PN" class="form-control form-control-sm inverse-model" value="{{company.PN}}" data-parsley-type="digits" data-parsley-type-message="{{__('register_digits_error')}}" data-parsley-required-message="{{__('required_detail')}}" required /></td>
+								</tr>
+								<tr>
+									<th>{{__('profile_password_now')}}</th>
+									<td><input type="password" id="PW" name="PW" class="form-control form-control-sm" data-parsley-error-message="{{__('required_detail')}}" required /></td>
+								</tr>
+							</table>
+							<p class="text-center mt-3 m-b-0">
+								<input type="submit" class="btn btn-primary width-150" value="{{__('profile_password_submit')}}" />
+								<input type="reset" class="btn btn-white width-150 m-l-10" value="{{__('profile_password_cancel')}}" />
+							</p>
+						</form>
+					</div>
+					<!-- end tab-pane -->
+					<!-- begin tab-pane -->
+					<div class="tab-pane fade" id="editPwBox">
+						<div id="emailBox">
+							<table class="table table-borderless table-th-valign-middle w-50 mx-auto my-2">
+								<tr>
+									<th>{{__('email')}}</th>
+									<td><input type="email" id="EA" name="EA" class="form-control form-control-sm" data-parsley-required-message="{{__('required_detail')}}" required /></td>
+								</tr>
+							</table>
+							<p class="text-center mt-3 m-b-0">
+								<input type="button" class="btn btn-primary width-150" value="{{__('confirm')}}" onclick="emailCheck();">
+							</p>
+						</div>
+						<form action="" method="post" id="editPw" class="margin-bottom-0 d-none" data-parsley-validate="true" onsubmit="editPw();">
+							<table class="table table-borderless table-th-valign-middle w-50 mx-auto my-2">
+								<tr>
+									<th>{{__('profile_password_now')}}</th>
+									<td><input type="password" id="PW2" name="PW2" class="form-control form-control-sm" data-parsley-required-message="{{__('required_detail')}}" required /></td>
+								</tr>
+								<tr>
+									<th>{{__('profile_password_modify')}}</th>
+									<td><input type="password" id="CPW" name="CPW" class="form-control form-control-sm" data-parsley-length="[8, 16]" data-parsley-length-message="{{__('findpw_guide')}}" data-parsley-notequalto="#PW2" data-parsley-notequalto-message="{{__('pw_check_same')}}" data-parsley-required-message="{{__('required_detail')}}" required /></td>
+								</tr>
+								<tr >
+									<th>{{__('profile_password_re')}}</th>
+									<td><input type="password" id="RPW" name="RPW" class="form-control form-control-sm" data-parsley-equalto="#CPW" data-parsley-equalto-message="{{__('pw_check_diff')}}" data-parsley-required-message="{{__('required_detail')}}" required /></td>
+								</tr>
+							</table>
+							<p class="text-center mt-3 m-b-0">
+								<input type="submit" class="btn btn-primary width-150" value="{{__('profile_password_submit')}}">
+								<input type="reset" class="btn btn-white width-150 m-l-10" value="{{__('profile_password_cancel')}}">
+							</p>
+						</form>
+					</div>
+					<!-- end tab-pane -->
+				</div>
 				<!-- end tab-content -->
 			</div>
-			</div>
-			<!-- end profile -->
-			
-			<!-- end profile-content -->
-		<!-- end #content -->
-		
-
-	<!-- end page container -->
-
-</body>
-</html>
+			<!-- end tab-content -->
+		</div>
+		<!-- end profile -->
+	</div>
+	<!-- end #content -->
+	
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
-	// 에러 링크 기능
-    window.onload = () => {
-      if (new URL(location.href).searchParams.get('update')) {
-        alert("{{__('profile_error1')}}");
-      }
-      if (new URL(location.href).searchParams.get('uperr') || new URL(location.href).searchParams.get('pwerr') ) {
-        alert("{{__('profile_error2')}}");
-      }
-       if (new URL(location.href).searchParams.get('pwc')) {
-        alert("{{__('profile_error3')}}");
-      }
-       if (new URL(location.href).searchParams.get('pwcerr')) {
-        alert("{{__('profile_error4')}}");
-      }
-      if (new URL(location.href).searchParams.get('success')) {
-        alert("{{__('profile_error5')}}");
-      }
-      if (new URL(location.href).searchParams.get('same')) {
-        alert("{{__('profile_error6')}}");
-      }
+    function editInfo() {
+    	var validateCNA = $("#CNA").parsley();
+    	var validateMN = $("#MN").parsley();
+    	var validatePN = $("#PN").parsley();
+    	var validatePW = $("#PW").parsley();
     	
+		if (validateCNA.isValid() == true && validateMN.isValid() == true && validatePN.isValid() == true && validatePW.isValid() == true) {
+	    	$.ajax({
+				type: 'POST',
+				url: '/profile/editInfo',
+				dataType: 'json',
+				data: {
+					CNA : document.getElementsByName("CNA")[0].value,
+					MN : document.getElementsByName("MN")[0].value,
+					PN : document.getElementsByName("PN")[0].value,
+					PW : document.getElementsByName("PW")[0].value,
+				},
+				success: function(result) {
+					if (result.status == 'success') {
+						alert("{{__('profile_success')}}");
+						location = '/profile';
+					}
+					else if (result.status == 'exMn') {
+	    				alert("{{__('profile_ex_mn')}}");
+	    				document.getElementsByName("CNA")[0].value = "{{company.CNA}}";
+	    				document.getElementsByName("MN")[0].value = "{{company.MN}}";
+	    				document.getElementsByName("PN")[0].value = "{{company.PN}}";
+	    				document.getElementsByName("PW")[0].value = null;
+	    			}
+	    			else if (result.status == 'exPn') {
+	    				alert("{{__('profile_ex_pn')}}");
+	    				document.getElementsByName("CNA")[0].value = "{{company.CNA}}";
+	    				document.getElementsByName("MN")[0].value = "{{company.MN}}";
+	    				document.getElementsByName("PN")[0].value = "{{company.PN}}";
+	    				document.getElementsByName("PW")[0].value = null;
+	    			}
+					else if (result.status == 'fail') {
+						alert("{{__('profile_pw_error')}}");
+						document.getElementsByName("CNA")[0].value = "{{company.CNA}}";
+	    				document.getElementsByName("MN")[0].value = "{{company.MN}}";
+	    				document.getElementsByName("PN")[0].value = "{{company.PN}}";
+	    				document.getElementsByName("PW")[0].value = null;
+					}
+				}
+	    	});
+		}
+		else {
+			alert("{{__('profile_form_error')}}");
+		}
+    	event.preventDefault();
     }
+    
+    function emailCheck() {
+    	var validateEA = $("#EA").parsley();
+    	
+    	if (validateEA.isValid() == true) {
+    		$.ajax({
+    			type: 'POST',
+	    		url: '/profile/emailCK',
+	    		dataType: 'json',
+	    		data: {
+	    			EA : document.getElementsByName('EA')[0].value,
+	    		},
+	    		success: function(result) {
+	    			if (result.status == 'match') {
+	    				document.getElementById('emailBox').classList.add('d-none');
+	    				document.getElementById('editPw').classList.remove('d-none');
+	    			}
+	    			else if (result.status == 'mismatch') {
+	    				alert("{{__('find_email_error')}}");
+	    				document.getElementsByName('EA')[0].value = null;
+	    			}
+	    		}
+    		});
+    	}
+    	else {
+    		alert("{{__('register_email_valid_msg')}}")
+    	}
+    }
+    
+    function editPw() {
+    	var validatePW2 = $("#PW2").parsley();
+    	var validateCPW = $("#CPW").parsley();
+    	var validateRPW = $("#RPW").parsley();
+    	
+    	if (validatePW2.isValid() == true && validateCPW.isValid() == true && validateRPW.isValid() == true) {
+	    	$.ajax({
+	    		type: 'POST',
+	    		url: '/profile/editPw',
+	    		dataType: 'json',
+	    		data: {
+	    			PW : document.getElementsByName("PW2")[0].value,
+	    			CPW : document.getElementsByName("CPW")[0].value,
+	    			RPW : document.getElementsByName("RPW")[0].value,
+	    		},
+	    		success: function(result) {
+	    			if (result.status == 'success') {
+	    				alert("{{__('profile_pw_success')}}\n"+"{{__('login_again')}}");
+	    				location = '/login'
+	    			}
+	    			else if (result.status == 'fail') {
+	    				alert("{{__('profile_pw_error')}}");
+	    				document.getElementsByName("PW2")[0].value = null;
+	    				document.getElementsByName("CPW")[0].value = null;
+	    				document.getElementsByName("RPW")[0].value = null;
+	    			}
+	    		}
+	    	});
+    	}
+    	else {
+    		alert("{{__('profile_form_error')}}");
+    	}
+    	event.preventDefault();
+    }
+</script>
+{% endblock %}
+
+{% block script %}
+<script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
+<script>
+    window.Parsley.addValidator("notequalto", {
+		validateString: function(value, id) {
+			return value !== $(id).val();
+		}
+	});
 </script>
 {% endblock %}

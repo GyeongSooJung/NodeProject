@@ -90,7 +90,7 @@
     							<label class="control-label">{{__('business_number')}} <span class="text-danger"> *</span></label>
         						<div class="form-group m-b-20" >
         							<div class="d-flex justify-content-between align-items-center mb-2">
-        								<input id="CNU" name="CNU" type="text" class="form-control form-control-lg inverse-mode w-70 mr-2" placeholder="{{__('business_number')}}" data-parsley-error-message="{{__('required_detail')}}" data-parsley-errors-container="#err-msg1" required/>
+        								<input id="CNU" name="CNU" type="text" class="form-control form-control-lg inverse-mode w-70 mr-2" placeholder="{{__('business_number')}}" data-parsley-type="digits" data-parsley-type-message="{{__('register_digits_error')}}" data-parsley-required-message="{{__('required_detail')}}" data-parsley-errors-container="#err-msg1" required/>
     								    <input type="button" class="btn btn-primary btn-block btn-lg w-25" value="{{__('confirm')}}" onclick="checkCNU();">
     							    </div>
     							    <div id="err-msg1"></div>
@@ -126,7 +126,7 @@
     							<!--전화번호-->
         						<label class="control-label">{{__('company')}} {{__('phone_number')}} <span class="text-danger"> *</span></label>
         						<div class="form-group m-b-20" >
-    								<input id="PN" name = "PN" type="text" class="form-control form-control-lg inverse-mode" placeholder="{{__('company')}} {{__('phone_number')}}" data-parsley-type="digits" data-parsley-error-message="{{__('required_detail')}}" required/>
+    								<input id="PN" name = "PN" type="text" class="form-control form-control-lg inverse-mode" placeholder="{{__('company')}} {{__('phone_number')}}" data-parsley-type="digits" data-parsley-type-message="{{__('register_digits_error')}}" data-parsley-required-message="{{__('required_detail')}}" required/>
         						</div>
         						
         					<!--사업자 대표 정보-->
@@ -141,13 +141,13 @@
         						<!--휴대폰 번호-->
     							<label class="control-label">{{__('mobile_number')}} <span class="text-danger"> *</span></label>
         						<div class="form-group m-b-20" >
-    								<input id="MN" name = "MN" type="text" class="form-control form-control-lg inverse-mode" placeholder="{{__('mobile_number')}}" data-parsley-type="digits" data-parsley-error-message="{{__('required_detail')}}" required/>
+    								<input id="MN" name = "MN" type="text" class="form-control form-control-lg inverse-mode" placeholder="{{__('mobile_number')}}" data-parsley-type="digits" data-parsley-type-message="{{__('register_digits_error')}}" data-parsley-required-message="{{__('required_detail')}}" required/>
         						</div>
         						<!--비밀번호-->
     							<label class="control-label">{{__('pw')}} <span class="text-danger"> *</span></label>
         						<div class="form-group m-b-20" >
         							<div class="inputbox">
-        								<input id="PW" name = "PW" type="password" class="form-control form-control-lg inverse-mode" placeholder="{{__('pw_guide')}}" data-parsley-length="[8, 16]" data-parsley-error-message="{{__('findpw_guide')}}" required/>
+        								<input id="PW" name = "PW" type="password" class="form-control form-control-lg inverse-mode" placeholder="{{__('pw_guide')}}" data-parsley-length="[8, 16]" data-parsley-length-message="{{__('findpw_guide')}}" data-parsley-required-message="{{__('required_detail')}}" required/>
         								<font id="pwNotice" size="1"></font>
         							</div>
         						</div>
@@ -155,7 +155,7 @@
     							<label class="control-label">{{__('pw_check')}} <span class="text-danger"> *</span></label>
         						<div class="form-group m-b-20" >
         							<div class="inputbox">
-	    								<input id="CPW" name = "CPW" type="password" class="form-control form-control-lg inverse-mode" placeholder="{{__('pw_check_guide')}}" data-parsley-equalto="#PW" data-parsley-error-message="{{__('pw_check_diff')}}" required/>
+	    								<input id="CPW" name = "CPW" type="password" class="form-control form-control-lg inverse-mode" placeholder="{{__('pw_check_guide')}}" data-parsley-equalto="#PW" data-parsley-equalto-message="{{__('pw_check_diff')}}" data-parsley-required-message="{{__('required_detail')}}" required/>
 	        							<font id="pwNotice2" size="1"></font>
 	        						</div>
         						</div>
