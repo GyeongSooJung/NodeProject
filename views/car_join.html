@@ -125,6 +125,13 @@
 			window.open('/car_inspect', 'pop', "width=620, height=700, scrollbars=yes, resizable=yes");
 		}
 	};
+	
+	// 폼 enter키 submit 막기
+	document.addEventListener('keydown', function(event) {
+		if (event.keyCode === 13) {
+			event.preventDefault();
+		}
+	}, true);
 </script>
 {% endblock %}
 
