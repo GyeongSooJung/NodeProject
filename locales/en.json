@@ -22,7 +22,7 @@
 	"signup" : "Sign Up",
 	"findpw" : "Forgot your password",
 	"pw" : "Password",
-	"pw_guide" : "Password(8 digits or more)",
+	"pw_guide" : "Password(8 to 16 digits)",
 	"wrong_pw_guide" : "Wrong Password",
 	"match_pw_guide" : "Match Password",
 	"mismatch_pw_guide" : "Mismatch Password",

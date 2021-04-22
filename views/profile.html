@@ -1,5 +1,18 @@
 {% extends 'layout.html' %}
 
+{% block css %}
+<style>
+	.inputbox {
+		position: relative !important;
+	}
+	#pwNotice, #pwNotice2 {
+		position: absolute !important;
+		top: 8px;
+		left: 90%;
+	}
+</style>
+{% endblock %}
+
 {% block content %}
 	<div class="sidebar-bg"></div>
 	<div id="content" class="content content-full-width">
@@ -113,11 +126,21 @@
 								</tr>
 								<tr>
 									<th>{{__('profile_password_modify')}}</th>
-									<td><input type="password" id="CPW" name="CPW" class="form-control form-control-sm" data-parsley-length="[8, 16]" data-parsley-length-message="{{__('findpw_guide')}}" data-parsley-notequalto="#PW2" data-parsley-notequalto-message="{{__('pw_check_same')}}" data-parsley-required-message="{{__('required_detail')}}" required /></td>
+									<td>
+										<div class="inputbox">
+	        								<input type="password" id="CPW" name="CPW" class="form-control form-control-sm" data-parsley-length="[8, 16]" data-parsley-length-message="{{__('findpw_guide')}}" data-parsley-notequalto="#PW2" data-parsley-notequalto-message="{{__('pw_check_same')}}" data-parsley-required-message="{{__('required_detail')}}" required />
+	        								<font id="pwNotice" size="1"></font>
+	        							</div>
+									</td>
 								</tr>
 								<tr >
 									<th>{{__('profile_password_re')}}</th>
-									<td><input type="password" id="RPW" name="RPW" class="form-control form-control-sm" data-parsley-equalto="#CPW" data-parsley-equalto-message="{{__('pw_check_diff')}}" data-parsley-required-message="{{__('required_detail')}}" required /></td>
+									<td>
+										<div class="inputbox">
+	        								<input type="password" id="RPW" name="RPW" class="form-control form-control-sm" data-parsley-equalto="#CPW" data-parsley-equalto-message="{{__('pw_check_diff')}}" data-parsley-required-message="{{__('required_detail')}}" required />
+	        								<font id="pwNotice2" size="1"></font>
+	        							</div>
+	        						</td>
 								</tr>
 							</table>
 							<p class="text-center mt-3 m-b-0">
@@ -138,6 +161,44 @@
 	
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
+	window.addEventListener('load', function() {
+		// 비밀번호 입력 시 notice
+		$(function(){
+		    $('#CPW').keyup(function() {
+		    	if($('#CPW').val() == "") {
+		    		$('#pwNotice').hide();
+		    	}
+				else if($('#CPW').val().length < 8 || $('#CPW').val().length > 16 || $('#CPW').val() == $('#PW2').val()) {
+					$('#pwNotice').show();
+					$('#pwNotice').html('<i class="fas fa-lg fa-unlock"></i>');
+					$('#pwNotice').attr('color', '#ff100b');
+				}
+				else {
+					$('#pwNotice').show();
+					$('#pwNotice').html('<i class="fas fa-lg fa-lock"></i>');
+					$('#pwNotice').attr('color', '#23cf23');
+				}
+		    });
+		
+		    $('#RPW').keyup(function() {
+		    	if($('#RPW').val() == "") {
+		    		$('#pwNotice2').hide();
+		    	}
+				else if($('#CPW').val() == $('#RPW').val()) {
+					$('#pwNotice2').show();
+					$('#pwNotice2').html('<i class="far fa-lg fa-check-circle"></i>');
+					$('#pwNotice2').attr('color', '#23cf23');
+				}
+				else {
+					$('#pwNotice2').show();
+					$('#pwNotice2').html('<i class="fas fa-lg fa-times-circle"></i>');
+					$('#pwNotice2').attr('color', '#ff100b');
+				}
+		    });
+		});
+	});
+
+	// 회원정보 수정 ajax 기능
     function editInfo() {
     	var validateCNA = $("#CNA").parsley();
     	var validateMN = $("#MN").parsley();
@@ -190,6 +251,7 @@
     	event.preventDefault();
     }
     
+    // 이메일 체크 ajax 기능
     function emailCheck() {
     	var validateEA = $("#EA").parsley();
     	
@@ -218,6 +280,7 @@
     	}
     }
     
+    // 비밀번호 변경 ajax 기능
     function editPw() {
     	var validatePW2 = $("#PW2").parsley();
     	var validateCPW = $("#CPW").parsley();

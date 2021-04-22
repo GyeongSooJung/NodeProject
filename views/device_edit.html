@@ -48,28 +48,20 @@
             
               <div class="panel-body">
                <form id="device-form" action="/device/device_edit/upreg/{{deviceone.MAC}}" method="post" class="form-horizontal" data-parsley-validate="true" name="device-form">
-                  {% if CNU == 3388800960 %}
                   <div class="form-group row m-b-15">
-                     <label class="col-md-4 col-sm-4 col-form-label" for="MD">{{__('business_number')}} :</label>
-                     <div class="col-md-8 col-sm-8">
-                        <input class="form-control" id="CNU" type="text" name = "CNU" value="{{deviceone.CNU}}" data-parsley-required="true"/>
-                     </div>
-                  </div>
-                  {% endif %}
-                  <div class="form-group row m-b-15">
-                     <label class="col-md-4 col-sm-4 col-form-label" for="MD">{{__('device_model')}} * :</label>
+                     <label class="col-md-4 col-sm-4 col-form-label" for="MD">{{__('device_model')}} <span class="text-danger">*</span> :</label>
                      <div class="col-md-8 col-sm-8">
                         <input class="form-control" id="MD" type="text" name = "MD" value="{{deviceone.MD}}" data-parsley-required="true" readonly />
                      </div>
                   </div>
                   <div class="form-group row m-b-15">
-                     <label class="col-md-4 col-sm-4 col-form-label" for="VER">{{__('device_version')}} * :</label>
+                     <label class="col-md-4 col-sm-4 col-form-label" for="VER">{{__('device_version')}} <span class="text-danger">*</span> :</label>
                      <div class="col-md-8 col-sm-8">
                         <input class="form-control" id="VER" type="text" name = "VER" placeholder="{{__('device_edit_version_enter')}}" data-parsley-required="true" />
                      </div>
                   </div>
                   <div class="form-group row m-b-15">
-                     <label class="col-md-4 col-sm-4 col-form-label" for="MAC">{{__('device_mac')}} * :</label>
+                     <label class="col-md-4 col-sm-4 col-form-label" for="MAC">{{__('device_mac')}} <span class="text-danger">*</span> :</label>
                      <div class="col-md-8 col-sm-8">
                         <input class="form-control" id="MAC" type="text" name = "MAC" value="{{deviceone.MAC}}" data-parsley-required="true" readonly />
                      </div>

@@ -22,7 +22,7 @@
 	"signup" : "회원가입",
 	"findpw" : "비밀번호 찾기",
 	"pw" : "비밀번호",
-	"pw_guide" : "비밀번호(8자리 이상)",
+	"pw_guide" : "비밀번호(8~16자리)",
 	"wrong_pw_guide" : "비밀번호가 틀립니다.",
 	"match_pw_guide" : "비밀번호 일치",
 	"pw_check" : "비밀번호 확인",

@@ -33,7 +33,7 @@ router.post('/checkCNU', async(req, res, next) => {
         const exEmail = exCNU.EA;
         console.log("이엑스이메일"+exEmail);
         
-        function maskingName(email) {
+        var masking = function maskingName(email) {
             var maskingEmail = "";
             var idx = email.indexOf('@');
             var email1 = email.substring(0, idx);
@@ -51,7 +51,7 @@ router.post('/checkCNU', async(req, res, next) => {
             return maskingEmail;
         }
         
-        const mask = maskingName(exEmail);
+        const mask = masking(exEmail);
 
         if(!exCNU) {
             return res.send({ status: 'fail' });
@@ -148,7 +148,7 @@ router.post('/findPW', async(req, res, next) => {
     const { CNU, EA } = req.body;
 
     try {
-        function createCode(arr, length) {
+        var createCode = function createCode(arr, length) {
             var randomStr = "";
             
             for (var i = 0; i < length; i++) {
