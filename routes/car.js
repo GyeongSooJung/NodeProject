@@ -14,42 +14,41 @@ const Company = require('../schemas/company');
 
 //자동차 등록
   //DB에 등록
-router.post('/car_join', isNotLoggedIn,async (req, res, next) => {
-  const { CC, CN, SN} = req.body;
+router.post('/car_join', isNotLoggedIn, async (req, res, next) => {
+  const { CN, CPN } = req.body;
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   // const CA = moment().format('YYYY-MM-DD hh:mm:ss');
   
   
   try {
-      const exCar = await Car.findOne({ "CN" :  CN });
-      // const exCar2 = await Car.findOne({ "SN" : SN  });
-      const check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
+    const exCar = await Car.findOne({ "CID" : CID, "CN" :  CN });
+    const check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
 
-      if (CN.length >= 7 && CN.length <= 8) {
-        if (check.test(CN) == true) {
-          if (!exCar) {
-            await Car.create({
-              CID, CC, CN, SN, 
-            });
-            
-            const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
-            await Company.where({ "CNU" : CNU })
-              .update({ "CUA" : CUA }).setOptions({runValidators : true})
-              .exec();
-            return res.redirect('/car_list');
-          }
-          else {
-            return res.redirect('/car_join?exist=true');
-          }
+    if (CN.length >= 7 && CN.length <= 8) {
+      if (check.test(CN) == true) {
+        if (!exCar) {
+          await Car.create({
+            CID, CN, CPN,
+          });
+          
+          const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
+          await Company.where({ "CNU" : CNU })
+            .update({ "CUA" : CUA }).setOptions({runValidators : true})
+            .exec();
+          return res.redirect('/car_list');
         }
         else {
-          return res.redirect('/car_join?type=true');
+          return res.redirect('/car_join?exist=true');
         }
       }
       else {
-        return res.redirect('/car_join?length=true');
+        return res.redirect('/car_join?type=true');
       }
+    }
+    else {
+      return res.redirect('/car_join?length=true');
+    }
     } catch (err) {
       console.error(err);
       return next(err);
@@ -81,8 +80,6 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
           // 중복된 값들을 넣는 배열(CID같음)
           const re_excel1 = [];
           const re_excel2 = [];
-          // 중복된 값들을 넣는 배열(CID다름)
-          const re_di_excel1 = [];
           
           // 엑셀 파일 처리
           const workbook = xlsx.readFile(file.path);
@@ -91,13 +88,11 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
           
           var a = 0;
           var b = 0;
-          var c = 0;
           
           // 항목이 100개 이하인 경우
           if (resData.Sheet1.length <= 100) {
             for(var j = 0; j < resData.Sheet1.length;  j++) {
-              const carone = await Car.findOne({"CN": resData.Sheet1[j].차량번호});
-              
+              const carone = await Car.findOne({"CID" : CID, "CN": resData.Sheet1[j].차량번호});
               const check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
               
               // 차량번호 길이가 7,8자리인 경우
@@ -108,27 +103,15 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
                   
                   // 차량번호가 중복되지 않는 경우
                   if (!carone) {
-                    resData[sheetnames[0]][j].CID = CID;
-                    
-                    add_excel1[a] = resData.Sheet1[j].CID;
-                    add_excel2[a] = resData.Sheet1[j].차량번호;
+                    add_excel1[a] = resData.Sheet1[j].차량번호;
+                    add_excel2[a] = resData.Sheet1[j].차주전화번호;
                     a += 1;
                   }
-                  // 차량번호가 중복되는 경우
+                  // 차량번호가 중복되는 경우(CID 같음)
                   else {
-                    // 등록 업체와 중복 차량 업체가 같은 경우
-                    if (CID == carone.CID) {
-                      resData[sheetnames[0]][j].CID = CID;
-                
-                      re_excel1[b] = resData.Sheet1[j].CID;
-                      re_excel2[b] = resData.Sheet1[j].차량번호;
-                      b += 1;
-                    }
-                    // 등록 업체와 중복 차량 업체가 다른 경우
-                    else {
-                      re_di_excel1[c] = resData.Sheet1[j].차량번호;
-                      c += 1;
-                    }
+                    re_excel1[b] = resData.Sheet1[j].차량번호;
+                    re_excel2[b] = resData.Sheet1[j].차주전화번호;
+                    b += 1;
                   }
                 }
                 // 
@@ -143,37 +126,23 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
             }
             a = 0;
             b = 0;
-            c = 0;
             
-            if (re_di_excel1 == "") {
-              for (var h = 0; h < add_excel1.length; h ++) {
-                Car.insertMany({
-                  "CID": add_excel1[h],
-                  "CN": add_excel2[h],
-                  "SN": "엑셀등록",
+            for (var h = 0; h < add_excel1.length; h ++) {
+              await Car.insertMany({
+                "CID" : CID,
+                "CN" : add_excel1[h],
+                "CPN" : add_excel2[h],
+              });
+            }
+            for (var i = 0; i < re_excel1.length; i ++) {
+              await Car.where({ "CN" : re_excel1[i] })
+                .update({
+                  "CID" : CID,
+                  "CN" : re_excel1[i],
+                  "CPN" : re_excel2[i],
                 });
-              }
-              for (var j = 0; j < re_excel1.length; j ++) {
-                Car.where({ "CN" : re_excel1[j] })
-                  .update({
-                    "CID" : CID,
-                    "CN" : re_excel2[j],
-                    "SN" : "엑셀등록",
-                  });
-              }
-              return res.redirect('/car_list');
             }
-            else {
-              var re_di_excel = [];
-              
-              for (var i = 0; i < re_di_excel1.length; i ++) {
-                re_di_excel[i] = [re_di_excel1[i]];
-              }
-              
-              req.session.excelCar = await re_di_excel;
-              
-              return res.redirect('/car_join?inspect=true');
-            }
+            return res.redirect('/car_list');
           }
           else {
             return res.redirect('/car_join?excelSize=true');
@@ -206,28 +175,55 @@ router.post('/car_join_xlsx', isNotLoggedIn, async(req, res, next) => {
 
 //차량 수정
   //DB
-router.post('/car_edit/upreg/:CN', isNotLoggedIn,async (req, res, next) => {
-    const { CC, CN, SN } = req.body;
+router.post('/car_edit/upreg/:CN', isNotLoggedIn, async (req, res, next) => {
+    const { CN, CPN } = req.body;
     const CID = req.decoded.CID;
     const CNU = req.decoded.CNU;
     const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
     
     try {
-      // const exCar = await Car.findOne({ "CN" :  CN });
-      // const exCar2 = await Car.findOne({ "SN" : SN  });
-      // const check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
+      const exCar = await Car.findOne({ "CID" : CID, "CN" :  CN });
+      const check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
       
-      await Car.where({"CN" : req.params.CN})
-        .update({ "CID" : CID,
-                      "CC" : CC,
-                      "CN" : CN,
-                      "SN" : SN,
-        }).setOptions({runValidators : true})
-        .exec();
-        
-      await Company.where({"CNU" : CNU})
-        .update({ "CUA" : CUA }).setOptions({runValidators : true})
-        .exec();
+      if (CN.length >= 7 && CN.length <= 8) {
+        if (check.test(CN) == true) {
+          if (!exCar) {
+            await Car.where({"CN" : req.params.CN})
+              .update({ "CID" : CID,
+                        "CN" : CN,
+                        "CPN" : CPN,
+              }).setOptions({runValidators : true})
+              .exec();
+              
+            await Company.where({"CNU" : CNU})
+              .update({ "CUA" : CUA }).setOptions({runValidators : true})
+              .exec();
+          }
+          else {
+            if (CN == req.params.CN) {
+              await Car.where({"CN" : req.params.CN})
+                .update({ "CID" : CID,
+                          "CN" : CN,
+                          "CPN" : CPN,
+                }).setOptions({runValidators : true})
+                .exec();
+                
+              await Company.where({"CNU" : CNU})
+                .update({ "CUA" : CUA }).setOptions({runValidators : true})
+                .exec();
+            }
+            else {
+              res.redirect('/car_list?exist=true');
+            }
+          }
+        }
+        else {
+          return res.redirect('/car_join?type=true');
+        }
+      }
+      else {
+        return res.redirect('/car_join?length=true');
+      }
       
     } catch (error) {
     console.error(error);
@@ -237,19 +233,19 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn,async (req, res, next) => {
 });
 
 //차량 삭제
-router.get('/car_delete/:CN',isNotLoggedIn, async (req, res, next) => {
-  const { CC, CN, SN } = req.body;
+router.get('/car_delete/:CN', isNotLoggedIn, async (req, res, next) => {
+  const { CN, CPN } = req.body;
+  const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
   try {
-    const carone = await Car.findOne({ "CN" : req.params.CN });
+    const carone = await Car.findOne({ "CID" : CID, "CN" : req.params.CN });
     await Cardelete.create({
-                   "CID" : carone.CID,
+                    "CID" : carone.CID,
                     "CC" : carone.CC,
-                    "CN" : carone.CN,
-                    "SN" : carone.SN,
+                    "CPN" : carone.CPN,
     });
-    await Car.remove({ "CN" : req.params.CN });
+    await Car.remove({ "CID" : CID, "CN" : req.params.CN });
     res.redirect('/car_list');
     
   const companyone = await Company.where({"CNU" : CNU})
@@ -263,7 +259,8 @@ router.get('/car_delete/:CN',isNotLoggedIn, async (req, res, next) => {
 
 //차량 선택삭제
 router.post('/car_select_delete',isNotLoggedIn ,async (req, res, next) => {
-    const { CC, CN, SN } = req.body;
+    const { CN, CPN } = req.body;
+    const CID = req.decoded.CID;
     const CNU = req.decoded.CNU;
     const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
     try {
@@ -275,25 +272,23 @@ router.post('/car_select_delete',isNotLoggedIn ,async (req, res, next) => {
         else {
           
           if (typeof(ck) == 'string') {
-            const carone = await Car.findOne({"CN" : ck});
+            const carone = await Car.findOne({ "CID" : CID, "CN" : ck });
                 await Cardelete.create({
-                   "CID" : carone.CID,
-                    "CC" : carone.CC,
+                    "CID" : carone.CID,
                     "CN" : carone.CN,
-                    "SN" : carone.SN,
+                    "CPN" : carone.CPN,
                 });
-            await Car.remove({ "CN" : ck });
+            await Car.remove({ "CID" : CID, "CN" : ck });
           }
           else {
              for(var i = 0; i < ck.length; i++){
-               var carone = await Car.findOne({"CN" : ck[i]});  
+               var carone = await Car.findOne({ "CID" : CID, "CN" : ck[i] });  
                  await Cardelete.create({
-                   "CID" : carone.CID,
-                    "CC" : carone.CC,
+                    "CID" : carone.CID,
                     "CN" : carone.CN,
-                    "SN" : carone.SN,
+                    "CPN" : carone.CPN,
                 });
-                await Car.remove({ "CN" : ck[i] });
+                await Car.remove({ "CID" : CID, "CN" : ck[i] });
              }
           }
           

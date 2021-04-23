@@ -227,6 +227,7 @@
 	"car": "Car",
 	"car_number": "Car Number",
 	"car_number_msg" : "Enter car number without spacing.(000 1234)",
+	"car_customer_phone" : "Car owner's phone number",
 	"car_register" : "Car Registeration",
 	"car_type" : "Car Type",
 	"car_type_select" : "Please select a car type.",

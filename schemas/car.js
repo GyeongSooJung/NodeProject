@@ -5,18 +5,22 @@ const carSchema = new Schema({
 
   CID: {
     type: String,
-    unique: false,
     require: true
   },
+  //차종
   CC: {
     type: Number,
-    unique: false,
   },
+  //차량번호
   CN: {
     type: String,
-    unique: true,
-    require: true
+    require: true,
   },
+  //차주 전화번호
+  CPN: {
+    type: String,
+  },
+  //차대번호
   SN: {
     type: String,
   },

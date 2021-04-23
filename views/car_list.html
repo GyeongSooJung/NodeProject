@@ -45,11 +45,9 @@
 											<input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/>
 										</th>
 										<th width="2.5%"></th>
-										<th>{{__('car_type')}}</th>
 										<th>{{__('car_number')}}</th>
-										<th>{{__('car_identification_number')}}</th>
+										<th>{{__('car_customer_phone')}}</th>
 										<th>{{__('create_date')}}</th>
-										<th>{{__('update_date')}}</th>
 										<th width="1%"></th>
 									</tr>
 								</thead>
@@ -67,41 +65,15 @@
 			    							</td>
 			    							<td class="font-weight-bold">{{totalNum - count - (currentPage*10)}} </td>
 				  							{% set totalNum = totalNum - 1 %}
-			    							{% if car.CC == 1 %}
-												<td>{{__('car_type1')}}</td>
-											{% elif car.CC == 2 %}
-												<td>{{__('car_type2')}}</td>
-											{% elif car.CC == 3 %}
-												<td>{{__('car_type3')}}</td>
-											{% elif car.CC == 4 %}
-												<td>{{__('car_type4')}}</td>
-											{% elif car.CC == 5 %}
-												<td>{{__('car_type5')}}</td>
-											{% elif car.CC == 6 %}
-												<td>{{__('car_type6')}}</td>
-											{% elif car.CC == 7 %}
-												<td>{{__('car_type7')}}</td>
-											{% elif car.CC == 8 %}
-												<td>{{__('car_type8')}}</td>
-											{% elif car.CC == 9 %}
-												<td>{{__('car_type9')}}</td>
-											{% else %}
-												<td>{{__('null')}}</td>
-											{% endif %}
 											<td>{{car.CN}}</td>
-											{% if car.SN %}
-											<td>{{car.SN}}</td>
-											{% else %} <td>{{__('null')}} </td>
+											{% if car.CPN %}
+											<td>{{car.CPN}}</td>
+											{% else %}
+											<td>N/A</td>
 											{% endif %}
-											
 											<td>
 												<script>
 										        Timefunction("{{car.CA}}");
-												</script>
-											</td>
-											<td>
-												<script>
-												Timefunction("{{car.UA}}");
 												</script>
 											</td>
 											<td class="with-btn" nowrap>
@@ -250,6 +222,15 @@
 		}
 		if (new URL(location.href).searchParams.get('searcherror')) {
 			alert("{{__('search_error')}}");
+		}
+		if (new URL(location.href).searchParams.get('length')) {
+			alert("{{__('car_length_error')}}");
+		}
+		if (new URL(location.href).searchParams.get('type')) {
+			alert("{{__('car_type_error')}}");
+		}
+		if (new URL(location.href).searchParams.get('exist')) {
+			alert("{{__('car_exist_error')}}");
 		}
 	}
 </script>

@@ -374,22 +374,6 @@ router.get('/car_join', isNotLoggedIn, DataSet, async(req, res, next) => {
   res.render('car_join', { company: req.decoded.company, aclist });
 });
 
-//차량 검증
-router.get('/car_inspect', isNotLoggedIn, DataSet, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
-  var session_car = await req.session.excelCar;
-  // req.session.excelCar = null;
-  
-  if(typeof(session_car[1]) == 'string') {
-    var session_car_1 = session_car;
-    res.render('car_inspect', {company: req.decoded.company, aclist, session_car_1});
-  }
-  else{
-    res.render('car_inspect', {company: req.decoded.company, aclist, session_car});
-  }
-});
-
 //차량 수정
 router.get('/car_edit/:CN', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
