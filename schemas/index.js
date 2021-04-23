@@ -2,10 +2,12 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 
 const connect = () => {
+    const mongoCon = 'mongodb://'+process.env.MONGO_ID+':'+process.env.MONGO_PWD+'@'+process.env.MONGO_IP+':'+process.env.MONGO_PORT+'/admin';
+    
     if (process.env.NODE_ENV !== 'production') {
         mongoose.set('debug', true);
     }
-    mongoose.connect(process.env.MONGO_IP, {dbName: 'OASIS'}, {
+    mongoose.connect(mongoCon, {dbName: 'OASIS'}, {
     }, (error) => {
         if (error) {
             console.log('DB Connection is Error', error);

@@ -40,7 +40,10 @@ pw : root
     + COOKIE_SECRET = 쿠키 비밀키
     + PORT = 기본 웹포트 (ex. 80)
     + IP = 홈페이지 주소  (ex. http://1.23.45.678)
-    + MONGO_IP = mongodb://각 개발IP/admin (ex. mongodb://1.23.45.678:1111/admin)
+    + MONGO_ID = 몽고DB - 아이디
+    + MONGO_PWD = 몽고DB - 비밀번호
+    + MONGO_IP = 몽고DB - IP
+    + MONGO_PORT = 몽고DB - PORT
   - 아임포트
     + imp_code = 아임포트 식별자 코드
     + imp_key = 아임포트 REST API 키
