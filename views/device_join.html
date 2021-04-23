@@ -21,19 +21,19 @@
 					<form id="device-form" action="/device/device_join" method="post" class="form-horizontal" data-parsley-validate="true" name="device-form">
 					
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="MD">{{__('device_model')}} * :</label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="MD">{{__('device_model')}} <span class="text-danger">*</span> :</label>
 							<div class="col-md-8 col-sm-8">
 								<input class="form-control" type="text" id="MD" name="MD" placeholder="{{__('device_model_enter')}}" data-parsley-required="true" data-parsley-error-message="{{__('required_detail')}}"/>
 							</div>
 						</div>
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="VER">{{__('device_version')}} * :</label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="VER">{{__('device_version')}} <span class="text-danger">*</span> :</label>
 							<div class="col-md-8 col-sm-8">
 								<input class="form-control" type="Number" id="VER" name="VER" placeholder="{{__('device_version_enter')}}" data-parsley-required="true" data-parsley-error-message="{{__('required_detail')}}"/>
 							</div>
 						</div>
 						<div class="form-group row m-b-15">
-							<label class="col-md-4 col-sm-4 col-form-label" for="MAC">{{__('device_mac')}} * :</label>
+							<label class="col-md-4 col-sm-4 col-form-label" for="MAC">{{__('device_mac')}} <span class="text-danger">*</span> :</label>
 							<div class="col-md-8 col-sm-8">
 								<input class="form-control" type="String" id="MAC" name="MAC" onKeypress ="this.value = setComma(this.value)" placeholder="{{__('device_mac_enter')}}" minlength=17 maxlength=17 data-parsley-required="true" data-parsley-error-message="{{__('required_detail')}}"/>
 							</div>
