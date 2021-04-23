@@ -355,6 +355,8 @@ exports.createHistory = async(req, res) => {
         const { WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD } = req.body;
 
         var result = await History.create({ WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD });
+        await Device.where({_id : "606e9aefe1b5857040081cc4"}).update({$inc: {UN : 1}})
+        
         console.log(result);
 
         res.json({
@@ -432,8 +434,9 @@ exports.findHistory = async(req, res) => {
 exports.registerDevice = async(req, res) => {
     try {
         const { CID, MD, MAC, NN, VER } = req.body;
+        const UN = 0;
 
-        var result = await Device.create({ CID, MD, MAC, NN, VER });
+        var result = await Device.create({ CID, MD, MAC, NN, VER, UN });
         console.log(result);
 
         res.json({
@@ -662,7 +665,7 @@ exports.registerKAKAO = async(req, res) => {
                   const params = {
                     autoTypeDetect: true,
                     text: companyone.CNA + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
-                    to: '01021128228', // 수신번호 (받는이)
+                    to: number, // 수신번호 (받는이)
                     from: '16443486', // 발신번호 (보내는이)
                     type: 'ATA',
                     kakaoOptions: {

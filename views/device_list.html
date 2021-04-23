@@ -60,6 +60,8 @@
 										<th>{{__('device_version')}}</th>
 										<th>{{__('device_mac')}}</th>
 										<th>{{__('device_nick')}}</th>
+										<th>{{__('device_use_number')}}</th>
+										<th>{{__('create_date')}}</th>
 										<th width="1%"></th>
 									</tr>
 								</thead>
@@ -81,6 +83,12 @@
 											<td>{{device.VER}}</td>
 											<td>{{device.MAC}}</td>
 											<td>{{device.NN}}</td>
+											<th>{{device.UN}}회</th>
+											<td>
+												<script>
+										        Timefunction("{{device.CA}}");
+												</script>
+											</td>
 											<td class="with-btn" nowrap>
 												
 												
