@@ -1215,8 +1215,9 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
 //                                  Test                                      //
 //----------------------------------------------------------------------------//
 
-router.get('/test', (req, res, next) => {
-  res.render('test');
+router.get('/test', async(req, res, next)  =>  {
+  
+  res.render('company_list');
 });
 
 module.exports = router;

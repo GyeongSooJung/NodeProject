@@ -72,11 +72,14 @@ const CompanySchema = new Schema({
     UA: {
         type: Date,
         default: Date.now
-    },
+    },//Car UpDate
     CUA: {
         type: Date,
         default: Date.now
-    },
+    },//Renual UpDate
+    RUA: {
+        type: Date
+    }, //UpDate Date
 }, { collection: 'Company' });
 
 module.exports = mongoose.model('Company', CompanySchema, 'Company');

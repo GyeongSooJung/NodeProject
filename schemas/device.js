@@ -32,8 +32,11 @@ const deviceSchema = new Schema({
     UA: {
         type: Date,
         default: Date.now
-    },
+    },//Time of Use
     UT: {
+        type: Number,
+    },//Number of Use
+    UN: {
         type: Number,
     }
 },

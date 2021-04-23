@@ -355,6 +355,8 @@ exports.createHistory = async(req, res) => {
         const { WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD } = req.body;
 
         var result = await History.create({ WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD });
+        await Device.where({_id : DID}).update({$inc: {UN : 1}});
+        
         console.log(result);
 
         res.json({
@@ -432,8 +434,9 @@ exports.findHistory = async(req, res) => {
 exports.registerDevice = async(req, res) => {
     try {
         const { CID, MD, MAC, NN, VER } = req.body;
+        const UN = 0;
 
-        var result = await Device.create({ CID, MD, MAC, NN, VER });
+        var result = await Device.create({ CID, MD, MAC, NN, VER, UN });
         console.log(result);
 
         res.json({

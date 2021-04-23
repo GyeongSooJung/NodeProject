@@ -26,31 +26,31 @@
 		<!-- end panel-heading -->
 		<!-- begin panel-body -->
 		<div class="panel-body">
-			<center>
-	            <div class="btn-group m-b-5 mx-3">
-	               <a href="/history_list" class="btn btn-primary text-white px-4">{{__('all')}}</a>
-	            </div>
-	            <div class="btn-group m-b-5 mx-3">
-	               <a href="javascript:;" class="btn btn-primary text-white px-5">{{__('car')}}</a>
-	               <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle text-white"><b class="caret"></b></a>
-	               <div class="dropdown-menu dropdown-menu-right">
-	                  {% for car in cars %}
-	                  <a href="/history_list/?CN={{car.CN}}" class="dropdown-item">{{car.CN}}</a>
+			<!--<center>-->
+	  <!--          <div class="btn-group m-b-5 mx-3">-->
+	  <!--             <a href="/history_list" class="btn btn-primary text-white px-4">{{__('all')}}</a>-->
+	  <!--          </div>-->
+	  <!--          <div class="btn-group m-b-5 mx-3">-->
+	  <!--             <a href="javascript:;" class="btn btn-primary text-white px-5">{{__('car')}}</a>-->
+	  <!--             <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle text-white"><b class="caret"></b></a>-->
+	  <!--             <div class="dropdown-menu dropdown-menu-right">-->
+	  <!--                {% for car in cars %}-->
+	  <!--                <a href="/history_list/?CN={{car.CN}}" class="dropdown-item">{{car.CN}}</a>-->
 	                  <!--/history_CN_select/{{car.CN}}-->
-	                  {% endfor %}
-	               </div>
-	            </div>
-	            <div class="btn-group m-b-5 mx-3">
-	               <a href="javascript:;" class="btn btn-primary text-white px-5">{{__('device')}}</a>
-	               <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle text-white"><b class="caret"></b></a>
-	               <div class="dropdown-menu dropdown-menu-right">
-	                  {% for device in devices %}
-	                  <a href="/history_list/?MD={{device.MD}}" class="dropdown-item">{{device.MD}}</a>
+	  <!--                {% endfor %}-->
+	  <!--             </div>-->
+	  <!--          </div>-->
+	  <!--          <div class="btn-group m-b-5 mx-3">-->
+	  <!--             <a href="javascript:;" class="btn btn-primary text-white px-5">{{__('device')}}</a>-->
+	  <!--             <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle text-white"><b class="caret"></b></a>-->
+	  <!--             <div class="dropdown-menu dropdown-menu-right">-->
+	  <!--                {% for device in devices %}-->
+	  <!--                <a href="/history_list/?MD={{device.MD}}" class="dropdown-item">{{device.MD}}</a>-->
 	                  <!--/history_MD_select/{{device.MD}}-->
-	                  {% endfor %}
-	               </div>
-	            </div>
-			</center>
+	  <!--                {% endfor %}-->
+	  <!--             </div>-->
+	  <!--          </div>-->
+			<!--</center>-->
          
  	       <div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
 	        	<div class="mr-2">{{__('search')}} : </div>
@@ -70,9 +70,7 @@
 								<th class="text-nowrap">{{__('car_number')}}</th>
 								<th class="text-nowrap">{{__('device_model')}}</th>
 							    <th class="text-nowrap">{{__('history_date')}}</th>
-								<th class="text-nowrap">{{__('register_date')}}</th>
 								<th class="text-nowrap">{{__('history_time')}}</th>
-								<th class="text-nowrap">{{__('history_result')}}</th>
 								<th class="text-nowrap">{{__('worker')}}</th>
 								<th width="1%"></th>
 							</tr>
@@ -114,22 +112,12 @@
 											Timefunction("{{history.ET}}");
 											</script>
 										</td>
-										<td>
-											<script>
-											Timefunction("{{history.CA}}");
-											</script>
-										</td>
 										{% if (history.PD.length//60)==0  %}
 										<td>{{history.PD.length%60+"s"}}</td>
 										{% else %}
 										<td>{{history.PD.length//60+"m "+history.PD.length%60+"s"}}</td>
 										{% endif %}
 										
-										{% if history.RC == 1 %}
-										<td>{{__('success')}}</td>
-										{% else %}
-										<td>{{__('failed')}}</td>
-										{% endif %}
 										<td>
 									    	{% if history.WNM %}
 											  	{{history.WNM}}
@@ -138,7 +126,7 @@
 											{% endif %}
 										</td>
 				  						<td>
-				  							<a href="javascript:delete_one('{{history._id}}')" class="btn btn-sm btn-white width-60">{{__('delete')}}</a>
+				  							<a href="/history_chart/{{history._id}}" class="btn btn-sm btn-white width-60">{{__('main_indetail')}}</a>
 				  						</td>
 									</tr>
 								{% endfor %}
