@@ -126,10 +126,6 @@
 		if (new URL(location.href).searchParams.get('excelType')) {
 			alert("{{__('car_exceltype_error')}}");
 		}
-		if (new URL(location.href).searchParams.get('inspect')) {
-			alert("{{__('car_inspect_error')}}");
-			window.open('/car_inspect', 'pop', "width=620, height=700, scrollbars=yes, resizable=yes");
-		}
 	};
 	
 	// 폼 enter키 submit 막기
