@@ -355,7 +355,7 @@ exports.createHistory = async(req, res) => {
         const { WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD } = req.body;
 
         var result = await History.create({ WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD });
-        await Device.where({_id : "606e9aefe1b5857040081cc4"}).update({$inc: {UN : 1}})
+        await Device.where({_id : DID}).update({$inc: {UN : 1}})
         
         console.log(result);
 
