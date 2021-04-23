@@ -662,7 +662,7 @@ exports.registerKAKAO = async(req, res) => {
                   const params = {
                     autoTypeDetect: true,
                     text: companyone.CNA + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
-                    to: '01021128228', // 수신번호 (받는이)
+                    to: number, // 수신번호 (받는이)
                     from: '16443486', // 발신번호 (보내는이)
                     type: 'ATA',
                     kakaoOptions: {
