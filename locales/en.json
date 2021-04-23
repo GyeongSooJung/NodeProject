@@ -217,6 +217,7 @@
 	"device_mac" : "MAC address",
 	"device_mac_enter" : "Enter Mac address in format (11:22:33:44:55:66)",
 	"device_nick" : "NickName",
+	"device_use_number" : "NumberOfUse",
 	"device_nick_enter" : "Please enter your alias as desired.",
 	"device_duplicated" : "MAC already exists.",
 	"device_mac_wrong" : "Please enter the MAC address correctly.",

@@ -217,6 +217,7 @@
 	"device_mac" : "MAC 주소",
 	"device_mac_enter" : "MAC 주소를 형식대로 입력하세요 (11:22:33:44:55:66)",
 	"device_nick" : "별칭",
+	"device_use_number" : "사용 횟수",
 	"device_nick_enter" : "별칭을 원하는대로 입력하세요.",
 	"device_duplicated" : "이미 존재하는 MAC 입니다.",
 	"device_mac_wrong" : "MAC 주소를 정확히 입력해주세요.",
