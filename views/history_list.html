@@ -85,7 +85,7 @@
 							    {% set count = 0 %}
 							    
 								{% for history in historylist %}
-									<tr onClick="location.href='/history_chart/{{history._id}}'" class="odd gradeX">
+									<tr class="odd gradeX">
 				  						<td onclick='event.cancelBubble=true;' class="with-btn" nowrap>
 				 							<input id="ck" type="checkbox" name = "_id" class="neHeros" value={{history._id}} onChange="eachCheckedBox(this);"/>
 				  						</td>
