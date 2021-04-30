@@ -120,7 +120,7 @@
         		console.log($(this).val());
         		if(key.keyCode == 13) {
         			if(pagingObject.search == "")
-        			alert("{{__('choicliste_error')}}");
+        			alert("{{__('choice_error')}}");
         			else {
         				pagingObject.searchtext = $(this).val();
         				pagereload()
@@ -138,7 +138,7 @@
         		console.log($(this).val());
         		if(key.keyCode == 13) {
         			if(pagingObject.search == "")
-        			alert("{{__('choicliste_error')}}");
+        			alert("{{__('choice_error')}}");
         			else {
         				console.log(pagingObject.search);
         				pagingObject.searchtext = $(this).val();
@@ -263,7 +263,7 @@
     function searchbutton() {
     	
     	if(pagingObject.search == "")
-          alert("{{__('choice_error')}}");
+          alert("{{__('search_option_error')}}");
         else {
         	if(!document.getElementById('searchtext').classList.contains('d-none')) {
 				pagingObject.searchtext = $('#searchtext').val();

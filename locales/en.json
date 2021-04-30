@@ -195,6 +195,7 @@
     "excel_register" : "Register as an Excel File",
     "return_list" : "Back",
 	"choice_error" : "Please select an item.",
+	"search_option_error": "Please select a search option.",
 	"search_error" : "Please check the search term again.",
 	"create_date" : "Create Date",
 	"update_date" : "Update Date",
