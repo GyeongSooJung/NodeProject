@@ -30,13 +30,31 @@
 				<!-- begin panel-body -->
 				<div class="panel-body" >
 					
+					
 					<div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
-	            	<div class="mr-2">{{__('search')}} : </div>
-				<div>
-					<input type="text" id="NNkeyword" class="form-control" placeholder ="{{__('device_nick')}}" />
-				</div>
-				<div>
-					<button class="ml-2 btn btn-primary text-white px-1" onclick="searchbutton()">{% if NN %} <i class="mx-1 fas fa-lg fa-fw m-r-10 fa-chevron-left"></i> {% else %}<i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i> {% endif %}</button></div>
+	            	<div class="mr-2">
+	            		<div class="btn-group m-r-5 m-b-5">
+								<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>
+								<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
+								<div class="dropdown-menu dropdown-menu-right" style="">
+									<a href="javascript:searchoption('MD');" class="dropdown-item">{{__('device_model')}}</a>
+									<a href="javascript:searchoption('VER');" class="dropdown-item">{{__('device_version')}}</a>
+									<a href="javascript:searchoption('MAC');" class="dropdown-item">{{__('device_mac')}}</a>
+									<a href="javascript:searchoption('NN');" class="dropdown-item">{{__('device_nick')}}</a>
+									<a href="javascript:searchoption('UN');" class="dropdown-item">{{__('device_use_number')}}</a>
+								
+									<!--<a href="javascript:searchoption('CA');" class="dropdown-item">{{__('create_date')}}</a>-->
+								</div>
+						</div> 
+					</div>
+					<div>
+						<input id ="searchtext" type="text" class="form-control" placeholder ="" />
+						<input id ="searchdatetext" type="date" class="d-none form-control" placeholder ="" />
+						
+					</div>
+					<div>
+					<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
+					<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('return_list')}}</a>
 				</div>
 	               	
 	     <!--          	    <div class="col-xl-4">-->
@@ -48,72 +66,32 @@
 						<!--</div>-->
 					
 					<div class="overflow-auto">
-						<form action="/device/device_select_delete" method="post">
+						<form  method="post">
 							<table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle text-center">
 								<thead>
 									<tr>
-										<th width="1%">
+										<th id ="allcheck" width="1%">
 											<input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/>
 										</th>
 										<th width="2.5%"></th>
-										<th>{{__('device_model')}}</th>
-										<th>{{__('device_version')}}</th>
-										<th>{{__('device_mac')}}</th>
-										<th>{{__('device_nick')}}</th>
-										<th>{{__('device_use_number')}}</th>
-										<th>{{__('create_date')}}</th>
+										<th width="10.5%" class = "sort" name = "MD">{{__('device_model')}}<i id = "MD" class="d-none  float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+										<th width="10%" class = "sort" name = "VER">{{__('device_version')}}<i id = "VER" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+										<th width="18%" class = "sort" name = "MAC">{{__('device_mac')}}<i id = "MAC" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+										<th width="18%" class = "sort" name = "NN">{{__('device_nick')}}<i id = "NN" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+										<th width="18%" class = "sort" name = "UN">{{__('device_use_number')}}<i id = "UN" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+										<th width="18%" class = "sort" name = "CA">{{__('create_date')}}<i id = "CA" class="float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
 										<th width="1%"></th>
 									</tr>
 								</thead>
-								<tbody>
-									{% if (totalNum == 0) %}
-									<tr>
-										<td colspan="7">No Data</td>
-									</tr>
-									{% else %}
-									{% set count = 0 %}
-										{% for device in devices %}
-										<tr>
-			    							<td class="with-btn" nowrap>
-												<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{device.MAC}} onChange="eachCheckedBox(this);"/>
-			    							</td>
-			    							<td class="font-weight-bold">{{totalNum - count - (currentPage*10)}} </td>
-				  							{% set totalNum = totalNum - 1 %}
-											<td>{{device.MD}}</td>
-											<td>{{device.VER}}</td>
-											<td>{{device.MAC}}</td>
-											<td>{{device.NN}}</td>
-											<th>{{device.UN}}회</th>
-											<td>
-												<script>
-										        Timefunction("{{device.CA}}");
-												</script>
-											</td>
-											<td class="with-btn" nowrap>
-												
-												
-												<a href="/device_edit/{{device.MAC}}" class="btn btn-sm btn-primary width-60 m-r-2 edit-btn">{{__('modify')}}</a>
-												<a href="javascript:delete_one('{{device.MAC}}')" class="btn btn-sm btn-white width-60">{{__('delete')}}</a>
-											</td>
-										</tr>
-										{% endfor %}
-									{% endif %}
+								<tbody id = "memDiv">
+									
 								</tbody>
 							</table>
 							<div class="d-flex justify-content-between align-item-center">
-								<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="return delete_check(this.form);">
+								<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="delete_check();">
 								
-								<div class="d-flex justify-content-around align-item-center">
-									<a href="javascript:pageDoubleBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
-									<a href="javascript:pageBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
-									{% if (totalNum==0) %}
-									{% else %}
-										{% for i in range(startPage, endPage) %}
-										<a href="/device_list/?page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
-										{% endfor %}
-									{% endif %}
-									<a href="javascript:pageBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
-									<a href="javascript:pageDoubleBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
+								<div id="pagebox" class=" justify-content-around align-item-center">
+									
 								</div>
 							</div>
 						</form>
@@ -131,51 +109,364 @@
 <!-- Script -->
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script>
+    var pagingObject = new Object({array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : ""});
+    
 	// 검색기능
 	$(document).ready(function() {
-        $("#keyword").keyup(function() {
-            var k = $(this).val();
-            $("#data-table-combine > tbody > tr").hide();
-            var temp = $("#data-table-combine > tbody > tr > td:contains('" + k + "')");
-
-            $(temp).parent().show();
-        })
+		
+        	pagereload() // 첫 화면 페이지 로드
+        	
+        	$('#searchtext').keyup(function(key) {
+        		console.log($(this).val());
+        		if(key.keyCode == 13) {
+        			if(pagingObject.search == "")
+        			alert("{{__('choicliste_error')}}");
+        			else {
+        				pagingObject.searchtext = $(this).val();
+        				pagereload()
+        				document.getElementById('gotolist').classList.remove('d-none');
+        			}
+        		}
+        		if($(this).val() == "") {
+        			pagereload()
+        		}
+        	
+        		
+        	})
+        	
+        	$('#searchdatetext').keyup(function(key) {
+        		console.log($(this).val());
+        		if(key.keyCode == 13) {
+        			if(pagingObject.search == "")
+        			alert("{{__('choicliste_error')}}");
+        			else {
+        				console.log(pagingObject.search);
+        				pagingObject.searchtext = $(this).val();
+        				console.log(pagingObject.searchtext)
+        				pagereload()
+        				document.getElementById('gotolist').classList.remove('d-none');
+        				document.getElementById('searchtext').classList.remove('d-none');
+        				document.getElementById('searchdatetext').classList.add('d-none');
+        			}
+        		}
+        		if($(this).val() == "") {
+        			pagereload()
+        		}
+        	
+        		
+        	})
+        	
+        	$('.sort').click(function() {
+        		
+        		$("#searchoption").empty();
+            	$("#searchoption").append("{{__('search')}}");
+        		
+        		pagingObject.search = "";
+        		pagingObject.searchtext = "";
+        		
+        		var paglist = pagingObject.array;
+        		
+        		var check_sort = $(this).attr('name');
+        		
+        		console.log(check_sort)
+        		console.log(typeof(check_sort))
+        		
+        		console.log(document.getElementById(check_sort).classList.contains('d-none'))
+        		console.log(document.getElementById(check_sort).classList.contains('fa-angle-down'))
+        		
+        		 if(document.getElementById(check_sort).classList.contains('d-none')) {
+        		 	
+        		 	document.getElementById(check_sort).classList.remove('fa-angle-up');
+	        		document.getElementById(check_sort).classList.add('fa-angle-down');
+        		 	var check2 = check_sort;
+        		 }
+        		 else {
+        		 	if (document.getElementById(check_sort).classList.contains('fa-angle-down')) {
+        		 		
+	        		 	document.getElementById(check_sort).classList.remove('fa-angle-down');
+	        		 	document.getElementById(check_sort).classList.add('fa-angle-up');
+        		 		var check2 = check_sort + "2";
+        		 	}
+        		 	else {
+        		 		
+        		 		document.getElementById(check_sort).classList.remove('fa-angle-up');
+	        		 	document.getElementById(check_sort).classList.add('fa-angle-down');
+        		 		var check2 = check_sort;
+        		 		
+        		 	}
+        		 }
+        		 
+        		 console.log(check2)
+        		
+        		document.getElementById('MD').classList.add('d-none');
+        		document.getElementById('VER').classList.add('d-none');
+        		document.getElementById('MAC').classList.add('d-none');
+        		document.getElementById('NN').classList.add('d-none');
+        		document.getElementById('UN').classList.add('d-none');
+        		document.getElementById('CA').classList.add('d-none');
+        		
+        		
+        		document.getElementById(check_sort).classList.remove('d-none');
+        		
+        		
+        		pagingObject.array = paglist;
+        		pagingObject.sort = check2;
+        		pagingObject.page = 0;
+        		pagereload();
+        		
+        	})
+	        
+     
     })
+    
+    //초기화
+    function refresh() {
+    	pagingObject.array = [];
+    	pagingObject.sort = "CA";
+    	pagingObject.page = 0;
+    	pagingObject.postNum = 10;
+    	pagingObject.pageNum = 5;
+    	pagingObject.startpage = 0;
+    	pagingObject.endpage = 0;
+    	pagingObject.search = "";
+    	pagingObject.searchtext = "";
+    	
+    	
+    }
+    
 
+    function searchoption(opt) {
+    	pagingObject.search = opt;
+    	$("#searchoption").empty();
+    	var string = opt;
+    	if (string == "MD")
+    	   string = "{{__('device_model')}}";
+    	if (string == "VER")
+    	   string = "{{__('device_version')}}";
+    	if (string == "MAC")
+    	   string = "{{__('device_mac')}}";
+    	if (string == "NN")
+    	   string = "{{__('device_nick')}}";
+    	if (string == "UN")
+    	   string = "{{__('device_use_number')}}";
+    	if (string == "CA") {
+    	   string = "{{__('create_date')}}";
+    	   document.getElementById('searchtext').classList.add('d-none');
+    	   document.getElementById('searchdatetext').classList.remove('d-none');
+    	}
+    	$("#searchoption").append(string);
+    	$("#searchoption").show();
+    }
+    
+    
+    
     function searchbutton() {
-		const keyword = document.getElementById('NNkeyword').value;
-		location = '/device_list/?NN=' + keyword;
+    	
+    	if(pagingObject.search == "")
+          alert("{{__('choice_error')}}");
+        else {
+        	if(!document.getElementById('searchtext').classList.contains('d-none')) {
+				pagingObject.searchtext = $('#searchtext').val();
+				pagereload()
+				document.getElementById('gotolist').classList.remove('d-none');
+        	}else {
+        		console.log($('#searchdatetext').val())
+        		pagingObject.searchtext = $('#searchdatetext').val();
+				pagereload()
+				document.getElementById('gotolist').classList.remove('d-none');
+        	}
+		}
+	}
+	
+	// 전체 목록으로
+	function gotolist() {
+		
+		refresh()
+		pagereload()
+		
+		$("#searchoption").empty();
+		$("#searchoption").append("{{__('search')}}");
+		document.getElementById('gotolist').classList.add('d-none');
 	}
 	
 	// 페이지 기능
-	function pageBtn(dir) {
+	function pagebutton(num) {
+		pagingObject.page = num;
+    	pagereload()
+    }
+    
+	function pageBtn(dir,page) {
 		if(dir == 'left') {
-			location = '/device_list/?page={{currentPage-1}}';
+			if((pagingObject.page - 1) > -1)
+			{
+				pagingObject.page -= 1;
+				pagereload()
+			}
 		}
 		if(dir == 'right') {
-			location = '/device_list/?page={{currentPage+1}}';
+			if((pagingObject.page + 1) < Math.ceil(pagingObject.array.length / pagingObject.postNum))
+			{
+				pagingObject.page += 1;
+				pagereload()
+				
+			}
+			
 		}
 	}
 	
-	function pageDoubleBtn(dir) {
+	function pageDoubleBtn(dir,page) {
 		if(dir == 'left') {
-			location = '/device_list/?page={{startPage-1}}';
+			if((pagingObject.page - pagingObject.pageNum) < 0) {
+				pagingObject.page = 0;
+				pagereload()
+			}
+			else {
+				pagingObject.startpage -= 1;
+				pagingObject.page -= 5;
+				pagereload()
+			}
 		}
 		if(dir == 'right') {
-			location = '/device_list/?page={{endPage+1}}';
+			
+			if ((pagingObject.page + pagingObject.pageNum) >= Math.ceil(pagingObject.array.length / pagingObject.postNum))
+			{
+				pagingObject.page = Math.ceil(pagingObject.array.length / pagingObject.postNum)-1;
+				pagereload()
+			}
+			else {
+				pagingObject.startpage += 1;
+				pagingObject.page += 5;
+				pagereload()
+			}
 		}
 	}
+	
+	function pagereload() {
+    	    $.ajax({
+	    		url: "/ajax/device_list",
+	                    type: "POST",
+	                    async: false,
+	                    dataType: 'json',
+	                    data: {
+	                        sort : pagingObject.sort,
+	                        search : pagingObject.search,
+	                        searchtext : pagingObject.searchtext
+	                    }
+	        }).done(function (data) { 
+	        	if(data.result == true) {
+		    		    pagingObject.array = data.devicelist;
+		    		    pagingObject.startpage = Math.floor((pagingObject.page) / pagingObject.pageNum) * pagingObject.pageNum;
+		    		    pagingObject.endpage = pagingObject.startpage + pagingObject.pageNum;
+		    		    
+		    		    var devicelist = pagingObject.array; // 전체 리스트
+		    		    var devicenum = devicelist.length; // 전체 리스트의 갯수
+		    		    var page = pagingObject.page; // 페이지 번호
+		    		    var startPage = pagingObject.startpage; // 시작 페이지
+		    		    var endPage = pagingObject.endpage; // 끝 페이지
+		    		    var postNum = pagingObject.postNum; // 게시될 페이지 숫자
+		    		    var pageNum = pagingObject.pageNum; // 페이지 번호의 갯수
+		    		    var totalPage = Math.ceil(devicenum/postNum); // 전체 페이지의 갯수
+		    		    
+		    		    if (endPage > totalPage) { // 끝 페이지가 총 페이지 수보다 많다면 같게끔 처리
+					        endPage = totalPage;
+					    }
+		    		    
+			        	//tr 초기화
+			        	$("#data-table-combine > tbody > tr").remove();
+			        	//페이지 넘버 박스 초기화
+				     	$("#pagebox *").remove(); 
+				    		
+				        var	insertTr = ""; // 채워넣을 HTML 초기화
+				     	
+				     	var indexcount = 1; // 인덱스번호 초기화
+				    		
+				    	
+				    	
+				    	
+				     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+				     	   if(devicelist[i]) {
+							  insertTr += "<tr>";
+							  insertTr += " 	<td class='with-btn' nowrap>";
+							  insertTr += "		<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+ devicelist[i].MAC +" onChange='eachCheckedBox(this);'/>";
+							  insertTr += " 	</td>";
+							  insertTr += "<td class='font-weight-bold'>"+(devicenum - (page*10)) +" </td>";
+							  insertTr += "<td>"+ devicelist[i].MD +"</td>";
+							  insertTr += "<td>"+ devicelist[i].VER+"</td>";
+							  insertTr += "<td>"+ devicelist[i].MAC+"</td>";
+							  insertTr += "<td>"+ devicelist[i].NN+"</td>";
+							  insertTr += "<td>"+ devicelist[i].UN+"회</td><td>";
+							 
+						     if ( (moment(devicelist[i].CA).format('DD')) == moment().format('DD') )
+						     {
+						       insertTr +=  moment(devicelist[i].CA).format('HH:mm');
+						     }
+						     else {
+						      insertTr += moment(devicelist[i].CA).format('YYYY-MM-DD');
+						     }
+						      insertTr += "</td><td class='with-btn' nowrap>"	
+							  insertTr += "<a href='/device_edit/"+devicelist[i].MAC+"'   class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>{{__('modify')}}</a>";
+							  insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this) class='btn btn-sm btn-white width-60' name =' "+ devicelist[i].MAC +"'></td> ";
+							  insertTr += "</tr>";
+							  devicenum -= indexcount;
+							  
+				     	   }
+				     	}
+							  
+							  $("#memDiv").append(insertTr);
+							  insertTr = " ";
+					    	  insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>";
+							  insertTr +=	"<a href='javascript:;' onclick=pageBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>";
+		
+								for(var i = startPage; i < endPage; i ++) {
+									if(page == i)
+										insertTr +=	"<input type='button' onclick='pagebutton("+ i +")' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' style=' background-color: #00acac; color: white !important;' >";
+									else
+										insertTr +=	"<input type='button' onclick='pagebutton("+ i +")' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' >";
+								}
+								insertTr +=	"<a href='javascript:;' onclick=pageBtn('right',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-right'></i></a>";
+								insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('right',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-right'></i></a>";
+							  $("#pagebox").append(insertTr);
+							  $("#pagebox").show();
+	        	}
+	        	
+	        	else if (data.result == "nothing") {
+	        		alert("{{__('search_error')}}")
+	        	}
+	        	
+	        	else {
+	        		alert("{{__('search_error')}}")
+	        	}
+			})
+    	
+    }
+	
 	
 	// 일반 삭제 기능
-	function delete_one(ck) {
+	function delete_one(obj) {
+		
+		console.log($(obj).attr('name'));
 		var answer;
-		var ckc = ck;
-		//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
-		//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
-		answer = confirm("{{__('delete_confirm')}}");
-		//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
+	    	answer = confirm("{{__('delete_confirm')}}");
 		if(answer == true){
-			location = '/device/device_delete/' + ckc;
+			$.ajax({
+    		url: "/device/ajax/device_deleteone",
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                    	select : $(obj).attr('name'),
+                    }
+	    	}).done(function (data) {  
+	    		if(data.result == true) {
+	    			alert("{{__('delete_success')}}");
+	    			location.reload();
+	    		}
+	    		else {
+	    			alert("{{__('choice_error')}}");
+	    		}
+	    		
+	    	})
+    	
+    	
 		}
 		else {
 			location = '/device_list';
@@ -184,10 +475,33 @@
 
 	// 선택항목 삭제 기능
 	function delete_check(frm) {
+		var select_obj = [];
+        $('input[type="checkbox"]:checked').each(function (index) {
+                select_obj[index] = $(this).val() ;
+        });
+        console.log(select_obj);
 		var answer;
-		answer = confirm("{{__('delete_confirm')}}");
+	    	answer = confirm("{{__('delete_confirm')}}");
 		if(answer == true){
-			frm.action='/device/device_select_delete/'; frm.submit(); return true;
+			$.ajax({
+    		url: "/device/ajax/device_delete",
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                    	select : select_obj,
+                    }
+	    	}).done(function (data) {  
+	    		if(data.result == true) {
+	    			alert("{{__('delete_success')}}");
+	    			location.reload();
+	    		}
+	    		else {
+	    			alert("{{__('choice_error')}}");
+	    		}
+	    		
+	    	})
+    	
+    	
 		}
 		else {
 			location = '/device_list';

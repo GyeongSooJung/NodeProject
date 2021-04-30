@@ -25,6 +25,9 @@ var request = require('request');
 //메세지 조회 사용
 const { msg } = require('solapi'); 
 
+let running = false;
+global.running = running;
+
 //----------------------------------------------------------------------------//
 //                                  기본라우터                                //
 //----------------------------------------------------------------------------//
@@ -331,6 +334,8 @@ router.get('/device_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   const NN = req.query.NN;
+  
+  
 
   let page = req.query.page;
 
@@ -340,7 +345,6 @@ router.get('/device_list', isNotLoggedIn, DataSet, async(req, res, next) => {
     const devices = await Device.find({ "NN": NN }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
     res.render('device_list', { company: req.decoded.company, aclist, devices, totalNum, currentPage, totalPage, startPage, endPage, NN });
-
 
   }
   else {
@@ -360,6 +364,138 @@ router.get('/device_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   }
 
 
+});
+
+router.post('/ajax/device_list', isNotLoggedIn, DataSet, async function(req, res) {
+  const CID = req.decoded.CID;
+  
+  var sort = req.body.sort;
+  var search = req.body.search;
+  var searchtext = req.body.searchtext;
+  
+  console.log(searchtext);
+  
+  if ((search!="") && (searchtext!="")) {
+    try{
+      if (search =="MD") {
+        var devices = await Device.find({ "CID": CID, "MD" : {$regex:searchtext} });
+        if(devices.length == 0) 
+        res.json({result : "nothing"});
+      }
+      else if (search =="DNM") {
+        var devices = await Device.find({ "CID": CID, "DNM" : {$regex:searchtext} });
+        if(devices.length == 0) 
+        res.json({result : "nothing"});
+      }
+      else if (search =="MAC") {
+        var devices = await Device.find({ "CID": CID, "MAC" : {$regex:searchtext} });
+        if(devices.length == 0) 
+        res.json({result : "nothing"});
+      }
+      else if (search =="NN") {
+        var devices = await Device.find({ "CID": CID, "NN" : {$regex:searchtext} });
+        if(devices.length == 0) 
+        res.json({result : "nothing"});
+      }
+      else if (search =="UN") {
+        searchtext = parseInt(searchtext);
+        var devices = await Device.find({ "CID": CID, "UN" : searchtext });
+        if(devices.length == 0) 
+        res.json({result : "nothing"});
+      }
+      else {
+        console.log(typeof(searchtext))
+        var devices = await Device.find({ "CID": CID, "CA" : {$regex:searchtext}})
+        console.log(devices +"@@@")
+      }
+    }catch(e) {
+      res.json({ result: false});
+    }
+    
+  }
+  
+  else {
+    
+      var devices = await Device.find({ "CID": CID });
+    
+      if(sort == "MD") {
+          devices.sort(function (a,b) {
+            if(typeof(a.MD) == "object")
+            a.MD = JSON.stringify(a.MD);
+            return (a.MD[0]).charCodeAt(0) < (b.MD[0]).charCodeAt(0) ? -1 : (a.MD[0]).charCodeAt(0) > (b.MD[0]).charCodeAt(0) ? 1 : 0;
+          })
+      }
+      
+      else if(sort == "MD2") {
+          devices.sort(function (a,b) {
+            if(typeof(a.MD) == "object")
+            a.MD = JSON.stringify(a.MD);
+            return (a.MD[0]).charCodeAt(0) > (b.MD[0]).charCodeAt(0) ? -1 : (a.MD[0]).charCodeAt(0) < (b.MD[0]).charCodeAt(0) ? 1 : 0;
+          })
+      }
+      
+      else if(sort == "VER") {  // 버전은 숫자인데 스키마에서 string이라 첫글자만 비교함 그래서 바꿔야됨
+          devices.sort(function (a,b) {
+            var anum = parseInt(a.VER);
+            var bnum = parseInt(b.VER);
+            return anum < bnum ? -1 : anum > bnum ? 1 : 0;
+          })
+      }
+      
+      else if(sort == "VER2")
+          devices.sort(function (a,b) {
+            var anum = parseInt(a.VER);
+            var bnum = parseInt(b.VER);
+            return anum > bnum ? -1 : anum < bnum ? 1 : 0;
+          })
+        
+      else if(sort == "MAC")
+        var devices = await Device.find({ "CID": CID }).sort({ MAC: -1 });
+        
+      else if(sort == "MAC2")
+        var devices = await Device.find({ "CID": CID }).sort({ MAC: 1 });
+        
+      else if(sort == "NN") {
+          devices.sort(function (a,b) {
+            if(typeof(a.NN) == "object")
+            a.NN = JSON.stringify(a.NN);
+            return (a.NN[0]).charCodeAt(0) < (b.NN[0]).charCodeAt(0) ? -1 : (a.NN[0]).charCodeAt(0) > (b.NN[0]).charCodeAt(0) ? 1 : 0;
+          })
+      }
+      
+      else if(sort == "NN2") {
+          devices.sort(function (a,b) {
+            if(typeof(a.NN) == "object")
+            a.NN = JSON.stringify(a.NN);
+            return (a.NN[0]).charCodeAt(0) > (b.NN[0]).charCodeAt(0) ? -1 : (a.NN[0]).charCodeAt(0) < (b.NN[0]).charCodeAt(0) ? 1 : 0;
+          })
+      }
+      else if(sort == "UN")
+        var devices = await Device.find({ "CID": CID }).sort({ UN: 1 });
+        
+      else if(sort == "UN2")
+        var devices = await Device.find({ "CID": CID }).sort({ UN: -1 });
+        
+      else if(sort == "CA")
+        var devices = await Device.find({ "CID": CID }).sort({ CA: -1 });
+        
+      else if(sort == "CA2")
+        var devices = await Device.find({ "CID": CID }).sort({ CA: 1 });
+        
+      else {
+        var devices = await Device.find({ "CID": CID }).sort({ CA: -1 });
+        
+      }
+  }
+  
+  var devicelist = [];
+  if(devices.length) {
+    for(var i = 0; i < devices.length; i ++) {
+      devicelist[i] = devices[i];
+    }
+  }
+  res.json({ result: true, devicelist : devicelist, devicenum : devices.length});
+ 
 });
 
 //----------------------------------------------------------------------------//
@@ -507,9 +643,7 @@ router.get('/history_list', isNotLoggedIn, DataSet, async(req, res, next) => {
     const keyword = req.query.keyword;
 
     let page = req.query.page;
-
-    if (!CN & !MD) {
-
+    
       const totalNum = await History.countDocuments({ "CID": CID });
       let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
       const historylist = await History.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
@@ -519,37 +653,135 @@ router.get('/history_list', isNotLoggedIn, DataSet, async(req, res, next) => {
       }
 
       res.render('history_list', { company: req.decoded.company, aclist, cars, devices, historylist, totalNum, currentPage, totalPage, startPage, endPage, totalNumlist });
-    }
-
-    else if (CN) {
-      const carone = await Car.findOne({ "CN": CN });
-      if (carone) {
-        const totalNum = await History.countDocuments({ "VID": carone._id });
-        let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-        const historylist = await History.find({ "VID": carone._id }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-
-        res.render('history_list', { company: req.decoded.company, aclist, cars, carone, devices, historylist, totalNum, currentPage, totalPage, startPage, endPage });
-      }
-      else {
-        res.redirect('?searcherror=true');
-      }
-    }
-
-    else if (MD) {
-      const deviceone = await Device.findOne({ "MD": MD });
-      console.log(deviceone);
-
-      const totalNum = await History.countDocuments({ "DID": deviceone._id });
-      let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-      const historylist = await History.find({ "DID": deviceone._id }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-
-      res.render('history_list', { company: req.decoded.company, aclist, cars, devices, deviceone, historylist, totalNum, currentPage, totalPage, startPage, endPage });
-    }
+    
   }
   catch (err) {
     console.error(err);
     next(err);
   }
+});
+
+router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, res) {
+  const CID = req.decoded.CID;
+  
+  var sort = req.body.sort;
+  var search = req.body.search;
+  var searchtext = req.body.searchtext;
+  
+  console.log(searchtext);
+  
+  if ((search!="") && (searchtext!="")) {
+    try{
+      if (search =="CNM") {
+        var historys = await History.find({ "CID": CID, "CNM" : {$regex:searchtext} });
+        if(historys.length == 0) 
+        res.json({result : "nothing"});
+      }
+      else if (search =="DNM") {
+        var historys = await History.find({ "CID": CID, "DNM" : {$regex:searchtext} });
+        if(historys.length == 0) 
+        res.json({result : "nothing"});
+      }
+      else if (search =="WNM") {
+        var historys = await History.find({ "CID": CID, "WNM" : {$regex:searchtext} });
+        if(historys.length == 0) 
+        res.json({result : "nothing"});
+      }
+      // else if (search =="ET") {
+      //   var historys = await History.find({ "CID": CID, "ET" : {$regex:searchtext} });
+      //   if(historys.length == 0) 
+      //   res.json({result : "nothing"});
+      // }
+      else {
+        var historys = await History.find({ "CID": CID }).sort({ ET: -1 });
+      }
+    }catch(e) {
+      res.json({ result: false});
+    }
+    
+  }
+  
+  else {
+    
+      var historys = await History.find({ "CID": CID });
+    
+      if(sort == "CNM") {
+          historys.sort(function (a,b) {
+            
+            if(typeof(a.CNM) == "object")
+            a.CNM = JSON.stringify(a.CNM);
+            return (a.CNM[0]).charCodeAt(0) < (b.CNM[0]).charCodeAt(0) ? -1 : (a.CNM[0]).charCodeAt(0) > (b.CNM[0]).charCodeAt(0) ? 1 : 0;
+          })
+      }
+      
+      else if(sort == "CNM2") {
+          historys.sort(function (a,b) {
+            if(typeof(a.CNM) == "object")
+            a.CNM = JSON.stringify(a.CNM);
+            return (a.CNM[0]).charCodeAt(0) > (b.CNM[0]).charCodeAt(0) ? -1 : (a.CNM[0]).charCodeAt(0) < (b.CNM[0]).charCodeAt(0) ? 1 : 0;
+          })
+      }
+      
+      else if(sort == "DNM") { 
+          historys.sort(function (a,b) {
+            if(typeof(a.DNM) == "object")
+            a.DNM = JSON.stringify(a.DNM);
+            return (a.DNM[0]).charCodeAt(0) < (b.DNM[0]).charCodeAt(0) ? -1 : (a.DNM[0]).charCodeAt(0) > (b.DNM[0]).charCodeAt(0) ? 1 : 0;
+          })
+      }
+      
+      else if(sort == "DNM2"){
+          historys.sort(function (a,b) {
+            if(typeof(a.DNM) == "object")
+            a.DNM = JSON.stringify(a.DNM);
+            return (a.DNM[0]).charCodeAt(0) > (b.DNM[0]).charCodeAt(0) ? -1 : (a.DNM[0]).charCodeAt(0) < (b.DNM[0]).charCodeAt(0) ? 1 : 0;
+          })
+       }
+      else if(sort == "ET")
+        var historys = await History.find({ "CID": CID }).sort({ ET: -1 });
+        
+      else if(sort == "ET2")
+        var historys = await History.find({ "CID": CID }).sort({ ET: 1 });
+        
+      else if(sort == "PD") {
+          historys.sort(function (a,b) {
+            return (a.PD).length < (b.PD).length ? -1 : (a.PD).length > (b.PD).length ? 1 : 0;
+          });
+          
+      }
+      else if(sort == "PD2") {
+          historys.sort(function (a,b) {
+            return (a.PD).length > (b.PD).length ? -1 : (a.PD).length < (b.PD).length ? 1 : 0;
+          });
+      }
+      else if(sort == "WNM") {
+          historys.sort(function (a,b) {
+            if(typeof(a.WNM) == "object")
+            a.WNM = JSON.stringify(a.WNM);
+            return (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? 1 : 0;
+          })
+      }
+      else if(sort == "WNM2") {
+          historys.sort(function (a,b) {
+            if(typeof(a.WNM) == "object")
+            a.WNM = JSON.stringify(a.WNM);
+            return (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? 1 : 0;
+          })
+      }
+      else {
+        var historys = await History.find({ "CID": CID }).sort({ CA: -1 });
+        
+      }
+  }
+  
+  var historylist = [];
+  if(historys.length) {
+    for(var i = 0; i < historys.length; i ++) {
+      historylist[i] = historys[i];
+    }
+  }
+  res.json({ result: true, historylist : historylist, historynum : historys.length});
+ 
 });
 
 //소독 그래프

@@ -190,6 +190,7 @@
     "null" : "선택안됨",
     "delete_selection" : "선택항목 삭제",
     "delete_confirm" : "데이터를 삭제하시겠습니까?",
+    "delete_success" : "데이터가 삭제되었습니다.",
     "attachments" : "첨부파일",
     "excel_register" : "Excel 파일로 등록",
     "return_list" : "목록으로",

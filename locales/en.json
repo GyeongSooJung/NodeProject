@@ -190,6 +190,7 @@
     "null" : "Not Selected",
     "delete_selection" : "Delete selection",
     "delete_confirm" : "Are you sure you want to delete the data?",
+    "delete_success" : "Data has been deleted",
     "attachments" : "Attachments",
     "excel_register" : "Register as an Excel File",
     "return_list" : "Back",

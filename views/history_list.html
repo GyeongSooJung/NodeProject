@@ -26,36 +26,30 @@
 		<!-- end panel-heading -->
 		<!-- begin panel-body -->
 		<div class="panel-body">
-			<!--<center>-->
-	  <!--          <div class="btn-group m-b-5 mx-3">-->
-	  <!--             <a href="/history_list" class="btn btn-primary text-white px-4">{{__('all')}}</a>-->
-	  <!--          </div>-->
-	  <!--          <div class="btn-group m-b-5 mx-3">-->
-	  <!--             <a href="javascript:;" class="btn btn-primary text-white px-5">{{__('car')}}</a>-->
-	  <!--             <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle text-white"><b class="caret"></b></a>-->
-	  <!--             <div class="dropdown-menu dropdown-menu-right">-->
-	  <!--                {% for car in cars %}-->
-	  <!--                <a href="/history_list/?CN={{car.CN}}" class="dropdown-item">{{car.CN}}</a>-->
-	                  <!--/history_CN_select/{{car.CN}}-->
-	  <!--                {% endfor %}-->
-	  <!--             </div>-->
-	  <!--          </div>-->
-	  <!--          <div class="btn-group m-b-5 mx-3">-->
-	  <!--             <a href="javascript:;" class="btn btn-primary text-white px-5">{{__('device')}}</a>-->
-	  <!--             <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle text-white"><b class="caret"></b></a>-->
-	  <!--             <div class="dropdown-menu dropdown-menu-right">-->
-	  <!--                {% for device in devices %}-->
-	  <!--                <a href="/history_list/?MD={{device.MD}}" class="dropdown-item">{{device.MD}}</a>-->
-	                  <!--/history_MD_select/{{device.MD}}-->
-	  <!--                {% endfor %}-->
-	  <!--             </div>-->
-	  <!--          </div>-->
-			<!--</center>-->
          
- 	       <div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
-	        	<div class="mr-2">{{__('search')}} : </div>
-				<div><input type="text" id="CNkeyword" class="form-control" placeholder ="{{__('car_number')}}" /></div>
-				<div><button class="ml-2 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
+			<div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
+        	<div class="mr-2">
+            		<div class="btn-group m-r-5 m-b-5">
+							<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>
+							<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
+							<div class="dropdown-menu dropdown-menu-right" style="">
+								<a href="javascript:searchoption('CNM');" class="dropdown-item">{{__('car_number')}}</a>
+								<a href="javascript:searchoption('DNM');" class="dropdown-item">{{__('device_model')}}</a>
+								<!--<a href="javascript:searchoption('ET');" class="dropdown-item">{{__('history_date')}}</a>-->
+								<!--<a href="javascript:searchoption('PD');" class="dropdown-item">{{__('history_time')}}</a>-->
+								<a href="javascript:searchoption('WNM');" class="dropdown-item">{{__('worker')}}</a>
+							
+							</div>
+					</div> 
+				</div>
+				<div>
+					<input id ="searchtext" type="text" class="form-control" placeholder ="" />
+					<input id ="searchdatetext" type="date" class="d-none form-control" placeholder ="" />
+					
+				</div>
+				<div>
+				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
+				<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>전체목록</a>
 			</div>
 
 			<div class="overflow-auto">
@@ -63,93 +57,25 @@
 					<table id="data-table-combine" class="table table-striped table-bordered table-td-valign-middle text-center">
 						<thead>
 							<tr>
-								<th width="1%">
-									<input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/>
-								</th>
 								<th width="2.5%"></th>
-								<th class="text-nowrap">{{__('car_number')}}</th>
-								<th class="text-nowrap">{{__('device_model')}}</th>
-							    <th class="text-nowrap">{{__('history_date')}}</th>
-								<th class="text-nowrap">{{__('history_time')}}</th>
-								<th class="text-nowrap">{{__('worker')}}</th>
-								<th width="1%"></th>
+										<th width="15%" class = "sort" name = "CNM">{{__('car_number')}}<i id = "CNM" class="d-none  float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+										<th width="15%" class = "sort" name = "DNM">{{__('device_model')}}<i id = "DNM" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+										<th width="15%" class = "sort" name = "ET">{{__('history_date')}}<i id = "ET" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+										<th width="15%" class = "sort" name = "PD">{{__('history_time')}}<i id = "PD" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+										<th width="15%" class = "sort" name = "WNM">{{__('worker')}}<i id = "WNM" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+										<th width="1%"></th>
 							</tr>
 						</thead>
-						<tbody>
-							{% if (totalNum == 0) %}
-							<tr>
-								<td colspan="10">No Data</td>
-							</tr>
-							{% else %}
-							    
-							    {% set count = 0 %}
-							    
-								{% for history in historylist %}
-									<tr class="odd gradeX">
-				  						<td onclick='event.cancelBubble=true;' class="with-btn" nowrap>
-				 							<input id="ck" type="checkbox" name = "_id" class="neHeros" value={{history._id}} onChange="eachCheckedBox(this);"/>
-				  						</td>
-				  						<td class="font-weight-bold">{{totalNum - count - (currentPage*10)}} </td>
-				  						{% set totalNum = totalNum - 1 %}
-										<td>
-										     	{% if history.CNM %}
-												  <a href="/history_list/?CN={{history.CNM}}" class="dropdown-item">{{history.CNM}}</a>
-												{% else %}
-												  	N/A
-												{% endif %}
-										</td>
-										
-										<td>
-												{% if history.DNM %}
-												  	{{history.DNM}}
-												{% else %}
-												  	N/A
-												{% endif %}
-										</td>
-										
-										<td>
-											<script>
-											Timefunction("{{history.ET}}");
-											</script>
-										</td>
-										{% if (history.PD.length//60)==0  %}
-										<td>{{history.PD.length%60+"s"}}</td>
-										{% else %}
-										<td>{{history.PD.length//60+"m "+history.PD.length%60+"s"}}</td>
-										{% endif %}
-										
-										<td>
-									    	{% if history.WNM %}
-											  	{{history.WNM}}
-											{% else %}
-											  	N/A
-											{% endif %}
-										</td>
-				  						<td>
-				  							<a href="/history_chart/{{history._id}}" class="btn btn-sm btn-white width-60">{{__('main_indetail')}}</a>
-				  						</td>
-									</tr>
-								{% endfor %}
-								
-								
-							{% endif %}
+						<tbody id = "memDiv">
+							
 						</tbody>
 					</table>
 					<div class="d-flex justify-content-between align-item-center">
-						<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="return delete_check(this.form);">
-						
-						<div class="d-flex justify-content-around align-item-center">
-							<a href="javascript:pageDoubleBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
-							<a href="javascript:pageBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
-							{% if (totalNum==0) %}
-							{% else %}
-								{% for i in range(startPage, endPage) %}
-								<a href="/history_list/?CN={{carone.CN}}&MD={{deviceone.MD}}&page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
-								{% endfor %}
-							{% endif %}
-							<a href="javascript:pageBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
-							<a href="javascript:pageDoubleBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
-						</div>
+								<input  class="d-none btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="delete_check();">
+								
+								<div id="pagebox" class=" justify-content-around align-item-center">
+									
+								</div>
 					</div>
 				</form>
 			</div>
@@ -163,104 +89,328 @@
 <!--Script-->
     <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 	<script>
+	var pagingObject = new Object({array : [], sort : "ET", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : ""});
 		// 검색 기능
 		$(document).ready(function() {
-	        $("#keyword").keyup(function() {
-	            var k = $(this).val();
-	            $("#data-table-combine > tbody > tr").hide();
-	            var temp = $("#data-table-combine > tbody > tr > td:contains('" + k + "')");
-	
-	            $(temp).parent().show();
-	        })
+	        pagereload()
+	        
+	        $('#searchtext').keyup(function(key) {
+        		console.log($(this).val());
+        		if(key.keyCode == 13) {
+        			if(pagingObject.search == "")
+        			alert("{{__('choice_error')}}");
+        			else {
+        				pagingObject.searchtext = $(this).val();
+        				pagereload()
+        				document.getElementById('gotolist').classList.remove('d-none');
+        			}
+        		}
+        		if($(this).val() == "") {
+        			pagereload()
+        		}
+        	})
+        	
+        	$('#searchdatetext').keyup(function(key) {
+        		console.log($(this).val());
+        		if(key.keyCode == 13) {
+        			if(pagingObject.search == "")
+        			alert("{{__('choice_error')}}");
+        			else {
+        				console.log(pagingObject.search);
+        				pagingObject.searchtext = $(this).val();
+        				console.log(pagingObject.searchtext)
+        				pagereload()
+        				document.getElementById('gotolist').classList.remove('d-none');
+        				document.getElementById('searchtext').classList.remove('d-none');
+        				document.getElementById('searchdatetext').classList.add('d-none');
+        			}
+        		}
+        		if($(this).val() == "") {
+        			pagereload()
+        		}
+        	
+        		
+        	})
+        	
+        	$('.sort').click(function() {
+        		console.log("@@@")
+        		
+        		$("#searchoption").empty();
+            	$("#searchoption").append("{{__('search')}}");
+        		
+        		pagingObject.search = "";
+        		pagingObject.searchtext = "";
+        		
+        		var paglist = pagingObject.array;
+        		
+        		var check_sort = $(this).attr('name');
+        		
+        		
+        		 if(document.getElementById(check_sort).classList.contains('d-none')) {
+        		 	
+        		 	document.getElementById(check_sort).classList.remove('fa-angle-up');
+	        		document.getElementById(check_sort).classList.add('fa-angle-down');
+        		 	var check2 = check_sort;
+        		 }
+        		 else {
+        		 	if (document.getElementById(check_sort).classList.contains('fa-angle-down')) {
+        		 		
+	        		 	document.getElementById(check_sort).classList.remove('fa-angle-down');
+	        		 	document.getElementById(check_sort).classList.add('fa-angle-up');
+        		 		var check2 = check_sort + "2";
+        		 	}
+        		 	else {
+        		 		
+        		 		document.getElementById(check_sort).classList.remove('fa-angle-up');
+	        		 	document.getElementById(check_sort).classList.add('fa-angle-down');
+        		 		var check2 = check_sort;
+        		 		
+        		 	}
+        		 }
+        		 
+        		 console.log(check2)
+
+        		document.getElementById('CNM').classList.add('d-none');
+        		document.getElementById('DNM').classList.add('d-none');
+        		document.getElementById('ET').classList.add('d-none');
+        		document.getElementById('PD').classList.add('d-none');
+        		document.getElementById('WNM').classList.add('d-none');
+        		
+        		
+        		document.getElementById(check_sort).classList.remove('d-none');
+        		
+        		
+        		pagingObject.array = paglist;
+        		pagingObject.sort = check2;
+        		pagingObject.page = 0;
+        		pagereload();
+        		
+        	})
 	    })
 	    
+	    //초기화
+	    function refresh() {
+	    	pagingObject.array = [];
+	    	pagingObject.sort = "CA";
+	    	pagingObject.page = 0;
+	    	pagingObject.postNum = 10;
+	    	pagingObject.pageNum = 5;
+	    	pagingObject.startpage = 0;
+	    	pagingObject.endpage = 0;
+	    	pagingObject.search = "";
+	    	pagingObject.searchtext = "";
+	    	
+	    	
+	    }
+	    
+		function searchoption(opt) {
+    	pagingObject.search = opt;
+    	$("#searchoption").empty();
+    	var string = opt;
+    	if (string == "CNM")
+    	   string = "{{__('car_number')}}";
+    	if (string == "DNM")
+    	   string = "{{__('device_model')}}";
+    	if (string == "ET") {
+       	   string = "";
+    	   document.getElementById('searchtext').classList.add('d-none');
+    	   document.getElementById('searchdatetext').classList.remove('d-none');
+    	   
+    	}
+    	   
+    	if (string == "WNM") 
+    	   string = "{{__('worker')}}";
+    	
+    	$("#searchoption").append(string);
+    	$("#searchoption").show();
+        }
+		
 		function searchbutton() {
-			const keyword = document.getElementById('CNkeyword').value;
-			location = '/history_list/?CN=' + keyword;
+    	
+	    	if(pagingObject.search == "")
+	          alert("{{__('choice_error')}}");
+	        else {
+	        	if(!document.getElementById('searchtext').classList.contains('d-none')) {
+					pagingObject.searchtext = $('#searchtext').val();
+					pagereload()
+					document.getElementById('gotolist').classList.remove('d-none');
+	        	}else {
+	        		console.log($('#searchdatetext').val())
+	        		pagingObject.searchtext = $('#searchdatetext').val();
+					pagereload()
+					document.getElementById('gotolist').classList.remove('d-none');
+	        	}
+			}
+		}
+		
+		
+		// 전체 목록으로
+		function gotolist() {
+			
+			refresh()
+			pagereload()
+			
+			$("#searchoption").empty();
+			$("#searchoption").append("{{__('search')}}");
+			document.getElementById('gotolist').classList.add('d-none');
 		}
 		
 		// 페이지 기능
-		function pageBtn(dir) {
+		function pagebutton(num) {
+			pagingObject.page = num;
+	    	pagereload()
+	    }
+	    
+		function pageBtn(dir,page) {
 			if(dir == 'left') {
-				location = '/history_list/?CN={{carone.CN}}&MD={{deviceone.MD}}&page={{currentPage-1}}';
+				if((pagingObject.page - 1) > -1)
+				{
+					pagingObject.page -= 1;
+					pagereload()
+				}
 			}
 			if(dir == 'right') {
-				location = '/history_list/?CN={{carone.CN}}&MD={{deviceone.MD}}&page={{currentPage+1}}';
+				if((pagingObject.page + 1) < Math.ceil(pagingObject.array.length / pagingObject.postNum))
+				{
+					pagingObject.page += 1;
+					pagereload()
+					
+				}
+				
 			}
 		}
 		
-		function pageDoubleBtn(dir) {
+		function pageDoubleBtn(dir,page) {
 			if(dir == 'left') {
-				location = '/history_list/?CN={{carone.CN}}&MD={{deviceone.MD}}&page={{startPage-1}}';
+				if((pagingObject.page - pagingObject.pageNum) < 0) {
+					pagingObject.page = 0;
+					pagereload()
+				}
+				else {
+					pagingObject.startpage -= 1;
+					pagingObject.page -= 5;
+					pagereload()
+				}
 			}
 			if(dir == 'right') {
-				location = '/history_list/?CN={{carone.CN}}&MD={{deviceone.MD}}&page={{endPage}}';
+				console.log(pagingObject.page)
+				console.log(pagingObject.pageNum)
+				console.log(pagingObject.array.length)
+				console.log(pagingObject.postNum)
+				if ((pagingObject.page + pagingObject.pageNum) >= Math.ceil(pagingObject.array.length / pagingObject.postNum))
+				{
+					console.log("@@@")
+					pagingObject.page = Math.ceil(pagingObject.array.length / pagingObject.postNum)-1;
+					pagereload()
+				}
+				else {
+					pagingObject.startpage += 1;
+					pagingObject.page += 5;
+					pagereload()
+				}
 			}
 		}
 		
-		// 일반 삭제 기능
-		function delete_one(_id) {
-			var answer;
-			var idc = _id;
-			//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
-			//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
-			answer = confirm("{{__('delete_confirm')}}");
-			//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
-			if(answer == true){
-				location = '/history/history_delete/' + idc;
-			}
-			else {
-				location = '/history_list';
-			}
-		}
-		
-		// 선택항목 삭제 기능
-		function delete_check(frm) {
-			var answer;
-			answer = confirm("{{__('delete_confirm')}}");
-			if(answer == true){
-				frm.action='/history/history_select_delete/'; frm.submit(); return true;
-			}
-			else {
-				location = '/history_list';
-			}
-		}
+		function pagereload() {
+    	    $.ajax({
+	    		url: "/ajax/history_list",
+	                    type: "POST",
+	                    async: false,
+	                    dataType: 'json',
+	                    data: {
+	                        sort : pagingObject.sort,
+	                        search : pagingObject.search,
+	                        searchtext : pagingObject.searchtext
+	                    }
+	        }).done(function (data) { 
+	        	if(data.result == true) {
+		    		    pagingObject.array = data.historylist;
+		    		    pagingObject.startpage = Math.floor((pagingObject.page) / pagingObject.pageNum) * pagingObject.pageNum;
+		    		    pagingObject.endpage = pagingObject.startpage + pagingObject.pageNum;
+		    		    
+		    		    var historylist = pagingObject.array; // 전체 리스트
+		    		    var historynum = historylist.length; // 전체 리스트의 갯수
+		    		    var page = pagingObject.page; // 페이지 번호
+		    		    var startPage = pagingObject.startpage; // 시작 페이지
+		    		    var endPage = pagingObject.endpage; // 끝 페이지
+		    		    var postNum = pagingObject.postNum; // 게시될 페이지 숫자
+		    		    var pageNum = pagingObject.pageNum; // 페이지 번호의 갯수
+		    		    var totalPage = Math.ceil(historynum/postNum); // 전체 페이지의 갯수
+		    		    
+		    		    if (endPage > totalPage) { // 끝 페이지가 총 페이지 수보다 많다면 같게끔 처리
+					        endPage = totalPage;
+					    }
+		    		    
+			        	//tr 초기화
+			        	$("#data-table-combine > tbody > tr").remove();
+			        	//페이지 넘버 박스 초기화
+				     	$("#pagebox *").remove(); 
+				    		
+				     	var insertTr = ""; // 채워넣을 HTML 초기화
+				     	
+				     	var indexcount = 1; // 인덱스번호 초기화
+				    		
+				    	
+				    	
+				    	
+				     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+				     	   if(historylist[i]) {
+							  insertTr += "<tr>";
+							  insertTr += "<td class='font-weight-bold'>"+(historynum - (page*10)) +" </td>";
+							  insertTr += "<td>"+ historylist[i].CNM +"</td>";
+							  insertTr += "<td>"+ historylist[i].DNM+"</td><td>";
+							  if ( (moment(historylist[i].ET).format('DD')) == moment().format('DD') )
+							     {
+							       insertTr +=  moment(historylist[i].ET).format('HH:mm');
+							  }
+							  else {
+							      insertTr += moment(historylist[i].ET).format('YYYY-MM-DD');
+							  }
+							   if (parseInt(historylist[i].PD.length/60)==0)  
+                                  insertTr +=  "</td><td>"+((historylist[i].PD.length)%60)+"s</td>"
+                              else 
+                                  insertTr +=  "</td><td>"+parseInt(historylist[i].PD.length/60)+"m "+((historylist[i].PD.length)%60)+"s</td>"
+                         
 
-		// 전체 선택 기능
-		function allCheckedBox(obj) {
-		   	// @brief 선택한 체크박스의 클래스 명칭을 가져온다.
-		   	const termClass = obj.getAttribute("class");
-		   	// @brief 선택한 클래스명과 같은 클래스의 갯수
-		   	console.log(document.getElementsByClassName(termClass).length);
-		   	Array.prototype.forEach.call(document.getElementsByClassName(termClass), function(element, index, array) {
-		        // @brief 엘리먼트의 값 출력
-		        console.log(element.value);
-		        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 되있는 경우
-		        if(document.getElementsByClassName(termClass)[0].checked == true) {
-		            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 완료 처리 한다.
-		            element.checked = true;
-		        }
-		        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 해제된 경우
-		        else {
-		            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 해제 처리 한다.
-		            element.checked = false;
-		        }
-		   	});
-	    }
-    
-    	// 항목 선택 기능
-		function eachCheckedBox(obj) {
-	      // @brief 선택한 체크박스의 상태가 선택해제인 경우
-	      if(obj.checked == false) {
-	            // @brief 선택한 체크박스의 클래스 명칭을 가져온다.
-	            const termClass = obj.getAttribute("class");
-	            // @brief 첫번째 checkbox의 상태가 체크가 되어있는경우
-	            if(document.getElementsByClassName(termClass)[0].checked == true) {
-	                // @brief 첫번째 checkbox의 상태를 체크해제한다.
-	                document.getElementsByClassName(termClass)[0].checked = false;
-	            }
-	        }
-	    }
+							  insertTr += "<td>"+ historylist[i].WNM+"</td>";
+							 
+						     
+						      insertTr += "<td class='with-btn' nowrap>"	
+						      insertTr += "<a href='/history_chart/"+historylist[i]._id+"' class='btn btn-sm btn-white width-60'>{{__('main_indetail')}}</a>"
+							  insertTr += "</tr>";
+							  historynum -= indexcount;
+							  
+				     	   }
+				     	}
+							  
+							  $("#memDiv").append(insertTr);
+							  insertTr = " ";
+					    	  insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>";
+							  insertTr +=	"<a href='javascript:;' onclick=pageBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>";
+		
+								for(var i = startPage; i < endPage; i ++) {
+									if(page == i)
+										insertTr +=	"<input type='button' onclick='pagebutton("+ i +")' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' style=' background-color: #00acac; color: white !important;' >";
+									else
+										insertTr +=	"<input type='button' onclick='pagebutton("+ i +")' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' >";
+								}
+								insertTr +=	"<a href='javascript:;' onclick=pageBtn('right',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-right'></i></a>";
+								insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('right',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-right'></i></a>";
+							  $("#pagebox").append(insertTr);
+							  $("#pagebox").show();
+	        	}
+	        	
+	        	else if (data.result == "nothing") {
+	        		alert("{{__('search_error')}}")
+	        	}
+	        	
+	        	else {
+	        		alert("{{__('search_error')}}")
+	        	}
+			})
+    	
+    }
+
 	    
 	    // 에러 링크 기능
 		window.onload = () => {
