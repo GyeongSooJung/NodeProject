@@ -49,6 +49,11 @@
   color: #363636;
 }
 
+/*다른 차량 확인 버튼*/
+.re-enter {
+  background: #ffdb3d;
+}
+
 @media screen and (max-width: 1024px) {
   #chartdiv {
       width: 120%;

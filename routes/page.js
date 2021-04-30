@@ -334,9 +334,6 @@ router.get('/device_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   const NN = req.query.NN;
-  
-  
-
   let page = req.query.page;
 
   if (NN) {
