@@ -384,6 +384,10 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, async function(req, res
         if(devices.length == 0) 
         res.json({result : "nothing"});
       }
+      else if (search =="VER") {
+        searchtext = parseInt(searchtext)
+        var devices = await Device.find({ "CID": CID, "VER" : searchtext });
+      }
       else if (search =="MAC") {
         var devices = await Device.find({ "CID": CID, "MAC" : {$regex:searchtext} });
         if(devices.length == 0) 
@@ -766,7 +770,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
           })
       }
       else {
-        var historys = await History.find({ "CID": CID }).sort({ CA: -1 });
+        var historys = await History.find({ "CID": CID }).sort({ ET: -1 });
         
       }
   }

@@ -41,8 +41,8 @@
 							
 							</div>
 					</div> 
-				</div>
-				<div>
+			</div>
+			<div>
 					<input id ="searchtext" type="text" class="form-control" placeholder ="" />
 					<input id ="searchdatetext" type="date" class="d-none form-control" placeholder ="" />
 					
@@ -191,7 +191,7 @@
 	    //초기화
 	    function refresh() {
 	    	pagingObject.array = [];
-	    	pagingObject.sort = "CA";
+	    	pagingObject.sort = "ET";
 	    	pagingObject.page = 0;
 	    	pagingObject.postNum = 10;
 	    	pagingObject.pageNum = 5;
@@ -212,7 +212,7 @@
     	if (string == "DNM")
     	   string = "{{__('device_model')}}";
     	if (string == "ET") {
-       	   string = "";
+       	   string = "{{__('history_date')}}";
     	   document.getElementById('searchtext').classList.add('d-none');
     	   document.getElementById('searchdatetext').classList.remove('d-none');
     	   
