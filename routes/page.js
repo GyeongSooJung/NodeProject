@@ -769,7 +769,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
           })
       }
       else {
-        var historys = await History.find({ "CID": CID }).sort({ CA: -1 });
+        var historys = await History.find({ "CID": CID }).sort({ ET: -1 });
         
       }
   }
