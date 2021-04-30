@@ -244,6 +244,7 @@
 	"car_identification_number" : "Car Identification Number",
 	"car_identification_msg" : "Please enter your car identification number",
 	"car_excel_form" : "Car Registeration Form",
+	"car_register_success" : "The car has been registered."
 	"car_length_error" : "Please check the number of digits of the car number.",
 	"car_type_error" : "Please check the car number.",
 	"car_exist_error" : "Car number already exists",

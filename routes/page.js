@@ -331,7 +331,11 @@ router.get('/device_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   const NN = req.query.NN;
-
+  const deviceAllCount = await Device.count();
+  console.log("올올"+deviceAllCount);
+  const deviceTodayCount = await Device.where({ "CA" : { '$gte' : moment(Date.now()).add(-24, 'hours'), '$lte' : moment(Date.now())} }).count();
+  console.log("투투"+deviceTodayCount);
+  
   let page = req.query.page;
 
   if (NN) {

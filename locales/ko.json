@@ -244,6 +244,7 @@
 	"car_identification_number" : "차대 번호",
 	"car_identification_msg" : "차대 번호를 입력하세요.",
 	"car_excel_form" : "차량 등록 양식",
+	"car_register_success" : "차량이 등록되었습니다.",
 	"car_length_error" : "차량 번호 자릿수를 확인해주세요.",
 	"car_type_error" : "차량 번호를 확인해주세요.",
 	"car_exist_error" : "차량번호가 이미 존재합니다.",
