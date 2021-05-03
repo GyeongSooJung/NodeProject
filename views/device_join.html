@@ -18,7 +18,7 @@
 				<!-- end panel-heading -->
 				<!-- begin panel-body -->
 				<div class="panel-body">
-					<form id="device-form" action="/device/device_join" method="post" class="form-horizontal" data-parsley-validate="true" name="device-form">
+					<form id="device-form" action="/device/device_join" method="post" class="form-horizontal" data-parsley-validate="true" name="device-form" onsubmit="deviceJoin();">
 					
 						<div class="form-group row m-b-15">
 							<label class="col-md-4 col-sm-4 col-form-label" for="MD">{{__('device_model')}} <span class="text-danger">*</span> :</label>
@@ -74,16 +74,6 @@
 		}
 		return str;
 	}
-	
-	// 에러 링크 기능
-	window.onload = () => {
-		if (new URL(location.href).searchParams.get('exist')) {
-			alert("{{__('device_duplicated')}}");
-		}
-		if (new URL(location.href).searchParams.get('type')) {
-			alert("{{__('device_mac_wrong')}}");
-		}
-	};
 
 	// 폼 enter키 submit 막기
 	document.addEventListener('keydown', function(event) {
@@ -91,6 +81,37 @@
 			event.preventDefault();
 		}
 	}, true);
+	
+	// 장비 등록 ajax
+	function deviceJoin() {
+		var formParsley  = $('#device-form').parsley();
+		if(formParsley.isValid() == true) {
+			$.ajax({
+				type: 'POST',
+				url: '/device/device_join',
+				dataType: 'json',
+				data: {
+					MD: document.getElementsByName("MD")[0].value,
+					VER: document.getElementsByName("VER")[0].value,
+					MAC: document.getElementsByName("MAC")[0].value,
+					NN: document.getElementsByName("NN")[0].value,
+				},
+				success: function(result) {
+					if(result.status == 'success') {
+						alert("{{__('device_register_success')}}");
+						location = '/device_list';
+					}
+					else if(result.status == 'exist') {
+						alert("{{__('device_duplicated')}}");
+					}
+					else if(result.status == 'type') {
+						alert("{{__('device_mac_wrong')}}");
+					}
+				}
+			});
+		}
+		event.preventDefault();
+	}
 </script>
 
 {% endblock %}

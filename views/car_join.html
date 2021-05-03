@@ -24,7 +24,7 @@
 				<!-- end panel-heading -->
 				<!-- begin panel-body -->
 				<div id="car-form-div" class="panel-body">
-					<form id="car-form" action="/car/car_join" method="post" class="form-horizontal" data-parsley-validate="true" name="car-form">
+					<form id="car-form" action="" method="post" class="form-horizontal" data-parsley-validate="true" name="car-form" onsubmit="carJoin();">
 						<!--<div class="form-group row m-b-15">-->
 						<!--	<label class="col-md-4 col-sm-4 col-form-label" for="CC">차종 * :</label>-->
 						<!--	<div class="col-md-8 col-sm-8">-->
@@ -69,7 +69,7 @@
 						<div class="form-group row m-b-0">
 							<label class="col-md-4 col-sm-4 col-form-label">&nbsp;</label>
 							<div class="col-md-8 col-sm-8">
-								<button type="button" class="btn btn-primary width-80" onclick ="carJoin();">{{__('registration')}}</button>
+								<button type="submit" class="btn btn-primary width-80">{{__('registration')}}</button>
 								<button type="reset" class="btn btn-primary width-80">{{__('reset')}}</button>
 							</div>
 						</div>
@@ -116,32 +116,6 @@
 
 <!-- error script -->
 <script>
-	window.onload = () => {
-		if (new URL(location.href).searchParams.get('length')) {
-			alert("{{__('car_length_error')}}");
-		}
-		if (new URL(location.href).searchParams.get('type')) {
-			alert("{{__('car_type_error')}}");
-		}
-		if (new URL(location.href).searchParams.get('exist')) {
-			alert("{{__('car_exist_error')}}");
-		}
-		if (new URL(location.href).searchParams.get('nofile')) {
-			alert("{{__('car_nofile_error')}}");
-		}
-		if (new URL(location.href).searchParams.get('excel')) {
-			alert("{{__('car_excel_error')}}");
-		}
-		if (new URL(location.href).searchParams.get('excelSize')) {
-			alert("{{__('car_excelsize_error')}}");
-		}
-		if (new URL(location.href).searchParams.get('excelLength')) {
-			alert("{{__('car_excellength_error')}}");
-		}
-		if (new URL(location.href).searchParams.get('excelType')) {
-			alert("{{__('car_exceltype_error')}}");
-		}
-	};
 	
 	// 폼 enter키 submit 막기
 	document.addEventListener('keydown', function(event) {
@@ -326,33 +300,39 @@
 		});
 	}
 	
+	// 차량 등록 ajax
 	function carJoin() {
-		$.ajax({
-			type: 'POST',
-			url: '/car/car_join',
-			dataType: 'json',
-			data: {
-				CN: document.getElementsByName("CN")[0].value,
-				CPN: document.getElementsByName("CPN")[0].value,
-			},
-			success: function(result) {
-				if(result.status == 'success') {
-					alert("{{__('car_register_success')}}");
-					location = '/car_list';
+		var formParsley  = $('#car-form').parsley();
+		if(formParsley.isValid() == true) {
+			$.ajax({
+				type: 'POST',
+				url: '/car/car_join',
+				dataType: 'json',
+				data: {
+					CN: document.getElementsByName("CN")[0].value,
+					CPN: document.getElementsByName("CPN")[0].value,
+				},
+				success: function(result) {
+					if(result.status == 'success') {
+						alert("{{__('car_register_success')}}");
+						location = '/car_list';
+					}
+					else if(result.status == 'exist') {
+						alert("{{__('car_exist_error')}}");
+					}
+					else if(result.status == 'type') {
+						alert("{{__('car_type_error')}}");
+					}
+					else if(result.status == 'length') {
+						alert("{{__('car_length_error')}}");
+					}
 				}
-				else if(result.status == 'exist') {
-					alert("{{__('car_exist_error')}}");
-				}
-				else if(result.status == 'type') {
-					alert("{{__('car_type_error')}}");
-				}
-				else if(result.status == 'length') {
-					alert("{{__('car_length_error')}}");
-				}
-			}
-		});
+			});
+		}
+		event.preventDefault();
 	}
 	
+	// 차량 excel 등록 ajax
 	function carExcelJoin() {
 		$.ajax({
 			type: 'POST',

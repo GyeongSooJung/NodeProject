@@ -560,6 +560,117 @@ router.get('/car_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   }
 });
 
+router.post('/ajax/car_list', isNotLoggedIn, DataSet, async function(req, res) {
+  const CID = req.decoded.CID;
+  
+  var sort = req.body.sort;
+  var search = req.body.search;
+  var searchtext = req.body.searchtext;
+  
+  console.log(searchtext);
+  
+  if ((search!="") && (searchtext!="")) {
+    try{
+      if (search =="CN") {
+        var cars = await Car.find({ "CID": CID, "CN" : {$regex:searchtext} });
+        if(cars.length == 0) 
+        res.json({result : "nothing"});
+      }
+      else if (search =="CPN") {
+        var cars = await Car.find({ "CID": CID, "CPN" : {$regex:searchtext} });
+        if(cars.length == 0) 
+        res.json({result : "nothing"});
+      }
+      else {
+        console.log(typeof(searchtext));
+        var cars = await Car.find({ "CID": CID, "CA" : {$regex:searchtext}});
+        console.log(cars +"@@@");
+      }
+    }catch(e) {
+      res.json({ result: false });
+    }
+    
+  }
+  
+  else {
+    
+      var cars = await Car.find({ "CID": CID });
+    
+      if(sort == "CN") {
+          cars.sort(function (a,b) {
+                var ax = [], bx = [];
+                a = JSON.stringify(a.CN);
+                b = JSON.stringify(b.CN);
+              
+                a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
+                b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
+                
+                while(ax.length && bx.length) {
+                    var an = ax.shift();
+                    var bn = bx.shift();
+                    var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
+                    if(nn) return nn;
+                }
+            
+                return ax.length - bx.length;
+            });
+      }
+      else if(sort == "CN2") {
+          cars.sort(function (a,b) {
+                var ax = [], bx = [];
+                a = JSON.stringify(a.CN);
+                b = JSON.stringify(b.CN);
+              
+                a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
+                b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
+                
+                while(ax.length && bx.length) {
+                    var an = bx.shift();
+                    var bn = ax.shift();
+                    var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
+                    if(nn) return nn;
+                }
+            
+                return ax.length - bx.length;eAt(0) < (b.CN[0]).charCodeAt(0) ? -1 : (a.CN[0]).charCodeAt(0) > (b.CN[0]).charCodeAt(0) ? 1 : 0;
+          });
+      }
+      else if(sort == "CPN") {  // 버전은 숫자인데 스키마에서 string이라 첫글자만 비교함 그래서 바꿔야됨
+          cars.sort(function (a,b) {
+            var anum = parseInt(a.CPN);
+            var bnum = parseInt(b.CPN);
+            return anum < bnum ? -1 : anum > bnum ? 1 : 0;
+          });
+      }
+      
+      else if(sort == "CPN2") {
+          cars.sort(function (a,b) {
+            var anum = parseInt(a.CPN);
+            var bnum = parseInt(b.CPN);
+            return anum > bnum ? -1 : anum < bnum ? 1 : 0;
+          });
+      }
+      else if(sort == "CA")
+        var devices = await Device.find({ "CID": CID }).sort({ CA: -1 });
+        
+      else if(sort == "CA2")
+        var devices = await Device.find({ "CID": CID }).sort({ CA: 1 });
+        
+      else {
+        var devices = await Device.find({ "CID": CID }).sort({ CA: -1 });
+        
+      }
+  }
+  
+  var carlist = [];
+  if(cars.length) {
+    for(var i = 0; i < cars.length; i ++) {
+      carlist[i] = cars[i];
+    }
+  }
+  res.json({ result: true, carlist : carlist, carnum : cars.length});
+ 
+});
+
 //----------------------------------------------------------------------------//
 //                                  작업자                                    //
 //----------------------------------------------------------------------------//

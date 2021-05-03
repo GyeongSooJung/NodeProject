@@ -35,21 +35,17 @@ router.post('/car_join', isNotLoggedIn, async (req, res, next) => {
           await Company.where({ "CNU" : CNU })
             .update({ "CUA" : CUA }).setOptions({runValidators : true})
             .exec();
-          // return res.redirect('/car_list');
           return res.send({ status: 'success' });
         }
         else {
-          // return res.redirect('/car_join?exist=true');
           return res.send({ status: 'exist' });
         }
       }
       else {
-        // return res.redirect('/car_join?type=true');
         return res.send({ status: 'type' });
       }
     }
     else {
-      // return res.redirect('/car_join?length=true');
       return res.send({ status: 'length' });
     }
   } catch (err) {
@@ -92,12 +88,10 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
         }
         else {
           return res.send({ status: 'excelType' });
-          // return res.redirect('/car_join?excelType=true');
         }
       }
       else {
         return res.send({ status: 'excelLength' });
-        // return res.redirect('/car_join?excelLength=true');
       }
     }
     // 엑셀 데이터(차주전화번호) 배열에 담기
@@ -191,6 +185,7 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn, async (req, res, next) => {
       const check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
       
       if (CN.length >= 7 && CN.length <= 8) {
+        check.lastIndex = 0;
         if (check.test(CN) == true) {
           if (!exCar) {
             await Car.where({"CN" : req.params.CN})
@@ -203,6 +198,8 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn, async (req, res, next) => {
             await Company.where({"CNU" : CNU})
               .update({ "CUA" : CUA }).setOptions({runValidators : true})
               .exec();
+              
+            return res.send({ status: 'success' });
           }
           else {
             if (CN == req.params.CN) {
@@ -216,95 +213,98 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn, async (req, res, next) => {
               await Company.where({"CNU" : CNU})
                 .update({ "CUA" : CUA }).setOptions({runValidators : true})
                 .exec();
+              
+              return res.send({ status: 'success' });
             }
             else {
-              res.redirect('/car_list?exist=true');
+              return res.send({ status: 'exist' });
             }
           }
         }
         else {
-          return res.redirect('/car_join?type=true');
+          return res.send({ status: 'type' });
         }
       }
       else {
-        return res.redirect('/car_join?length=true');
+        return res.send({ status: 'length' });
       }
       
     } catch (error) {
     console.error(error);
     return next(error);
   }
-  res.redirect('/car_list');
 });
 
-//차량 삭제
-router.get('/car_delete/:CN', isNotLoggedIn, async (req, res, next) => {
-  const { CN, CPN } = req.body;
+//차량 한개 삭제
+router.post('/ajax/car_deleteone', isNotLoggedIn, async (req, res, next) => {
+  var select = req.body["select"];
+  console.log(select);
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
   try {
-    const carone = await Car.findOne({ "CID" : CID, "CN" : req.params.CN });
+    const carone = await Car.findOne({ "CID" : CID, "CN" : select.split(' ') });
     await Cardelete.create({
-                    "CID" : carone.CID,
-                    "CC" : carone.CC,
-                    "CPN" : carone.CPN,
+      "CID" : carone.CID,
+      "CC" : carone.CC,
+      "CPN" : carone.CPN,
     });
-    await Car.remove({ "CID" : CID, "CN" : req.params.CN });
-    res.redirect('/car_list');
-    
-  const companyone = await Company.where({"CNU" : CNU})
-    .update({ "CUA" : CUA }).setOptions({runValidators : true})
-    .exec();
+    await Car.remove({ "CID" : CID, "CN" : select.split(' ') });
+    await Company.where({"CNU" : CNU})
+      .update({ "CUA" : CUA }).setOptions({runValidators : true})
+      .exec();
+    res.json({ result : true });
   } catch (err) {
+    res.json({ result : false });
     console.error(err);
     next(err);
   }
 });
 
 //차량 선택삭제
-router.post('/car_select_delete',isNotLoggedIn ,async (req, res, next) => {
-    const { CN, CPN } = req.body;
+router.post('/ajax/car_delete', isNotLoggedIn ,async (req, res, next) => {
+    var select = req.body["select[]"];
+    console.log(JSON.stringify(req.body));
+    console.log(select);
     const CID = req.decoded.CID;
     const CNU = req.decoded.CNU;
     const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
     try {
-        const {ck} = req.body;
-        
-        if(!ck) {
-          return res.redirect('/car_list?null=true');
+        if(!select) {
+          res.json({ result : false });
         }
         else {
           
-          if (typeof(ck) == 'string') {
-            const carone = await Car.findOne({ "CID" : CID, "CN" : ck });
+          if (typeof(select) == 'string') {
+            const carone = await Car.findOne({ "CID" : CID, "CN" : select });
                 await Cardelete.create({
                     "CID" : carone.CID,
                     "CN" : carone.CN,
                     "CPN" : carone.CPN,
                 });
-            await Car.remove({ "CID" : CID, "CN" : ck });
+            await Car.remove({ "CID" : CID, "CN" : select });
           }
           else {
-             for(var i = 0; i < ck.length; i++){
-               var carone = await Car.findOne({ "CID" : CID, "CN" : ck[i] });  
+             for(var i = 0; i < select.length; i++){
+               var carone = await Car.findOne({ "CID" : CID, "CN" : select[i] });  
                  await Cardelete.create({
                     "CID" : carone.CID,
                     "CN" : carone.CN,
                     "CPN" : carone.CPN,
                 });
-                await Car.remove({ "CID" : CID, "CN" : ck[i] });
+                await Car.remove({ "CID" : CID, "CN" : select[i] });
              }
           }
           
-          const companyone = await Company.where({"CNU" : CNU})
+          await Company.where({"CNU" : CNU})
             .update({ "CUA" : CUA }).setOptions({runValidators : true})
             .exec();
-              res.redirect('/car_list');
+        res.json({ result : true });
         }
-    }   catch (err) {
-        console.error(err);
-        next(err);
+    } catch (err) {
+    res.json({ result : true });
+    console.error(err);
+    next(err);
   }
 });
 

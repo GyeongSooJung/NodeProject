@@ -12,10 +12,12 @@
 	"complete": "완료",
 	"time": "시간",
 	"link": "링크",
+	
 	"mk": "주식회사 엠케이",
 	"mk_address": "경기도 용인시 기흥구 동백중앙로 191, 8층 엘818호",
 	"mk_ceo_name": "변무영",
 	"mk_oasis_goods": "차량용 소독기",
+	
 	"login": "로그인",
 	"signup": "회원가입",
 	"findpw": "비밀번호 찾기",
@@ -54,7 +56,9 @@
 	"reenter": "재입력",
 	"reenter_guide": "다시 입력해주세요.",
 	"wrong_authnum_guide": "인증번호가 틀립니다.",
+	
 	"business_number": "사업자 등록번호",
+	
 	"index_title": "OASIS | 소독 서비스",
 	"index_text": "자동화된 시스템과 오존을 활용한 소독 방식으로 완벽한 내부 공간 살균을 제공합니다.",
 	"index_about": "소개",
@@ -79,14 +83,17 @@
 	"index_ozone_point1": "살균력",
 	"index_ozone_point2": "탈취력",
 	"index_ozone_point3": "안전성",
+	
 	"login_error": "아이디 혹은 비밀번호를 확인해주세요.",
 	"login_again": "다시 로그인해주세요.",
 	"login_pw_change": "비밀번호 변경이 완료되었습니다.",
 	"login_findpw": "임시 비밀번호가 이메일로 전송되었습니다.",
 	"login_findpw2": "보안을 위해 비밀번호는 추후에 변경해주세요.",
+	
 	"find_no_register": "가입되지 않은 사업자번호입니다.",
 	"find_enter": "사업자 번호를 입력해주세요.",
 	"find_email_error": "이메일이 가입된 정보와 다릅니다.",
+	
 	"register_text1": "OASIS 계정을 만드세요. 효율적인 관리가 가능합니다.",
 	"register_check_guide": "체크해주세요.",
 	"register_personal": "개인정보 수집 및 활용 방안",
@@ -117,6 +124,7 @@
 	"register_auth_enter": "인증번호를 입력해주세요.",
 	"register_auth_need": "이메일 인증이 필요합니다.",
 	"register_digits_error": "숫자만 입력해주세요.",
+	
 	"main_title": "OASIS | 관리자 페이지",
 	"main_point": "보유 포인트",
 	"main_company": "사업자",
@@ -134,6 +142,7 @@
 	"main_ago6": "6일 전",
 	"main_ago7": "7일 전",
 	"main_count": "횟수 (개)",
+	
 	"layout_modify": "프로필 수정",
 	"layout_signout": "로그아웃",
 	"layout_signout_confirm": "로그아웃을 하시겠습니까?",
@@ -151,6 +160,7 @@
 	"layout_payment_list": "결제 목록",
 	"layout_qrcode_man": "QR 관리",
 	"layout_qrcode_con": "QR 접속",
+	
 	"profile_modify": "정보 수정",
 	"profile_company_name": "상호",
 	"profile_company_ceo_name": "이름",
@@ -169,6 +179,7 @@
 	"profile_pw_need": "비밀번호를 입력해주세요.",
 	"profile_pw_success": "비밀번호가 변경되었습니다.",
 	"profile_form_error": "형식에 맞게 입력해주세요.",
+	
 	"search": "검색",
 	"required_detail": "필수 입력 사항입니다.",
 	"registration": "등록",
@@ -192,26 +203,32 @@
 	"success": "성공",
 	"failed": "실패",
 	"all": "전체",
+	
 	"company": "사업자",
 	"company_list": "사업자 목록",
+	
 	"statistics": "통계",
 	"statistics_device": "제품 통계",
 	"statistics_history": "소독 통계",
+	
 	"device": "소독기",
 	"device_model": "모델명",
 	"device_model_enter": "모델명을 입력하세요",
 	"device_version": "버전",
 	"device_version_enter": "버전을 입력하세요",
 	"device_mac": "MAC 주소",
-	"device_mac_enter": "MAC 주소를 형식대로 입력하세요 (11:22:33:44:55:66)",
+	"device_mac_enter": "MAC 주소를 형식대로 입력하세요 (A1:B2:C3:D4:E5:F6)",
 	"device_nick": "별칭",
 	"device_use_number": "사용 횟수",
 	"device_nick_enter": "별칭을 원하는대로 입력하세요.",
+	"device_register_success": "장비가 등록되었습니다.",
+	"device_modify_success": "장비가 수정되었습니다.",
 	"device_duplicated": "이미 존재하는 MAC 입니다.",
 	"device_mac_wrong": "MAC 주소를 정확히 입력해주세요.",
 	"device_edit": "장비 수정",
 	"device_edit_version_enter": "버전을 입력하세요",
 	"device_edit_nick_enter": "별칭을 원하는대로 입력하세요",
+	
 	"car": "자동차",
 	"car_number": "차량 번호",
 	"car_number_msg": "띄어쓰기 없이 차량번호를 입력하세요.(12가1234)",
@@ -232,6 +249,7 @@
 	"car_identification_msg": "차대 번호를 입력하세요.",
 	"car_excel_form": "차량 등록 양식",
 	"car_register_success": "차량이 등록되었습니다.",
+	"car_modify_success": "차량이 수정되었습니다.",
 	"car_length_error": "차량 번호 자릿수를 확인해주세요.",
 	"car_type_error": "차량 번호를 확인해주세요.",
 	"car_exist_error": "차량번호가 이미 존재합니다.",
@@ -242,12 +260,14 @@
 	"car_exceltype_error": "파일 내 잘못된 차량 번호가 존재합니다.",
 	"car_modify": "차량 수정",
 	"car_list": "차량 목록",
+	
 	"worker": "작업자",
 	"worker_list": "작업자 목록",
 	"staff": "직원",
 	"name": "이름",
 	"owner_auth": "사업주 권한",
 	"approval": "승인",
+	
 	"history": "소독 이력",
 	"history_date": "소독 일시",
 	"history_result": "소독 결과",
@@ -257,10 +277,13 @@
 	"history_graph": "그래프",
 	"history_max": "최고농도",
 	"history_end": "최종농도",
+	
 	"payment": "결제",
 	"payment_won": "원",
 	"payment_selected_goods": "선택 상품",
 	"payment_point": "포인트",
+	"payment_current" : "현재 포인트",
+	"payment_after" : "구매 후 포인트",
 	"payment_theamountofgoods": "상품 금액",
 	"payment_regulation1": "본 서비스는 소독공정 완료 후 업체 고객들에게 SMS 알림을 주는 서비스입니다.",
 	"payment_regulation2": "※ 환불 규정 및 민원 처리",
@@ -293,8 +316,8 @@
 	"payment_receit_surtax": "부가세",
 	"payment_receit_confirm1": "본 거래확인서는 세금계산서 대용으로 사용할 수 없습니다.",
 	"payment_receit_confirm2": "위 거래를 확인함",
+	
 	"qrcode": "QR 코드",
 	"qrcode_create": "QR 생성",
-	"qrcode_generated": "생성된 QR코드",
-	"choicliste_error": "choicliste_error"
+	"qrcode_generated": "생성된 QR코드"
 }

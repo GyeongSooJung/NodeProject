@@ -46,7 +46,7 @@
 				<!-- end panel-body -->
 				
 		     	<div class="panel-body">
-					<form id="car-form" action="/car/car_edit/upreg/{{carone.CN}}" method="post" data-parsley-validate="true">
+					<form id="car-edit-form" action="" method="post" data-parsley-validate="true" onsubmit="carEdit();">
 						<div class="form-group row m-b-15">
 							<label class="col-md-4 col-sm-4 col-form-label" for="CN">{{__('car_number')}} <span class="text-danger">*</span> :</label>
 							<div class="col-md-8 col-sm-8">
@@ -83,7 +83,37 @@
 		}
 	}, true);
 	
-	
+	// 차량 수정 ajax
+	function carEdit() {
+		var formParsley  = $('#car-edit-form').parsley();
+		if(formParsley.isValid() == true) {
+			$.ajax({
+				type: 'POST',
+				url: '/car/car_edit/upreg/{{carone.CN}}',
+				dataType: 'json',
+				data: {
+					CN: document.getElementsByName('CN')[0].value,
+					CPN: document.getElementsByName('CPN')[0].value
+				},
+				success: function(result) {
+					if(result.status == 'success') {
+						alert("{{__('car_modify_success')}}");
+						location = '/car_list';
+					}
+					else if(result.status == 'exist') {
+						alert("{{__('car_exist_error')}}");
+					}
+					else if(result.status == 'type') {
+						alert("{{__('car_type_error')}}");
+					}
+					else if(result.status == 'length') {
+						alert("{{__('car_length_error')}}");
+					}
+				}
+			});
+		}
+		event.preventDefault();
+	}
 </script>
 {% endblock %}
 

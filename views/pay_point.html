@@ -40,20 +40,28 @@
                          {% endfor %}
                      </div>
                      <div class="col-md-4 mx-auto my-4 py-2 bg-gray-200 rounded border">
-                         <table class="table table-borderless table-last table-td-valign-middle mb-0">
-                             <tr>
-                                 <th width=60% class="text-left">{{__('payment_selected_goods')}}</th>
-                                 <td width=40% id="check_name" class="text-right h5 mb-0"></td>
-                             </tr>
-                             <tr>
-                                 <th class="text-left">{{__('payment_point')}}</th>
-                                 <td id="check_point" class="text-right h5 mb-0"></td>
-                             </tr>
-                             <tr>
-                                 <th class="text-left">{{__('payment_theamountofgoods')}}</th>
-                                 <td id="check_amount" class="text-right h5 mb-0"></td>
-                             </tr>
-                         </table>
+                        <table class="table table-borderless table-last table-td-valign-middle mb-0">
+                            <tr>
+                                <th width=60% class="text-left">{{__('payment_selected_goods')}}</th>
+                                <td width=40% id="check_name" class="text-right h5 mb-0"></td>
+                            </tr>
+                            <tr>
+                                <th class="text-left">{{__('payment_point')}}</th>
+                                <td id="check_point" class="text-right h5 mb-0"></td>
+                            </tr>
+                            <tr>
+                                <th class="text-left">{{__('payment_current')}}</th>
+                                <td id="check_current" class="text-right h5 mb-0"></td>
+                            </tr>
+                            <tr>
+                                <th class="text-left">{{__('payment_after')}}</th>
+                                <td id="check_after" class="text-right h5 mb-0"></td>
+                            </tr>
+                            <tr>
+                                <th class="text-left">{{__('payment_theamountofgoods')}}</th>
+                                <td id="check_amount" class="text-right h5 mb-0"></td>
+                            </tr>
+                        </table>
                      </div>
                     <div class="d-flex justify-content-center align-items-center">
                         <a href="javascript:payments('sms')" class="btn btn-primary text-white px-4"><i class="fas fa-credit-card mr-2"></i>{{__('payment')}}</a>

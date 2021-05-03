@@ -33,7 +33,7 @@
 					
 					<div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
 	            	<div class="mr-2">
-	            		<div class="btn-group m-r-5 m-b-5">
+	            		<div class="btn-group m-r-5">
 								<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>
 								<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
 								<div class="dropdown-menu dropdown-menu-right" style="">
@@ -53,9 +53,9 @@
 						
 					</div>
 					<div>
-					<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
-					<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('return_list')}}</a>
-				</div>
+						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
+						<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('return_list')}}</a>
+					</div>
 	               	
 	     <!--          	    <div class="col-xl-4">-->
 	     <!--          	    <button id ="CopyBTN" class="btn btn-secondary buttons-copy buttons-html5 btn-sm" tabindex="0" aria-controls="data-table-combine" type="button"><span>Copy</span></button>	-->
@@ -71,7 +71,7 @@
 								<thead>
 									<tr>
 										<th id ="allcheck" width="1%">
-											<input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/>
+											<input type="checkbox" name="allck" class="neHeros" value="" onChange="allCheckedBox(this);"/>
 										</th>
 										<th width="2.5%"></th>
 										<th width="10.5%" class = "sort" name = "MD">{{__('device_model')}}<i id = "MD" class="d-none  float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
@@ -114,7 +114,7 @@
 	// 검색기능
 	$(document).ready(function() {
 		
-        	pagereload() // 첫 화면 페이지 로드
+        	pagereload(); // 첫 화면 페이지 로드
         	
         	$('#searchtext').keyup(function(key) {
         		console.log($(this).val());
@@ -123,16 +123,16 @@
         			alert("{{__('choice_error')}}");
         			else {
         				pagingObject.searchtext = $(this).val();
-        				pagereload()
+        				pagereload();
         				document.getElementById('gotolist').classList.remove('d-none');
         			}
         		}
         		if($(this).val() == "") {
-        			pagereload()
+        			pagereload();
         		}
         	
         		
-        	})
+        	});
         	
         	$('#searchdatetext').keyup(function(key) {
         		console.log($(this).val());
@@ -142,8 +142,8 @@
         			else {
         				console.log(pagingObject.search);
         				pagingObject.searchtext = $(this).val();
-        				console.log(pagingObject.searchtext)
-        				pagereload()
+        				console.log(pagingObject.searchtext);
+        				pagereload();
         				document.getElementById('gotolist').classList.remove('d-none');
         				document.getElementById('searchtext').classList.remove('d-none');
         				document.getElementById('searchdatetext').classList.add('d-none');
@@ -154,7 +154,7 @@
         		}
         	
         		
-        	})
+        	});
         	
         	$('.sort').click(function() {
         		
@@ -168,8 +168,8 @@
         		
         		var check_sort = $(this).attr('name');
         		
-        		console.log(check_sort)
-        		console.log(typeof(check_sort))
+        		console.log(check_sort);
+        		console.log(typeof(check_sort));
         		
         		console.log(document.getElementById(check_sort).classList.contains('d-none'))
         		console.log(document.getElementById(check_sort).classList.contains('fa-angle-down'))
@@ -214,10 +214,8 @@
         		pagingObject.page = 0;
         		pagereload();
         		
-        	})
-	        
-     
-    })
+        	});
+    });
     
     //초기화
     function refresh() {
@@ -230,8 +228,6 @@
     	pagingObject.endpage = 0;
     	pagingObject.search = "";
     	pagingObject.searchtext = "";
-    	
-    	
     }
     
 
@@ -261,18 +257,17 @@
     
     
     function searchbutton() {
-    	
     	if(pagingObject.search == "")
           alert("{{__('search_option_error')}}");
         else {
         	if(!document.getElementById('searchtext').classList.contains('d-none')) {
 				pagingObject.searchtext = $('#searchtext').val();
-				pagereload()
+				pagereload();
 				document.getElementById('gotolist').classList.remove('d-none');
         	}else {
         		console.log($('#searchdatetext').val())
         		pagingObject.searchtext = $('#searchdatetext').val();
-				pagereload()
+				pagereload();
 				document.getElementById('gotolist').classList.remove('d-none');
         	}
 		}
@@ -280,9 +275,8 @@
 	
 	// 전체 목록으로
 	function gotolist() {
-		
-		refresh()
-		pagereload()
+		refresh();
+		pagereload();
 		
 		$("#searchoption").empty();
 		$("#searchoption").append("{{__('search')}}");
@@ -292,10 +286,10 @@
 	// 페이지 기능
 	function pagebutton(num) {
 		pagingObject.page = num;
-    	pagereload()
+    	pagereload();
     }
     
-	function pageBtn(dir,page) {
+	function pageBtn(dir, page) {
 		if(dir == 'left') {
 			if((pagingObject.page - 1) > -1)
 			{
@@ -314,7 +308,7 @@
 		}
 	}
 	
-	function pageDoubleBtn(dir,page) {
+	function pageDoubleBtn(dir, page) {
 		if(dir == 'left') {
 			if((pagingObject.page - pagingObject.pageNum) < 0) {
 				pagingObject.page = 0;
@@ -342,101 +336,103 @@
 	}
 	
 	function pagereload() {
+			$("input:checkbox[name='allck']").prop("checked", false);
+			$("input:checkbox[name='ck']").prop("checked", false);
     	    $.ajax({
 	    		url: "/ajax/device_list",
-	                    type: "POST",
-	                    async: false,
-	                    dataType: 'json',
-	                    data: {
-	                        sort : pagingObject.sort,
-	                        search : pagingObject.search,
-	                        searchtext : pagingObject.searchtext
-	                    }
+                type: "POST",
+                async: false,
+                dataType: 'json',
+                data: {
+                    sort : pagingObject.sort,
+                    search : pagingObject.search,
+                    searchtext : pagingObject.searchtext
+                }
 	        }).done(function (data) { 
 	        	if(data.result == true) {
-		    		    pagingObject.array = data.devicelist;
-		    		    pagingObject.startpage = Math.floor((pagingObject.page) / pagingObject.pageNum) * pagingObject.pageNum;
-		    		    pagingObject.endpage = pagingObject.startpage + pagingObject.pageNum;
-		    		    
-		    		    var devicelist = pagingObject.array; // 전체 리스트
-		    		    var devicenum = devicelist.length; // 전체 리스트의 갯수
-		    		    var page = pagingObject.page; // 페이지 번호
-		    		    var startPage = pagingObject.startpage; // 시작 페이지
-		    		    var endPage = pagingObject.endpage; // 끝 페이지
-		    		    var postNum = pagingObject.postNum; // 게시될 페이지 숫자
-		    		    var pageNum = pagingObject.pageNum; // 페이지 번호의 갯수
-		    		    var totalPage = Math.ceil(devicenum/postNum); // 전체 페이지의 갯수
-		    		    
-		    		    if (endPage > totalPage) { // 끝 페이지가 총 페이지 수보다 많다면 같게끔 처리
-					        endPage = totalPage;
-					    }
-		    		    
-			        	//tr 초기화
-			        	$("#data-table-combine > tbody > tr").remove();
-			        	//페이지 넘버 박스 초기화
-				     	$("#pagebox *").remove(); 
-				    		
-				        var	insertTr = ""; // 채워넣을 HTML 초기화
-				     	
-				     	var indexcount = 1; // 인덱스번호 초기화
-				    		
-				    	
-				    	
-				    	
-				     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-				     	   if(devicelist[i]) {
-							  insertTr += "<tr>";
-							  insertTr += " 	<td class='with-btn' nowrap>";
-							  insertTr += "		<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+ devicelist[i].MAC +" onChange='eachCheckedBox(this);'/>";
-							  insertTr += " 	</td>";
-							  insertTr += "<td class='font-weight-bold'>"+(devicenum - (page*10)) +" </td>";
-							  insertTr += "<td>"+ devicelist[i].MD +"</td>";
-							  insertTr += "<td>"+ devicelist[i].VER+"</td>";
-							  insertTr += "<td>"+ devicelist[i].MAC+"</td>";
-							  insertTr += "<td>"+ devicelist[i].NN+"</td>";
-							  insertTr += "<td>"+ devicelist[i].UN+"회</td><td>";
-							 
-						     if ( (moment(devicelist[i].CA).format('DD')) == moment().format('DD') )
-						     {
-						       insertTr +=  moment(devicelist[i].CA).format('HH:mm');
-						     }
-						     else {
-						      insertTr += moment(devicelist[i].CA).format('YYYY-MM-DD');
-						     }
-						      insertTr += "</td><td class='with-btn' nowrap>"	
-							  insertTr += "<a href='/device_edit/"+devicelist[i].MAC+"'   class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>{{__('modify')}}</a>";
-							  insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this) class='btn btn-sm btn-white width-60' name =' "+ devicelist[i].MAC +"'></td> ";
-							  insertTr += "</tr>";
-							  devicenum -= indexcount;
-							  
-				     	   }
-				     	}
-							  
-							  $("#memDiv").append(insertTr);
-							  insertTr = " ";
-					    	  insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>";
-							  insertTr +=	"<a href='javascript:;' onclick=pageBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>";
-		
-								for(var i = startPage; i < endPage; i ++) {
-									if(page == i)
-										insertTr +=	"<input type='button' onclick='pagebutton("+ i +")' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' style=' background-color: #00acac; color: white !important;' >";
-									else
-										insertTr +=	"<input type='button' onclick='pagebutton("+ i +")' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' >";
-								}
-								insertTr +=	"<a href='javascript:;' onclick=pageBtn('right',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-right'></i></a>";
-								insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('right',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-right'></i></a>";
-							  $("#pagebox").append(insertTr);
-							  $("#pagebox").show();
+	    		    pagingObject.array = data.devicelist;
+	    		    pagingObject.startpage = Math.floor((pagingObject.page) / pagingObject.pageNum) * pagingObject.pageNum;
+	    		    pagingObject.endpage = pagingObject.startpage + pagingObject.pageNum;
+	    		    
+	    		    var devicelist = pagingObject.array; // 전체 리스트
+	    		    var devicenum = devicelist.length; // 전체 리스트의 갯수
+	    		    var page = pagingObject.page; // 페이지 번호
+	    		    var startPage = pagingObject.startpage; // 시작 페이지
+	    		    var endPage = pagingObject.endpage; // 끝 페이지
+	    		    var postNum = pagingObject.postNum; // 게시될 페이지 숫자
+	    		    var pageNum = pagingObject.pageNum; // 페이지 번호의 갯수
+	    		    var totalPage = Math.ceil(devicenum/postNum); // 전체 페이지의 갯수
+	    		    
+	    		    if (endPage > totalPage) { // 끝 페이지가 총 페이지 수보다 많다면 같게끔 처리
+				        endPage = totalPage;
+				    }
+	    		    
+		        	//tr 초기화
+		        	$("#data-table-combine > tbody > tr").remove();
+		        	//페이지 넘버 박스 초기화
+			     	$("#pagebox *").remove(); 
+			    		
+			        var	insertTr = ""; // 채워넣을 HTML 초기화
+			     	
+			     	var indexcount = 1; // 인덱스번호 초기화
+			    		
+			    	
+			    	
+			    	
+			     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+			     	   if(devicelist[i]) {
+						  insertTr += "<tr>";
+						  insertTr += " 	<td class='with-btn' nowrap>";
+						  insertTr += "		<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+ devicelist[i].MAC +" onChange='eachCheckedBox(this);'/>";
+						  insertTr += " 	</td>";
+						  insertTr += "<td class='font-weight-bold'>"+(devicenum - (page*10)) +" </td>";
+						  insertTr += "<td>"+ devicelist[i].MD +"</td>";
+						  insertTr += "<td>"+ devicelist[i].VER+"</td>";
+						  insertTr += "<td>"+ devicelist[i].MAC+"</td>";
+						  insertTr += "<td>"+ devicelist[i].NN+"</td>";
+						  insertTr += "<td>"+ devicelist[i].UN+"회</td><td>";
+						 
+					     if ( (moment(devicelist[i].CA).format('DD')) == moment().format('DD') )
+					     {
+					       insertTr +=  moment(devicelist[i].CA).format('HH:mm');
+					     }
+					     else {
+					      insertTr += moment(devicelist[i].CA).format('YYYY-MM-DD');
+					     }
+					      insertTr += "</td><td class='with-btn' nowrap>"	
+						  insertTr += "<a href='/device_edit/"+devicelist[i].MAC+"'   class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>{{__('modify')}}</a>";
+						  insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this) class='btn btn-sm btn-white width-60' name =' "+ devicelist[i].MAC +"'></td> ";
+						  insertTr += "</tr>";
+						  devicenum -= indexcount;
+						  
+			     	   }
+			     	}
+						  
+						  $("#memDiv").append(insertTr);
+						  insertTr = " ";
+				    	  insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>";
+						  insertTr +=	"<a href='javascript:;' onclick=pageBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>";
+	
+							for(var i = startPage; i < endPage; i ++) {
+								if(page == i)
+									insertTr +=	"<input type='button' onclick='pagebutton("+ i +")' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' style=' background-color: #00acac; color: white !important;' >";
+								else
+									insertTr +=	"<input type='button' onclick='pagebutton("+ i +")' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' >";
+							}
+							insertTr +=	"<a href='javascript:;' onclick=pageBtn('right',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-right'></i></a>";
+							insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('right',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-right'></i></a>";
+						  $("#pagebox").append(insertTr);
+						  $("#pagebox").show();
 	        	}
 	        	
 	        	else if (data.result == "nothing") {
-	        		alert("{{__('search_error')}}")
+	        		alert("{{__('search_error')}}");
 	        	}
 	        	
 	        	else {
-	        		alert("{{__('search_error')}}")
+	        		alert("{{__('search_error')}}");
 	        	}
-			})
+			});
     	
     }
 	
@@ -464,47 +460,53 @@
 	    			alert("{{__('choice_error')}}");
 	    		}
 	    		
-	    	})
-    	
-    	
+	    	});
 		}
 		else {
-			location = '/device_list';
+			return false;
 		}
 	}
 
 	// 선택항목 삭제 기능
 	function delete_check(frm) {
-		var select_obj = [];
-        $('input[type="checkbox"]:checked').each(function (index) {
-                select_obj[index] = $(this).val() ;
-        });
-        console.log(select_obj);
-		var answer;
-	    	answer = confirm("{{__('delete_confirm')}}");
-		if(answer == true){
-			$.ajax({
-    		url: "/device/ajax/device_delete",
-                    type: "POST",
-                    dataType: 'json',
-                    data: {
-                    	select : select_obj,
-                    }
-	    	}).done(function (data) {  
-	    		if(data.result == true) {
-	    			alert("{{__('delete_success')}}");
-	    			location.reload();
-	    		}
-	    		else {
-	    			alert("{{__('choice_error')}}");
-	    		}
-	    		
-	    	})
-    	
-    	
+		var check = $("input:checkbox[name='ck']").is(":checked");
+		if(!check) {
+			alert("{{__('choice_error')}}");
 		}
 		else {
-			location = '/device_list';
+			var select_obj = [];
+	        $('input[name="ck"]:checked').each(function (index) {
+	                select_obj[index] = $(this).val() ;
+	        });
+	        console.log(select_obj);
+			var answer;
+		    	answer = confirm("{{__('delete_confirm')}}");
+			if(answer == true){
+				$.ajax({
+	    		url: "/device/ajax/device_delete",
+	                    type: "POST",
+	                    dataType: 'json',
+	                    data: {
+	                    	select : select_obj,
+	                    }
+		    	}).done(function (data) {  
+		    		if(data.result == true) {
+		    			alert("{{__('delete_success')}}");
+		    			location.reload();
+		    		}
+		    		else {
+		    			alert("{{__('choice_error')}}");
+		    		}
+		    		
+		    	})
+	    	
+	    	
+			}
+			else {
+				$("input:checkbox[name='allck']").prop("checked", false);
+				$("input:checkbox[name='ck']").prop("checked", false);
+				return false;
+			}
 		}
 	}
 	

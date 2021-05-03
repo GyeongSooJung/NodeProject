@@ -27,14 +27,17 @@ router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
         await Device.create({
             CID, MD, VER, MAC, NN, UN
         });
-        return res.redirect('/device_list');
+        // return res.redirect('/device_list');
+        return res.send({ status: 'success' });
       }
       else {
-        return res.redirect('/device_join?exist=true');
+        // return res.redirect('/device_join?exist=true');
+        return res.send({ status: 'exist' });
       }
     }
     else {
-      return res.redirect('/device_join?type=true');
+      // return res.redirect('/device_join?type=true');
+      return res.send({ status: 'type' });
     }
   } catch (err) {
     console.error(err);
@@ -44,29 +47,25 @@ router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
 
 //장비 수정
   //DB
-router.post('/device_edit/upreg/MAC', isNotLoggedIn, async (req, res, next) => {
+router.post('/device_edit/upreg/:MAC', isNotLoggedIn, async (req, res, next) => {
     const { MD, VER, NN, MAC } = req.body;
     const CID = req.decoded.CID;
     const CNU = req.decoded.CNU;
 
     try {
-      const exDevice = await Device.find({ "MAC" :  MAC });
-      console.log(exDevice);
-
-      const deviceone = await Device.where({"MAC" : req.params.MAC})
+      await Device.where({"MAC" : req.params.MAC})
       .update({ "CID" : CID,
-                    "MD" : MD,
-                    "VER" : VER,
-                    "NN" : NN,
-                    "MAC" : MAC
+                "MD" : MD,
+                "VER" : VER,
+                "NN" : NN,
+                "MAC" : MAC
         }).setOptions({runValidators : true})
           .exec();
-        console.log(deviceone);
+      return res.send({ status: 'success' });
     } catch (error) {
     console.error(error);
     next(error);
   }
-  res.redirect('/device_list');
 });
 
 //장비 한개 삭제
@@ -94,7 +93,7 @@ router.post('/ajax/device_deleteone', async (req, res, next) => {
 });
 
 //장비 선택 삭제
-router.post('/ajax/device_delete', async (req, res, next) => {
+router.post('/ajax/device_delete', isNotLoggedIn, async (req, res, next) => {
   var select = req.body["select[]"];
   console.log(JSON.stringify(req.body));
   console.log(select)
@@ -139,50 +138,6 @@ router.post('/ajax/device_delete', async (req, res, next) => {
   } catch (err) {
     console.error(err);
     next(err);
-  }
-});
-
-//장비 선택삭제
-router.post('/device_select_delete',isNotLoggedIn ,async (req, res, next) => {
-    try {
-        const {ck} = req.body;
-        console.log("21323"+ck);
-
-        if(!ck) {
-          return res.redirect('/device_list?null=true');
-        }
-        else {
-          
-          if(typeof(ck) == 'string') {
-            const deviceone = await Device.findOne({"MAC" : ck});
-            await Devicedelete.create({
-                  "CID" : deviceone.CID,
-                  "MD" : deviceone.MD,
-                  "VER" : deviceone.VER,
-                  "NN" : deviceone.NN,
-                  "MAC" : deviceone.MAC
-            });
-            await Device.remove({ "MAC" : ck });
-            
-          }
-          else {
-            for(var i = 0; i < ck.length; i++){
-              var deviceone = await Device.findOne({"MAC" : ck[i]});   
-              await Devicedelete.create({
-                     "CID" : deviceone.CID,
-                      "MD" : deviceone.MD,
-                      "VER" : deviceone.VER,
-                      "NN" : deviceone.NN,
-                      "MAC" : deviceone.MAC
-              });
-              await Device.remove({ "MAC" : ck[i] });
-            }
-          }
-          res.redirect('/device_list');
-        }
-    }   catch (err) {
-        console.error(err);
-        next(err);
   }
 });
 

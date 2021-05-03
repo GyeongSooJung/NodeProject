@@ -166,23 +166,29 @@
 			location = '/worker/worker_delete/' + ckc;
 		}
 		else {
-			location = '/worker_list';
+			return false;
 		}
 	}
 	
 	// 항목 삭제 기능
 	function delete_check(frm) {
-		var answer;
-		//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
-		//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
-		answer = confirm("{{__('delete_confirm')}}");
-		//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
-		
-		if(answer == true){
-			frm.action='/worker/worker_select_delete/'; frm.submit(); return true;
+		var check = $("input:checkbox[name='ck']").is(":checked");
+		if(!check) {
+			alert("{{__('choice_error')}}");
 		}
 		else {
-			location = '/worker_list';
+			var answer;
+			//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
+			//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
+			answer = confirm("{{__('delete_confirm')}}");
+			//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
+			
+			if(answer == true){
+				frm.action='/worker/worker_select_delete/'; frm.submit(); return true;
+			}
+			else {
+				return false;
+			}
 		}
 		
 	}
