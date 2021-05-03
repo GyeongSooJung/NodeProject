@@ -35,7 +35,7 @@
 							<div class="dropdown-menu dropdown-menu-right" style="">
 								<a href="javascript:searchoption('CNM');" class="dropdown-item">{{__('car_number')}}</a>
 								<a href="javascript:searchoption('DNM');" class="dropdown-item">{{__('device_model')}}</a>
-								<!--<a href="javascript:searchoption('ET');" class="dropdown-item">{{__('history_date')}}</a>-->
+								<a href="javascript:searchoption('ET');" class="dropdown-item">{{__('history_date')}}</a>
 								<!--<a href="javascript:searchoption('PD');" class="dropdown-item">{{__('history_time')}}</a>-->
 								<a href="javascript:searchoption('WNM');" class="dropdown-item">{{__('worker')}}</a>
 							
@@ -43,14 +43,20 @@
 					</div> 
 			</div>
 			<div>
-					<input id ="searchtext" type="text" class="form-control" placeholder ="" />
-					<input id ="searchdatetext" type="date" class="d-none form-control" placeholder ="" />
-					
-				</div>
-				<div>
-				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
-				<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>전체목록</a>
-			</div>
+	  				<input id ="searchtext" type="text" class="form-control" placeholder ="" />
+	  			</div>
+	  			<div id ="searchdatetext" class="d-none">
+	  				<div class ="d-flex">
+	  				<input type="date" id = "searchdatetext1" class ="form-control" placeholder ="" />
+	  				&nbsp;&nbsp;~&nbsp;&nbsp;
+	  				<input type="date" id = "searchdatetext2" class ="form-control" placeholder ="" />
+	  				</div>
+	  			</div>
+	  			<div>
+	  				
+	  				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
+	  			<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>전체목록</a>
+   			</div>
 
 			<div class="overflow-auto">
 				<form action="/history/history_select_delete" method="post">
@@ -58,12 +64,12 @@
 						<thead>
 							<tr>
 								<th width="2.5%"></th>
-										<th width="15%" class = "sort" name = "CNM">{{__('car_number')}}<i id = "CNM" class="d-none  float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="15%" class = "sort" name = "DNM">{{__('device_model')}}<i id = "DNM" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="15%" class = "sort" name = "ET">{{__('history_date')}}<i id = "ET" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="15%" class = "sort" name = "PD">{{__('history_time')}}<i id = "PD" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="15%" class = "sort" name = "WNM">{{__('worker')}}<i id = "WNM" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="1%"></th>
+								<th width="15%" class = "sort" name = "CNM">{{__('car_number')}}<i id = "CNM" class="d-none  float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+								<th width="15%" class = "sort" name = "DNM">{{__('device_model')}}<i id = "DNM" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+								<th width="15%" class = "sort" name = "ET">{{__('history_date')}}<i id = "ET" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+								<th width="15%" class = "sort" name = "PD">{{__('history_time')}}<i id = "PD" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+								<th width="15%" class = "sort" name = "WNM">{{__('worker')}}<i id = "WNM" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+								<th width="1%"></th>
 							</tr>
 						</thead>
 						<tbody id = "memDiv">
@@ -95,7 +101,6 @@
 	        pagereload()
 	        
 	        $('#searchtext').keyup(function(key) {
-        		console.log($(this).val());
         		if(key.keyCode == 13) {
         			if(pagingObject.search == "")
         			alert("{{__('choice_error')}}");
@@ -110,27 +115,6 @@
         		}
         	})
         	
-        	$('#searchdatetext').keyup(function(key) {
-        		console.log($(this).val());
-        		if(key.keyCode == 13) {
-        			if(pagingObject.search == "")
-        			alert("{{__('choice_error')}}");
-        			else {
-        				console.log(pagingObject.search);
-        				pagingObject.searchtext = $(this).val();
-        				console.log(pagingObject.searchtext)
-        				pagereload()
-        				document.getElementById('gotolist').classList.remove('d-none');
-        				document.getElementById('searchtext').classList.remove('d-none');
-        				document.getElementById('searchdatetext').classList.add('d-none');
-        			}
-        		}
-        		if($(this).val() == "") {
-        			pagereload()
-        		}
-        	
-        		
-        	})
         	
         	$('.sort').click(function() {
         		console.log("@@@")
@@ -207,19 +191,27 @@
     	pagingObject.search = opt;
     	$("#searchoption").empty();
     	var string = opt;
+    	
     	if (string == "CNM")
     	   string = "{{__('car_number')}}";
+    	   document.getElementById('searchtext').classList.remove('d-none');
+    	   document.getElementById('searchdatetext').classList.add('d-none');
     	if (string == "DNM")
     	   string = "{{__('device_model')}}";
+    	   document.getElementById('searchtext').classList.remove('d-none');
+    	   document.getElementById('searchdatetext').classList.add('d-none');
     	if (string == "ET") {
        	   string = "{{__('history_date')}}";
+       	   console.log(string)
     	   document.getElementById('searchtext').classList.add('d-none');
     	   document.getElementById('searchdatetext').classList.remove('d-none');
     	   
     	}
-    	   
-    	if (string == "WNM") 
+    	if (string == "WNM")  {
     	   string = "{{__('worker')}}";
+    	   document.getElementById('searchtext').classList.remove('d-none');
+    	   document.getElementById('searchdatetext').classList.add('d-none');
+    	}
     	
     	$("#searchoption").append(string);
     	$("#searchoption").show();
@@ -235,12 +227,19 @@
 					pagereload()
 					document.getElementById('gotolist').classList.remove('d-none');
 	        	}else {
-	        		console.log($('#searchdatetext').val())
-	        		pagingObject.searchtext = $('#searchdatetext').val();
+	        		pagingObject.searchtext += $('#searchdatetext1').val();
+	        		pagingObject.searchtext += "~";
+	        		pagingObject.searchtext += $('#searchdatetext2').val();
+	        		console.log(pagingObject.searchtext+"@@");
 					pagereload()
 					document.getElementById('gotolist').classList.remove('d-none');
 	        	}
+	        	document.getElementById('searchtext').classList.remove('d-none');
+    			document.getElementById('searchdatetext').classList.add('d-none');
 			}
+			$("#searchoption").empty();
+			$("#searchoption").append("{{__('search')}}");
+			$("#searchoption").show();
 		}
 		
 		
