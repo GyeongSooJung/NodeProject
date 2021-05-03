@@ -279,9 +279,13 @@
 	"history_end": "최종농도",
 	
 	"payment": "결제",
+	"payment_tax_guide": "부가세 포함",
+	"payment_tax": "부가세",
 	"payment_won": "원",
 	"payment_selected_goods": "선택 상품",
 	"payment_point": "포인트",
+	"payment_guide": "상품을 선택해주세요.",
+	"payment_buy_point": "구매 포인트",
 	"payment_current" : "현재 포인트",
 	"payment_after" : "구매 후 포인트",
 	"payment_theamountofgoods": "상품 금액",

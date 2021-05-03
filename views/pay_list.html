@@ -376,35 +376,29 @@
 				    	
 				    	
 				     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-							if(orderlist.length != 0) {
-					     	   if(orderlist[i]) {
-					     	      
-								  insertTr += "<tr>";
-								  insertTr += "<td class='font-weight-bold'>"+(ordernum - (page*10)) +" </td>";
-								  insertTr += "<td>"+ orderlist[i].MID +"</td><td>";
-								  if ( (moment(orderlist[i].CA).format('DD')) == moment().format('DD') )
-								  {
-								       insertTr +=  moment(orderlist[i].CA).format('HH:mm');
-								  }
-								  else {
-								      insertTr += moment(orderlist[i].CA).format('YYYY-MM-DD');
-								  }
-								  insertTr += "</td><td>"+ orderlist[i].GN+"</td>";
-								  insertTr += "<td>"+ orderlist[i].AM+"</td>";
-								  insertTr += "<td class='with-btn' nowrap>";
-								  insertTr +=	"<a href='javascript:;' onclick ='receiptPay(this)' class='btn btn-sm btn-primary width-60 m-r-2 edit-btn' name ='"+ orderlist[i].IID +"' >{{__('payment_receit')}}</a>";
-								  insertTr += "</td>";
-								  insertTr += "</tr>";
-								  ordernum -= indexcount;
-					     	   }
-							}
-					     	  else {
-					     	  	insertTr += "<tr>";
-								insertTr += "	<td colspan='10'>No Data</td>";
-								insertTr += "</tr>";
-	
-	                            break;
-					     	  }
+
+				     	   if(orderlist[i]) {
+				     	      
+							  insertTr += "<tr>";
+							  insertTr += "<td class='font-weight-bold'>"+(ordernum - (page*10)) +" </td>";
+							  insertTr += "<td>"+ orderlist[i].MID +"</td><td>";
+							  if ( (moment(orderlist[i].CA).format('DD')) == moment().format('DD') )
+							  {
+							       insertTr +=  moment(orderlist[i].CA).format('HH:mm');
+							  }
+							  else {
+							      insertTr += moment(orderlist[i].CA).format('YYYY-MM-DD');
+							  }
+							  insertTr += "</td><td>"+ orderlist[i].GN+"</td>";
+							  insertTr += "<td>"+ Math.floor(orderlist[i].AM * 1.1)+"</td>";
+							  insertTr += "<td class='with-btn' nowrap>";
+							  insertTr +=	"<a href='javascript:;' onclick ='receiptPay(this)' class='btn btn-sm btn-primary width-60 m-r-2 edit-btn' name ='"+ orderlist[i].IID +"' >{{__('payment_receit')}}</a>";
+							  console.log(orderlist[i].IID)
+							  insertTr += "</td>";
+							  insertTr += "</tr>";
+							  ordernum -= indexcount;
+							  
+				     	   }
 				     	}
 							  
 							  $("#memDiv").append(insertTr);
