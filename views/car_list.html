@@ -39,19 +39,25 @@
 									<a href="javascript:searchoption('CN');" class="dropdown-item">{{__('car_number')}}</a>
 									<a href="javascript:searchoption('CPN');" class="dropdown-item">{{__('car_customer_phone')}}</a>
 								
-									<!--<a href="javascript:searchoption('CA');" class="dropdown-item">{{__('create_date')}}</a>-->
+									<a href="javascript:searchoption('CA');" class="dropdown-item">{{__('create_date')}}</a>
 								</div>
 						</div> 
 					</div>
 					<div>
-						<input id ="searchtext" type="text" class="form-control" placeholder ="" />
-						<input id ="searchdatetext" type="date" class="d-none form-control" placeholder ="" />
-						
-					</div>
-					<div>
-						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
-						<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('return_list')}}</a>
-					</div>
+			  				<input id ="searchtext" type="text" class="form-control" placeholder ="" />
+			  			</div>
+			  			<div id ="searchdatetext" class="d-none">
+			  				<div class ="d-flex">
+			  				<input type="date" id = "searchdatetext1" class ="form-control" placeholder ="" />
+			  				&nbsp;&nbsp;~&nbsp;&nbsp;
+			  				<input type="date" id = "searchdatetext2" class ="form-control" placeholder ="" />
+			  				</div>
+			  			</div>
+			  			<div>
+			  				
+			  				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
+			  			<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
+		   			</div>
 					
 					<div class="overflow-auto">
 						<!--<form action="/car/car_select_delete" method="post">-->
@@ -99,7 +105,6 @@
 		pagereload() // 첫 화면 페이지 로드
 		
 		$('#searchtext').keyup(function(key) {
-			console.log($(this).val());
 			if(key.keyCode == 13) {
 				if(pagingObject.search == "")
 				alert("{{__('choice_error')}}");
@@ -115,14 +120,11 @@
 		});
 		
 		$('#searchdatetext').keyup(function(key) {
-			console.log($(this).val());
 			if(key.keyCode == 13) {
 				if(pagingObject.search == "")
 				alert("{{__('choice_error')}}");
 				else {
-					console.log(pagingObject.search);
 					pagingObject.searchtext = $(this).val();
-					console.log(pagingObject.searchtext);
 					pagereload();
 					document.getElementById('gotolist').classList.remove('d-none');
 					document.getElementById('searchtext').classList.remove('d-none');
@@ -146,11 +148,6 @@
 			
 			var check_sort = $(this).attr('name');
 			
-			console.log(check_sort);
-			console.log(typeof(check_sort));
-			
-			console.log(document.getElementById(check_sort).classList.contains('d-none'));
-			console.log(document.getElementById(check_sort).classList.contains('fa-angle-down'));
 			
 			 if(document.getElementById(check_sort).classList.contains('d-none')) {
 			 	
@@ -173,9 +170,6 @@
 			 		
 			 	}
 			 }
-			 
-			 console.log(check2)
-			
 			document.getElementById('CN').classList.add('d-none');
 			document.getElementById('CPN').classList.add('d-none');
 			document.getElementById('CA').classList.add('d-none');
@@ -211,12 +205,17 @@
     	var string = opt;
     	if (string == "CN")
     	   string = "{{__('car_number')}}";
+    	   document.getElementById('searchtext').classList.remove('d-none');
+    	   document.getElementById('searchdatetext').classList.add('d-none');
     	if (string == "CPN")
     	   string = "{{__('car_customer_phone')}}";
+    	   document.getElementById('searchtext').classList.remove('d-none');
+    	   document.getElementById('searchdatetext').classList.add('d-none');
     	if (string == "CA") {
     	   string = "{{__('create_date')}}";
     	   document.getElementById('searchtext').classList.add('d-none');
     	   document.getElementById('searchdatetext').classList.remove('d-none');
+    	   $("#searchtext").val('');
     	}
     	$("#searchoption").append(string);
     	$("#searchoption").show();
@@ -231,9 +230,10 @@
 				pagereload();
 				document.getElementById('gotolist').classList.remove('d-none');
         	}else {
-        		console.log($('#searchdatetext').val())
-        		pagingObject.searchtext = $('#searchdatetext').val();
-				pagereload();
+        		pagingObject.searchtext += $('#searchdatetext1').val();
+        		pagingObject.searchtext += "~";
+        		pagingObject.searchtext += $('#searchdatetext2').val();
+				pagereload()
 				document.getElementById('gotolist').classList.remove('d-none');
         	}
 		}
@@ -247,6 +247,8 @@
 		$("#searchoption").empty();
 		$("#searchoption").append("{{__('search')}}");
 		document.getElementById('gotolist').classList.add('d-none');
+		document.getElementById('searchtext').classList.remove('d-none');
+    	document.getElementById('searchdatetext').classList.add('d-none');
 	}
 	
 	// 페이지 기능
@@ -346,35 +348,43 @@
 			    	
 			    	
 			     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-			     	   if(carlist[i]) {
-						  insertTr += "<tr>";
-						  insertTr += " 	<td class='with-btn' nowrap>";
-						  insertTr += "		<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+ carlist[i].CN +" onChange='eachCheckedBox(this);'/>";
-						  insertTr += " 	</td>";
-						  insertTr += "<td class='font-weight-bold'>"+(carnum - (page*10)) +" </td>";
-						  insertTr += "<td>"+ carlist[i].CN +"</td>";
-						  
-						  if(!carlist[i].CPN){
-						  	insertTr+="<td>"+"N/A"+"</td><td>";
-						  }
-						  else {
-							insertTr += "<td>"+ carlist[i].CPN+"</td><td>";
-						  }
-						 
-					     if ( (moment(carlist[i].CA).format('DD')) == moment().format('DD') )
-					     {
-					       insertTr +=  moment(carlist[i].CA).format('HH:mm');
-					     }
-					     else {
-					      insertTr += moment(carlist[i].CA).format('YYYY-MM-DD');
-					     }
-					      insertTr += "</td><td class='with-btn' nowrap>"	
-						  insertTr += "<a href='/car_edit/"+carlist[i].CN+"'   class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>{{__('modify')}}</a>";
-						  insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this) class='btn btn-sm btn-white width-60' name =' "+ carlist[i].CN +"'></td> ";
-						  insertTr += "</tr>";
-						  carnum -= indexcount;
-						  
-			     	   }
+				        if(carlist.length != 0) {
+				     	   if(carlist[i]) {
+							  insertTr += "<tr>";
+							  insertTr += " 	<td class='with-btn' nowrap>";
+							  insertTr += "		<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+ carlist[i].CN +" onChange='eachCheckedBox(this);'/>";
+							  insertTr += " 	</td>";
+							  insertTr += "<td class='font-weight-bold'>"+(carnum - (page*10)) +" </td>";
+							  insertTr += "<td>"+ carlist[i].CN +"</td>";
+							  
+							  if(!carlist[i].CPN){
+							  	insertTr+="<td>"+"N/A"+"</td><td>";
+							  }
+							  else {
+								insertTr += "<td>"+ carlist[i].CPN+"</td><td>";
+							  }
+							 
+						     if ( (moment(carlist[i].CA).format('DD')) == moment().format('DD') )
+						     {
+						       insertTr +=  moment(carlist[i].CA).format('HH:mm');
+						     }
+						     else {
+						      insertTr += moment(carlist[i].CA).format('YYYY-MM-DD');
+						     }
+						      insertTr += "</td><td class='with-btn' nowrap>"	
+							  insertTr += "<a href='/car_edit/"+carlist[i].CN+"'   class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>{{__('modify')}}</a>";
+							  insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this) class='btn btn-sm btn-white width-60' name =' "+ carlist[i].CN +"'></td> ";
+							  insertTr += "</tr>";
+							  carnum -= indexcount;
+				     	   }
+				        }
+				     	  else {
+				     	  	insertTr += "<tr>";
+							insertTr += "	<td colspan='10'>No Data</td>";
+							insertTr += "</tr>";
+
+                            break;
+				     	  }
 			     	}
 						  
 						  $("#memDiv").append(insertTr);
@@ -407,7 +417,6 @@
 	// 일반 삭제 기능
 	function delete_one(obj) {
 		
-		console.log($(obj).attr('name'));
 		var answer;
 	    	answer = confirm("{{__('delete_confirm')}}");
 		if(answer == true){
@@ -445,7 +454,6 @@
 	        $('input[name="ck"]:checked').each(function (index) {
 	                select_obj[index] = $(this).val() ;
 	        });
-	        console.log(select_obj);
 			var answer;
 		    	answer = confirm("{{__('delete_confirm')}}");
 			if(answer == true){
@@ -482,10 +490,8 @@
 	   	// @brief 선택한 체크박스의 클래스 명칭을 가져온다.
 	   	const termClass = obj.getAttribute("class");
 	   	// @brief 선택한 클래스명과 같은 클래스의 갯수
-	   	console.log(document.getElementsByClassName(termClass).length);
 	   	Array.prototype.forEach.call(document.getElementsByClassName(termClass), function(element, index, array) {
 	        // @brief 엘리먼트의 값 출력
-	        console.log(element.value);
 	        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 되있는 경우
 	        if(document.getElementsByClassName(termClass)[0].checked == true) {
 	            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 완료 처리 한다.
@@ -512,136 +518,6 @@
             }
         }
     }
-	
-	
-	
-	
-	
-	
-	// // 검색 기능
-	// $(document).ready(function() {
- //       $("#keyword").keyup(function() {
- //           var k = $(this).val();
- //           $("#data-table-combine > tbody > tr").hide();
- //           var temp = $("#data-table-combine > tbody > tr > td:contains('" + k + "')");
-
- //           $(temp).parent().show();
- //       })
- //   })
-
-	// function searchbutton() {
-	// 	const keyword = document.getElementById('CNkeyword').value;
-	// 	location = '/car_list/?CN=' + keyword;
-	// }
-	
-	// // 페이지 기능
-	// function pageBtn(dir) {
-	// 	if(dir == 'left') {
-	// 		location = '/car_list/?page={{currentPage-1}}';
-	// 	}
-	// 	if(dir == 'right') {
-	// 		location = '/car_list/?page={{currentPage+1}}';
-	// 	}
-	// }
-	
-	// function pageDoubleBtn(dir) {
-	// 	if(dir == 'left') {
-	// 		location = '/car_list/?page={{startPage-1}}';
-	// 	}
-	// 	if(dir == 'right') {
-	// 		location = '/car_list/?page={{endPage+1}}';
-	// 	}
-	// }
-	
-	// // 일반 삭제 기능
-	// function delete_one(ck) {
-	// 	var answer;
-	// 	var ckc = ck;
-	// 	//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
-	// 	//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
-	// 	answer = confirm("{{__('delete_confirm')}}");
-	// 	//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
-	// 	if(answer == true){
-	// 		location = '/car/car_delete/' + ckc;
-	// 	}
-	// 	else {
-	// 		return false;
-	// 	}
-	// }
-	
-	// // 선택항목 삭제 기능
-	// function delete_check(frm) {
-	// 	var check = $("input:checkbox[name='ck']").is(":checked");
-	// 	if(!check) {
-	// 		alert("{{__('choice_error')}}");
-	// 	}
-	// 	else {
-	// 		var answer;
-	// 		answer = confirm("{{__('delete_confirm')}}");
-	// 		if(answer == true){
-	// 			frm.action='/car/car_select_delete/'; frm.submit(); return true;
-	// 		}
-	// 		else {
-	// 			$("input:checkbox[name='ck']").prop("checked", false);
-	// 			return false;
-	// 		}
-	// 	}
-	// }
-	
-	// // 전체선택 기능
-	// function allCheckedBox(obj) {
-	//   	// @brief 선택한 체크박스의 클래스 명칭을 가져온다.
-	//   	const termClass = obj.getAttribute("class");
-	//   	// @brief 선택한 클래스명과 같은 클래스의 갯수
-	//   	console.log(document.getElementsByClassName(termClass).length);
-	//   	Array.prototype.forEach.call(document.getElementsByClassName(termClass), function(element, index, array) {
- //       	// @brief 엘리먼트의 값 출력
-	//         console.log(element.value);
-	//         // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 되있는 경우
-	//         if(document.getElementsByClassName(termClass)[0].checked == true) {
-	//             // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 완료 처리 한다.
-	//             element.checked = true;
-	//         }
-	//         // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 해제된 경우
-	//         else {
-	//             // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 해제 처리 한다.
-	//             element.checked = false;
-	//         }
-	//   	});
- //   }
-
-	// // 항목선택 기능
-	// function eachCheckedBox(obj) {
- //     // @brief 선택한 체크박스의 상태가 선택해제인 경우
- //     if(obj.checked == false) {
- //           // @brief 선택한 체크박스의 클래스 명칭을 가져온다.
- //           const termClass = obj.getAttribute("class");
- //           // @brief 첫번째 checkbox의 상태가 체크가 되어있는경우
- //           if(document.getElementsByClassName(termClass)[0].checked == true) {
- //               // @brief 첫번째 checkbox의 상태를 체크해제한다.
- //               document.getElementsByClassName(termClass)[0].checked = false;
- //           }
- //       }
- //   }
-    
- //   // 에러 링크 기능
-	// window.onload = () => {
-	// 	if (new URL(location.href).searchParams.get('null')) {
-	// 		alert("{{__('choice_error')}}");
-	// 	}
-	// 	if (new URL(location.href).searchParams.get('searcherror')) {
-	// 		alert("{{__('search_error')}}");
-	// 	}
-	// 	// if (new URL(location.href).searchParams.get('length')) {
-	// 	// 	alert("{{__('car_length_error')}}");
-	// 	// }
-	// 	// if (new URL(location.href).searchParams.get('type')) {
-	// 	// 	alert("{{__('car_type_error')}}");
-	// 	// }
-	// 	// if (new URL(location.href).searchParams.get('exist')) {
-	// 	// 	alert("{{__('car_exist_error')}}");
-	// 	// }
-	// }
 </script>
 {% endblock %}
 

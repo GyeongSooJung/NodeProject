@@ -322,6 +322,8 @@
 	"payment_receit_confirm1" : "This transaction confirmation cannot be used as a substitute for a tax invoice.",
 	"payment_receit_confirm2" : "Confirmed the above transaction",
 	
+	"purchase_failed" : "Your purchase is incorrect",
+	
 	"qrcode": "QR code",
 	"qrcode_create":  "QR create",
 	"qrcode_generated": "Created QR code"

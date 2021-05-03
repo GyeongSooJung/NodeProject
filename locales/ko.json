@@ -321,6 +321,8 @@
 	"payment_receit_confirm1": "본 거래확인서는 세금계산서 대용으로 사용할 수 없습니다.",
 	"payment_receit_confirm2": "위 거래를 확인함",
 	
+	"purchase_failed" : "구매내역이 잘못되었습니다.",
+	
 	"qrcode": "QR 코드",
 	"qrcode_create": "QR 생성",
 	"qrcode_generated": "생성된 QR코드"
