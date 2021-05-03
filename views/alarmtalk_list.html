@@ -55,7 +55,7 @@
 	  			</div>
   				<div>
   				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
-  				<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>전체목록</a>
+  				<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
    				</div>
                
                <div class="overflow-auto">
@@ -158,7 +158,6 @@
         	
         	
         	$('.sort').click(function() {
-        		console.log("@@@")
         		
         		$("#searchoption").empty();
             	$("#searchoption").append("{{__('search')}}");
@@ -193,8 +192,6 @@
         		 	}
         		 }
         		 
-        		 console.log(check2)
-
         		document.getElementById('WNM').classList.add('d-none');
         		document.getElementById('CA').classList.add('d-none');
         		document.getElementById('RE').classList.add('d-none');
@@ -238,6 +235,7 @@
     	    string = "{{__('payment_point_Dateofuse')}}";
     	   document.getElementById('searchtext').classList.add('d-none');
     	   document.getElementById('searchdatetext').classList.remove('d-none');
+    	   $("#searchtext").val('');
     	}
     	if (string == "RE") {
        	   string = "{{__('payment_result')}}";
@@ -262,7 +260,6 @@
 	        		pagingObject.searchtext += $('#searchdatetext1').val();
 	        		pagingObject.searchtext += "~";
 	        		pagingObject.searchtext += $('#searchdatetext2').val();
-	        		console.log(pagingObject.searchtext+"@@");
 					pagereload()
 					document.getElementById('gotolist').classList.remove('d-none');
 	        	}
@@ -284,6 +281,8 @@
 			$("#searchoption").empty();
 			$("#searchoption").append("{{__('search')}}");
 			document.getElementById('gotolist').classList.add('d-none');
+			document.getElementById('searchtext').classList.remove('d-none');
+    	   document.getElementById('searchdatetext').classList.add('d-none');
 		}
 		
 		// 페이지 기능
@@ -324,13 +323,8 @@
 				}
 			}
 			if(dir == 'right') {
-				console.log(pagingObject.page)
-				console.log(pagingObject.pageNum)
-				console.log(pagingObject.array.length)
-				console.log(pagingObject.postNum)
 				if ((pagingObject.page + pagingObject.pageNum) >= Math.ceil(pagingObject.array.length / pagingObject.postNum))
 				{
-					console.log("@@@")
 					pagingObject.page = Math.ceil(pagingObject.array.length / pagingObject.postNum)-1;
 					pagereload()
 				}
@@ -384,26 +378,31 @@
 				    	
 				    	
 				     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-
-				     	   if(alarmlist[i]) {
-				     	      
-							  insertTr += "<tr>";
-							  insertTr += "<td class='font-weight-bold'>"+(alarmnum - (page*10)) +" </td>";
-							  insertTr += "<td>"+ alarmlist[i].WNM +"</td><td>";
-							  if ( (moment(alarmlist[i].CA).format('DD')) == moment().format('DD') )
-							  {
-							     console.log("@@@")
-							       insertTr +=  moment(alarmlist[i].CA).format('HH:mm');
-							  }
-							  else {
-							     console.log(moment(alarmlist[i].CA).format('YYYY-MM-DD'))
-							      insertTr += moment(alarmlist[i].CA).format('YYYY-MM-DD');
-							  }
-							  insertTr += "</td><td>-"+ alarmlist[i].RE+"</td><td>";
-							  insertTr += "</tr>";
-							  alarmnum -= indexcount;
-							  
-				     	   }
+							if(alarmlist.length != 0) {	
+					     	   if(alarmlist[i]) {
+					     	      
+								  insertTr += "<tr>";
+								  insertTr += "<td class='font-weight-bold'>"+(alarmnum - (page*10)) +" </td>";
+								  insertTr += "<td>"+ alarmlist[i].WNM +"</td><td>";
+								  if ( (moment(alarmlist[i].CA).format('DD')) == moment().format('DD') )
+								  {
+								       insertTr +=  moment(alarmlist[i].CA).format('HH:mm');
+								  }
+								  else {
+								      insertTr += moment(alarmlist[i].CA).format('YYYY-MM-DD');
+								  }
+								  insertTr += "</td><td>-"+ alarmlist[i].RE+"</td><td>";
+								  insertTr += "</tr>";
+								  alarmnum -= indexcount;
+					     	   }
+							}
+					     	else {
+					     	  	insertTr += "<tr>";
+								insertTr += "	<td colspan='10'>No Data</td>";
+								insertTr += "</tr>";
+								
+								break;
+					     	}   
 				     	}
 							  
 							  $("#memDiv").append(insertTr);

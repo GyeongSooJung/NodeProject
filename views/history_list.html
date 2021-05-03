@@ -55,7 +55,7 @@
 	  			<div>
 	  				
 	  				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
-	  			<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>전체목록</a>
+	  			<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
    			</div>
 
 			<div class="overflow-auto">
@@ -117,7 +117,6 @@
         	
         	
         	$('.sort').click(function() {
-        		console.log("@@@")
         		
         		$("#searchoption").empty();
             	$("#searchoption").append("{{__('search')}}");
@@ -151,8 +150,6 @@
         		 		
         		 	}
         		 }
-        		 
-        		 console.log(check2)
 
         		document.getElementById('CNM').classList.add('d-none');
         		document.getElementById('DNM').classList.add('d-none');
@@ -202,9 +199,9 @@
     	   document.getElementById('searchdatetext').classList.add('d-none');
     	if (string == "ET") {
        	   string = "{{__('history_date')}}";
-       	   console.log(string)
     	   document.getElementById('searchtext').classList.add('d-none');
     	   document.getElementById('searchdatetext').classList.remove('d-none');
+    	   $("#searchtext").val('');
     	   
     	}
     	if (string == "WNM")  {
@@ -230,7 +227,6 @@
 	        		pagingObject.searchtext += $('#searchdatetext1').val();
 	        		pagingObject.searchtext += "~";
 	        		pagingObject.searchtext += $('#searchdatetext2').val();
-	        		console.log(pagingObject.searchtext+"@@");
 					pagereload()
 					document.getElementById('gotolist').classList.remove('d-none');
 	        	}
@@ -240,6 +236,7 @@
 			$("#searchoption").empty();
 			$("#searchoption").append("{{__('search')}}");
 			$("#searchoption").show();
+			
 		}
 		
 		
@@ -252,6 +249,8 @@
 			$("#searchoption").empty();
 			$("#searchoption").append("{{__('search')}}");
 			document.getElementById('gotolist').classList.add('d-none');
+			document.getElementById('searchtext').classList.remove('d-none');
+    	    document.getElementById('searchdatetext').classList.add('d-none');
 		}
 		
 		// 페이지 기능
@@ -292,13 +291,8 @@
 				}
 			}
 			if(dir == 'right') {
-				console.log(pagingObject.page)
-				console.log(pagingObject.pageNum)
-				console.log(pagingObject.array.length)
-				console.log(pagingObject.postNum)
 				if ((pagingObject.page + pagingObject.pageNum) >= Math.ceil(pagingObject.array.length / pagingObject.postNum))
 				{
-					console.log("@@@")
 					pagingObject.page = Math.ceil(pagingObject.array.length / pagingObject.postNum)-1;
 					pagereload()
 				}
@@ -353,33 +347,41 @@
 				    	
 				    	
 				     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-				     	   if(historylist[i]) {
-							  insertTr += "<tr>";
-							  insertTr += "<td class='font-weight-bold'>"+(historynum - (page*10)) +" </td>";
-							  insertTr += "<td>"+ historylist[i].CNM +"</td>";
-							  insertTr += "<td>"+ historylist[i].DNM+"</td><td>";
-							  if ( (moment(historylist[i].ET).format('DD')) == moment().format('DD') )
-							     {
-							       insertTr +=  moment(historylist[i].ET).format('HH:mm');
-							  }
-							  else {
-							      insertTr += moment(historylist[i].ET).format('YYYY-MM-DD');
-							  }
-							   if (parseInt(historylist[i].PD.length/60)==0)  
-                                  insertTr +=  "</td><td>"+((historylist[i].PD.length)%60)+"s</td>"
-                              else 
-                                  insertTr +=  "</td><td>"+parseInt(historylist[i].PD.length/60)+"m "+((historylist[i].PD.length)%60)+"s</td>"
-                         
-
-							  insertTr += "<td>"+ historylist[i].WNM+"</td>";
-							 
-						     
-						      insertTr += "<td class='with-btn' nowrap>"	
-						      insertTr += "<a href='/history_chart/"+historylist[i]._id+"' class='btn btn-sm btn-white width-60'>{{__('main_indetail')}}</a>"
-							  insertTr += "</tr>";
-							  historynum -= indexcount;
-							  
-				     	   }
+				     	  if(historylist.length != 0) {
+					     	   if(historylist[i]) {
+								  insertTr += "<tr>";
+								  insertTr += "<td class='font-weight-bold'>"+(historynum - (page*10)) +" </td>";
+								  insertTr += "<td>"+ historylist[i].CNM +"</td>";
+								  insertTr += "<td>"+ historylist[i].DNM+"</td><td>";
+								  if ( (moment(historylist[i].ET).format('DD')) == moment().format('DD') )
+								     {
+								       insertTr +=  moment(historylist[i].ET).format('HH:mm');
+								  }
+								  else {
+								      insertTr += moment(historylist[i].ET).format('YYYY-MM-DD');
+								  }
+								   if (parseInt(historylist[i].PD/60)==0)  
+	                                  insertTr +=  "</td><td>"+((historylist[i].PD)%60)+"s</td>"
+	                              else 
+	                                  insertTr +=  "</td><td>"+parseInt(historylist[i].PD/60)+"m "+((historylist[i].PD)%60)+"s</td>"
+	                         
+	
+								  insertTr += "<td>"+ historylist[i].WNM+"</td>";
+								 
+							     
+							      insertTr += "<td class='with-btn' nowrap>"	
+							      insertTr += "<a href='/history_chart/"+historylist[i]._id+"' class='btn btn-sm btn-white width-60'>{{__('main_indetail')}}</a>"
+								  insertTr += "</tr>";
+								  historynum -= indexcount;
+					     	   }
+				     	  }
+				     	  else {
+				     	  	insertTr += "<tr>";
+							insertTr += "	<td colspan='10'>No Data</td>";
+							insertTr += "</tr>";
+							
+							break;
+				     	  }
 				     	}
 							  
 							  $("#memDiv").append(insertTr);

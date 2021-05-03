@@ -58,7 +58,7 @@
 			  			<div>
 			  				
 			  				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
-			  			<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>전체목록</a>
+			  			<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
 		   			</div>
 					
 					<div class="overflow-auto">
@@ -194,7 +194,6 @@
         	
         	
         	$('.sort').click(function() {
-        		console.log("@@@")
         		
         		$("#searchoption").empty();
             	$("#searchoption").append("{{__('search')}}");
@@ -276,7 +275,6 @@
     	   document.getElementById('searchdatetext').classList.add('d-none');
     	if (string == "EM") {
        	   string = "{{__('email')}}";
-       	   console.log(string)
     	   document.getElementById('searchtext').classList.remove('d-none');
     	   document.getElementById('searchdatetext').classList.add('d-none');
     	   
@@ -291,9 +289,9 @@
 	    	if(pagingObject.search == "")
 	          alert("{{__('search_option_error')}}");
 	        else {
-					pagingObject.searchtext = $('#searchtext').val();
-					pagereload()
-					document.getElementById('gotolist').classList.remove('d-none');
+				pagingObject.searchtext = $('#searchtext').val();
+				pagereload()
+				document.getElementById('gotolist').classList.remove('d-none');
 	        	document.getElementById('searchtext').classList.remove('d-none');
     			document.getElementById('searchdatetext').classList.add('d-none');
 			}
@@ -312,6 +310,8 @@
 			$("#searchoption").empty();
 			$("#searchoption").append("{{__('search')}}");
 			document.getElementById('gotolist').classList.add('d-none');
+			document.getElementById('searchtext').classList.remove('d-none');
+    	document.getElementById('searchdatetext').classList.add('d-none');
 		}
 		
 		// 페이지 기능
@@ -352,13 +352,8 @@
 				}
 			}
 			if(dir == 'right') {
-				console.log(pagingObject.page)
-				console.log(pagingObject.pageNum)
-				console.log(pagingObject.array.length)
-				console.log(pagingObject.postNum)
 				if ((pagingObject.page + pagingObject.pageNum) >= Math.ceil(pagingObject.array.length / pagingObject.postNum))
 				{
-					console.log("@@@")
 					pagingObject.page = Math.ceil(pagingObject.array.length / pagingObject.postNum)-1;
 					pagereload()
 				}
@@ -413,40 +408,46 @@
 				    	
 				    	
 				     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-				     	   if(workerlist[i]) {
-				     	   	console.log(workerlist)
-							  insertTr += "<tr>";
-							  insertTr += " 	<td class='with-btn' nowrap>";
-							  insertTr += "		<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+ workerlist[i].EM +" onChange='eachCheckedBox(this);'/>";
-							  insertTr += " 	</td>";
-							  insertTr += "<td class='font-weight-bold'>"+(workernum - (page*10)) +" </td>";
-							  insertTr += "<td class='with-img'><img src='"+ workerlist[i].PU +"' class='img-rounded height-30' /></td>";
-							  insertTr += "<td>"+ workerlist[i].WN+"</td>";
-							  insertTr += "<td>"+ workerlist[i].PN+"</td>";
-							  insertTr += "<td>"+ workerlist[i].EM+"</td>";
-							  insertTr += "<td class='with-btn' nowrap>";
-		        			  insertTr += "<input class ='ck_au' type='checkbox' data-render='switchery' data-theme='black' value ='"+workerlist[i].EM+"'";
-		        			  if(workerlist[i].AU ==1)
-		        				insertTr += "checked/>";
-		        			  else
-		        				insertTr += "unchecked/>";
-		        			  insertTr += "</td>";
-		        			  insertTr += "<td class='with-btn' nowrap>";
-		        			  insertTr += "<input class ='ck_ac' type='checkbox' data-render='switchery' data-theme='default' value ='"+workerlist[i].EM+"'";
-		        			  if(workerlist[i].AC ==1)
-		        				insertTr += "checked/>";
-		        			  else
-		        				insertTr += "unchecked/>";
-		        			  insertTr += "</td>";
-		        			  insertTr += "<td>";
-		        			  insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this) class='btn btn-sm btn-white width-60' name ='"+ workerlist[i].EM +"'></td> ";
-		        			  insertTr += "</td>";
-							  insertTr += "</tr>";
-							  workernum -= indexcount;
-							  
-				     	   }
+					     	if(workerlist.length != 0) {
+					     	   if(workerlist[i]) {
+								  insertTr += "<tr>";
+								  insertTr += " 	<td class='with-btn' nowrap>";
+								  insertTr += "		<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+ workerlist[i].EM +" onChange='eachCheckedBox(this);'/>";
+								  insertTr += " 	</td>";
+								  insertTr += "<td class='font-weight-bold'>"+(workernum - (page*10)) +" </td>";
+								  insertTr += "<td class='with-img'><img src='"+ workerlist[i].PU +"' class='img-rounded height-30' /></td>";
+								  insertTr += "<td>"+ workerlist[i].WN+"</td>";
+								  insertTr += "<td>"+ workerlist[i].PN+"</td>";
+								  insertTr += "<td>"+ workerlist[i].EM+"</td>";
+								  insertTr += "<td class='with-btn' nowrap>";
+			        			  insertTr += "<input class ='ck_au' type='checkbox' data-render='switchery' data-theme='black' value ='"+workerlist[i].EM+"'";
+			        			  if(workerlist[i].AU ==1)
+			        				insertTr += "checked/>";
+			        			  else
+			        				insertTr += "unchecked/>";
+			        			  insertTr += "</td>";
+			        			  insertTr += "<td class='with-btn' nowrap>";
+			        			  insertTr += "<input class ='ck_ac' type='checkbox' data-render='switchery' data-theme='default' value ='"+workerlist[i].EM+"'";
+			        			  if(workerlist[i].AC ==1)
+			        				insertTr += "checked/>";
+			        			  else
+			        				insertTr += "unchecked/>";
+			        			  insertTr += "</td>";
+			        			  insertTr += "<td>";
+			        			  insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this) class='btn btn-sm btn-white width-60' name ='"+ workerlist[i].EM +"'></td> ";
+			        			  insertTr += "</td>";
+								  insertTr += "</tr>";
+								  workernum -= indexcount;
+					     	   }
+					     	}
+					     	  else {
+					     	  	insertTr += "<tr>";
+								insertTr += "	<td colspan='10'>No Data</td>";
+								insertTr += "</tr>";
+	
+	                            break;
+					     	  }
 				     	}
-							  console.log(insertTr)
 							  $("#memDiv").append(insertTr);
 							  insertTr = " ";
 					    	  insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>";
@@ -473,6 +474,111 @@
 	        	}
 			})
     	
+    }
+    
+    	// 일반 삭제 기능
+	function delete_one(obj) {
+		
+		var answer;
+	    	answer = confirm("{{__('delete_confirm')}}");
+		if(answer == true){
+			$.ajax({
+    		url: "/device/ajax/device_deleteone",
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                    	select : $(obj).attr('name'),
+                    }
+	    	}).done(function (data) {  
+	    		if(data.result == true) {
+	    			alert("{{__('delete_success')}}");
+	    			location.reload();
+	    		}
+	    		else {
+	    			alert("{{__('choice_error')}}");
+	    		}
+	    		
+	    	});
+		}
+		else {
+			return false;
+		}
+	}
+
+	// 선택항목 삭제 기능
+	function delete_check(frm) {
+		var check = $("input:checkbox[name='ck']").is(":checked");
+		if(!check) {
+			alert("{{__('choice_error')}}");
+		}
+		else {
+			var select_obj = [];
+	        $('input[name="ck"]:checked').each(function (index) {
+	                select_obj[index] = $(this).val() ;
+	        });
+			var answer;
+		    	answer = confirm("{{__('delete_confirm')}}");
+			if(answer == true){
+				$.ajax({
+	    		url: "/device/ajax/device_delete",
+	                    type: "POST",
+	                    dataType: 'json',
+	                    data: {
+	                    	select : select_obj,
+	                    }
+		    	}).done(function (data) {  
+		    		if(data.result == true) {
+		    			alert("{{__('delete_success')}}");
+		    			location.reload();
+		    		}
+		    		else {
+		    			alert("{{__('choice_error')}}");
+		    		}
+		    		
+		    	})
+	    	
+	    	
+			}
+			else {
+				$("input:checkbox[name='allck']").prop("checked", false);
+				$("input:checkbox[name='ck']").prop("checked", false);
+				return false;
+			}
+		}
+	}
+	
+	// 전체 선택 기능
+	function allCheckedBox(obj) {
+	   	// @brief 선택한 체크박스의 클래스 명칭을 가져온다.
+	   	const termClass = obj.getAttribute("class");
+	   	// @brief 선택한 클래스명과 같은 클래스의 갯수
+	   	Array.prototype.forEach.call(document.getElementsByClassName(termClass), function(element, index, array) {
+	        // @brief 엘리먼트의 값 출력
+	        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 되있는 경우
+	        if(document.getElementsByClassName(termClass)[0].checked == true) {
+	            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 완료 처리 한다.
+	            element.checked = true;
+	        }
+	        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 해제된 경우
+	        else {
+	            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 해제 처리 한다.
+	            element.checked = false;
+	        }
+	   	});
+    }
+
+	// 항목 선택 기능
+	function eachCheckedBox(obj) {
+      // @brief 선택한 체크박스의 상태가 선택해제인 경우
+      if(obj.checked == false) {
+            // @brief 선택한 체크박스의 클래스 명칭을 가져온다.
+            const termClass = obj.getAttribute("class");
+            // @brief 첫번째 checkbox의 상태가 체크가 되어있는경우
+            if(document.getElementsByClassName(termClass)[0].checked == true) {
+                // @brief 첫번째 checkbox의 상태를 체크해제한다.
+                document.getElementsByClassName(termClass)[0].checked = false;
+            }
+        }
     }
 
 	    

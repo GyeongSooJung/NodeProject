@@ -42,28 +42,26 @@
 									<a href="javascript:searchoption('MAC');" class="dropdown-item">{{__('device_mac')}}</a>
 									<a href="javascript:searchoption('NN');" class="dropdown-item">{{__('device_nick')}}</a>
 									<a href="javascript:searchoption('UN');" class="dropdown-item">{{__('device_use_number')}}</a>
-								
-									<!--<a href="javascript:searchoption('CA');" class="dropdown-item">{{__('create_date')}}</a>-->
+									<a href="javascript:searchoption('CA');" class="dropdown-item">{{__('create_date')}}</a>
 								</div>
 						</div> 
 					</div>
 					<div>
-						<input id ="searchtext" type="text" class="form-control" placeholder ="" />
-						<input id ="searchdatetext" type="date" class="d-none form-control" placeholder ="" />
-						
-					</div>
-					<div>
-						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
-						<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('return_list')}}</a>
-					</div>
+			  				<input id ="searchtext" type="text" class="form-control" placeholder ="" />
+			  			</div>
+			  			<div id ="searchdatetext" class="d-none">
+			  				<div class ="d-flex">
+			  				<input type="date" id = "searchdatetext1" class ="form-control" placeholder ="" />
+			  				&nbsp;&nbsp;~&nbsp;&nbsp;
+			  				<input type="date" id = "searchdatetext2" class ="form-control" placeholder ="" />
+			  				</div>
+			  			</div>
+			  			<div>
+			  				
+			  				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
+			  			<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
+		   			</div>
 	               	
-	     <!--          	    <div class="col-xl-4">-->
-	     <!--          	    <button id ="CopyBTN" class="btn btn-secondary buttons-copy buttons-html5 btn-sm" tabindex="0" aria-controls="data-table-combine" type="button"><span>Copy</span></button>	-->
-	     <!--          	    <button id ="CSVBTN" class="btn btn-secondary buttons-csv buttons-html5 btn-sm" tabindex="0" aria-controls="data-table-combine" type="button"><span>CSV</span></button>-->
-	     <!--          	    <button id ="ExcelBTN" class="btn btn-secondary buttons-excel buttons-html5 btn-sm" tabindex="0" aria-controls="data-table-combine" type="button"><span>Excel</span></button>-->
-	     <!--          	    <button id ="PDF" class="btn btn-secondary buttons-pdf buttons-html5 btn-sm" tabindex="0" aria-controls="data-table-combine" type="button"><span>PDF</span></button>-->
-						<!--<button id ="Print" class="btn btn-secondary buttons-print btn-sm" tabindex="0" aria-controls="data-table-combine" type="button"><span>Print</span></button>-->
-						<!--</div>-->
 					
 					<div class="overflow-auto">
 						<form  method="post">
@@ -117,7 +115,6 @@
         	pagereload(); // 첫 화면 페이지 로드
         	
         	$('#searchtext').keyup(function(key) {
-        		console.log($(this).val());
         		if(key.keyCode == 13) {
         			if(pagingObject.search == "")
         			alert("{{__('choice_error')}}");
@@ -134,27 +131,6 @@
         		
         	});
         	
-        	$('#searchdatetext').keyup(function(key) {
-        		console.log($(this).val());
-        		if(key.keyCode == 13) {
-        			if(pagingObject.search == "")
-        			alert("{{__('choice_error')}}");
-        			else {
-        				console.log(pagingObject.search);
-        				pagingObject.searchtext = $(this).val();
-        				console.log(pagingObject.searchtext);
-        				pagereload();
-        				document.getElementById('gotolist').classList.remove('d-none');
-        				document.getElementById('searchtext').classList.remove('d-none');
-        				document.getElementById('searchdatetext').classList.add('d-none');
-        			}
-        		}
-        		if($(this).val() == "") {
-        			pagereload()
-        		}
-        	
-        		
-        	});
         	
         	$('.sort').click(function() {
         		
@@ -167,13 +143,6 @@
         		var paglist = pagingObject.array;
         		
         		var check_sort = $(this).attr('name');
-        		
-        		console.log(check_sort);
-        		console.log(typeof(check_sort));
-        		
-        		console.log(document.getElementById(check_sort).classList.contains('d-none'))
-        		console.log(document.getElementById(check_sort).classList.contains('fa-angle-down'))
-        		
         		 if(document.getElementById(check_sort).classList.contains('d-none')) {
         		 	
         		 	document.getElementById(check_sort).classList.remove('fa-angle-up');
@@ -196,7 +165,6 @@
         		 	}
         		 }
         		 
-        		 console.log(check2)
         		
         		document.getElementById('MD').classList.add('d-none');
         		document.getElementById('VER').classList.add('d-none');
@@ -237,21 +205,33 @@
     	var string = opt;
     	if (string == "MD")
     	   string = "{{__('device_model')}}";
+    	   document.getElementById('searchtext').classList.remove('d-none');
+    	   document.getElementById('searchdatetext').classList.add('d-none');
     	if (string == "VER")
     	   string = "{{__('device_version')}}";
+    	   document.getElementById('searchtext').classList.remove('d-none');
+    	   document.getElementById('searchdatetext').classList.add('d-none');
     	if (string == "MAC")
     	   string = "{{__('device_mac')}}";
+    	   document.getElementById('searchtext').classList.remove('d-none');
+    	   document.getElementById('searchdatetext').classList.add('d-none');
     	if (string == "NN")
     	   string = "{{__('device_nick')}}";
+    	   document.getElementById('searchtext').classList.remove('d-none');
+    	   document.getElementById('searchdatetext').classList.add('d-none');
     	if (string == "UN")
     	   string = "{{__('device_use_number')}}";
+    	    document.getElementById('searchtext').classList.remove('d-none');
+    	   document.getElementById('searchdatetext').classList.add('d-none');
     	if (string == "CA") {
     	   string = "{{__('create_date')}}";
     	   document.getElementById('searchtext').classList.add('d-none');
     	   document.getElementById('searchdatetext').classList.remove('d-none');
+    	   $("#searchtext").val('');
     	}
     	$("#searchoption").append(string);
     	$("#searchoption").show();
+    	
     }
     
     
@@ -265,11 +245,15 @@
 				pagereload();
 				document.getElementById('gotolist').classList.remove('d-none');
         	}else {
-        		console.log($('#searchdatetext').val())
-        		pagingObject.searchtext = $('#searchdatetext').val();
-				pagereload();
+        		pagingObject.searchtext += $('#searchdatetext1').val();
+        		pagingObject.searchtext += "~";
+        		pagingObject.searchtext += $('#searchdatetext2').val();
+				pagereload()
 				document.getElementById('gotolist').classList.remove('d-none');
         	}
+        	$("#searchoption").empty();
+			$("#searchoption").append("{{__('search')}}");
+			$("#searchoption").show();
 		}
 	}
 	
@@ -281,6 +265,8 @@
 		$("#searchoption").empty();
 		$("#searchoption").append("{{__('search')}}");
 		document.getElementById('gotolist').classList.add('d-none');
+		document.getElementById('searchtext').classList.remove('d-none');
+    	document.getElementById('searchdatetext').classList.add('d-none');
 	}
 	
 	// 페이지 기능
@@ -380,32 +366,40 @@
 			    	
 			    	
 			     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-			     	   if(devicelist[i]) {
-						  insertTr += "<tr>";
-						  insertTr += " 	<td class='with-btn' nowrap>";
-						  insertTr += "		<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+ devicelist[i].MAC +" onChange='eachCheckedBox(this);'/>";
-						  insertTr += " 	</td>";
-						  insertTr += "<td class='font-weight-bold'>"+(devicenum - (page*10)) +" </td>";
-						  insertTr += "<td>"+ devicelist[i].MD +"</td>";
-						  insertTr += "<td>"+ devicelist[i].VER+"</td>";
-						  insertTr += "<td>"+ devicelist[i].MAC+"</td>";
-						  insertTr += "<td>"+ devicelist[i].NN+"</td>";
-						  insertTr += "<td>"+ devicelist[i].UN+"회</td><td>";
-						 
-					     if ( (moment(devicelist[i].CA).format('DD')) == moment().format('DD') )
-					     {
-					       insertTr +=  moment(devicelist[i].CA).format('HH:mm');
-					     }
-					     else {
-					      insertTr += moment(devicelist[i].CA).format('YYYY-MM-DD');
-					     }
-					      insertTr += "</td><td class='with-btn' nowrap>"	
-						  insertTr += "<a href='/device_edit/"+devicelist[i].MAC+"'   class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>{{__('modify')}}</a>";
-						  insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this) class='btn btn-sm btn-white width-60' name =' "+ devicelist[i].MAC +"'></td> ";
-						  insertTr += "</tr>";
-						  devicenum -= indexcount;
-						  
-			     	   }
+				        if(devicelist.length != 0) {	  
+				     	   if(devicelist[i]) {
+							  insertTr += "<tr>";
+							  insertTr += " 	<td class='with-btn' nowrap>";
+							  insertTr += "		<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+ devicelist[i].MAC +" onChange='eachCheckedBox(this);'/>";
+							  insertTr += " 	</td>";
+							  insertTr += "<td class='font-weight-bold'>"+(devicenum - (page*10)) +" </td>";
+							  insertTr += "<td>"+ devicelist[i].MD +"</td>";
+							  insertTr += "<td>"+ devicelist[i].VER+"</td>";
+							  insertTr += "<td>"+ devicelist[i].MAC+"</td>";
+							  insertTr += "<td>"+ devicelist[i].NN+"</td>";
+							  insertTr += "<td>"+ devicelist[i].UN+"회</td><td>";
+							 
+						     if ( (moment(devicelist[i].CA).format('DD')) == moment().format('DD') )
+						     {
+						       insertTr +=  moment(devicelist[i].CA).format('HH:mm');
+						     }
+						     else {
+						      insertTr += moment(devicelist[i].CA).format('YYYY-MM-DD');
+						     }
+						      insertTr += "</td><td class='with-btn' nowrap>"	
+							  insertTr += "<a href='/device_edit/"+devicelist[i].MAC+"'   class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>{{__('modify')}}</a>";
+							  insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this) class='btn btn-sm btn-white width-60' name =' "+ devicelist[i].MAC +"'></td> ";
+							  insertTr += "</tr>";
+							  devicenum -= indexcount;
+				     	   }
+				        }
+				     	  else {
+				     	  	insertTr += "<tr>";
+							insertTr += "	<td colspan='10'>No Data</td>";
+							insertTr += "</tr>";
+
+                            break;
+				     	  }
 			     	}
 						  
 						  $("#memDiv").append(insertTr);
@@ -440,7 +434,6 @@
 	// 일반 삭제 기능
 	function delete_one(obj) {
 		
-		console.log($(obj).attr('name'));
 		var answer;
 	    	answer = confirm("{{__('delete_confirm')}}");
 		if(answer == true){
@@ -478,7 +471,6 @@
 	        $('input[name="ck"]:checked').each(function (index) {
 	                select_obj[index] = $(this).val() ;
 	        });
-	        console.log(select_obj);
 			var answer;
 		    	answer = confirm("{{__('delete_confirm')}}");
 			if(answer == true){
@@ -515,10 +507,8 @@
 	   	// @brief 선택한 체크박스의 클래스 명칭을 가져온다.
 	   	const termClass = obj.getAttribute("class");
 	   	// @brief 선택한 클래스명과 같은 클래스의 갯수
-	   	console.log(document.getElementsByClassName(termClass).length);
 	   	Array.prototype.forEach.call(document.getElementsByClassName(termClass), function(element, index, array) {
 	        // @brief 엘리먼트의 값 출력
-	        console.log(element.value);
 	        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 되있는 경우
 	        if(document.getElementsByClassName(termClass)[0].checked == true) {
 	            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 완료 처리 한다.

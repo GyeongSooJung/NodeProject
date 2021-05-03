@@ -57,7 +57,7 @@
 	  			<div>
 	  				
 	  				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
-	  			<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>전체목록</a>
+	  			<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
    			</div>
                
                <div class="overflow-auto">
@@ -149,8 +149,6 @@
         	})
         	
         	$('.sort').click(function() {
-        		console.log("@@@")
-        		
         		$("#searchoption").empty();
             	$("#searchoption").append("{{__('search')}}");
         		
@@ -227,6 +225,7 @@
     	    string = "{{__('payment_date')}}";
     	   document.getElementById('searchtext').classList.add('d-none');
     	   document.getElementById('searchdatetext').classList.remove('d-none');
+    	   $("#searchtext").val('');
     	}
     	if (string == "GN") {
 	       	string = "{{__('payment_name')}}";
@@ -259,7 +258,6 @@
 	        		pagingObject.searchtext += $('#searchdatetext1').val();
 	        		pagingObject.searchtext += "~";
 	        		pagingObject.searchtext += $('#searchdatetext2').val();
-	        		console.log(pagingObject.searchtext+"@@");
 					pagereload()
 					document.getElementById('gotolist').classList.remove('d-none');
 	        	}
@@ -281,6 +279,8 @@
 			$("#searchoption").empty();
 			$("#searchoption").append("{{__('search')}}");
 			document.getElementById('gotolist').classList.add('d-none');
+			document.getElementById('searchtext').classList.remove('d-none');
+    		document.getElementById('searchdatetext').classList.add('d-none');
 		}
 		
 		// 페이지 기능
@@ -321,13 +321,8 @@
 				}
 			}
 			if(dir == 'right') {
-				console.log(pagingObject.page)
-				console.log(pagingObject.pageNum)
-				console.log(pagingObject.array.length)
-				console.log(pagingObject.postNum)
 				if ((pagingObject.page + pagingObject.pageNum) >= Math.ceil(pagingObject.array.length / pagingObject.postNum))
 				{
-					console.log("@@@")
 					pagingObject.page = Math.ceil(pagingObject.array.length / pagingObject.postNum)-1;
 					pagereload()
 				}
@@ -381,29 +376,35 @@
 				    	
 				    	
 				     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-
-				     	   if(orderlist[i]) {
-				     	      
-							  insertTr += "<tr>";
-							  insertTr += "<td class='font-weight-bold'>"+(ordernum - (page*10)) +" </td>";
-							  insertTr += "<td>"+ orderlist[i].MID +"</td><td>";
-							  if ( (moment(orderlist[i].CA).format('DD')) == moment().format('DD') )
-							  {
-							       insertTr +=  moment(orderlist[i].CA).format('HH:mm');
-							  }
-							  else {
-							      insertTr += moment(orderlist[i].CA).format('YYYY-MM-DD');
-							  }
-							  insertTr += "</td><td>"+ orderlist[i].GN+"</td>";
-							  insertTr += "<td>"+ orderlist[i].AM+"</td>";
-							  insertTr += "<td class='with-btn' nowrap>";
-							  insertTr +=	"<a href='javascript:;' onclick ='receiptPay(this)' class='btn btn-sm btn-primary width-60 m-r-2 edit-btn' name ='"+ orderlist[i].IID +"' >{{__('payment_receit')}}</a>";
-							  console.log(orderlist[i].IID)
-							  insertTr += "</td>";
-							  insertTr += "</tr>";
-							  ordernum -= indexcount;
-							  
-				     	   }
+							if(orderlist.length != 0) {
+					     	   if(orderlist[i]) {
+					     	      
+								  insertTr += "<tr>";
+								  insertTr += "<td class='font-weight-bold'>"+(ordernum - (page*10)) +" </td>";
+								  insertTr += "<td>"+ orderlist[i].MID +"</td><td>";
+								  if ( (moment(orderlist[i].CA).format('DD')) == moment().format('DD') )
+								  {
+								       insertTr +=  moment(orderlist[i].CA).format('HH:mm');
+								  }
+								  else {
+								      insertTr += moment(orderlist[i].CA).format('YYYY-MM-DD');
+								  }
+								  insertTr += "</td><td>"+ orderlist[i].GN+"</td>";
+								  insertTr += "<td>"+ orderlist[i].AM+"</td>";
+								  insertTr += "<td class='with-btn' nowrap>";
+								  insertTr +=	"<a href='javascript:;' onclick ='receiptPay(this)' class='btn btn-sm btn-primary width-60 m-r-2 edit-btn' name ='"+ orderlist[i].IID +"' >{{__('payment_receit')}}</a>";
+								  insertTr += "</td>";
+								  insertTr += "</tr>";
+								  ordernum -= indexcount;
+					     	   }
+							}
+					     	  else {
+					     	  	insertTr += "<tr>";
+								insertTr += "	<td colspan='10'>No Data</td>";
+								insertTr += "</tr>";
+	
+	                            break;
+					     	  }
 				     	}
 							  
 							  $("#memDiv").append(insertTr);
@@ -437,12 +438,10 @@
         //영수증 출력 화면
     function receiptPay(obj) {
        var imp_code = $(obj).attr('name');
-       console.log(imp_code)
-        console.log(typeof(imp_code))
         if (imp_code)
         window.open("/receipt?imp_uid="+imp_code,"pop","width=620, height=700, scrollbars=yes, resizable=yes"); 
         else{
-            alert("구매 내용이 잘못되었습니다.");
+            alert("{{__('purchase_failed')}}");
         }   
     }
    
