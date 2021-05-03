@@ -1075,6 +1075,8 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
       if(err) throw err;
     });
     
+    console.log(pointaggregate)
+    
     //_id 키의 값들을 배열에 담음(mid들만)
     for (var i = 0; i < pointaggregate.length; i++) {
       messageIds[i] = await pointaggregate[i]._id;
