@@ -169,7 +169,7 @@
                   <p class="is-size-2">
                     <strong class="mr-2 has-text-info">
                       <!--홍보용-->
-                      {% if (historyone.CNM == '123호1234') %}
+                      {% if (historyone.CNM == '123가1234') %}
                         1일
                       <!--기본-->
                       {% else %}
@@ -191,7 +191,7 @@
                           <script>
                             var et;
                             // 홍보용
-                            if ('{{historyone.CNM}}' == '123호1234') {
+                            if ('{{historyone.CNM}}' == '123가1234') {
                               et = moment().add(-1, 'days').format('YYYY-MM-DD');
                             }
                             // 기본
@@ -218,7 +218,15 @@
                       </tr>
                       <tr>
                         <th>담당 작업자</th>
-                        <td>{{historyone.WNM}}</td>
+                        <td>
+                          <!--홍보용-->
+                          {% if (historyone.CNM == '123가1234') %}
+                            엠케이
+                          <!--기본-->
+                          {% else %}
+                            {{historyone.WNM}}
+                          {% endif %}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
