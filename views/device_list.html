@@ -405,7 +405,7 @@
 						     }
 						      insertTr += "</td><td class='with-btn' nowrap>"	
 							  insertTr += "<a href='/device_edit/"+devicelist[i].MAC+"'   class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>{{__('modify')}}</a>";
-							  insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this) class='btn btn-sm btn-white width-60' name =' "+ devicelist[i].MAC +"'></td> ";
+							  insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this) class='btn btn-sm btn-white width-60' name ='"+ devicelist[i].MAC +"'></td> ";
 							  insertTr += "</tr>";
 							  devicenum -= indexcount;
 							  

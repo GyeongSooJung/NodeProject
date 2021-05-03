@@ -37,21 +37,27 @@
 							<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
 							<div class="dropdown-menu dropdown-menu-right" style="">
 								<a href="javascript:searchoption('PN');" class="dropdown-item">{{__('payment_name')}}</a>
-								<!--<a href="javascript:searchoption('CA');" class="dropdown-item">{{__('payment_Dateofuse')}}</a>-->
+								<a href="javascript:searchoption('CA');" class="dropdown-item">{{__('payment_Dateofuse')}}</a>
 								<a href="javascript:searchoption('PO');" class="dropdown-item">{{__('payment_point')}}</a>
 							
 							</div>
 					</div> 
 			</div>
 			<div>
-					<input id ="searchtext" type="text" class="form-control" placeholder ="" />
-					<input id ="searchdatetext" type="date" class="d-none form-control" placeholder ="" />
-					
-				</div>
-				<div>
-				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
-				<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>전체목록</a>
-			</div>
+	  				<input id ="searchtext" type="text" class="form-control" placeholder ="" />
+	  			</div>
+	  			<div id ="searchdatetext" class="d-none">
+	  				<div class ="d-flex">
+	  				<input type="date" id = "searchdatetext1" class ="form-control" placeholder ="" />
+	  				&nbsp;&nbsp;~&nbsp;&nbsp;
+	  				<input type="date" id = "searchdatetext2" class ="form-control" placeholder ="" />
+	  				</div>
+	  			</div>
+	  			<div>
+	  				
+	  				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
+	  			<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>전체목록</a>
+   			</div>
             
                <div class="overflow-auto">
                   <!--<form action="/device/device_select_delete" method="post">-->
@@ -131,14 +137,12 @@
     </script>
   
     <script>
-   // 검색기능
   	var pagingObject = new Object({array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : ""});
 		// 검색 기능
 		$(document).ready(function() {
 	        pagereload()
 	        
 	        $('#searchtext').keyup(function(key) {
-        		console.log($(this).val());
         		if(key.keyCode == 13) {
         			if(pagingObject.search == "")
         			alert("{{__('choice_error')}}");
@@ -153,27 +157,6 @@
         		}
         	})
         	
-        	$('#searchdatetext').keyup(function(key) {
-        		console.log($(this).val());
-        		if(key.keyCode == 13) {
-        			if(pagingObject.search == "")
-        			alert("{{__('choice_error')}}");
-        			else {
-        				console.log(pagingObject.search);
-        				pagingObject.searchtext = $(this).val();
-        				console.log(pagingObject.searchtext)
-        				pagereload()
-        				document.getElementById('gotolist').classList.remove('d-none');
-        				document.getElementById('searchtext').classList.remove('d-none');
-        				document.getElementById('searchdatetext').classList.add('d-none');
-        			}
-        		}
-        		if($(this).val() == "") {
-        			pagereload()
-        		}
-        	
-        		
-        	})
         	
         	$('.sort').click(function() {
         		console.log("@@@")
@@ -250,13 +233,17 @@
     	var string = opt;
     	if (string == "PN")
     	   string = "{{__('payment_name')}}";
+    	   document.getElementById('searchtext').classList.remove('d-none');
+    	   document.getElementById('searchdatetext').classList.add('d-none');
     	if (string == "CA"){
     	    string = "{{__('payment_Dateofuse')}}";
     	   document.getElementById('searchtext').classList.add('d-none');
     	   document.getElementById('searchdatetext').classList.remove('d-none');
     	}
-    	if (string == "ET") {
+    	if (string == "PO") {
        	string = "{{__('payment_point')}}";
+           document.getElementById('searchtext').classList.remove('d-none');
+    	   document.getElementById('searchdatetext').classList.add('d-none');
     	   
     	}
     	
@@ -267,19 +254,26 @@
 		function searchbutton() {
     	
 	    	if(pagingObject.search == "")
-	          alert("{{__('choice_error')}}");
+	          alert("{{__('search_option_error')}}");
 	        else {
 	        	if(!document.getElementById('searchtext').classList.contains('d-none')) {
 					pagingObject.searchtext = $('#searchtext').val();
 					pagereload()
 					document.getElementById('gotolist').classList.remove('d-none');
 	        	}else {
-	        		console.log($('#searchdatetext').val())
-	        		pagingObject.searchtext = $('#searchdatetext').val();
+	        		pagingObject.searchtext += $('#searchdatetext1').val();
+	        		pagingObject.searchtext += "~";
+	        		pagingObject.searchtext += $('#searchdatetext2').val();
+	        		console.log(pagingObject.searchtext+"@@");
 					pagereload()
 					document.getElementById('gotolist').classList.remove('d-none');
 	        	}
+	        	document.getElementById('searchtext').classList.remove('d-none');
+    			document.getElementById('searchdatetext').classList.add('d-none');
 			}
+			$("#searchoption").empty();
+			$("#searchoption").append("{{__('search')}}");
+			$("#searchoption").show();
 		}
 		
 		
@@ -363,18 +357,18 @@
 	                    }
 	        }).done(function (data) { 
 	        	if(data.result == true) {
-		    		    pagingObject.array = data.historylist;
+		    		    pagingObject.array = data.pointlist;
 		    		    pagingObject.startpage = Math.floor((pagingObject.page) / pagingObject.pageNum) * pagingObject.pageNum;
 		    		    pagingObject.endpage = pagingObject.startpage + pagingObject.pageNum;
 		    		    
-		    		    var historylist = pagingObject.array; // 전체 리스트
-		    		    var historynum = historylist.length; // 전체 리스트의 갯수
+		    		    var pointlist = pagingObject.array; // 전체 리스트
+		    		    var pointnum = pointlist.length; // 전체 리스트의 갯수
 		    		    var page = pagingObject.page; // 페이지 번호
 		    		    var startPage = pagingObject.startpage; // 시작 페이지
 		    		    var endPage = pagingObject.endpage; // 끝 페이지
 		    		    var postNum = pagingObject.postNum; // 게시될 페이지 숫자
 		    		    var pageNum = pagingObject.pageNum; // 페이지 번호의 갯수
-		    		    var totalPage = Math.ceil(historynum/postNum); // 전체 페이지의 갯수
+		    		    var totalPage = Math.ceil(pointnum/postNum); // 전체 페이지의 갯수
 		    		    
 		    		    if (endPage > totalPage) { // 끝 페이지가 총 페이지 수보다 많다면 같게끔 처리
 					        endPage = totalPage;
@@ -391,33 +385,38 @@
 				    		
 				    	
 				    	
-				    	
 				     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-				     	   if(historylist[i]) {
+
+				     	   if(pointlist[i]) {
 							  insertTr += "<tr>";
-							  insertTr += "<td class='font-weight-bold'>"+(historynum - (page*10)) +" </td>";
-							  insertTr += "<td>"+ historylist[i].CNM +"</td>";
-							  insertTr += "<td>"+ historylist[i].DNM+"</td><td>";
-							  if ( (moment(historylist[i].ET).format('DD')) == moment().format('DD') )
-							     {
-							       insertTr +=  moment(historylist[i].ET).format('HH:mm');
+							  insertTr += "<td class='font-weight-bold'>"+(pointnum - (page*10)) +" </td>";
+							  insertTr += "<td>"+ pointlist[i].PN +"</td><td>";
+							  if ( (moment(pointlist[i].CA).format('DD')) == moment().format('DD') )
+							  {
+							     console.log("@@@")
+							       insertTr +=  moment(pointlist[i].CA).format('HH:mm');
 							  }
 							  else {
-							      insertTr += moment(historylist[i].ET).format('YYYY-MM-DD');
+							     console.log(moment(pointlist[i].CA).format('YYYY-MM-DD'))
+							      insertTr += moment(pointlist[i].CA).format('YYYY-MM-DD');
 							  }
-							   if (parseInt(historylist[i].PD.length/60)==0)  
-                                  insertTr +=  "</td><td>"+((historylist[i].PD.length)%60)+"s</td>"
-                              else 
-                                  insertTr +=  "</td><td>"+parseInt(historylist[i].PD.length/60)+"m "+((historylist[i].PD.length)%60)+"s</td>"
+							  insertTr += "</td><td>-"+ pointlist[i].PO+"</td><td>";
+							  //if ( (moment(pointlist[i].ET).format('DD')) == moment().format('DD') )
+							  //   {
+							  //     insertTr +=  moment(pointlist[i].ET).format('HH:mm');
+							  //}
+							  //else {
+							  //    insertTr += moment(pointlist[i].ET).format('YYYY-MM-DD');
+							  //}
                          
 
-							  insertTr += "<td>"+ historylist[i].WNM+"</td>";
+							  //insertTr += "<td>"+ pointlist[i].WNM+"</td>";
 							 
 						     
-						      insertTr += "<td class='with-btn' nowrap>"	
-						      insertTr += "<a href='/history_chart/"+historylist[i]._id+"' class='btn btn-sm btn-white width-60'>{{__('main_indetail')}}</a>"
+						   //    insertTr += "<td class='with-btn' nowrap>"	
+						   //    insertTr += "<a href='/point_chart/"+pointlist[i]._id+"' class='btn btn-sm btn-white width-60'>{{__('main_indetail')}}</a>"
 							  insertTr += "</tr>";
-							  historynum -= indexcount;
+							  pointnum -= indexcount;
 							  
 				     	   }
 				     	}

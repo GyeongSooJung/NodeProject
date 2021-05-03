@@ -33,78 +33,60 @@
 				<div class="panel-body">
 					
 					<div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
-		            		<div class="mr-2">{{__('search')}} : </div>
-				<div><input type="text" id="WNkeyword" class="form-control" placeholder ="{{__('name')}}" /></div>
-				<div><button class="ml-2 btn btn-primary text-white px-1" onclick="searchbutton()">{% if WN %} <i class="fas fa-lg fa-fw m-r-10 fa-chevron-left"></i> {% else %}<i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i> {% endif %}</button></div>
+		        	<div class="mr-2">
+		            		<div class="btn-group m-r-5 m-b-5">
+									<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>
+									<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
+									<div class="dropdown-menu dropdown-menu-right" style="">
+										<a href="javascript:searchoption('WN');" class="dropdown-item">{{__('name')}}</a>
+										<a href="javascript:searchoption('PN');" class="dropdown-item">{{__('mobile_number')}}</a>
+										<a href="javascript:searchoption('EM');" class="dropdown-item">{{__('email')}}</a>
+									
+									</div>
+							</div> 
 					</div>
+					<div>
+			  				<input id ="searchtext" type="text" class="form-control" placeholder ="" />
+			  			</div>
+			  			<div id ="searchdatetext" class="d-none">
+			  				<div class ="d-flex">
+			  				<input type="date" id = "searchdatetext1" class ="form-control" placeholder ="" />
+			  				&nbsp;&nbsp;~&nbsp;&nbsp;
+			  				<input type="date" id = "searchdatetext2" class ="form-control" placeholder ="" />
+			  				</div>
+			  			</div>
+			  			<div>
+			  				
+			  				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
+			  			<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>전체목록</a>
+		   			</div>
 					
 					<div class="overflow-auto">
 					    <form action="/worker/worker_update" method="post">
 					        <table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle text-center">
 	        					<thead>
 	        						<tr>
-	        							<th width="1%"><input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/></th>
-	        							<th width="2.5%"></th>
-	        							<th width="2.5%" data-orderable="false"></th>
-	        							<th>{{__('name')}}</th>
-	        							<th>{{__('mobile_number')}}</th>
-	        							<th>{{__('email')}}</th>
-	        							<th width="10%">{{__('owner_auth')}}</th>
-	        							<th width="10%">{{__('approval')}}</th>
-	        							<th width="1%"></th>
+		        							<th width="1%"><input type="checkbox" class="neHeros" value="" onChange="allCheckedBox(this);"/></th>
+		        							<th width="2.5%"></th>
+		        							<th width="2.5%" data-orderable="false"></th>
+		        							<th width="15%" class = "sort" name = "WN">{{__('name')}}<i id = "WN" class="d-none  float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+		        							<th width="15%" class = "sort" name = "PN">{{__('mobile_number')}}<i id = "PN" class="d-none  float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+		        							<th width="15%" class = "sort" name = "EM">{{__('email')}}<i id = "EM" class="d-none  float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+		        							<th width="10%">{{__('owner_auth')}}</th>
+		        							<th width="10%">{{__('approval')}}</th>
+		        							<th width="1%"></th>
 	        						</tr>
 	        					</thead>
-	        					<tbody>
-									{% if (totalNum == 0) %}
-									<tr>
-										<td colspan="9">No Data</td>
-									</tr>
-									{% else %}
-									{% set count = 0 %}
-		        					    {% for worker in workers %}
-		        						<tr>
-		        							<td class="with-btn" nowrap>
-	    										<input id ="ck" type="checkbox" name="ck" class="neHeros" value={{worker.EM}} unchecked onChange="eachCheckedBox(this);"/>
-		        							</td>
-		        							<td class="font-weight-bold">{{totalNum - count - (currentPage*10)}} </td>
-			  								{% set totalNum = totalNum - 1 %}
-		                                    <td class="with-img"><img src={{worker.PU}} class="img-rounded height-30" /></td>
-		        							<td>{{worker.WN}}</td>
-		        							<td>{{worker.PN}}</td>
-		        							<td>{{worker.EM}}</td>
-		        							    <input type="hidden" name="EM" value="{{worker.EM}}">
-		        							<td class="with-btn" nowrap>
-		        								<input class ="ck_au" type="checkbox" data-render="switchery" data-theme="black" value ="{{worker.EM}}"  {% if worker.AU == 1 %} checked {% else %} unchecked  {% endif %} />
-		        								
-		        							</td>
-		        							<td class="with-btn" nowrap>
-		        								<input class ="ck_ac" type="checkbox" data-render="switchery" data-theme="default" value ="{{worker.EM}}"  {% if worker.AC == 1 %} checked {% else %} unchecked  {% endif %} />
-		        								
-		        							</td>
-		        							<td>
-		        								<a class="btn btn-sm btn-white width-60" href="javascript:delete_one('{{worker.EM}}')">{{__('delete')}}</a>
-		        								<!--<a class="btn btn-sm btn-white width-60" onclick ="confirm({{worker.EM}})">Delete</a>-->
-		        							</td>
-		        						</tr>
-		        						{% endfor %}
-		        					{% endif %}
+	        					<tbody id ="memDiv">
+									
 	        					</tbody>
 	        				</table>
-							<div class="d-flex justify-content-between align-item-center">
-								<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="return delete_check(this.form);">
-								
-								<div class="d-flex justify-content-around align-item-center">
-									<a href="javascript:pageDoubleBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
-									<a href="javascript:pageBtn('left')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
-									{% if (totalNum==0) %}
-									{% else %}
-										{% for i in range(startPage, endPage) %}
-										<a href="/worker_list/?page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
-										{% endfor %}
-									{% endif %}
-									<a href="javascript:pageBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
-									<a href="javascript:pageDoubleBtn('right')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
-								</div>
+							<div class="justify-content-between align-item-center">
+								<center>
+										<div id="pagebox" class=" justify-content-around align-item-center">
+											
+										</div>
+								</center>
 							</div>
 					    </form>
 				    </div>
@@ -120,192 +102,386 @@
 	
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>	
 <script>
-	// 검색 기능
-	$(document).ready(function() {
-        $("#keyword").keyup(function() {
-            var k = $(this).val();
-            $("#data-table-combine > tbody > tr").hide();
-            var temp = $("#data-table-combine > tbody > tr > td:contains('" + k + "')");
-
-            $(temp).parent().show();
-        })
-    })
-    function searchbutton() {
-		const keyword = document.getElementById('WNkeyword').value;
-		location = '/worker_list/?WN=' + keyword;
-	}
-	
-	// 페이지 기능
-	function pageBtn(dir) {
-		if(dir == 'left') {
-			location = '/worker_list/?page={{currentPage-1}}';
-		}
-		if(dir == 'right') {
-			location = '/worker_list/?page={{currentPage+1}}';
-		}
-	}
-	
-	function pageDoubleBtn(dir) {
-		if(dir == 'left') {
-			location = '/worker_list/?page={{startPage-1}}';
-		}
-		if(dir == 'right') {
-			location = '/worker_list/?page={{endPage+1}}';
-		}
-	}
-	
-	// 일반 삭제 기능
-	function delete_one(ck) {
-		var answer;
-		var ckc = ck;
-		//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
-		//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
-		answer = confirm("{{__('delete_confirm')}}");
-		//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
-		if(answer == true){
-			location = '/worker/worker_delete/' + ckc;
-		}
-		else {
-			location = '/worker_list';
-		}
-	}
-	
-	// 항목 삭제 기능
-	function delete_check(frm) {
-		var answer;
-		//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
-		//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
-		answer = confirm("{{__('delete_confirm')}}");
-		//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
+	var pagingObject = new Object({array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : ""});
+		// 검색 기능
 		
-		if(answer == true){
-			frm.action='/worker/worker_select_delete/'; frm.submit(); return true;
-		}
-		else {
-			location = '/worker_list';
-		}
-		
-	}
-	
-	// 전체 선택 기능
-	function allCheckedBox(obj) {
-		// @brief 선택한 체크박스의 클래스 명칭을 가져온다.
-		const termClass = obj.getAttribute("class");
-		// @brief 선택한 클래스명과 같은 클래스의 갯수
-		console.log(document.getElementsByClassName(termClass).length);
-		Array.prototype.forEach.call(document.getElementsByClassName(termClass), function(element, index, array) {
-		    // @brief 엘리먼트의 값 출력
-		    console.log(element.value);
-		    // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 되있는 경우
-		    if(document.getElementsByClassName(termClass)[0].checked == true) {
-		        // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 완료 처리 한다.
-		        element.checked = true;
-		    }
-		    // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 해제된 경우
-		    else {
-		
-		        // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 해제 처리 한다.
-		        element.checked = false;
-		    }
-		});
-	}
-	
-	// 항목 선택 기능
-	function eachCheckedBox(obj) {
-	    // @brief 선택한 체크박스의 상태가 선택해제인 경우
-	    if(obj.checked == false) {
-	        // @brief 선택한 체크박스의 클래스 명칭을 가져온다.
-	        const termClass = obj.getAttribute("class");
-	        // @brief 첫번째 checkbox의 상태가 체크가 되어있는경우
-	        if(document.getElementsByClassName(termClass)[0].checked == true) {
-	            // @brief 첫번째 checkbox의 상태를 체크해제한다.
-	            document.getElementsByClassName(termClass)[0].checked = false;
-	        }
-	    }
-	}
-
-	// 에러 링크 기능
-	window.onload = () => {
-		if (new URL(location.href).searchParams.get('null')) {
-			alert("{{__('choice_error')}}");
-		}
-	}
-	
-	// ajax 기능
 	$(document).ready(function(){
+		pagereload()
+		
         $('.ck_au').change(function() {
-           var post = 'POST METHOD CALL';
-           var email = $(this).val();
-			
-	         if($(this).is(":checked")){
-                //Ajax POST Method TEST
-				$.ajax({
-					url: '/ajax/post',
-					dataType: 'json',
-					type: 'POST',
-					data: {au_true:email},
-					success: function(result) {
-						if (result) {
-						 $('#post_output').html(result.result);
+	           var post = 'POST METHOD CALL';
+	           var email = $(this).val();
+				
+		         if($(this).is(":checked")){
+	                //Ajax POST Method TEST
+					$.ajax({
+						url: '/ajax/post',
+						dataType: 'json',
+						type: 'POST',
+						data: {au_true:email},
+						success: function(result) {
+							if (result) {
+							 $('#post_output').html(result.result);
+							}
 						}
-					}
-				});
-	         }
-	         else {
-                //Ajax POST Method TEST
-                $.ajax({
-					url: '/ajax/post',
-					dataType: 'json',
-					type: 'POST',
-					data: {au_false:email},
-					success: function(result) {
-						if (result) {
-							$('#post_output').html(result.result);
-						}
-                    }
-				});
-	         }
-        });
-	});
-	
-	// ajsx 기능2
-	$(document).ready(function(){         
+					});
+		         }
+		         else {
+	                //Ajax POST Method TEST
+	                $.ajax({
+						url: '/ajax/post',
+						dataType: 'json',
+						type: 'POST',
+						data: {au_false:email},
+						success: function(result) {
+							if (result) {
+								$('#post_output').html(result.result);
+							}
+	                    }
+					});
+		         }
+	        });
+	        
 		$('.ck_ac').change(function() {
-		   var post = 'POST METHOD CALL';
-		   var email = $(this).val();
-			
-		     if($(this).is(":checked")){
-		     	console.log("@@@@@");
-	            //Ajax POST Method TEST
-	            $.ajax({
-					url: '/ajax/post',
-					dataType: 'json',
-					type: 'POST',
-					data: {ac_true:email},
-					success: function(result) {
-						if (result) {
-							$('#post_output').html(result.result);
+			   var post = 'POST METHOD CALL';
+			   var email = $(this).val();
+				
+			     if($(this).is(":checked")){
+		            //Ajax POST Method TEST
+		            $.ajax({
+						url: '/ajax/post',
+						dataType: 'json',
+						type: 'POST',
+						data: {ac_true:email},
+						success: function(result) {
+							if (result) {
+								$('#post_output').html(result.result);
+							}
 						}
-					}
-				});
-		    }
-		    else {
-	            //Ajax POST Method TEST
-	            $.ajax({
-					url: '/ajax/post',
-					dataType: 'json',
-					type: 'POST',
-					data: {ac_false:email},
-					success: function(result) {
-						if (result) {
-							$('#post_output').html(result.result);
+					});
+			    }
+			    else {
+		            //Ajax POST Method TEST
+		            $.ajax({
+						url: '/ajax/post',
+						dataType: 'json',
+						type: 'POST',
+						data: {ac_false:email},
+						success: function(result) {
+							if (result) {
+								$('#post_output').html(result.result);
+							}
 						}
-					}
-				});
+					});
+				}
+			});
+	        
+	        
+	        $('#searchtext').keyup(function(key) {
+        		if(key.keyCode == 13) {
+        			if(pagingObject.search == "")
+        			alert("{{__('choice_error')}}");
+        			else {
+        				pagingObject.searchtext = $(this).val();
+        				pagereload()
+        				document.getElementById('gotolist').classList.remove('d-none');
+        			}
+        		}
+        		if($(this).val() == "") {
+        			pagereload()
+        		}
+        	})
+        	
+        	
+        	$('.sort').click(function() {
+        		console.log("@@@")
+        		
+        		$("#searchoption").empty();
+            	$("#searchoption").append("{{__('search')}}");
+        		
+        		pagingObject.search = "";
+        		pagingObject.searchtext = "";
+        		
+        		var paglist = pagingObject.array;
+        		
+        		var check_sort = $(this).attr('name');
+        		
+        		
+        		 if(document.getElementById(check_sort).classList.contains('d-none')) {
+        		 	
+        		 	document.getElementById(check_sort).classList.remove('fa-angle-up');
+	        		document.getElementById(check_sort).classList.add('fa-angle-down');
+        		 	var check2 = check_sort;
+        		 }
+        		 else {
+        		 	if (document.getElementById(check_sort).classList.contains('fa-angle-down')) {
+        		 		
+	        		 	document.getElementById(check_sort).classList.remove('fa-angle-down');
+	        		 	document.getElementById(check_sort).classList.add('fa-angle-up');
+        		 		var check2 = check_sort + "2";
+        		 	}
+        		 	else {
+        		 		
+        		 		document.getElementById(check_sort).classList.remove('fa-angle-up');
+	        		 	document.getElementById(check_sort).classList.add('fa-angle-down');
+        		 		var check2 = check_sort;
+        		 		
+        		 	}
+        		 }
+        		 
+
+        		document.getElementById('WN').classList.add('d-none');
+        		document.getElementById('PN').classList.add('d-none');
+        		document.getElementById('EM').classList.add('d-none');
+        		
+        		
+        		document.getElementById(check_sort).classList.remove('d-none');
+        		
+        		
+        		pagingObject.array = paglist;
+        		pagingObject.sort = check2;
+        		pagingObject.page = 0;
+        		pagereload();
+        		
+        	})
+	    })
+	    
+	    //초기화
+	    function refresh() {
+	    	pagingObject.array = [];
+	    	pagingObject.sort = "CA";
+	    	pagingObject.page = 0;
+	    	pagingObject.postNum = 10;
+	    	pagingObject.pageNum = 5;
+	    	pagingObject.startpage = 0;
+	    	pagingObject.endpage = 0;
+	    	pagingObject.search = "";
+	    	pagingObject.searchtext = "";
+	    	
+	    	
+	    }
+	    
+		function searchoption(opt) {
+    	pagingObject.search = opt;
+    	$("#searchoption").empty();
+    	var string = opt;
+    	
+    	if (string == "WN")
+    	   string = "{{__('name')}}";
+    	   document.getElementById('searchtext').classList.remove('d-none');
+    	   document.getElementById('searchdatetext').classList.add('d-none');
+    	if (string == "PN")
+    	   string = "{{__('mobile_number')}}";
+    	   document.getElementById('searchtext').classList.remove('d-none');
+    	   document.getElementById('searchdatetext').classList.add('d-none');
+    	if (string == "EM") {
+       	   string = "{{__('email')}}";
+       	   console.log(string)
+    	   document.getElementById('searchtext').classList.remove('d-none');
+    	   document.getElementById('searchdatetext').classList.add('d-none');
+    	   
+    	}
+    	
+    	$("#searchoption").append(string);
+    	$("#searchoption").show();
+        }
+		
+		function searchbutton() {
+    	
+	    	if(pagingObject.search == "")
+	          alert("{{__('search_option_error')}}");
+	        else {
+					pagingObject.searchtext = $('#searchtext').val();
+					pagereload()
+					document.getElementById('gotolist').classList.remove('d-none');
+	        	document.getElementById('searchtext').classList.remove('d-none');
+    			document.getElementById('searchdatetext').classList.add('d-none');
 			}
-		});
-        
-	});
+			$("#searchoption").empty();
+			$("#searchoption").append("{{__('search')}}");
+			$("#searchoption").show();
+		}
+		
+		
+		// 전체 목록으로
+		function gotolist() {
+			
+			refresh()
+			pagereload()
+			
+			$("#searchoption").empty();
+			$("#searchoption").append("{{__('search')}}");
+			document.getElementById('gotolist').classList.add('d-none');
+		}
+		
+		// 페이지 기능
+		function pagebutton(num) {
+			pagingObject.page = num;
+	    	pagereload()
+	    }
+	    
+		function pageBtn(dir,page) {
+			if(dir == 'left') {
+				if((pagingObject.page - 1) > -1)
+				{
+					pagingObject.page -= 1;
+					pagereload()
+				}
+			}
+			if(dir == 'right') {
+				if((pagingObject.page + 1) < Math.ceil(pagingObject.array.length / pagingObject.postNum))
+				{
+					pagingObject.page += 1;
+					pagereload()
+					
+				}
+				
+			}
+		}
+		
+		function pageDoubleBtn(dir,page) {
+			if(dir == 'left') {
+				if((pagingObject.page - pagingObject.pageNum) < 0) {
+					pagingObject.page = 0;
+					pagereload()
+				}
+				else {
+					pagingObject.startpage -= 1;
+					pagingObject.page -= 5;
+					pagereload()
+				}
+			}
+			if(dir == 'right') {
+				console.log(pagingObject.page)
+				console.log(pagingObject.pageNum)
+				console.log(pagingObject.array.length)
+				console.log(pagingObject.postNum)
+				if ((pagingObject.page + pagingObject.pageNum) >= Math.ceil(pagingObject.array.length / pagingObject.postNum))
+				{
+					console.log("@@@")
+					pagingObject.page = Math.ceil(pagingObject.array.length / pagingObject.postNum)-1;
+					pagereload()
+				}
+				else {
+					pagingObject.startpage += 1;
+					pagingObject.page += 5;
+					pagereload()
+				}
+			}
+		}
+		
+		function pagereload() {
+    	    $.ajax({
+	    		url: "/ajax/worker_list",
+	                    type: "POST",
+	                    async: false,
+	                    dataType: 'json',
+	                    data: {
+	                        sort : pagingObject.sort,
+	                        search : pagingObject.search,
+	                        searchtext : pagingObject.searchtext
+	                    }
+	        }).done(function (data) { 
+	        	if(data.result == true) {
+		    		    pagingObject.array = data.workerlist;
+		    		    pagingObject.startpage = Math.floor((pagingObject.page) / pagingObject.pageNum) * pagingObject.pageNum;
+		    		    pagingObject.endpage = pagingObject.startpage + pagingObject.pageNum;
+		    		    
+		    		    var workerlist = pagingObject.array; // 전체 리스트
+		    		    var workernum = workerlist.length; // 전체 리스트의 갯수
+		    		    var page = pagingObject.page; // 페이지 번호
+		    		    var startPage = pagingObject.startpage; // 시작 페이지
+		    		    var endPage = pagingObject.endpage; // 끝 페이지
+		    		    var postNum = pagingObject.postNum; // 게시될 페이지 숫자
+		    		    var pageNum = pagingObject.pageNum; // 페이지 번호의 갯수
+		    		    var totalPage = Math.ceil(workernum/postNum); // 전체 페이지의 갯수
+		    		    
+		    		    if (endPage > totalPage) { // 끝 페이지가 총 페이지 수보다 많다면 같게끔 처리
+					        endPage = totalPage;
+					    }
+		    		    
+			        	//tr 초기화
+			        	$("#data-table-combine > tbody > tr").remove();
+			        	//페이지 넘버 박스 초기화
+				     	$("#pagebox *").remove(); 
+				    		
+				     	var insertTr = ""; // 채워넣을 HTML 초기화
+				     	
+				     	var indexcount = 1; // 인덱스번호 초기화
+				    		
+				    	
+				    	
+				    	
+				     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+				     	   if(workerlist[i]) {
+				     	   	console.log(workerlist)
+							  insertTr += "<tr>";
+							  insertTr += " 	<td class='with-btn' nowrap>";
+							  insertTr += "		<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+ workerlist[i].EM +" onChange='eachCheckedBox(this);'/>";
+							  insertTr += " 	</td>";
+							  insertTr += "<td class='font-weight-bold'>"+(workernum - (page*10)) +" </td>";
+							  insertTr += "<td class='with-img'><img src='"+ workerlist[i].PU +"' class='img-rounded height-30' /></td>";
+							  insertTr += "<td>"+ workerlist[i].WN+"</td>";
+							  insertTr += "<td>"+ workerlist[i].PN+"</td>";
+							  insertTr += "<td>"+ workerlist[i].EM+"</td>";
+							  insertTr += "<td class='with-btn' nowrap>";
+		        			  insertTr += "<input class ='ck_au' type='checkbox' data-render='switchery' data-theme='black' value ='"+workerlist[i].EM+"'";
+		        			  if(workerlist[i].AU ==1)
+		        				insertTr += "checked/>";
+		        			  else
+		        				insertTr += "unchecked/>";
+		        			  insertTr += "</td>";
+		        			  insertTr += "<td class='with-btn' nowrap>";
+		        			  insertTr += "<input class ='ck_ac' type='checkbox' data-render='switchery' data-theme='default' value ='"+workerlist[i].EM+"'";
+		        			  if(workerlist[i].AC ==1)
+		        				insertTr += "checked/>";
+		        			  else
+		        				insertTr += "unchecked/>";
+		        			  insertTr += "</td>";
+		        			  insertTr += "<td>";
+		        			  insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this) class='btn btn-sm btn-white width-60' name ='"+ workerlist[i].EM +"'></td> ";
+		        			  insertTr += "</td>";
+							  insertTr += "</tr>";
+							  workernum -= indexcount;
+							  
+				     	   }
+				     	}
+							  console.log(insertTr)
+							  $("#memDiv").append(insertTr);
+							  insertTr = " ";
+					    	  insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>";
+							  insertTr +=	"<a href='javascript:;' onclick=pageBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>";
+		
+								for(var i = startPage; i < endPage; i ++) {
+									if(page == i)
+										insertTr +=	"<input type='button' onclick='pagebutton("+ i +")' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' style=' background-color: #00acac; color: white !important;' >";
+									else
+										insertTr +=	"<input type='button' onclick='pagebutton("+ i +")' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' >";
+								}
+								insertTr +=	"<a href='javascript:;' onclick=pageBtn('right',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-right'></i></a>";
+								insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('right',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-right'></i></a>";
+							  $("#pagebox").append(insertTr);
+							  $("#pagebox").show();
+	        	}
+	        	
+	        	else if (data.result == "nothing") {
+	        		alert("{{__('search_error')}}")
+	        	}
+	        	
+	        	else {
+	        		alert("{{__('search_error')}}")
+	        	}
+			})
+    	
+    }
+
+	    
+	    // 에러 링크 기능
+		window.onload = () => {
+			if (new URL(location.href).searchParams.get('null')) {
+				alert("{{__('choice_error')}}");
+			}
+		}
 </script>
 {% endblock %}
 
