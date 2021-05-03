@@ -90,19 +90,31 @@
                      <div class="invoice-price-row">
                         <div class="sub-price">
                            <small>{{__('payment_amount')}}</small>
-                           <span class="text-inverse">&#8361;{{paymentData.amount * (9/10)}}</span>
+                           <span class="text-inverse">&#8361;{{paymentData.amount}}</span>
                         </div>
                         <div class="sub-price">
                            <i class="fa fa-plus text-muted"></i>
                         </div>
                         <div class="sub-price">
                            <small>{{__('payment_receit_surtax')}} (10%)</small>
-                           <span class="text-inverse">&#8361;{{paymentData.amount * (1/10)}}</span>
+                           <span class="text-inverse">&#8361;
+                              {{paymentData.amount * (1/10)}}
+                              <script>
+                                 var pr = Math.floor("{{paymentData.amount * (1/10)}}");
+                                 document.write(pr);
+                              </script>
+                           </span>
                         </div>
                      </div>
                   </div>
                   <div class="invoice-price-right">
-                     <small>TOTAL</small> <span class="f-w-600">&#8361;{{paymentData.amount}}</span>
+                     <small>TOTAL</small> <span class="f-w-600">&#8361;
+                        {{paymentData.amount * (11/10)}}
+                        <script>
+                           var pr = Math.floor("{{paymentData.amount * (11/10)}}");
+                           document.write(pr);
+                        </script>
+                     </span>
                   </div>
                </div>
                <!-- end invoice-price -->

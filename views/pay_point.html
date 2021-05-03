@@ -17,7 +17,7 @@
          <div class="panel panel-inverse" data-sortable-id="form-validation-1">
             <!-- begin panel-heading -->
             <div class="panel-heading">
-               <h4 class="panel-title">{{__('layout_payment_point_purchase')}}</h4>
+               <h4 class="panel-title">{{__('layout_payment_point_purchase')}} ({{__('payment_tax_guide')}})</h4>
                <p class="m-0"></p>
             </div>
             <!-- end panel-heading -->
@@ -32,34 +32,46 @@
                                 <i class="fas fa-4x fa-sms mb-2 icolor"></i>
                                 <p class="mb-2 font-weight-bold">+ {{goods.PO}} point</p>
                                 <div class="d-flex justify-content-center align-items-center">
-                                    <h1 class="mb-0 mr-1">{{goods.PR}}</h1>
+                                    <h1 class="mb-0 mr-1">
+                                        <script>
+                                            var pr = Math.floor("{{goods.PR * 1.1}}");
+                                            document.write(pr);
+                                        </script>
+                                    </h1>
                                     <h4 class="mb-0 mt-1">{{__('payment_won')}}</h4>
                                 </div>
                             </div>
                          </div>
                          {% endfor %}
                      </div>
-                     <div class="col-md-4 mx-auto my-4 py-2 bg-gray-200 rounded border">
+                     <div class="col-md-5 mx-auto my-4 py-2 bg-gray-200 rounded border">
                         <table class="table table-borderless table-last table-td-valign-middle mb-0">
-                            <tr>
-                                <th width=60% class="text-left">{{__('payment_selected_goods')}}</th>
-                                <td width=40% id="check_name" class="text-right h5 mb-0"></td>
+                            <tr class="guide">
+                                <th colspan="2" class="text-center">{{__('payment_guide')}}</th>
                             </tr>
-                            <tr>
-                                <th class="text-left">{{__('payment_point')}}</th>
+                            <tr class="goodsInfo">
+                                <th width=35% class="text-left">{{__('payment_selected_goods')}}</th>
+                                <td width=65% id="check_name" class="text-right h5 mb-0"></td>
+                            </tr>
+                            <tr class="goodsInfo">
+                                <th class="text-left">{{__('payment_buy_point')}}</th>
                                 <td id="check_point" class="text-right h5 mb-0"></td>
                             </tr>
-                            <tr>
+                            <tr class="goodsInfo">
+                                <th class="text-left">{{__('payment_amount')}}<br><small>({{__('payment_theamountofgoods')}} + {{__('payment_tax')}})</small></th>
+                                <td id="check_amount" class="text-right h5 mb-0"></td>
+                            </tr>
+                            <tr class="goodsInfo">
                                 <th class="text-left">{{__('payment_current')}}</th>
                                 <td id="check_current" class="text-right h5 mb-0"></td>
                             </tr>
-                            <tr>
+                            <tr class="goodsInfo">
+                                <th></th>
+                                <td id="b-arrow" class="text-right"></td>
+                            </tr>
+                            <tr class="goodsInfo">
                                 <th class="text-left">{{__('payment_after')}}</th>
                                 <td id="check_after" class="text-right h5 mb-0"></td>
-                            </tr>
-                            <tr>
-                                <th class="text-left">{{__('payment_theamountofgoods')}}</th>
-                                <td id="check_amount" class="text-right h5 mb-0"></td>
                             </tr>
                         </table>
                      </div>
@@ -162,30 +174,41 @@
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 
 <script>
-
+    window.addEventListener('load', function() {
+        $('.goodsInfo').hide();
+    });
    
     // 체크 시 텍스트 반영 기능
     function check(value) {
         const ckn = document.getElementById("check_name");
         const cka = document.getElementById("check_amount");
         const ckp = document.getElementById("check_point");
+        const ckc = document.getElementById("check_current");
+        const ckf = document.getElementById("check_after");
+        const ba = document.getElementById("b-arrow");
         var goods_name;
         var goods_amount;
         var goods_point;
         
         if(value == 10000)
-        goods_name = "{{__('payment_point')}} "+"10000";
+        goods_name = "{{__('payment_point')}} "+10000;
         else if(value == 50000)
-        goods_name = "{{__('payment_point')}} "+"50000";
+        goods_name = "{{__('payment_point')}} "+50000;
         else if(value == 100000)
-        goods_name = "{{__('payment_point')}} "+"100000";
+        goods_name = "{{__('payment_point')}} "+100000;
         
         goods_amount = value;
         goods_point = value;
         
+        $(".guide").hide();
+        $(".goodsInfo").show();
         ckn.innerHTML = goods_name;
-        cka.innerHTML = "<span class='text-realred h2 mb-0'>"+goods_amount+"</span>"+"{{__('payment_won')}}";
-        ckp.innerHTML = goods_point+" p";
+        cka.innerHTML = "<span class='text-realred h2 mb-0'>"+Math.floor(goods_amount*1.1)+"</span>"+" {{__('payment_won')}}\
+        <br><small>("+goods_amount+"{{__('payment_won')}} + "+Math.floor(goods_amount*0.1)+"{{__('payment_won')}})</small>";
+        ckp.innerHTML = "<span class='text-realred mb-0'>"+goods_point+"</span>"+" p";
+        ckc.innerHTML = "{{company.SPO}}"+ " p";
+        ckf.innerHTML = parseInt("{{company.SPO}}")+parseInt(goods_point)+ " p";
+        ba.innerHTML = "<i class='fas fa-lg fa-chevron-down mr-4 text-realred'></i>";
     }
     
     // $(".radio-btn").on("click", function() {
@@ -212,17 +235,17 @@
             if (goods[i].checked == true) {
                 if(goods[i].value == 10000) {
                   goods_name = "{{__('payment_point')}} "+"10000";
-                  goods_amount = 10000;
+                  goods_amount = Math.floor(10000*1.1);
                   checktest = true;
                 }
                 else if(goods[i].value == 50000) {
                   goods_name = "{{__('payment_point')}} "+"50000";
-                  goods_amount = 50000;
+                  goods_amount = Math.floor(50000*1.1);
                   checktest = true;
                 }
                 else if(goods[i].value == 100000) {
                   goods_name = "{{__('payment_point')}} "+"100000";
-                  goods_amount = 100000;
+                  goods_amount = Math.floor(100000*1.1);
                   checktest = true;
                 }
             }
@@ -364,31 +387,31 @@
 
     
     
-    function check2(value) {
-        const ckn = document.getElementById("check_name2");
-        const cka = document.getElementById("check_amount2");
-        const ckp = document.getElementById("check_point2");
-        var goods_name;
-        var goods_amount;
-        var goods_point;
+    // function check2(value) {
+    //     const ckn = document.getElementById("check_name2");
+    //     const cka = document.getElementById("check_amount2");
+    //     const ckp = document.getElementById("check_point2");
+    //     var goods_name;
+    //     var goods_amount;
+    //     var goods_point;
         
-        if(value == 10000)
-        goods_name = "{{__('payment_point')}} "+"10000";
-        else if(value == 50000)
-        goods_name = "{{__('payment_point')}} "+"50000";
-        else if(value == 100000)
-        goods_name = "{{__('payment_point')}} "+"100000";
+    //     if(value == 10000)
+    //     goods_name = "{{__('payment_point')}} "+"10000";
+    //     else if(value == 50000)
+    //     goods_name = "{{__('payment_point')}} "+"50000";
+    //     else if(value == 100000)
+    //     goods_name = "{{__('payment_point')}} "+"100000";
         
-        goods_amount = value;
-        goods_point = value;
+    //     goods_amount = value;
+    //     goods_point = value;
         
-        ckn.innerHTML = goods_name;
-        cka.innerHTML = "<span class='text-realred h2 mb-0'>"+goods_amount+"</span>"+"{{__('payment_won')}}";
-        ckp.innerHTML = goods_point+" p";
-    }
+    //     ckn.innerHTML = goods_name;
+    //     cka.innerHTML = "<span class='text-realred h2 mb-0'>"+goods_amount+"</span>"+"{{__('payment_won')}}";
+    //     ckp.innerHTML = goods_point+" p";
+    // }
     
-    //정기 결제 기능
-    function payments2(objName) {
+    // //정기 결제 기능
+    // function payments2(objName) {
         
         // var goods = document.getElementsByName(objName);
         // var checktest;
@@ -474,7 +497,7 @@
         //         amount : 10000
         //     }
         // });
-    }
+    // }
 </script>
 {% endblock %}
 

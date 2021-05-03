@@ -279,9 +279,13 @@
 	"history_end" : "End PPM",
 	
 	"payment": "Payment",
+	"payment_tax_guide": "VAT included",
+	"payment_tax": "VAT",
 	"payment_won" : "Won",
 	"payment_selected_goods" : "Selected_goods",
 	"payment_point" : "Point",
+	"payment_guide": "Please choose the goods.",
+	"payment_buy_point": "Purchase point",
 	"payment_current" : "Current point",
 	"payment_after" : "Point after purchase",
 	"payment_theamountofgoods" : "Amount",

@@ -64,15 +64,14 @@
                   <!--<form action="/device/device_select_delete" method="post">-->
                      <table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle text-center">
                         <thead>
-                           <tr>
-                              
-                              <th width="2.5%"></th>
-                              <th width="30.5%" class = "sort" name = "MID">{{__('payment_ordernumber')}}<i id = "MID" class="d-none  float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="24%" class = "sort" name = "CA">{{__('payment_date')}}<i id = "CA" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="21%" class = "sort" name = "GN">{{__('payment_name')}}<i id = "GN" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="21%" class = "sort" name = "AM">{{__('payment_amount')}}<i id = "AM" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="1%"></th>
-                           </tr>
+							<tr>
+								<th width="2.5%"></th>
+								<th width="30.5%" class = "sort" name = "MID">{{__('payment_ordernumber')}}<i id = "MID" class="d-none  float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+								<th width="24%" class = "sort" name = "CA">{{__('payment_date')}}<i id = "CA" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+								<th width="21%" class = "sort" name = "GN">{{__('payment_name')}}<i id = "GN" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+								<th width="21%" class = "sort" name = "AM">{{__('payment_amount')}}<i id = "AM" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
+								<th width="1%"></th>
+							</tr>
                         </thead>
                         <tbody id = "memDiv">
                            
@@ -395,7 +394,7 @@
 							      insertTr += moment(orderlist[i].CA).format('YYYY-MM-DD');
 							  }
 							  insertTr += "</td><td>"+ orderlist[i].GN+"</td>";
-							  insertTr += "<td>"+ orderlist[i].AM+"</td>";
+							  insertTr += "<td>"+ Math.floor(orderlist[i].AM * 1.1)+"</td>";
 							  insertTr += "<td class='with-btn' nowrap>";
 							  insertTr +=	"<a href='javascript:;' onclick ='receiptPay(this)' class='btn btn-sm btn-primary width-60 m-r-2 edit-btn' name ='"+ orderlist[i].IID +"' >{{__('payment_receit')}}</a>";
 							  console.log(orderlist[i].IID)
