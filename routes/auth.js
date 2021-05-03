@@ -25,7 +25,7 @@ const TokenMake = async function(req,res,next){
     if(bcrypt.compareSync( PW,company.PW) ){
        const token = jwt.sign({CNU : company.CNU, CNA : company.CNA, CID : company._id, AH : company.AH },// 토큰의 내용(payload)
         secretObj.secret ,   // 비밀 키
-      {expiresIn: '1440m'})  // 유효 시간은 1440분 하루 설정
+      {expiresIn: '1440m'});  // 유효 시간은 1440분 하루 설정
       res.cookie("token", token); // 쿠키에 token 등록  
       res.redirect('/main');
     }
