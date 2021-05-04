@@ -672,14 +672,16 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, async function(req, res) {
             return anum > bnum ? -1 : anum < bnum ? 1 : 0;
           });
       }
-      else if(sort == "CA")
-        var devices = await Device.find({ "CID": CID }).sort({ CA: -1 });
+      else if(sort == "CA") {
+      console.log("@@@")
+        var cars = await Car.find({ "CID": CID }).sort({ CA: -1 });
+      }
         
       else if(sort == "CA2")
-        var devices = await Device.find({ "CID": CID }).sort({ CA: 1 });
+        var cars = await Car.find({ "CID": CID }).sort({ CA: 1 });
         
       else {
-        var devices = await Device.find({ "CID": CID }).sort({ CA: -1 });
+        var cars = await Car.find({ "CID": CID }).sort({ CA: -1 });
         
       }
   }
@@ -1263,14 +1265,20 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res) {
         res.json({result : "nothing"});
       }
       else if (search =="GN") {
-        searchtext = parseInt(searchtext)
         var orders = await Order.find({ "CID": CID, "GN" : {$regex:searchtext} });
         if(orders.length == 0) 
         res.json({result : "nothing"});
       }
       else if (search =="AM") {
         searchtext = parseInt(searchtext)
-        var orders = await Order.find({ "CID": CID, "AM" : {$regex:searchtext} });
+        var orders = await Order.aggregate([
+      
+        { $match : {"CID" : CID},
+          $group : {_id : "$_id.AM"}}
+           
+        ], function (err,result) {
+          if(err) throw err;
+        });
         if(orders.length == 0) 
         res.json({result : "nothing"});
       }
@@ -1991,6 +1999,91 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
  
 });
 
+//----------------------------------------------------------------------------//
+//                                  Notice                                    //
+//----------------------------------------------------------------------------//
+
+// 알림톡 리스트
+router.get('/notice_list', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  
+  res.render('notice_list',{company: req.decoded.company, aclist})
+  
+});
+
+router.post('/ajax/notice_list', isNotLoggedIn, DataSet, async function(req, res) {
+  const CID = req.decoded.CID;
+  
+  var sort = req.body.sort;
+  var search = req.body.search;
+  var searchtext = req.body.searchtext;
+  
+  
+  if ((search!="") && (searchtext!="")) {
+    try{
+      if (search =="WNM") {
+        var alarms = await Alarm.find({ "CID": CID, "PN" : {$regex:searchtext} });
+        if(alarms.length == 0) 
+        res.json({result : "nothing"});
+      }
+      else if (search =="CA") {
+        var searchtext2 = searchtext.split("~")
+        var alarms = await Alarm.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
+        if(alarms.length == 0) 
+        res.json({result : "nothing"});
+      }
+      else {
+        var alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
+      }
+    }catch(e) {
+      res.json({ result: false});
+    }
+    
+  }
+  
+  else {
+      var alarms = await Alarm.find({ "CID": CID });
+    
+      if(sort == "WNM") {
+          alarms.sort(function (a,b) {
+            
+            if(typeof(a.WNM) == "object")
+            a.WNM = JSON.stringify(a.WNM);
+            return (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? 1 : 0;
+          })
+      }
+      
+      else if(sort == "WNM2") {
+          alarms.sort(function (a,b) {
+            if(typeof(a.WNM) == "object")
+            a.WNM = JSON.stringify(a.WNM);
+            return (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? 1 : 0;
+          })
+      }
+      
+      else if(sort == "CA") { 
+          var alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
+      }
+      
+      else if(sort == "CA2"){
+          var alarms = await Alarm.find({ "CID": CID }).sort({ CA: 1 });
+       }
+      else {
+        var alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
+        
+      }
+  }
+  
+  var alarmlist = [];
+  if(alarms.length) {
+    for(var i = 0; i < alarms.length; i ++) {
+      alarmlist[i] = alarms[i];
+    }
+  }
+  res.json({ result: true, alarmlist : alarmlist, alarmnum : alarms.length});
+ 
+});
 
 
 

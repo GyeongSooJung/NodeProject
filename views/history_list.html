@@ -28,6 +28,14 @@
 		<div class="panel-body">
          
 			<div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
+			<div class="mr-auto">
+				<select id = "selectpage" name="data-table-default_length" aria-controls="data-table-default" class="custom-select custom-select-sm form-control form-control-sm">
+					<option class ="postnumber" value="10">10</option>
+					<option class ="postnumber" value="25">25</option>
+					<option class ="postnumber" value="50">50</option>
+					<option class ="postnumber" value="100">100</option>
+				</select>
+			</div>
         	<div class="mr-2">
             		<div class="btn-group m-r-5 m-b-5">
 							<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>
@@ -98,7 +106,16 @@
 	var pagingObject = new Object({array : [], sort : "ET", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : ""});
 		// 검색 기능
 		$(document).ready(function() {
-	        pagereload()
+	        pagereload();
+	        
+	        $('#selectpage').click(function () {
+        		if(pagingObject.postNum != $('#selectpage option:selected').val())
+        		{
+        			pagingObject.postNum = $('#selectpage option:selected').val()
+        			pagereload();
+        		}
+        			
+        	})
 	        
 	        $('#searchtext').keyup(function(key) {
         		if(key.keyCode == 13) {

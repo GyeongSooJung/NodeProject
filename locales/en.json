@@ -324,6 +324,10 @@
 	
 	"purchase_failed" : "Your purchase is incorrect",
 	
+	"notice_list" : "Notice",
+	"notice_contents" : "Contents",
+	"notice_date" : "Registration date",
+	
 	"qrcode": "QR code",
 	"qrcode_create":  "QR create",
 	"qrcode_generated": "Created QR code"

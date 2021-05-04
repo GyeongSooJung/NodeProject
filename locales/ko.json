@@ -323,6 +323,10 @@
 	
 	"purchase_failed" : "구매내역이 잘못되었습니다.",
 	
+	"notice_list" : "공지사항",
+	"notice_contents" : "내용",
+	"notice_date" : "등록일",
+	
 	"qrcode": "QR 코드",
 	"qrcode_create": "QR 생성",
 	"qrcode_generated": "생성된 QR코드"
