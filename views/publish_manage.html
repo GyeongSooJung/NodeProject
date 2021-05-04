@@ -33,8 +33,8 @@
                   <table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle text-center">
                      <thead>
                         <tr>
-                           <th width="80%">URL</th>
-                           <th width="20%"></th>
+                           <th width="70%">URL</th>
+                           <th width="30%">{{__('qrcode_create')}}</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -43,7 +43,10 @@
                                  {{HOME}}/inflow?cat={{cat}}
                              </td>
                              <td>
-                                 <button class="btn btn-primary width-160" onclick="qrPOP();">{{__('qrcode_create')}}</button>
+                                 <button class="btn btn-primary width-160" onclick="qrPOP('qr','100','100');">100 x 100</button>
+                                 <button class="btn btn-primary width-160" onclick="qrPOP('qr','200','200');">200 x 200</button>
+                                 <button class="btn btn-primary width-160" onclick="qrPOP('qr','300','300');">300 x 300</button>
+                                 <button class="btn btn-primary width-160" onclick="qrPOP('st', '104', '104');">{{__('qrcode_sticker')}}</button>
                              </td>
                          </tr>
                      </tbody>
@@ -82,12 +85,27 @@
 </div>
 
 <script>
-    function qrPOP() {
+    function qrPOP(type, width, height) {
        var main = '{{HOME}}';
        var cid = '{{company._id}}';
        var cat = '{{cat}}';
+       var pw = 0;
+       var ph = 0;
        
-       window.open("/create?main="+main+"&cid="+cid+"&cat="+cat,"pop","width=600, height=450, scrollbars=yes, resizable=yes");
+       if(width == 100) {
+          pw = 400;
+          ph = 300;
+       }
+       else if(width == 200) {
+          pw = 500;
+          ph = 400;
+       }
+       else if(width == 300) {
+          pw = 600;
+          ph = 500;
+       }
+       
+       window.open("/create?main="+main+"&cid="+cid+"&cat="+cat+"&type="+type+"&width="+width+"&height="+height,"pop","width="+pw+", height="+ph+", scrollbars=yes, resizable=yes");
     }
 </script>
 {% endblock %}
