@@ -56,6 +56,7 @@ router.get('/ko_index', function(req, res) {
   res.cookie('lang', 'ko');
   res.redirect('/');
 });
+
 //----------------------------------------------------------------------------//
 //                                  회원정보                                  //
 //----------------------------------------------------------------------------//
@@ -102,6 +103,18 @@ router.get('/find', (req, res, next) => {
 });
 
 //----------------------------------------------------------------------------//
+//                                  설정                                      //
+//----------------------------------------------------------------------------//
+
+// 환경?설정
+router.get('/setting', isNotLoggedIn, DataSet, async (req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  
+  res.render('setting', { company: req.decoded.company, aclist });
+});
+
+//----------------------------------------------------------------------------//
 //                                  에러                                      //
 //----------------------------------------------------------------------------//
 
@@ -117,11 +130,12 @@ router.get('/error', (req, res) => {
 //메인 페이지
 router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
 
-
+  const company = req.decoded.company;
   const CID = req.decoded.CID;
 
   const HOME = process.env.IP;
 
+  const companyone = await Company.findOne({ "_id" : company._id });
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   const devices = await Device.find({ "CID": req.decoded.CID });
   const cars = await Car.find({ "CID": req.decoded.CID });
@@ -185,10 +199,10 @@ console.log(history_date);
   const history_array = await (historys.reverse())[0]
   if (history_array) {
     const recent_history = history_array.PD;
-    res.render('main', { company: req.decoded.company, aclist, devices, cars, workers, historys, recent_history, history_array, history_count, HOME, psum });
+    res.render('main', { company, companyone, aclist, devices, cars, workers, historys, recent_history, history_array, history_count, HOME, psum });
   }
   else {
-    res.render('main', { company: req.decoded.company, aclist, devices, cars, workers, historys, history_array, history_count, HOME, psum });
+    res.render('main', { company, companyone, aclist, devices, cars, workers, historys, history_array, history_count, HOME, psum });
   }
 
 });
@@ -1022,7 +1036,7 @@ router.get('/history_chart/:_id', isNotLoggedIn, DataSet, async(req, res, next) 
 //                                  pay                                       //
 //----------------------------------------------------------------------------//
 
-//알림톡 결제
+//포인트 결제
 router.get('/pay_point', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
@@ -1041,21 +1055,40 @@ router.get('/pay_point', isNotLoggedIn, DataSet, async(req, res, next) => {
   }
 });
 
-//알림톡 라디오 버튼 클릭 ajax
-router.post('/ajax/check', isNotLoggedIn, DataSet, async(req, res, next) => {
-  var SN = req.body.SN;
-  if (SN) {
-    const serviceone = await Service.findOne({ "SN": SN });
-    console.log(serviceone);
+//테스트
+router.get('/test', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const CNU = req.decoded.CNU;
+  const imp_code = process.env.imp_code;
+  const HOME = process.env.IP;
 
-    res.json({ result: true, serviceone: serviceone });
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  const service = await Service.find({});
+  
+  try {
+    res.render('test', { company: req.decoded.company, aclist, imp_code, HOME, service });
   }
-  else {
-    res.json({ result: true });
+  catch (err) {
+    console.error(err);
+    next(err);
   }
 });
 
-//알림톡 결제 ajax
+// //알림톡 라디오 버튼 클릭 ajax
+// router.post('/ajax/check', isNotLoggedIn, DataSet, async(req, res, next) => {
+//   var SN = req.body.SN;
+//   if (SN) {
+//     const serviceone = await Service.findOne({ "SN": SN });
+//     console.log(serviceone);
+
+//     res.json({ result: true, serviceone: serviceone });
+//   }
+//   else {
+//     res.json({ result: true });
+//   }
+// });
+
+//포인트 결제 ajax
 router.post('/ajax/payment', isNotLoggedIn, DataSet, async(req, res, next) => {
   var SN = req.body.SN;
   if (SN) {

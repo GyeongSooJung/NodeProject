@@ -26,8 +26,15 @@
     }
     
     
-    //원화 ���마 표시
+    //원화 콤마 표시 html용
     function MoneyComma(money) {
+        var money = String(money);
+        var moneyCom = money.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+        return document.write(moneyCom);
+    }
+    
+    //원화 콤마 표시 자바스크립트용
+    function MoneyCommaJava(money) {
         var money = String(money);
         return money.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
     }

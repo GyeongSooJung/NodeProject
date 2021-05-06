@@ -1,0 +1,138 @@
+{% extends 'layout.html' %}
+
+{% block css %}
+<style>
+	.inputbox {
+		position: relative !important;
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+	<div class="sidebar-bg"></div>
+	<div id="content" class="content content-full-width">
+		<!-- begin profile -->
+		<div class="profile">
+			<div class="profile-header">
+				<!-- BEGIN profile-header-cover -->
+				<div class="profile-header-cover"></div>
+				<!-- END profile-header-cover -->
+				<!-- BEGIN profile-header-content -->
+				<div class="profile-header-content d-flex justify-content-start align-items-center">
+					<!-- BEGIN profile-header-img -->
+					<div class="mr-3">
+						<!--<img src="../assets/img/user/user-13.jpg" alt="">-->
+						<i class="fas fa-6x fa-user-circle"></i>
+					</div>
+					<!-- END profile-header-img -->
+					<!-- BEGIN profile-header-info -->
+					<div class="profile-header-info">
+						<h3 class="my-1">{{company.CNA}}</h3>
+						<p class="my-1">{{__('business_number')}} : {{company.CNU}}</p>
+					</div>
+					<!-- END profile-header-info -->
+				</div>
+				<!-- END profile-header-content -->
+				<!-- BEGIN profile-header-tab -->
+				<!--<ul class="profile-header-tab nav nav-tabs">-->
+				<!--	<li class="nav-item"><p class="nav-link active mb-0">EDIT</p></li>-->
+				<!--</ul>-->
+				<!-- END profile-header-tab -->
+			</div>
+		</div>
+		<!-- end profile -->
+		<!-- begin profile-content -->
+		<div class="profile-content">
+			<!-- begin tab-content -->
+			<div class="tab-content p-0">
+				<!-- begin nav-tabs -->
+				<ul class="nav nav-tabs">
+					<li class="nav-item">
+						<a href="#editInfoBox" data-toggle="tab" class="nav-link active">
+							<span class="d-sm-none h5 mb-0">{{__('setting_point')}}</span>
+							<span class="d-sm-block d-none h5 mb-0">{{__('setting_point')}}</span>
+						</a>
+					</li>
+				</ul>
+				<!-- end nav-tabs -->
+				<!-- begin tab-content -->
+				<div class="tab-content">
+					<!-- begin tab-pane -->
+					<div class="tab-pane fade active show" id="editInfoBox">
+						<form action="" method="post" id="setPoint" class="margin-bottom-0" data-parsley-validate="true" onsubmit="setPoint();">
+							<table class="table table-borderless table-th-valign-middle w-50 mx-auto my-2">
+							    <tr>
+							        <th>{{__('payment_current')}}</th>
+							        <td>{{company.SPO}} p</td>
+							    </tr>
+								<tr>
+									<th>{{__('setting_send_available')}}</th>
+									<td>
+									    <script>
+									        var sendA = Math.floor("{{company.SPO}}"/50)+" {{__('setting_num')}}";
+									        document.write(sendA);
+									    </script>
+									</td>
+								</tr>
+								<tr>
+									<th>{{__('setting_point_alarm')}}<br><small>({{__('setting_point_alarm2')}})</small></th>
+									<td><input type="text" id="POA" name="POA" class="form-control form-control-sm" value="{{company.POA}}" data-parsley-type="digits" data-parsley-type-message="{{__('register_digits_error')}}" data-parsley-required-message="{{__('required_detail')}}" required /></td>
+								</tr>
+							</table>
+							<p class="text-center mt-3 m-b-0">
+								<input type="submit" class="btn btn-primary width-150" value="{{__('profile_password_submit')}}" />
+								<input type="reset" class="btn btn-white width-150 m-l-10" value="{{__('profile_password_cancel')}}" />
+							</p>
+						</form>
+					</div>
+					<!-- end tab-pane -->
+				</div>
+				<!-- end tab-content -->
+			</div>
+			<!-- end tab-content -->
+		</div>
+		<!-- end profile -->
+	</div>
+	<!-- end #content -->
+	
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    function setPoint() {
+        var formParsley  = $('#setPoint').parsley();
+		if(formParsley.isValid() == true) {
+		    $.ajax({
+		       type: 'POST',
+		       url: 'setting/point',
+		       dataType: 'json',
+		       data: {
+		           POA: document.getElementsByName("POA")[0].value
+		       },
+		       success: function(result) {
+		           if(result.status == 'success') {
+		               alert("{{__('setting_point_success')}}");
+		               location.reload();
+		           }
+		           else if(result.status == 'fail') {
+		               alert("{{__('setting_point_fail')}}");
+		               location.reload();
+		           }
+		       }
+		    });
+		}
+		event.preventDefault();
+    }
+    
+	// 폼 enter키 submit 막기
+	document.addEventListener('keydown', function(event) {
+		if (event.keyCode === 13) {
+			event.preventDefault();
+		}
+	}, true);
+</script>
+{% endblock %}
+
+{% block script %}
+<script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
+<script src="../assets/plugins/highlight.js/highlight.min.js"></script>
+<script src="../assets/js/demo/render.highlight.js"></script>
+{% endblock %}
