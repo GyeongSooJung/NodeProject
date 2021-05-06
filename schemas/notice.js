@@ -12,7 +12,7 @@ const NoticeSchema = new Schema({
         type: String,
     },//Contents
     CO: {
-        type: Number
+        type: String,
     },//Create Time
     CA: {
         type: Date,

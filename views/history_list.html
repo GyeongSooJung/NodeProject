@@ -366,6 +366,7 @@
 				     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
 				     	  if(historylist.length != 0) {
 					     	   if(historylist[i]) {
+					     	   	console.log(historylist[i].PD)
 								  insertTr += "<tr>";
 								  insertTr += "<td class='font-weight-bold'>"+(historynum - (page*10)) +" </td>";
 								  insertTr += "<td>"+ historylist[i].CNM +"</td>";

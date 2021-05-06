@@ -304,7 +304,6 @@
 	"payment_point_Dateofuse" : "Date of use",
 	"payment_result" : "Result",
 	"payment_alarmtalk_list" : "ATA Transmission History",
-	
 	"payment_confirm" : "Confirm Payment",
 	"payment_confirm_text" : "Your payment has been completed.",
 	"payment_information" : "Payment Info",
@@ -331,5 +330,5 @@
 	"qrcode": "QR code",
 	"qrcode_create":  "QR create",
 	"qrcode_generated": "Created QR code",
-	"qrcode_sticker": "Sticker",
+	"qrcode_sticker": "Sticker"
 }

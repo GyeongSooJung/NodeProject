@@ -193,6 +193,31 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
 	// 시간 표현 기능
+	$(document).ready(function(){
+		var height =  $(".notice").height();
+		var num = $(".rolling li").length;
+		var max = height * num;
+		var move = 0;
+		function noticeRolling(){
+			move += height;
+			$(".rolling").animate({"top":-move},600,function(){
+				if( move >= max ){
+					$(this).css("top",0);
+					move = 0;
+				};
+			});
+		};
+		noticeRollingOff = setInterval(noticeRolling,2000);
+		$(".rolling").append($(".rolling li").first().clone());
+	
+		$(".rolling_stop").click(function(){
+			clearInterval(noticeRollingOff);
+		});
+		$(".rolling_start").click(function(){
+			noticeRollingOff = setInterval(noticeRolling,1000);
+		});
+	});
+	
 	var et = document.getElementById('ET');
 	var ca = document.getElementById('CA');
 	
@@ -368,7 +393,6 @@ am4core.ready(function() {
 	 * https://www.amcharts.com/docs/v4/
 	 * ---------------------------------------
 	 */
-	console.log('{{history_count}}');
 	
 	var data = {
 	  "week1": [{

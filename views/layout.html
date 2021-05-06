@@ -1,5 +1,60 @@
 <!DOCTYPE html>
 <html lang="kor">
+	<!--공지사항css-->
+	<style> 
+		/* 리셋css */
+			html, body, div, span, applet, object, iframe,
+			h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+			a, abbr, acronym, address, big, cite, code,
+			del, dfn, em, img, ins, kbd, q, s, samp,
+			small, strike, strong, sub, sup, tt, var,
+			b, u, i, center,
+			dl, dt, dd, ol, ul, li,
+			fieldset, form, label, legend,
+			table, caption, tbody, tfoot, thead, tr, th, td,
+			article, aside, canvas, details, embed, 
+			figure, figcaption, footer, header, hgroup, 
+			menu, nav, output, ruby, section, summary,
+			time, mark, audio, video {
+				margin: 0;
+				padding: 0;
+				border: 0;
+				font-size: 100%;
+				font: inherit;
+				vertical-align: baseline;
+				text-decoration:none;
+			}
+			article, aside, details, figcaption, figure, 
+			footer, header, hgroup, menu, nav, section {
+				display: block;
+			}
+			body {
+				line-height: 1;
+			}
+			ol, ul {
+				list-style: none;
+			}
+			blockquote, q {
+				quotes: none;
+			}
+			blockquote:before, blockquote:after,
+			q:before, q:after {
+				content: '';
+				content: none;
+			}
+			table {
+				border-collapse: collapse;
+				border-spacing: 0;
+			}
+		/* 또군css */
+		body{background-color:#d1d1d1;}
+		.notice{width:100%; height:50px; overflow:hidden; background-color:#fff;}
+		.rolling{position:relative; width:100%; height:auto;}
+		.rolling li{width:100%; height:50px; line-height:50px;}
+		.rolling_stop{display:block; width:100px; height:20px; background-color:#000; color:#fff; text-align:center;}
+		.rolling_start{display:block; width:100px; height:20px; background-color:#000; color:#0f0; text-align:center;}
+	</style>
+	
 <head>
 	<meta charset="utf-8" />
 	<title>{{__('main_title')}}</title>
@@ -36,11 +91,24 @@
 			<!-- begin navbar-header -->
 			<div class="navbar-header">
 				<a href="/main" class="navbar-brand ml-3"><img src="../assets/img/oasis.png"></a>
-				<button type="button" class="navbar-toggle" data-click="sidebar-toggled">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
+				
+			</div>
+			<div class="navbar-nav navbar-center">
+				
+				{% if noticethree %}
+				<p style=" width:120px;" class="m-15">공지사항 &nbsp;:&nbsp;</p>
+				<div class="notice">
+					
+					<ul class="rolling">
+						{% for notice in noticethree %}
+						<li>
+							<a href="#" onclick="noticepop(this)" name="{{notice._id}}">{{notice.TI}}</a>
+						</li>
+						{% endfor %}
+					</ul>
+				</div>
+				{% endif %}
+				
 			</div>
 			<!-- end navbar-header --><!-- begin header-nav -->
 			<ul class="navbar-nav navbar-right">
@@ -205,7 +273,7 @@
 					<li class="has-sub">
 						<a href="/notice_list">
 							<b class="caret"></b>
-							<i class="fas fa-lg fa-fw m-r-10 fa-qrcode"></i>
+							<i class="fas fa-lg fa-fw m-r-10 fa-volume-up"></i>
 							<span> {{__('notice_list')}} </span> 
 						</a>
 					</li>
@@ -235,6 +303,33 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
+
+	$(document).ready(function(){
+		var height =  $(".notice").height();
+		var num = $(".rolling li").length;
+		var max = height * num;
+		var move = 0;
+		function noticeRolling(){
+			move += height;
+			$(".rolling").animate({"top":-move},600,function(){
+				if( move >= max ){
+					$(this).css("top",0);
+					move = 0;
+				};
+			});
+		};
+		noticeRollingOff = setInterval(noticeRolling,2000);
+		$(".rolling").append($(".rolling li").first().clone());
+	
+		$(".rolling_stop").click(function(){
+			clearInterval(noticeRollingOff);
+		});
+		$(".rolling_start").click(function(){
+			noticeRollingOff = setInterval(noticeRolling,1000);
+		});
+	});
+
+
 	window.addEventListener('load', function() {
 		// 언어 변경시 국기 변환 기능
 		var cookie = document.cookie;
@@ -302,6 +397,15 @@
 			location = '/main';
 		}
 	}
+	// 공지사항
+	function noticepop(obj) {
+       var noticeid = $(obj).attr('name');
+        if (noticeid)
+        window.open("/noticepop?noticeid="+noticeid,"pop","width=620, height=700, scrollbars=yes, resizable=yes"); 
+        else{
+            alert("{{__('purchase_failed')}}");
+        }   
+    }
 </script>
 
 <!-- ================== BEGIN BASE JS ================== -->
