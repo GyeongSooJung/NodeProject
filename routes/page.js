@@ -11,6 +11,7 @@ const Service = require('../schemas/service');
 const Publish = require('../schemas/publish');
 const Point = require('../schemas/point');
 const Alarm = require('../schemas/alarm_complete')
+const Notice = require('../schemas/notice')
 
 const moment = require('moment');
 const qrcode = require('qrcode');
@@ -142,11 +143,11 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
   const workers = await Worker.find({ "CID": req.decoded.CID });
   const publishs = await Publish.find({});
   const historys = await History.find({ "CID": req.decoded.CID });
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
   
   var psum = 0;
   for(var i = 0; i < publishs.length; i++) {
     var pcount = publishs[i].PUN;
-    console.log("카운트"+pcount);
     
     psum += pcount;
   }
@@ -156,9 +157,7 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
   const Days = 24 * 60 * 60 * 1000;
   
   const history_date = await History.find({ "CID": req.decoded.CID, "CA": { $lte: Date.now(), $gte: (Date.now() - Days * 7) } },{_id:0,CA:1});
-console.log(history_date);
     for (var i =  0; i < 7 ; i ++) {
-        console.log(history_date[i]);
         for(var j = await 0; j < history_date.length; j ++) {
           if((history_date[j].CA <=  (Date.now() - (Days * i))) && (history_date[j].CA >=  (Date.now() - Days * (i + 1)))) {
             history_count2[i] += await 1;
@@ -166,43 +165,17 @@ console.log(history_date);
         } 
       }
       
-//   const history_date2 = await History.aggregate([
-//   {
-//     $match : {
-//       CID : req.decoded.CID
-//     }
-//   },
-//    {
-//       $group : {
-//         _id : {month: { $month: "$CA" },day : {$dayOfMonth : "$CA"}},
-//         count : { $sum: 1},
-//       },
-//    },
-//    {
-//      $sort : { _id : -1}
-//    },
-//       {
-//      $project : {
-//        _id : 0
-//      }
-//    }
-
-// ],function(rr,ra){
-//    if(ra){
-//       console.log(ra);   
-//    } 
-// });
 
   const history_count = await history_count2;
-  console.log(history_count);
   
   const history_array = await (historys.reverse())[0]
+  
   if (history_array) {
     const recent_history = history_array.PD;
-    res.render('main', { company, companyone, aclist, devices, cars, workers, historys, recent_history, history_array, history_count, HOME, psum });
+    res.render('main', { company, companyone, aclist, noticethree, devices, cars, workers, historys, recent_history, history_array, history_count, HOME, psum });
   }
   else {
-    res.render('main', { company, companyone, aclist, devices, cars, workers, historys, history_array, history_count, HOME, psum });
+    res.render('main', { company, companyone, aclist, noticethree, devices, cars, workers, historys, history_array, history_count, HOME, psum });
   }
 
 });
@@ -224,11 +197,7 @@ router.get('/company_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CAR = req.query.CAR;
   const WORKER = req.query.WORKER;
   const HISTORY = req.query.HISTORY;
-
-  console.log("DEVICE : " + DEVICE);
-  console.log("CAR : " + CAR);
-  console.log("WORKER : " + WORKER);
-  console.log("HISTORY : " + HISTORY);
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
   if (DEVICE) {
     const companyone = await Company.findOne({ "_id": DEVICE });
@@ -237,7 +206,7 @@ router.get('/company_list', isNotLoggedIn, DataSet, async(req, res, next) => {
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const devices = await Device.find({ "CID": DEVICE }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
-    res.render('company_list', { company: req.decoded.company, companyone, aclist, devices, totalNum, currentPage, totalPage, startPage, endPage });
+    res.render('company_list', { company: req.decoded.company, companyone, aclist, noticethree, devices, totalNum, currentPage, totalPage, startPage, endPage });
   }
   else if (CAR) {
     const companyone = await Company.findOne({ "_id": CAR });
@@ -246,7 +215,7 @@ router.get('/company_list', isNotLoggedIn, DataSet, async(req, res, next) => {
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const cars = await Car.find({ "CID": CAR }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
-    res.render('company_list', { company: req.decoded.company, companyone, aclist, cars, totalNum, currentPage, totalPage, startPage, endPage });
+    res.render('company_list', { company: req.decoded.company, companyone, aclist, noticethree, cars, totalNum, currentPage, totalPage, startPage, endPage });
   }
   else if (WORKER) {
     const companyone = await Company.findOne({ "_id": WORKER });
@@ -255,7 +224,7 @@ router.get('/company_list', isNotLoggedIn, DataSet, async(req, res, next) => {
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const workers = await Worker.find({ "CID": WORKER }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
-    res.render('company_list', { company: req.decoded.company, companyone, aclist, workers, totalNum, currentPage, totalPage, startPage, endPage });
+    res.render('company_list', { company: req.decoded.company, companyone, aclist, noticethree, workers, totalNum, currentPage, totalPage, startPage, endPage });
   }
   else if (HISTORY) {
     const companyone = await Company.findOne({ "_id": HISTORY });
@@ -264,14 +233,14 @@ router.get('/company_list', isNotLoggedIn, DataSet, async(req, res, next) => {
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const historys = await History.find({ "CID": HISTORY }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
-    res.render('company_list', { company: req.decoded.company, companyone, aclist, historys, totalNum, currentPage, totalPage, startPage, endPage });
+    res.render('company_list', { company: req.decoded.company, companyone, aclist, noticethree, historys, totalNum, currentPage, totalPage, startPage, endPage });
   }
   else {
     totalNum = await Company.countDocuments({ "AH": false });
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const companys = await Company.find({ "AH": false }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
-    res.render('company_list', { company: req.decoded.company, companys, aclist, totalNum, currentPage, totalPage, startPage, endPage });
+    res.render('company_list', { company: req.decoded.company, companys, aclist, noticethree, totalNum, currentPage, totalPage, startPage, endPage });
   }
 })
 
@@ -283,6 +252,7 @@ router.get('/company_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.get('/device_static', isNotLoggedIn, DataSet, async(req, res, nex) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
   const AllCompany = await Company.countDocuments({});
   const AllHistory = await History.countDocuments({});
@@ -298,9 +268,8 @@ router.get('/device_static', isNotLoggedIn, DataSet, async(req, res, nex) => {
   const company6 = await Company.count({ "CK": "버스운수업" });
   const company7 = await Company.count({ "CK": "타이어샵" });
   const companycount = [company1, company2, company3, company4, company5, company6, company7];
-  console.log(companycount[0]);
 
-  res.render('device_static', { company: req.decoded.company, companycount, aclist, AllDevice, AllCar, AllHistory, AllCompany });
+  res.render('device_static', { company: req.decoded.company, companycount, aclist, noticethree, AllDevice, AllCar, AllHistory, AllCompany });
 })
 
 //소독 통계
@@ -312,7 +281,9 @@ router.get('/history_static', isNotLoggedIn, DataSet, async(req, res, nex) => {
   const AllHistory = await History.countDocuments({});
   const AllCar = await Car.countDocuments({});
   const AllDevice = await Device.countDocuments({});
-  res.render('history_static', { company: req.decoded.company, aclist, AllDevice, AllCar, AllHistory, AllCompany });
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
+  
+  res.render('history_static', { company: req.decoded.company, aclist, noticethree, AllDevice, AllCar, AllHistory, AllCompany });
 })
 
 //----------------------------------------------------------------------------//
@@ -323,19 +294,21 @@ router.get('/history_static', isNotLoggedIn, DataSet, async(req, res, nex) => {
 router.get('/device_join', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
-  res.render('device_join', { company: req.decoded.company, aclist });
+  res.render('device_join', { company: req.decoded.company, aclist, noticethree, });
 });
 
 //장비 수정
 router.get('/device_edit/:MAC', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
 
   try {
     const deviceone = await Device.findOne({ MAC: req.params.MAC });
-    res.render('device_edit', { company: req.decoded.company, aclist, deviceone });
+    res.render('device_edit', { company: req.decoded.company, aclist, deviceone, noticethree});
   }
   catch (err) {
     console.error(err);
@@ -349,29 +322,19 @@ router.get('/device_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   const NN = req.query.NN;
   let page = req.query.page;
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
-  if (NN) {
-    const totalNum = await Device.countDocuments({ "NN": NN });
+
+  try {
+    const totalNum = await Device.countDocuments({ "CID": CID });
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-    const devices = await Device.find({ "NN": NN }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
+    const devices = await Device.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
-    res.render('device_list', { company: req.decoded.company, aclist, devices, totalNum, currentPage, totalPage, startPage, endPage, NN });
-
+    res.render('device_list', { company: req.decoded.company, aclist, devices, totalNum, currentPage, totalPage, startPage, endPage, noticethree });
   }
-  else {
-
-    try {
-      const totalNum = await Device.countDocuments({ "CID": CID });
-      let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-      const devices = await Device.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-
-      res.render('device_list', { company: req.decoded.company, aclist, devices, totalNum, currentPage, totalPage, startPage, endPage });
-    }
-    catch (err) {
-      console.error(err);
-      next(err);
-    }
-
+  catch (err) {
+    console.error(err);
+    next(err);
   }
 
 
@@ -384,17 +347,11 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, async function(req, res
   var search = req.body.search;
   var searchtext = req.body.searchtext;
   
-  console.log(searchtext);
   
   if ((search!="") && (searchtext!="")) {
     try{
       if (search =="MD") {
         var devices = await Device.find({ "CID": CID, "MD" : {$regex:searchtext} });
-        if(devices.length == 0) 
-        res.json({result : "nothing"});
-      }
-      else if (search =="DNM") {
-        var devices = await Device.find({ "CID": CID, "DNM" : {$regex:searchtext} });
         if(devices.length == 0) 
         res.json({result : "nothing"});
       }
@@ -419,9 +376,10 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, async function(req, res
         res.json({result : "nothing"});
       }
       else {
-        console.log(typeof(searchtext))
-        var devices = await Device.find({ "CID": CID, "CA" : {$regex:searchtext}})
-        console.log(devices +"@@@")
+        var searchtext2 = searchtext.split("~")
+        var devices = await Device.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
+        if(devices.length == 0) 
+        res.json({result : "nothing"});
       }
     }catch(e) {
       res.json({ result: false});
@@ -435,18 +393,42 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, async function(req, res
     
       if(sort == "MD") {
           devices.sort(function (a,b) {
-            if(typeof(a.MD) == "object")
-            a.MD = JSON.stringify(a.MD);
-            return (a.MD[0]).charCodeAt(0) < (b.MD[0]).charCodeAt(0) ? -1 : (a.MD[0]).charCodeAt(0) > (b.MD[0]).charCodeAt(0) ? 1 : 0;
-          })
+                var ax = [], bx = [];
+                a = JSON.stringify(a.MD);
+                b = JSON.stringify(b.MD);
+              
+                a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
+                b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
+                
+                while(ax.length && bx.length) {
+                    var an = ax.shift();
+                    var bn = bx.shift();
+                    var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
+                    if(nn) return nn;
+                }
+            
+                return ax.length - bx.length;
+            });
       }
       
       else if(sort == "MD2") {
           devices.sort(function (a,b) {
-            if(typeof(a.MD) == "object")
-            a.MD = JSON.stringify(a.MD);
-            return (a.MD[0]).charCodeAt(0) > (b.MD[0]).charCodeAt(0) ? -1 : (a.MD[0]).charCodeAt(0) < (b.MD[0]).charCodeAt(0) ? 1 : 0;
-          })
+                var ax = [], bx = [];
+                a = JSON.stringify(a.MD);
+                b = JSON.stringify(b.MD);
+              
+                a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
+                b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
+                
+                while(ax.length && bx.length) {
+                    var an = bx.shift();
+                    var bn = ax.shift();
+                    var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
+                    if(nn) return nn;
+                }
+            
+                return ax.length - bx.length;
+            });
       }
       
       else if(sort == "VER") {  // 버전은 숫자인데 스키마에서 string이라 첫글자만 비교함 그래서 바꿔야됨
@@ -521,18 +503,20 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, async function(req, res
 router.get('/car_join', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
-  res.render('car_join', { company: req.decoded.company, aclist });
+  res.render('car_join', { company: req.decoded.company, aclist, noticethree });
 });
 
 //차량 수정
 router.get('/car_edit/:CN', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
   try {
     const carone = await Car.findOne({ CN: req.params.CN });
-    res.render('car_edit', { company: req.decoded.company, aclist, carone });
+    res.render('car_edit', { company: req.decoded.company, aclist, carone, noticethree});
   }
   catch (err) {
     console.error(err);
@@ -545,32 +529,19 @@ router.get('/car_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   const CN = req.query.CN;
-
   let page = req.query.page;
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
-  if (CN) {
-    const totalNum = await Car.countDocuments({ "CN": CN });
+  try {
+    const totalNum = await Car.countDocuments({ "CID": CID });
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-    const cars = await Car.find({ "CN": CN }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-    console.log(cars);
+    const cars = await Car.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
-    res.render('car_list', { company: req.decoded.company, aclist, cars, totalNum, currentPage, totalPage, startPage, endPage, CN });
-
+    res.render('car_list', { company: req.decoded.company, aclist, noticethree, cars, totalNum, currentPage, totalPage, startPage, endPage });
   }
-  else {
-
-    try {
-      const totalNum = await Car.countDocuments({ "CID": CID });
-      let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-      const cars = await Car.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-      console.log(cars);
-
-      res.render('car_list', { company: req.decoded.company, aclist, cars, totalNum, currentPage, totalPage, startPage, endPage });
-    }
-    catch (err) {
-      console.error(err);
-      next(err);
-    }
+  catch (err) {
+    console.error(err);
+    next(err);
   }
 });
 
@@ -580,8 +551,6 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, async function(req, res) {
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
-  
-  console.log(searchtext);
   
   if ((search!="") && (searchtext!="")) {
     try{
@@ -596,9 +565,10 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, async function(req, res) {
         res.json({result : "nothing"});
       }
       else {
-        console.log(typeof(searchtext));
-        var cars = await Car.find({ "CID": CID, "CA" : {$regex:searchtext}});
-        console.log(cars +"@@@");
+        var searchtext2 = searchtext.split("~")
+        var cars = await Car.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
+        if(cars.length == 0) 
+        res.json({result : "nothing"});;
       }
     }catch(e) {
       res.json({ result: false });
@@ -645,7 +615,7 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, async function(req, res) {
                     if(nn) return nn;
                 }
             
-                return ax.length - bx.length;eAt(0) < (b.CN[0]).charCodeAt(0) ? -1 : (a.CN[0]).charCodeAt(0) > (b.CN[0]).charCodeAt(0) ? 1 : 0;
+                return ax.length - bx.length;
           });
       }
       else if(sort == "CPN") {  // 버전은 숫자인데 스키마에서 string이라 첫글자만 비교함 그래서 바꿔야됨
@@ -664,7 +634,6 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, async function(req, res) {
           });
       }
       else if(sort == "CA") {
-      console.log("@@@")
         var cars = await Car.find({ "CID": CID }).sort({ CA: -1 });
       }
         
@@ -697,24 +666,14 @@ router.get('/worker_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CNU = req.decoded.CNU;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   const WN = req.query.WN;
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
   let page = req.query.page;
-  if (WN) {
-      const totalNum = await Worker.countDocuments({ "WN": WN });
-      let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-      const workers = await Worker.find({ "WN": WN, }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-
-      res.render('worker_list', { company: req.decoded.company, aclist, workers, totalNum, currentPage, totalPage, startPage, endPage, WN });
-
-  }
-  else {
     const totalNum = await Worker.countDocuments({ "CID": CID });
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const workers = await Worker.find({ CID: CID, }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
 
-    res.render('worker_list', { company: req.decoded.company, aclist, workers, totalNum, currentPage, totalPage, startPage, endPage });
-
-  }
+    res.render('worker_list', { company: req.decoded.company, aclist, noticethree, workers, totalNum, currentPage, totalPage, startPage, endPage });
 
 
 });
@@ -725,8 +684,6 @@ router.post('/ajax/worker_list', isNotLoggedIn, DataSet, async function(req, res
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
-  
-  console.log(searchtext);
   
   if ((search!="") && (searchtext!="")) {
     try{
@@ -831,9 +788,6 @@ router.post('/ajax/post', isNotLoggedIn, DataSet, async function(req, res) {
   const CNU = req.decoded.CNU;
 
   let workerone;
-  
-  console.log(au_true)
-  console.log(au_false)
 
   if (au_true) {
     workerone = await Worker.where({ "EM": au_true }).update({ "AU": 1 }).setOptions({ runValidators: true }).exec();
@@ -863,6 +817,7 @@ router.get('/history_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
   try {
     const cars = await Car.find({ "CID": CID });
@@ -873,15 +828,15 @@ router.get('/history_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 
     let page = req.query.page;
     
-      const totalNum = await History.countDocuments({ "CID": CID });
-      let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-      const historylist = await History.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-      const totalNumlist = [];
-      for (var i = 0; i < totalNum.length; i++) {
-        totalNumlist[i] = i + 1;
-      }
+    const totalNum = await History.countDocuments({ "CID": CID });
+    let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
+    const historylist = await History.find({ "CID": CID }).sort({ ET: -1 }).skip(skipPost).limit(postNum);
+    const totalNumlist = [];
+    for (var i = 0; i < totalNum.length; i++) {
+      totalNumlist[i] = i + 1;
+    }
 
-      res.render('history_list', { company: req.decoded.company, aclist, cars, devices, historylist, totalNum, currentPage, totalPage, startPage, endPage, totalNumlist });
+    res.render('history_list', { company: req.decoded.company, aclist, noticethree, cars, devices, historylist, totalNum, currentPage, totalPage, startPage, endPage, totalNumlist });
     
   }
   catch (err) {
@@ -897,28 +852,48 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
   var search = req.body.search;
   var searchtext = req.body.searchtext;
   
-  console.log(searchtext);
   
   if ((search!="") && (searchtext!="")) {
     try{
       if (search =="CNM") {
-        var historys = await History.find({ "CID": CID, "CNM" : {$regex:searchtext} });
+          var historys =await History.aggregate([
+        
+          { $match : {CID : CID, "CNM" : {$regex:searchtext}} },
+          { $project : {CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM"}},
+             
+          ], function (err,result) {
+            if(err) throw err;
+          });
         if(historys.length == 0) 
         res.json({result : "nothing"});
       }
       else if (search =="DNM") {
-        var historys = await History.find({ "CID": CID, "DNM" : {$regex:searchtext} });
+        var historys =await History.aggregate([
+        
+          { $match : {CID : CID, "DNM" : {$regex:searchtext}} },
+          { $project : {CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM"}},
+             
+          ], function (err,result) {
+            if(err) throw err;
+          });
         if(historys.length == 0) 
         res.json({result : "nothing"});
       }
       else if (search =="WNM") {
-        var historys = await History.find({ "CID": CID, "WNM" : {$regex:searchtext} });
+        var historys =await History.aggregate([
+        
+          { $match : {CID : CID, "WNM" : {$regex:searchtext}} },
+          { $project : {CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM"}},
+             
+          ], function (err,result) {
+            if(err) throw err;
+          });
         if(historys.length == 0) 
         res.json({result : "nothing"});
       }
       else if (search =="ET") {
         var searchtext2 = searchtext.split("~")
-        var historys = await History.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
+        var historys = await History.find({ "CID": CID, "ET" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
         if(historys.length == 0) 
         res.json({result : "nothing"});
       }
@@ -933,23 +908,55 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
   
   else {
     
-      var historys = await History.find({ "CID": CID });
+      
+      var historys =await History.aggregate([
+      
+        { $match : {CID : CID} },
+        { $project : {CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM"}},
+           
+        ], function (err,result) {
+          if(err) throw err;
+      });
+      
     
       if(sort == "CNM") {
           historys.sort(function (a,b) {
+                var ax = [], bx = [];
+                a = JSON.stringify(a.CNM);
+                b = JSON.stringify(b.CNM);
+              
+                a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
+                b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
+                
+                while(ax.length && bx.length) {
+                    var an = ax.shift();
+                    var bn = bx.shift();
+                    var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
+                    if(nn) return nn;
+                }
             
-            if(typeof(a.CNM) == "object")
-            a.CNM = JSON.stringify(a.CNM);
-            return (a.CNM[0]).charCodeAt(0) < (b.CNM[0]).charCodeAt(0) ? -1 : (a.CNM[0]).charCodeAt(0) > (b.CNM[0]).charCodeAt(0) ? 1 : 0;
-          })
+                return ax.length - bx.length;
+            });
       }
       
       else if(sort == "CNM2") {
           historys.sort(function (a,b) {
-            if(typeof(a.CNM) == "object")
-            a.CNM = JSON.stringify(a.CNM);
-            return (a.CNM[0]).charCodeAt(0) > (b.CNM[0]).charCodeAt(0) ? -1 : (a.CNM[0]).charCodeAt(0) < (b.CNM[0]).charCodeAt(0) ? 1 : 0;
-          })
+                var ax = [], bx = [];
+                a = JSON.stringify(a.CNM);
+                b = JSON.stringify(b.CNM);
+              
+                a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
+                b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
+                
+                while(ax.length && bx.length) {
+                    var an = bx.shift();
+                    var bn = ax.shift();
+                    var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
+                    if(nn) return nn;
+                }
+            
+                return ax.length - bx.length;
+            });
       }
       
       else if(sort == "DNM") { 
@@ -967,21 +974,27 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
             return (a.DNM[0]).charCodeAt(0) > (b.DNM[0]).charCodeAt(0) ? -1 : (a.DNM[0]).charCodeAt(0) < (b.DNM[0]).charCodeAt(0) ? 1 : 0;
           })
        }
-      else if(sort == "ET")
-        var historys = await History.find({ "CID": CID }).sort({ ET: -1 });
-        
-      else if(sort == "ET2")
-        var historys = await History.find({ "CID": CID }).sort({ ET: 1 });
+      else if(sort == "ET") {
+            historys.sort(function (a,b) {
+                return a.ET > b.ET ? -1 : a.ET < b.ET ? 1 : 0;
+              });
+        }
+          
+      else if(sort == "ET2") {
+            historys.sort(function (a,b) {
+                return a.ET < b.ET ? -1 : a.ET > b.ET ? 1 : 0;
+              })
+        }
         
       else if(sort == "PD") {
           historys.sort(function (a,b) {
-            return (a.PD).length < (b.PD).length ? -1 : (a.PD).length > (b.PD).length ? 1 : 0;
+            return a.PD < b.PD ? -1 : a.PD > b.PD ? 1 : 0;
           });
           
       }
       else if(sort == "PD2") {
           historys.sort(function (a,b) {
-            return (a.PD).length > (b.PD).length ? -1 : (a.PD).length < (b.PD).length ? 1 : 0;
+            return a.PD > b.PD ? -1 : a.PD < b.PD ? 1 : 0;
           });
       }
       else if(sort == "WNM") {
@@ -999,7 +1012,14 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
           })
       }
       else {
-        var historys = await History.find({ "CID": CID }).sort({ ET: -1 });
+        var historys =await History.aggregate([
+      
+        { $match : {CID : CID} },
+        { $project : {CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM"}},
+           
+        ], function (err,result) {
+          if(err) throw err;
+      });
         
       }
   }
@@ -1019,12 +1039,12 @@ router.get('/history_chart/:_id', isNotLoggedIn, DataSet, async(req, res, next) 
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
   try {
     const historyone = await History.findOne({ "_id": req.params._id });
     const history_array = historyone.PD;
-    console.log("길이" + history_array.length);
-    res.render('history_chart', { company: req.decoded.company, aclist, historyone, history_array });
+    res.render('history_chart', { company: req.decoded.company, aclist, noticethree, historyone, history_array });
   }
   catch (err) {
     console.error(err);
@@ -1045,9 +1065,11 @@ router.get('/pay_point', isNotLoggedIn, DataSet, async(req, res, next) => {
 
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   const service = await Service.find({});
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
+
 
   try {
-    res.render('pay_point', { company: req.decoded.company, aclist, imp_code, HOME, service });
+    res.render('pay_point', { company: req.decoded.company, aclist, noticethree, imp_code, HOME, service });
   }
   catch (err) {
     console.error(err);
@@ -1093,7 +1115,6 @@ router.post('/ajax/payment', isNotLoggedIn, DataSet, async(req, res, next) => {
   var SN = req.body.SN;
   if (SN) {
     const serviceone = await Service.findOne({ "SN": SN });
-    console.log(serviceone);
 
     res.json({ result: true, serviceone: serviceone, check: true });
   }
@@ -1109,6 +1130,7 @@ router.get('/pay_confirm', isNotLoggedIn, DataSet, async(req, res, next) => {
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   const imp_uid = req.query.imp_uid;
   const imp_code = process.env.imp_code;
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
   // 엑세스 토큰 발급 받기
   const getToken = await axios({
@@ -1131,10 +1153,8 @@ router.get('/pay_confirm', isNotLoggedIn, DataSet, async(req, res, next) => {
   const paymentData = getPaymentData.data.response; // 조회한 결제 정보
 
   const serviceone = await Service.findOne({ "SN": paymentData.name });
-  console.log(serviceone);
-
   try {
-    res.render('pay_confirm', { company: req.decoded.company, aclist, imp_code, paymentData, serviceone });
+    res.render('pay_confirm', { company: req.decoded.company, aclist, imp_code, paymentData, noticethree, serviceone });
   }
   catch (err) {
     console.error(err);
@@ -1151,30 +1171,21 @@ router.get('/pay_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   let page = req.query.page;
   const GN = req.query.GN;
   const IP = process.env.IP;
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
   try {
     const order = await Order.find({ "CID": CID });
-    if (GN) {
-      const orderone = await Order.find({ "GN": GN });
-      const totalNum = await Order.countDocuments({ "GN": GN });
-      let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-      const orders = await Order.find({ "GN": GN }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-      res.render('pay_list', { company: req.decoded.company, aclist, totalNum, currentPage, totalPage, startPage, endPage, imp_code, IP, orders, GN });
-    }
-    else {
       try {
         const totalNum = await Order.countDocuments({ "CID": CID });
         let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
         const orders = await Order.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-        console.log(orders);
 
-        res.render('pay_list', { company: req.decoded.company, aclist, totalNum, currentPage, totalPage, startPage, endPage, IP, orders });
+        res.render('pay_list', { company: req.decoded.company, aclist, noticethree, totalNum, currentPage, totalPage, startPage, endPage, IP, orders });
       }
       catch (err) {
         console.error(err);
         next(err);
       }
-    }
   }
   catch (err) {
     console.error(err);
@@ -1188,9 +1199,6 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res) {
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
-  
-  console.log(search)
-  console.log(searchtext)
   
   if ((search!="") && (searchtext!="")) {
     try{
@@ -1329,8 +1337,6 @@ router.get('/receipt', isNotLoggedIn, DataSet, async(req, res, next) => {
   });
   const paymentData = getPaymentData.data.response; // 조회한 결제 정보
 
-  console.log(paymentData);
-
 
   const orderone = await Order.find({ "IID": imp_uid });
 
@@ -1352,6 +1358,7 @@ router.get('/point_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   let page = req.query.page;
   const GN = req.query.GN;
   const IP = process.env.IP;
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
   try {
     const point = await Point.find({ "CID": CID });
@@ -1359,9 +1366,8 @@ router.get('/point_list', isNotLoggedIn, DataSet, async(req, res, next) => {
     const totalNum = await Point.countDocuments({ "CID": CID });
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
     const points = await Point.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-    console.log(points);
 
-    res.render('point_list', { company: req.decoded.company, aclist, totalNum, currentPage, totalPage, startPage, endPage, IP, points });
+    res.render('point_list', { company: req.decoded.company, aclist, noticethree, totalNum, currentPage, totalPage, startPage, endPage, IP, points });
 
   }
   catch (err) {
@@ -1377,8 +1383,6 @@ router.post('/ajax/point_list', isNotLoggedIn, DataSet, async function(req, res)
   var search = req.body.search;
   var searchtext = req.body.searchtext;
   
-  console.log("@@@");
-  
   if ((search!="") && (searchtext!="")) {
     try{
       if (search =="PN") {
@@ -1387,7 +1391,6 @@ router.post('/ajax/point_list', isNotLoggedIn, DataSet, async function(req, res)
         res.json({result : "nothing"});
       }
       else if (search =="CA") {
-        console.log(searchtext)
         var searchtext2 = searchtext.split("~")
         var points = await Point.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
         if(points.length == 0) 
@@ -1444,7 +1447,6 @@ router.post('/ajax/point_list', isNotLoggedIn, DataSet, async function(req, res)
           var points = await Point.find({ "CID": CID }).sort({ PO: 1 });
       }
       else {
-        console.log("@@@")
         var points = await Point.find({ "CID": CID }).sort({ CA: -1 });
         
       }
@@ -1456,7 +1458,6 @@ router.post('/ajax/point_list', isNotLoggedIn, DataSet, async function(req, res)
       pointlist[i] = points[i];
     }
   }
-  console.log(pointlist)
   res.json({ result: true, pointlist : pointlist, pointnum : points.length});
  
 });
@@ -1472,9 +1473,10 @@ router.get('/publish_manage', isNotLoggedIn, DataSet, async(req, res, next) => {
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   const HOME = process.env.IP;
   const cat = process.env.publish_cat;
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
   
   try {
-    res. render('publish_manage', { company: req.decoded.company, aclist, HOME, cat });
+    res. render('publish_manage', { company: req.decoded.company, aclist, noticethree, HOME, cat });
   }
   catch(err) {
     console.error(err);
@@ -1495,7 +1497,6 @@ router.get('/create', isNotLoggedIn, DataSet, async (req, res, next) => {
   var width = req.query.width;
   var height = req.query.height;
   var url;
-  console.log("ㅏ타타타"+type);
   
   try {
     if(cat == 1) {
@@ -1504,7 +1505,6 @@ router.get('/create', isNotLoggedIn, DataSet, async (req, res, next) => {
     else {
       url = main+"/inflow?cat="+cat+"&cid="+cid;
     }
-    console.log("유알엘"+url);
     const cr_qrcode = await qrcode.toDataURL(url, {width: width, height: height});
     const cr_sticker = await qrcode.toDataURL(url, {width: width, height: height, color: {light: "#FED23D"}});
     
@@ -1575,12 +1575,9 @@ router.get('/sendsms', isNotLoggedIn, DataSet, async(req, res, next) => {
 
     request(options, function(error, response, body) {
       if (error) throw error;
-      console.log('result :', body);
     });
 
-    console.log(companypoint);
     companypoint = companypoint - 20;
-    console.log(companypoint);
 
     const companyone = await Company.where({ '_id': historyone.CID })
       .update({ "SPO": companypoint }).setOptions({ runValidators: true })
@@ -1650,7 +1647,6 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
 
   request(options, function(error, response, body) {
     if (error) throw error;
-    console.log('result :', body);
   });
 
   const pointone = await Point.insertMany({
@@ -1659,9 +1655,7 @@ router.get('/sendkko', isNotLoggedIn, DataSet, async(req, res, next) => {
     "PO": 50,
   });
 
-  console.log(companypoint);
   companypoint = companypoint - 50;
-  console.log(companypoint);
 
   await Company.where({ '_id': historyone.CID })
     .update({ "SPO": companypoint }).setOptions({ runValidators: true })
@@ -1698,12 +1692,7 @@ router.get('/sendkko2', isNotLoggedIn, DataSet, async(req, res, next) => {
         "MID" : response.messageId,
         "WNM" : historyone.WNM,
       });
-      console.log(pointone);
-    
-      console.log(companypoint);
       companypoint = companypoint - 50;
-      console.log(companypoint);
-    
       await Company.where({ '_id': historyone.CID })
         .update({ "SPO": companypoint }).setOptions({ runValidators: true })
         .exec();
@@ -1745,6 +1734,7 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   let page = req.query.page;
   const WNM = req.query.WNM;
+  const noticethree = await Notice.find().limit(3).sort({CA : -1});
   
   
   let apiSecret = process.env.sol_secret;
@@ -1754,8 +1744,6 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const nanoidGenerate = require('nanoid/generate');
   const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32);
   const HmacSHA256 = require('crypto-js/hmac-sha256');
-  if(WNM)
-  console.log("WNM : " + WNM);
 
 
   
@@ -1866,7 +1854,7 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
         const totalNum = await Alarm.countDocuments({ "CID": CID });
         let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
         const alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-        res.render('alarmtalk_list', { company: req.decoded.company, aclist, totalNum, currentPage, totalPage, startPage, endPage, alarms });
+        res.render('alarmtalk_list', { company: req.decoded.company, aclist, noticethree, totalNum, currentPage, totalPage, startPage, endPage, alarms });
 
   }
   catch (err) {
@@ -1882,9 +1870,6 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
   var search = req.body.search;
   var searchtext = req.body.searchtext;
   
- 
-  
-  console.log("@@@");
   
   if ((search!="") && (searchtext!="")) {
     try{
@@ -1958,7 +1943,6 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
           })
       }
       else {
-        console.log("@@@")
         var alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
         
       }
@@ -1970,8 +1954,6 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
       alarmlist[i] = alarms[i];
     }
   }
-  console.log(alarms)
-  console.log(alarmlist)
   res.json({ result: true, alarmlist : alarmlist, alarmnum : alarms.length});
  
 });
@@ -1980,12 +1962,12 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
 //                                  Notice                                    //
 //----------------------------------------------------------------------------//
 
-// 알림톡 리스트
+// 공지사항
 router.get('/notice_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-  
-  res.render('notice_list',{company: req.decoded.company, aclist})
+  const noticethree = await Notice.find().limit(3)
+  res.render('notice_list',{company: req.decoded.company, aclist, noticethree})
   
 });
 
@@ -1997,21 +1979,22 @@ router.post('/ajax/notice_list', isNotLoggedIn, DataSet, async function(req, res
   var searchtext = req.body.searchtext;
   
   
+  
   if ((search!="") && (searchtext!="")) {
     try{
-      if (search =="WNM") {
-        var alarms = await Alarm.find({ "CID": CID, "PN" : {$regex:searchtext} });
-        if(alarms.length == 0) 
+      if (search =="TI") {
+        var notices = await Notice.find({ "CID": CID, "TI" : {$regex:searchtext} });
+        if(notices.length == 0) 
         res.json({result : "nothing"});
       }
       else if (search =="CA") {
         var searchtext2 = searchtext.split("~")
-        var alarms = await Alarm.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-        if(alarms.length == 0) 
+        var notices = await Notice.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
+        if(notices.length == 0) 
         res.json({result : "nothing"});
       }
       else {
-        var alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
+        var notices = await Notice.find({ "CID": CID }).sort({ CA: -1 });
       }
     }catch(e) {
       res.json({ result: false});
@@ -2020,10 +2003,10 @@ router.post('/ajax/notice_list', isNotLoggedIn, DataSet, async function(req, res
   }
   
   else {
-      var alarms = await Alarm.find({ "CID": CID });
+      var notices = await Notice.find({ "CID": CID });
     
       if(sort == "WNM") {
-          alarms.sort(function (a,b) {
+          notices.sort(function (a,b) {
             
             if(typeof(a.WNM) == "object")
             a.WNM = JSON.stringify(a.WNM);
@@ -2032,7 +2015,7 @@ router.post('/ajax/notice_list', isNotLoggedIn, DataSet, async function(req, res
       }
       
       else if(sort == "WNM2") {
-          alarms.sort(function (a,b) {
+          notices.sort(function (a,b) {
             if(typeof(a.WNM) == "object")
             a.WNM = JSON.stringify(a.WNM);
             return (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? 1 : 0;
@@ -2040,26 +2023,86 @@ router.post('/ajax/notice_list', isNotLoggedIn, DataSet, async function(req, res
       }
       
       else if(sort == "CA") { 
-          var alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
+          var notices = await Notice.find({ "CID": CID }).sort({ CA: -1 });
       }
       
       else if(sort == "CA2"){
-          var alarms = await Alarm.find({ "CID": CID }).sort({ CA: 1 });
+          var notices = await Notice.find({ "CID": CID }).sort({ CA: 1 });
        }
       else {
-        var alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
+        var notices = await Notice.find({ "CID": CID }).sort({ CA: -1 });
         
       }
   }
   
-  var alarmlist = [];
-  if(alarms.length) {
-    for(var i = 0; i < alarms.length; i ++) {
-      alarmlist[i] = alarms[i];
+  var noticelist = [];
+  if(notices.length) {
+    for(var i = 0; i < notices.length; i ++) {
+      noticelist[i] = notices[i];
     }
   }
-  res.json({ result: true, alarmlist : alarmlist, alarmnum : alarms.length});
+  res.json({ result: true, noticelist : noticelist, noticenum : notices.length});
  
+});
+
+// 공지사항 입력
+router.get('/notice_write', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  
+  res.render('notice_write',{company: req.decoded.company, aclist})
+});
+
+// 공지사항 입력 ajax
+router.post('/ajax/notice_write', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  
+  const title = req.body.title;
+  const text = req.body.text;
+  
+  
+  try {
+    
+    const notice = await Notice.create({ CID : CID, TI : title , CO : text});
+    
+    
+    res.json({result : true})
+  }catch(e) {
+    console.log(e)
+    res.json({result : false})
+  }
+});
+
+// 공지사항 팝업
+router.get('/noticepop', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  
+  const noticeid = req.query.noticeid
+  const noticeone = await Notice.find({_id : noticeid})
+  
+  res.render('noticepop',{company: req.decoded.company, aclist, noticeone, moment});
+  
+  
+});
+
+router.post('/ajax/notice_detail', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  
+  const noticeid = req.body.noticeid;
+  
+  
+  try {
+    
+    const noticedetail = await Notice.find({_id : noticeid});
+    
+    res.json({result : true, noticedetail : noticedetail})
+  }catch(e) {
+    console.log(e)
+    res.json({result : false})
+  }
 });
 
 
