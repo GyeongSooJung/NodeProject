@@ -29,44 +29,49 @@
             <!-- end panel-heading -->
             <!-- begin panel-body -->
             <div class="panel-body" >
-               
-            <div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
-            	<div class="mr-auto">
-					<select id = "selectpage" name="data-table-default_length" aria-controls="data-table-default" class="custom-select custom-select-sm form-control form-control-sm">
-						<option class ="postnumber" value="10">10</option>
-						<option class ="postnumber" value="25">25</option>
-						<option class ="postnumber" value="50">50</option>
-						<option class ="postnumber" value="100">100</option>
-					</select>
-				</div>
-              	<div class="mr-2">
-                  		<div class="btn-group m-r-5 m-b-5">
-      							<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>
-      							<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
-      							<div class="dropdown-menu dropdown-menu-right" style="">
-      								<a href="javascript:searchoption('MID');" class="dropdown-item">{{__('payment_ordernumber')}}</a>
-      								<a href="javascript:searchoption('CA');" class="dropdown-item">{{__('payment_date')}}</a>
-      								<a href="javascript:searchoption('GN');" class="dropdown-item">{{__('payment_name')}}</a>
-      								<!--<a href="javascript:searchoption('AM');" class="dropdown-item">{{__('payment_amount')}}</a>-->
-      							
-      							</div>
-      					</div> 
-      			</div>
-      		  	<div>
-	  				<input id ="searchtext" type="text" class="form-control" placeholder ="" />
-	  			</div>
-	  			<div id ="searchdatetext" class="d-none">
-	  				<div class ="d-flex">
-	  				<input type="date" id = "searchdatetext1" class ="form-control" placeholder ="" />
-	  				&nbsp;&nbsp;~&nbsp;&nbsp;
-	  				<input type="date" id = "searchdatetext2" class ="form-control" placeholder ="" />
-	  				</div>
-	  			</div>
-	  			<div>
-	  				
-	  				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
-	  			<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
-   			</div>
+   			<div class="mt-2 mb-2 d-flex justify-content-end align-items-center">
+						<div class="mr-auto">
+							<select id = "selectpage" name="data-table-default_length" aria-controls="data-table-default" class="custom-select custom-select-sm form-control form-control-sm">
+								<option class ="postnumber" value="10">10</option>
+								<option class ="postnumber" value="25">25</option>
+								<option class ="postnumber" value="50">50</option>
+								<option class ="postnumber" value="100">100</option>
+							</select>
+						</div>
+						
+		   				<div>
+							<div class ="d-flex w-100">
+				            	<div>
+				            		<div class="btn-group m-10 w-20">
+											<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>
+											<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
+											<div class="dropdown-menu dropdown-menu-right" style="">
+												<a href="javascript:searchoption('MID');" class="dropdown-item">{{__('payment_ordernumber')}}</a>
+												<a href="javascript:searchoption('CA');" class="dropdown-item">{{__('payment_date')}}</a>
+												<a href="javascript:searchoption('GN');" class="dropdown-item">{{__('payment_name')}}</a>
+												<a href="javascript:searchoption('AM');" class="dropdown-item">{{__('payment_amount')}}</a>
+											</div>
+									</div> 
+								</div>
+								
+								<div class="m-10 w-800">
+						  				<input  id ="searchtext" type="text" class="w-100 form-control" placeholder ="" />
+						  		</div>
+					  		</div>
+					  		
+							<div id ="searchdatetext" class ="d-flex m-10">
+									<input type="date" id = "searchdatetext1" class ="form-control" placeholder ="" />
+									&nbsp;&nbsp;~&nbsp;&nbsp;
+									<input type="date" id = "searchdatetext2" class ="form-control" placeholder ="" />
+							</div>
+						</div>
+						
+						<div>
+						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
+						</div>
+						
+						<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,condition,searcherror,'{{__('search')}}') class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
+					</div>
                
                <div class="overflow-auto">
                   <!--<form action="/device/device_select_delete" method="post">-->
@@ -136,32 +141,37 @@
     </script>
   
     <script>
-   var pagingObject = new Object({array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : ""});
+   var pagingObject = new Object({name : "Pay" ,url : "/ajax/pay_list", array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
 		// 검색 기능
 		$(document).ready(function() {
-	        pagereload();
+	        pagereload(pagingObject, condition, searcherror);
 	        
-	        $('#selectpage').click(function () {
-        		if(pagingObject.postNum != $('#selectpage option:selected').val())
-        		{
-        			pagingObject.postNum = $('#selectpage option:selected').val()
-        			pagereload();
-        		}
-        			
-        	})
+	        $('#selectpage').click(selectpagenum(pagingObject, condition, searcherror));
 	        
 	        $('#searchtext').keyup(function(key) {
         		if(key.keyCode == 13) {
-        			if(pagingObject.search == "")
+					if(pagingObject.search == "")
         			alert("{{__('choice_error')}}");
-        			else {
-        				pagingObject.searchtext = $(this).val();
-        				pagereload()
-        				document.getElementById('gotolist').classList.remove('d-none');
-        			}
+	        		else {
+	        			if(($('#searchdatetext1').val() != "") && ($('#searchdatetext2').val() != "")) {
+							
+							pagingObject.searchtext = $(this).val();
+							pagingObject.searchdate ="";
+			        		pagingObject.searchdate += $('#searchdatetext1').val();
+			        		pagingObject.searchdate += "~";
+			        		pagingObject.searchdate += $('#searchdatetext2').val();
+							pagereload(pagingObject, condition, searcherror);
+							document.getElementById('gotolist').classList.remove('d-none');
+		        		}
+		        		else {
+		        			pagingObject.searchtext = $(this).val();
+							pagereload(pagingObject, condition, searcherror);
+							document.getElementById('gotolist').classList.remove('d-none');
+		        		}
+	        		}
         		}
         		if($(this).val() == "") {
-        			pagereload()
+        			pagereload(pagingObject, condition, searcherror);
         		}
         	})
         	
@@ -210,25 +220,10 @@
         		pagingObject.array = paglist;
         		pagingObject.sort = check2;
         		pagingObject.page = 0;
-        		pagereload();
+        		pagereload(pagingObject, condition, searcherror);
         		
         	})
 	    })
-	    
-	    //초기화
-	    function refresh() {
-	    	pagingObject.array = [];
-	    	pagingObject.sort = "CA";
-	    	pagingObject.page = 0;
-	    	pagingObject.postNum = 10;
-	    	pagingObject.pageNum = 5;
-	    	pagingObject.startpage = 0;
-	    	pagingObject.endpage = 0;
-	    	pagingObject.search = "";
-	    	pagingObject.searchtext = "";
-	    	
-	    	
-	    }
 	    
 		function searchoption(opt) {
     	pagingObject.search = opt;
@@ -237,214 +232,87 @@
     	if (string == "MID")
     	   string = "{{__('payment_ordernumber')}}";
     	   document.getElementById('searchtext').classList.remove('d-none');
-    	   document.getElementById('searchdatetext').classList.add('d-none');
     	if (string == "CA"){
     	    string = "{{__('payment_date')}}";
     	   document.getElementById('searchtext').classList.add('d-none');
-    	   document.getElementById('searchdatetext').classList.remove('d-none');
     	   $("#searchtext").val('');
     	}
     	if (string == "GN") {
 	       	string = "{{__('payment_name')}}";
 	       	document.getElementById('searchtext').classList.remove('d-none');
-	    	document.getElementById('searchdatetext').classList.add('d-none');
     	   
     	}
     	if (string == "AM") {
 	       	string = "{{__('payment_amount')}}";
 	       	document.getElementById('searchtext').classList.remove('d-none');
-	    	document.getElementById('searchdatetext').classList.add('d-none');
     	   
     	}
     	
-    	$("#searchoption").append(string);
-    	$("#searchoption").show();
+    		$("#searchtext").val('');
+	    	$("#searchdatetext1").val('');
+	    	$("#searchdatetext2").val('');
+	    	$("#searchoption").append(string);
+	    	$("#searchoption").show();
         }
 		
 		function searchbutton() {
     	
 	    	if(pagingObject.search == "")
-	          alert("{{__('search_option_error')}}");
-	        else {
-	        	if(!document.getElementById('searchtext').classList.contains('d-none')) {
+			alert("{{__('choice_error')}}");
+			else{
+		    	if(($('#searchdatetext1').val() != "") && ($('#searchdatetext2').val() != "")) {
+					
 					pagingObject.searchtext = $('#searchtext').val();
-					pagereload()
+					pagingObject.searchdate ="";
+		    		pagingObject.searchdate += $('#searchdatetext1').val();
+		    		pagingObject.searchdate += "~";
+		    		pagingObject.searchdate += $('#searchdatetext2').val();
+					pagereload(pagingObject, condition, searcherror);
 					document.getElementById('gotolist').classList.remove('d-none');
-					
-	        	}else {
-	        		pagingObject.searchtext += $('#searchdatetext1').val();
-	        		pagingObject.searchtext += "~";
-	        		pagingObject.searchtext += $('#searchdatetext2').val();
-					pagereload()
-					document.getElementById('gotolist').classList.remove('d-none');
-	        	}
-	        	document.getElementById('searchtext').classList.remove('d-none');
-    			document.getElementById('searchdatetext').classList.add('d-none');
-			}
-			$("#searchoption").empty();
-			$("#searchoption").append("{{__('search')}}");
-			$("#searchoption").show();
-		}
-		
-		
-		// 전체 목록으로
-		function gotolist() {
-			
-			refresh()
-			pagereload()
-			
-			$("#searchoption").empty();
-			$("#searchoption").append("{{__('search')}}");
-			document.getElementById('gotolist').classList.add('d-none');
-			document.getElementById('searchtext').classList.remove('d-none');
-    		document.getElementById('searchdatetext').classList.add('d-none');
-		}
-		
-		// 페이지 기능
-		function pagebutton(num) {
-			pagingObject.page = num;
-	    	pagereload()
-	    }
-	    
-		function pageBtn(dir,page) {
-			if(dir == 'left') {
-				if((pagingObject.page - 1) > -1)
-				{
-					pagingObject.page -= 1;
-					pagereload()
-				}
-			}
-			if(dir == 'right') {
-				if((pagingObject.page + 1) < Math.ceil(pagingObject.array.length / pagingObject.postNum))
-				{
-					pagingObject.page += 1;
-					pagereload()
-					
-				}
-				
-			}
-		}
-		
-		function pageDoubleBtn(dir,page) {
-			if(dir == 'left') {
-				if((pagingObject.page - pagingObject.pageNum) < 0) {
-					pagingObject.page = 0;
-					pagereload()
 				}
 				else {
-					pagingObject.startpage -= 1;
-					pagingObject.page -= 5;
-					pagereload()
-				}
-			}
-			if(dir == 'right') {
-				if ((pagingObject.page + pagingObject.pageNum) >= Math.ceil(pagingObject.array.length / pagingObject.postNum))
-				{
-					pagingObject.page = Math.ceil(pagingObject.array.length / pagingObject.postNum)-1;
-					pagereload()
-				}
-				else {
-					pagingObject.startpage += 1;
-					pagingObject.page += 5;
-					pagereload()
+					pagingObject.searchtext = $('#searchtext').val();
+					pagereload(pagingObject, condition, searcherror);
+					document.getElementById('gotolist').classList.remove('d-none');
 				}
 			}
 		}
 		
-		function pagereload() {
-    	    $.ajax({
-	    		url: "/ajax/pay_list",
-	                    type: "POST",
-	                    async: false,
-	                    dataType: 'json',
-	                    data: {
-	                        sort : pagingObject.sort,
-	                        search : pagingObject.search,
-	                        searchtext : pagingObject.searchtext
-	                    }
-	        }).done(function (data) { 
-	        	if(data.result == true) {
-		    		    pagingObject.array = data.orderlist;
-		    		    pagingObject.startpage = Math.floor((pagingObject.page) / pagingObject.pageNum) * pagingObject.pageNum;
-		    		    pagingObject.endpage = pagingObject.startpage + pagingObject.pageNum;
-		    		    
-		    		    var orderlist = pagingObject.array; // 전체 리스트
-		    		    var ordernum = orderlist.length; // 전체 리스트의 갯수
-		    		    var page = pagingObject.page; // 페이지 번호
-		    		    var startPage = pagingObject.startpage; // 시작 페이지
-		    		    var endPage = pagingObject.endpage; // 끝 페이지
-		    		    var postNum = pagingObject.postNum; // 게시될 페이지 숫자
-		    		    var pageNum = pagingObject.pageNum; // 페이지 번호의 갯수
-		    		    var totalPage = Math.ceil(ordernum/postNum); // 전체 페이지의 갯수
-		    		    
-		    		    if (endPage > totalPage) { // 끝 페이지가 총 페이지 수보다 많다면 같게끔 처리
-					        endPage = totalPage;
-					    }
-		    		    
-			        	//tr 초기화
-			        	$("#data-table-combine > tbody > tr").remove();
-			        	//페이지 넘버 박스 초기화
-				     	$("#pagebox *").remove(); 
-				    		
-				     	var insertTr = ""; // 채워넣을 HTML 초기화
-				     	
-				     	var indexcount = 1; // 인덱스번호 초기화
-				    		
-				    	
-				    	
-				     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+	
+	var condition = function (Object) {
+    	var num =  Object.array.length; 	
+        var	insertTr = ""; // 채워넣을 HTML 초기화
+     	var indexcount = 1; // 인덱스번호 초기화
+		
+		for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
 
-				     	   if(orderlist[i]) {
+				     	   if(Object.array[i]) {
 				     	      
 							  insertTr += "<tr>";
-							  insertTr += "<td class='font-weight-bold'>"+(ordernum - (page*10)) +" </td>";
-							  insertTr += "<td>"+ orderlist[i].MID +"</td><td>";
-							  if ( (moment(orderlist[i].CA).format('DD')) == moment().format('DD') )
+							  insertTr += "<td class='font-weight-bold'>"+(num - (Object.page*10)) +" </td>";
+							  insertTr += "<td>"+ Object.array[i].MID +"</td><td>";
+							  if ( (moment(Object.array[i].CA).format('DD')) == moment().format('DD') )
 							  {
-							       insertTr +=  moment(orderlist[i].CA).format('HH:mm');
+							       insertTr +=  moment(Object.array[i].CA).format('HH:mm');
 							  }
 							  else {
-							      insertTr += moment(orderlist[i].CA).format('YYYY-MM-DD');
+							      insertTr += moment(Object.array[i].CA).format('YYYY-MM-DD');
 							  }
-							  insertTr += "</td><td>"+ orderlist[i].GN+"</td>";
-							  insertTr += "<td>"+ Math.floor(orderlist[i].AM * 1.1)+"</td>";
+							  insertTr += "</td><td>"+ Object.array[i].GN+"</td>";
+							  insertTr += "<td>"+ Math.floor(Object.array[i].AM * 1.1)+"</td>";
 							  insertTr += "<td class='with-btn' nowrap>";
-							  insertTr +=	"<a href='javascript:;' onclick ='receiptPay(this)' class='btn btn-sm btn-primary width-60 m-r-2 edit-btn' name ='"+ orderlist[i].IID +"' >{{__('payment_receit')}}</a>";
-							  console.log(orderlist[i].IID)
+							  insertTr +=	"<a href='javascript:;' onclick ='receiptPay(this)' class='btn btn-sm btn-primary width-60 m-r-2 edit-btn' name ='"+ Object.array[i].IID +"' >{{__('payment_receit')}}</a>";
+							  console.log(Object.array[i].IID)
 							  insertTr += "</td>";
 							  insertTr += "</tr>";
-							  ordernum -= indexcount;
+							  num -= indexcount;
 							  
 				     	   }
 				     	}
 							  
-							  $("#memDiv").append(insertTr);
-							  insertTr = " ";
-					    	  insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>";
-							  insertTr +=	"<a href='javascript:;' onclick=pageBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>";
-		
-								for(var i = startPage; i < endPage; i ++) {
-									if(page == i)
-										insertTr +=	"<input type='button' onclick='pagebutton("+ i +")' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' style=' background-color: #00acac; color: white !important;' >";
-									else
-										insertTr +=	"<input type='button' onclick='pagebutton("+ i +")' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' >";
-								}
-								insertTr +=	"<a href='javascript:;' onclick=pageBtn('right',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-right'></i></a>";
-								insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('right',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-right'></i></a>";
-							  $("#pagebox").append(insertTr);
-							  $("#pagebox").show();
-	        	}
-	        	
-	        	else if (data.result == "nothing") {
-	        		alert("{{__('search_error')}}")
-	        	}
-	        	
-	        	else {
-	        		alert("{{__('search_error')}}")
-	        	}
-			})
-    	
+						$("#memDiv").append(insertTr);
     }
+
     
         //영수증 출력 화면
     function receiptPay(obj) {
@@ -456,6 +324,9 @@
         }   
     }
    
+   var searcherror = function () {
+    	return alert("{{__('search_error')}}");
+    }
     
 </script>
 {% endblock %}
