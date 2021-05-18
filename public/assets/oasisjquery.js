@@ -246,10 +246,4 @@
 	// 페이지 찾기, 정렬 함수
 	
 	
-	function selectpagenum (Object, condition, searcherror) {
-		if(Object.postNum != $('#selectpage option:selected').val())
-		{
-			Object.postNum = $('#selectpage option:selected').val()
-			pagereload(Object, condition, searcherror);
-		}
-	}
+	
