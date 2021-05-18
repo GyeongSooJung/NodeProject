@@ -139,9 +139,9 @@
     								<input id="NA" name = "NA" type="text" class="form-control form-control-lg inverse-mode" placeholder="{{__('name')}}" data-parsley-error-message="{{__('required_detail')}}" required/>
         						</div>
         						<!--휴대폰 번호-->
-    							<label class="control-label">{{__('mobile_number')}} <span class="text-danger"> *</span></label>
+    							<label class="control-label">{{__('mobile_number')}}</label>
         						<div class="form-group m-b-20" >
-    								<input id="MN" name = "MN" type="text" class="form-control form-control-lg inverse-mode" placeholder="{{__('mobile_number')}}" data-parsley-type="digits" data-parsley-type-message="{{__('register_digits_error')}}" data-parsley-required-message="{{__('required_detail')}}" required/>
+    								<input id="MN" name = "MN" type="text" class="form-control form-control-lg inverse-mode" placeholder="{{__('mobile_number')}}" data-parsley-type="digits" data-parsley-type-message="{{__('register_digits_error')}}"/>
         						</div>
         						<!--비밀번호-->
     							<label class="control-label">{{__('pw')}} <span class="text-danger"> *</span></label>
@@ -241,12 +241,6 @@
 		}
 		if (new URL(location.href).searchParams.get('existCNU')) {
 			alert("{{__('register_cnu_error')}}");
-		}
-		if (new URL(location.href).searchParams.get('existPN')) {
-			alert("{{__('register_pn_error')}}");
-		}
-		if (new URL(location.href).searchParams.get('existMN')) {
-			alert("{{__('register_mn_error')}}");
 		}
 		if (new URL(location.href).searchParams.get('diffCEA')) {
 			alert("{{__('register_mn_error')}}");

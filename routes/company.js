@@ -15,10 +15,8 @@ router.post('/register', async (req, res, next) => {
   try {
     const companyEA = await Company.findOne({ "EA" : EA });
     const companyCNU = await Company.findOne({ "CNU" : CNU });
-    const companyPN = await Company.findOne({ "PN" : PN });
-    const companyMN = await Company.findOne({ "MN" : MN });
     
-    if(!companyEA && !companyCNU && !companyPN && !companyMN) {
+    if(!companyEA && !companyCNU) {
       if(bcrypt.compareSync(CEA, hashAuth)) {
         const hashPW = await bcrypt.hash(PW, 12);
           await Company.create({
@@ -43,12 +41,6 @@ router.post('/register', async (req, res, next) => {
     }
     else if(companyCNU) {
       return res.redirect('/register?existCNU=true');
-    }
-    else if(companyPN) {
-      return res.redirect('/register?existPN=true');
-    }
-    else if(companyMN) {
-      return res.redirect('/register?existMN=true');
     }
     else {
       return res.redirect('/register?fail=true');

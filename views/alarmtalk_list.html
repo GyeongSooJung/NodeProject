@@ -285,6 +285,7 @@
 			}
 		}
 		
+<<<<<<< HEAD
 	var condition = function (Object) {
     	var num =  Object.array.length; 	
         var	insertTr = ""; // 채워넣을 HTML 초기화
@@ -320,6 +321,81 @@
 			  
 		$("#memDiv").append(insertTr);
     }
+=======
+		function pagereload() {
+    	    $.ajax({
+	    		url: "/ajax/alarmtalk_list",
+	                    type: "POST",
+	                    async: false,
+	                    dataType: 'json',
+	                    data: {
+	                        sort : pagingObject.sort,
+	                        search : pagingObject.search,
+	                        searchtext : pagingObject.searchtext
+	                    }
+	        }).done(function (data) { 
+	        	if(data.result == true) {
+		    		    pagingObject.array = data.alarmlist;
+		    		    pagingObject.startpage = Math.floor((pagingObject.page) / pagingObject.pageNum) * pagingObject.pageNum;
+		    		    pagingObject.endpage = pagingObject.startpage + pagingObject.pageNum;
+		    		    
+		    		    var alarmlist = pagingObject.array; // 전체 리스트
+		    		    var alarmnum = alarmlist.length; // 전체 리스트의 갯수
+		    		    var page = pagingObject.page; // 페이지 번호
+		    		    var startPage = pagingObject.startpage; // 시작 페이지
+		    		    var endPage = pagingObject.endpage; // 끝 페이지
+		    		    var postNum = pagingObject.postNum; // 게시될 페이지 숫자
+		    		    var pageNum = pagingObject.pageNum; // 페이지 번호의 갯수
+		    		    var totalPage = Math.ceil(alarmnum/postNum); // 전체 페이지의 갯수
+		    		    
+		    		    if (endPage > totalPage) { // 끝 페이지가 총 페이지 수보다 많다면 같게끔 처리
+					        endPage = totalPage;
+					    }
+		    		    
+			        	//tr 초기화
+			        	$("#data-table-combine > tbody > tr").remove();
+			        	//페이지 넘버 박스 초기화
+				     	$("#pagebox *").remove(); 
+				    		
+				     	var insertTr = ""; // 채워넣을 HTML 초기화
+				     	
+				     	var indexcount = 1; // 인덱스번호 초기화
+				    		
+				    	
+				    	
+				     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+							if(alarmlist.length != 0) {	
+					     	   if(alarmlist[i]) {
+					     	      
+								  insertTr += "<tr>";
+								  insertTr += "<td class='font-weight-bold'>"+(alarmnum - (page*10)) +" </td>";
+								  insertTr += "<td>"+ alarmlist[i].WNM +"</td><td>";
+								  if ( (moment(alarmlist[i].CA).format('DD')) == moment().format('DD') )
+								  {
+								       insertTr +=  moment(alarmlist[i].CA).format('HH:mm');
+								  }
+								  else {
+								      insertTr += moment(alarmlist[i].CA).format('YYYY-MM-DD');
+								  }
+								  insertTr += "</td><td>"+ alarmlist[i].RE+"</td>";
+								  insertTr += "</tr>";
+								  alarmnum -= indexcount;
+					     	   }
+							}
+					     	else {
+					     	  	insertTr += "<tr>";
+								insertTr += "	<td colspan='10'>No Data</td>";
+								insertTr += "</tr>";
+								
+								break;
+					     	}   
+				     	}
+							  
+							  $("#memDiv").append(insertTr);
+							  insertTr = " ";
+					    	  insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>";
+							  insertTr +=	"<a href='javascript:;' onclick=pageBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>";
+>>>>>>> 5f48746a0c2157908229b8ba78e031508b868302
 		
     
     var searcherror = function () {

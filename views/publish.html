@@ -107,7 +107,11 @@
             </div>
           </div>
           <span class="desc-carnum">{{historyone.CNM}}</span>
-          <p>롯데렌터카</p>
+          {% if (historyone.CNM == '123가1234') %}
+          <p>주식회사 엠케이</p>
+          {% else %}
+          <p>{{companyone.CNA}}</p>
+          {% endif %}
         </div>
       </section>
       
@@ -515,7 +519,11 @@
 
     </main>
     <footer class="footer">
-        <p>롯데렌터카</p>
+      {% if (historyone.CNM == '123가1234') %}
+      <p>주식회사 엠케이</p>
+      {% else %}
+      <p>{{companyone.CNA}}</p>
+      {% endif %}
     </footer>
   </div>
   <script type="text/javascript" src="../assets/qrcode/js/accordion.js"></script>

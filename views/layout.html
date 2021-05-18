@@ -1,60 +1,5 @@
 <!DOCTYPE html>
 <html lang="kor">
-	<!--공지사항css-->
-	<style> 
-		/* 리셋css */
-			html, body, div, span, applet, object, iframe,
-			h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-			a, abbr, acronym, address, big, cite, code,
-			del, dfn, em, img, ins, kbd, q, s, samp,
-			small, strike, strong, sub, sup, tt, var,
-			b, u, i, center,
-			dl, dt, dd, ol, ul, li,
-			fieldset, form, label, legend,
-			table, caption, tbody, tfoot, thead, tr, th, td,
-			article, aside, canvas, details, embed, 
-			figure, figcaption, footer, header, hgroup, 
-			menu, nav, output, ruby, section, summary,
-			time, mark, audio, video {
-				margin: 0;
-				padding: 0;
-				border: 0;
-				font-size: 100%;
-				font: inherit;
-				vertical-align: baseline;
-				text-decoration:none;
-			}
-			article, aside, details, figcaption, figure, 
-			footer, header, hgroup, menu, nav, section {
-				display: block;
-			}
-			body {
-				line-height: 1;
-			}
-			ol, ul {
-				list-style: none;
-			}
-			blockquote, q {
-				quotes: none;
-			}
-			blockquote:before, blockquote:after,
-			q:before, q:after {
-				content: '';
-				content: none;
-			}
-			table {
-				border-collapse: collapse;
-				border-spacing: 0;
-			}
-		/* 또군css */
-		body{background-color:#d1d1d1;}
-		.notice{width:100%; height:50px; overflow:hidden; background-color:#fff;}
-		.rolling{position:relative; width:100%; height:auto;}
-		.rolling li{width:100%; height:50px; line-height:50px;}
-		.rolling_stop{display:block; width:100px; height:20px; background-color:#000; color:#fff; text-align:center;}
-		.rolling_start{display:block; width:100px; height:20px; background-color:#000; color:#0f0; text-align:center;}
-	</style>
-	
 <head>
 	<meta charset="utf-8" />
 	<title>{{__('main_title')}}</title>
@@ -93,33 +38,35 @@
 				<a href="/main" class="navbar-brand ml-3"><img src="../assets/img/oasis.png"></a>
 				
 			</div>
-			<div class="navbar-nav navbar-center">
-				
+			<div class="navbar-nav navbar-right">
 				{% if noticethree %}
-				<p style=" width:120px;" class="m-15">공지사항 &nbsp;:&nbsp;</p>
-				<div class="notice">
-					
-					<ul class="rolling">
-						{% for notice in noticethree %}
-						<li>
-							<a href="#" onclick="noticepop(this)" name="{{notice._id}}">{{notice.TI}}</a>
-						</li>
-						{% endfor %}
-					</ul>
+				<div class="d-flex justify-content-center align-items-center font-weight-bold">
+					<p class="width-80 mb-0 height-20">공지사항 &nbsp;:&nbsp;</p>
+					<div class="notice overflow-hidden height-20">
+						<ul class="rolling position-relative mb-0" style="list-style: none;">
+							{% for notice in noticethree %}
+							<li class="height-20 mb-0" style="line-height:1.5;">
+								<a href="#" onclick="noticepop(this)" name="{{notice._id}}">{{notice.TI}}</a>
+							</li>
+							{% endfor %}
+						</ul>
+					</div>
 				</div>
+				{% else %}
 				{% endif %}
-				
 			</div>
-			<!-- end navbar-header --><!-- begin header-nav -->
+			<!-- end navbar-header -->
+			<!-- begin header-nav -->
 			<ul class="navbar-nav navbar-right">
 				<li class="dropdown navbar-user">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<span class="d-none d-md-inline font-weight-bold">{{company.CNA}}</span>
-						<small class="font-weight-bold">({{__('main_point')}} : <span id="pointbox" class="text-primary">{{company.SPO}} p</span>)</small>
+						<span class="font-weight-bold">({{__('main_point')}} : <span id="pointbox" class="text-primary">{{company.SPO}} p</span>)</span>
 						<b class="caret"></b>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right">
 						<a href="/profile" class="dropdown-item">{{__('layout_modify')}}</a>
+						<a href="/setting" class="dropdown-item">{{__('layout_setting')}}</a>
 						<div class="dropdown-divider"></div>
 						<a href="/pay_point" class="dropdown-item">{{__('layout_payment_point_purchase')}}</a>
 						<a href="javascript:logout()" class="dropdown-item">{{__('layout_signout')}}</a>
@@ -146,7 +93,7 @@
 			<div id="active-menu" data-scrollbar="true" data-height="100%">
 				<ul class="nav">
 				<li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>
-				
+					<!--사업자만-->
 					{% if(company.AH == true) %}
 					<li class="has-sub">
 						<a href="javascript:;">
@@ -193,6 +140,7 @@
 					</li>					
 					{% else %}
 					{% endif %}
+					<!--//-->
 					<li class="has-sub">
 						<a href="javascript:;">
 							<b class="caret"></b>
@@ -250,26 +198,16 @@
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-shopping-cart m-r-10 fa-qrcode"></i>
-							<span> {{__('payment')}} </span> 
+							<span> {{__('layout_purchase')}} </span> 
 						</a>
 						<ul class="sub-menu">
-							<li><a href="/pay_point">{{__('layout_payment_point_purchase')}}</a></li>
+							<li><a href="/test">테스트</a></li>
+							<li><a href="/pay_point">{{__('layout_goods_purchase')}}</a></li>
+							<li><a href="/pay_list">{{__('layout_purchase_list')}}</a></li>
 							<li><a href="/point_list">{{__('layout_payment_point_usage')}}</a></li>
 							<li><a href="/alarmtalk_list">{{__('layout_payment_alarmtalk')}}</a></li>
-							<li><a href="/pay_list">{{__('layout_payment_list')}}</a></li>
-							
 						</ul>
 					</li>
-					<!--<li class="has-sub">-->
-					<!--	<a href="javascript:;">-->
-					<!--		<b class="caret"></b>-->
-					<!--		<i class="fas fa-lg fa-shopping-cart m-r-10 fa-qrcode"></i>-->
-					<!--		<span> 서비스 </span> -->
-					<!--	</a>-->
-					<!--	<ul class="sub-menu">-->
-					<!--		<li><a href="/sms_send">메일 보내기</a></li>-->
-					<!--	</ul>-->
-					<!--</li>-->
 					<li class="has-sub">
 						<a href="javascript:;">
 							<b class="caret"></b>
@@ -314,33 +252,6 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-
-	$(document).ready(function(){
-		var height =  $(".notice").height();
-		var num = $(".rolling li").length;
-		var max = height * num;
-		var move = 0;
-		function noticeRolling(){
-			move += height;
-			$(".rolling").animate({"top":-move},600,function(){
-				if( move >= max ){
-					$(this).css("top",0);
-					move = 0;
-				};
-			});
-		};
-		noticeRollingOff = setInterval(noticeRolling,2000);
-		$(".rolling").append($(".rolling li").first().clone());
-	
-		$(".rolling_stop").click(function(){
-			clearInterval(noticeRollingOff);
-		});
-		$(".rolling_start").click(function(){
-			noticeRollingOff = setInterval(noticeRolling,1000);
-		});
-	});
-
-
 	window.addEventListener('load', function() {
 		// 언어 변경시 국기 변환 기능
 		var cookie = document.cookie;
@@ -377,6 +288,30 @@
 			cut[1] = 'pay_sms';
 		}
 		$('#active-menu').find('a[href="' + '/' + cut[1] + '"]').parents('li').addClass('active');
+		
+		// 공지사항 rolling 기능
+		var height =  $(".notice").height();
+		var num = $(".rolling li").length;
+		var max = height * num;
+		var move = 0;
+		function noticeRolling(){
+			move += height;
+			$(".rolling").animate({"top":-move},600,function(){
+				if( move >= max ){
+					$(this).css("top",0);
+					move = 0;
+				};
+			});
+		};
+		noticeRollingOff = setInterval(noticeRolling,2000);
+		$(".rolling").append($(".rolling li").first().clone());
+	
+		$(".rolling_stop").click(function(){
+			clearInterval(noticeRollingOff);
+		});
+		$(".rolling_start").click(function(){
+			noticeRollingOff = setInterval(noticeRolling,1000);
+		});
 	});
 	
 	// 회원탈퇴 기능

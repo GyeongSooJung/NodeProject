@@ -30,13 +30,10 @@ const CompanySchema = new Schema({
     }, //Company Phone Number
     PN: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     }, //Company Mobile Number
     MN: {
         type: String,
-        required: true,
-        unique: true
     }, // PassWord
     PW: {
         type: String,
@@ -54,6 +51,10 @@ const CompanySchema = new Schema({
     SPO: {
         type: Number,
         default: 0
+    }, //Service Point Set Alarm
+    POA: {
+        type: Number,
+        default: 5000
     }, //Virtual Account Number
     VAN: {
         type: Number
