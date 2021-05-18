@@ -10,8 +10,9 @@ const Order = require('../schemas/order');
 const Service = require('../schemas/service');
 const Publish = require('../schemas/publish');
 const Point = require('../schemas/point');
-const Alarm = require('../schemas/alarm_complete')
-const Notice = require('../schemas/notice')
+const Alarm = require('../schemas/alarm_complete');
+const Notice = require('../schemas/notice');
+const Goods = require('../schemas/goods');
 
 const moment = require('moment');
 const qrcode = require('qrcode');
@@ -2352,4 +2353,6 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
   const aclist = await Worker.find({ "CID": CID, "AC": false });
 
   res.render('ozone_spread', { company: req.decoded.company, aclist });
+});
+  
 module.exports = router;

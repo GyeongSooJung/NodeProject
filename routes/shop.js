@@ -218,8 +218,8 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
         
         // DB에서 결제되어야 하는 금액 조회
         var goodsDB = [];
-        for(var i = 0; i < goods.length; ) {
-            
+        for(var i = 0; i < goods.length; i++) {
+            goodsDB[i] = await Goods.find({ "GN" : goods[i].GN });
         }
         // const service = await Service.findOne({"SN" : paymentData.name});
         // const 
