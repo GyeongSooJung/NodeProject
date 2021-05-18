@@ -116,14 +116,13 @@
 	$(document).ready(function(){
 		pagereload(pagingObject, condition, searcherror);
 		
-		$('#selectpage').click(function () {
-        		if(pagingObject.postNum != $('#selectpage option:selected').val())
-        		{
-        			pagingObject.postNum = $('#selectpage option:selected').val()
-        			pagereload(pagingObject, condition, searcherror);
-        		}
-        			
-        	})
+		$('#selectpage').click(function() {
+	            if(pagingObject.postNum != $('#selectpage option:selected').val())
+				{
+					pagingObject.postNum = $('#selectpage option:selected').val()
+					pagereload(pagingObject, condition, searcherror);
+				}
+	        });
 		
         $('.ck_au').change(function() {
 	          var post = 'POST METHOD CALL';

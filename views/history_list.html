@@ -116,7 +116,13 @@
 			
 	        pagereload(pagingObject, condition, searcherror);
 	        
-	        $('#selectpage').click(selectpagenum(pagingObject, condition, searcherror));
+	        $('#selectpage').click(function() {
+	            if(pagingObject.postNum != $('#selectpage option:selected').val())
+				{
+					pagingObject.postNum = $('#selectpage option:selected').val()
+					pagereload(pagingObject, condition, searcherror);
+				}
+	        });
 	        
 	        $('#searchtext').keyup(function(key) {
         		if(key.keyCode == 13) {
