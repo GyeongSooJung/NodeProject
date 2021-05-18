@@ -39,33 +39,40 @@
 								<option class ="postnumber" value="100">100</option>
 							</select>
 						</div>
-	            	<div class="mr-2">
-	            		<div class="btn-group m-r-5">
-								<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>
-								<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
-								<div class="dropdown-menu dropdown-menu-right" style="">
-									<a href="javascript:searchoption('CN');" class="dropdown-item">{{__('car_number')}}</a>
-									<a href="javascript:searchoption('CPN');" class="dropdown-item">{{__('car_customer_phone')}}</a>
-								
-									<a href="javascript:searchoption('CA');" class="dropdown-item">{{__('create_date')}}</a>
+						
+		   				<div>
+							<div class ="d-flex w-100">
+				            	<div>
+				            		<div class="btn-group m-10 w-20">
+											<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>
+											<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
+											<div class="dropdown-menu dropdown-menu-right" style="">
+												<a href="javascript:searchoption('CN');" class="dropdown-item">{{__('car_number')}}</a>
+												<a href="javascript:searchoption('CPN');" class="dropdown-item">{{__('car_customer_phone')}}</a>
+											
+												<a href="javascript:searchoption('CA');" class="dropdown-item">{{__('create_date')}}</a>
+											</div>
+									</div> 
 								</div>
-						</div> 
+								
+								<div class="m-10 w-800">
+						  				<input  id ="searchtext" type="text" class="w-100 form-control" placeholder ="" />
+						  		</div>
+					  		</div>
+					  		
+							<div id ="searchdatetext" class ="d-flex m-10">
+									<input type="date" id = "searchdatetext1" class ="form-control" placeholder ="" />
+									&nbsp;&nbsp;~&nbsp;&nbsp;
+									<input type="date" id = "searchdatetext2" class ="form-control" placeholder ="" />
+							</div>
+						</div>
+						
+						<div>
+						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
+						</div>
+						
+						<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,condition,searcherror,'{{__('search')}}') class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
 					</div>
-					<div>
-			  				<input id ="searchtext" type="text" class="form-control" placeholder ="" />
-			  			</div>
-			  			<div id ="searchdatetext" class="d-none">
-			  				<div class ="d-flex">
-			  				<input type="date" id = "searchdatetext1" class ="form-control" placeholder ="" />
-			  				&nbsp;&nbsp;~&nbsp;&nbsp;
-			  				<input type="date" id = "searchdatetext2" class ="form-control" placeholder ="" />
-			  				</div>
-			  			</div>
-			  			<div>
-			  				
-			  				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
-			  			<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
-		   			</div>
 					
 					<div class="overflow-auto">
 						<!--<form action="/car/car_select_delete" method="post">-->
@@ -105,52 +112,47 @@
 <!-- Script -->
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script>
-	var pagingObject = new Object({array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : ""});
+	var pagingObject = new Object({name : "Car",url : "/ajax/car_list", array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
+	
+	// i18n 용어 함수로 정리
+	// 각 리스트 별 CN같은거 배열에 담기 (종류별로 리스트별로)
 	
 	// 검색기능
 	$(document).ready(function() {
 		
-		pagereload(); // 첫 화면 페이지 로드
-		$('#selectpage').click(function () {
-        		if(pagingObject.postNum != $('#selectpage option:selected').val())
-        		{
-        			pagingObject.postNum = $('#selectpage option:selected').val()
-        			pagereload();
-        		}
-        			
-        	})
+		pagereload(pagingObject, condition, searcherror); // 첫 화면 페이지 로드
+		
+		$('#selectpage').click(selectpagenum(pagingObject, condition, searcherror));
 		
 		$('#searchtext').keyup(function(key) {
-			if(key.keyCode == 13) {
-				if(pagingObject.search == "")
-				alert("{{__('choice_error')}}");
-				else {
-					pagingObject.searchtext = $(this).val();
-					pagereload();
-					document.getElementById('gotolist').classList.remove('d-none');
-				}
-			}
-			if($(this).val() == "") {
-				pagereload();
-			}
+				if(key.keyCode == 13) {
+					if(pagingObject.search == "")
+        			alert("{{__('choice_error')}}");
+	        		else {
+	        			if(($('#searchdatetext1').val() != "") && ($('#searchdatetext2').val() != "")) {
+							console.log($('#searchdatetext1').val());
+							console.log($('#searchdatetext2').val());
+							
+							pagingObject.searchtext = $(this).val();
+							pagingObject.searchdate ="";
+			        		pagingObject.searchdate += $('#searchdatetext1').val();
+			        		pagingObject.searchdate += "~";
+			        		pagingObject.searchdate += $('#searchdatetext2').val();
+							pagereload(pagingObject, condition, searcherror);
+							document.getElementById('gotolist').classList.remove('d-none');
+		        		}
+		        		else {
+		        			pagingObject.searchtext = $(this).val();
+							pagereload(pagingObject, condition, searcherror);
+							document.getElementById('gotolist').classList.remove('d-none');
+		        		}
+	        		}
+        		}
+        		if($(this).val() == "") {
+        			pagereload(pagingObject, condition, searcherror);
+        		}
 		});
 		
-		$('#searchdatetext').keyup(function(key) {
-			if(key.keyCode == 13) {
-				if(pagingObject.search == "")
-				alert("{{__('choice_error')}}");
-				else {
-					pagingObject.searchtext = $(this).val();
-					pagereload();
-					document.getElementById('gotolist').classList.remove('d-none');
-					document.getElementById('searchtext').classList.remove('d-none');
-					document.getElementById('searchdatetext').classList.add('d-none');
-				}
-			}
-			if($(this).val() == "") {
-				pagereload();
-			}
-		});
 		
 		$('.sort').click(function() {
 			
@@ -197,238 +199,113 @@
 			pagingObject.array = paglist;
 			pagingObject.sort = check2;
 			pagingObject.page = 0;
-			pagereload();
+			pagereload(pagingObject, condition, searcherror);
 			
 		});
     });
     
-    //초기화
-    function refresh() {
-    	pagingObject.array = [];
-    	pagingObject.sort = "CA";
-    	pagingObject.page = 0;
-    	pagingObject.postNum = 10;
-    	pagingObject.pageNum = 5;
-    	pagingObject.startpage = 0;
-    	pagingObject.endpage = 0;
-    	pagingObject.search = "";
-    	pagingObject.searchtext = "";
-    }
+    
+    
     
     function searchoption(opt) {
     	pagingObject.search = opt;
     	$("#searchoption").empty();
     	var string = opt;
-    	if (string == "CN")
+    	if (string == "CN") {
     	   string = "{{__('car_number')}}";
     	   document.getElementById('searchtext').classList.remove('d-none');
-    	   document.getElementById('searchdatetext').classList.add('d-none');
-    	if (string == "CPN")
+    	}
+    	if (string == "CPN") {
     	   string = "{{__('car_customer_phone')}}";
     	   document.getElementById('searchtext').classList.remove('d-none');
-    	   document.getElementById('searchdatetext').classList.add('d-none');
+    	}
     	if (string == "CA") {
+    		document.getElementById('searchtext').classList.add('d-none');
     	   string = "{{__('create_date')}}";
-    	   document.getElementById('searchtext').classList.add('d-none');
-    	   document.getElementById('searchdatetext').classList.remove('d-none');
     	   $("#searchtext").val('');
     	}
+    	$("#searchtext").val('');
+    	$("#searchdatetext1").val('');
+    	$("#searchdatetext2").val('');
     	$("#searchoption").append(string);
     	$("#searchoption").show();
     }
     
     function searchbutton() {
-    	if(pagingObject.search == "")
-          alert("{{__('search_option_error')}}");
-        else {
-        	if(!document.getElementById('searchtext').classList.contains('d-none')) {
+    	if(pagingObject.search == "") {
+		alert("{{__('choice_error')}}");
+    	}
+		else{
+	    	if(($('#searchdatetext1').val() != "") && ($('#searchdatetext2').val() != "")) {
+				
 				pagingObject.searchtext = $('#searchtext').val();
-				pagereload();
+				pagingObject.searchdate ="";
+	    		pagingObject.searchdate += $('#searchdatetext1').val();
+	    		pagingObject.searchdate += "~";
+	    		pagingObject.searchdate += $('#searchdatetext2').val();
+				pagereload(pagingObject, condition, searcherror);
 				document.getElementById('gotolist').classList.remove('d-none');
-        	}else {
-        		pagingObject.searchtext += $('#searchdatetext1').val();
-        		pagingObject.searchtext += "~";
-        		pagingObject.searchtext += $('#searchdatetext2').val();
-				pagereload()
+			}
+			else {
+				pagingObject.searchtext = $('#searchtext').val();
+				pagereload(pagingObject, condition, searcherror);
 				document.getElementById('gotolist').classList.remove('d-none');
-        	}
+			}
 		}
 	}
 	
-	// 전체 목록으로
-	function gotolist() {
-		refresh();
-		pagereload();
 		
-		$("#searchoption").empty();
-		$("#searchoption").append("{{__('search')}}");
-		document.getElementById('gotolist').classList.add('d-none');
-		document.getElementById('searchtext').classList.remove('d-none');
-    	document.getElementById('searchdatetext').classList.add('d-none');
-	}
-	
-	// 페이지 기능
-	function pagebutton(num) {
-		pagingObject.page = num;
-    	pagereload();
+    
+    var condition = function (Object) {
+    	var num =  Object.array.length; 	
+        var	insertTr = ""; // 채워넣을 HTML 초기화
+     	var indexcount = 1; // 인덱스번호 초기화
+    	
+    	
+     	for (var i = ( Object.postNum *  Object.page) ; i < ( Object.postNum *  Object.page) +  Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+	        if( Object.array.length != 0) {
+	     	   if( Object.array[i]) {
+				  insertTr += "<tr>";
+				  insertTr += " 	<td class='with-btn' nowrap>";
+				  insertTr += "		<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+  Object.array[i].CN +" onChange='eachCheckedBox(this);'/>";
+				  insertTr += " 	</td>";
+				  insertTr += "<td class='font-weight-bold'>"+(num - ( Object.page*10)) +" </td>";
+				  insertTr += "<td>"+  Object.array[i].CN +"</td>";
+				  
+				  if(! Object.array[i].CPN){
+				  	insertTr+="<td>"+"N/A"+"</td><td>";
+				  }
+				  else {
+					insertTr += "<td>"+  Object.array[i].CPN+"</td><td>";
+				  }
+				  
+			     if ( (moment( Object.array[i].CA).format('DD')) == moment().format('DD') )
+			     {
+			       insertTr +=  moment( Object.array[i].CA).format('HH:mm');
+			     }
+			     else {
+			      insertTr += moment( Object.array[i].CA).format('YYYY-MM-DD');
+			     }
+			      insertTr += "</td><td class='with-btn' nowrap>"	
+				  insertTr += "<a href='/car_edit/"+ Object.array[i].CN+"'   class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>{{__('modify')}}</a>";
+				  insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this) class='btn btn-sm btn-white width-60' name =' "+  Object.array[i].CN +"'></td> ";
+				  insertTr += "</tr>";
+				  num -= indexcount;
+	     	   }
+	        }
+	     	  else {
+	     	  	insertTr += "<tr>";
+				insertTr += "	<td colspan='10'>No Data</td>";
+				insertTr += "</tr>";
+
+                break;
+	     	  }
+     	}
+			  
+		$("#memDiv").append(insertTr);
     }
     
-	function pageBtn(dir, page) {
-		if(dir == 'left') {
-			if((pagingObject.page - 1) > -1)
-			{
-				pagingObject.page -= 1;
-				pagereload();
-			}
-		}
-		if(dir == 'right') {
-			if((pagingObject.page + 1) < Math.ceil(pagingObject.array.length / pagingObject.postNum))
-			{
-				pagingObject.page += 1;
-				pagereload();
-				
-			}
-			
-		}
-	}
-	
-	function pageDoubleBtn(dir, page) {
-		if(dir == 'left') {
-			if((pagingObject.page - pagingObject.pageNum) < 0) {
-				pagingObject.page = 0;
-				pagereload();
-			}
-			else {
-				pagingObject.startpage -= 1;
-				pagingObject.page -= 5;
-				pagereload();
-			}
-		}
-		if(dir == 'right') {
-			
-			if ((pagingObject.page + pagingObject.pageNum) >= Math.ceil(pagingObject.array.length / pagingObject.postNum))
-			{
-				pagingObject.page = Math.ceil(pagingObject.array.length / pagingObject.postNum)-1;
-				pagereload();
-			}
-			else {
-				pagingObject.startpage += 1;
-				pagingObject.page += 5;
-				pagereload();
-			}
-		}
-	}
-	
-		function pagereload() {
-			$("input:checkbox[name='allck']").prop("checked", false);
-			$("input:checkbox[name='ck']").prop("checked", false);
-    	    $.ajax({
-	    		url: "/ajax/car_list",
-                type: "POST",
-                async: false,
-                dataType: 'json',
-                data: {
-                    sort : pagingObject.sort,
-                    search : pagingObject.search,
-                    searchtext : pagingObject.searchtext
-                }
-	        }).done(function (data) { 
-	        	if(data.result == true) {
-	    		    pagingObject.array = data.carlist;
-	    		    pagingObject.startpage = Math.floor((pagingObject.page) / pagingObject.pageNum) * pagingObject.pageNum;
-	    		    pagingObject.endpage = pagingObject.startpage + pagingObject.pageNum;
-	    		    
-	    		    var carlist = pagingObject.array; // 전체 리스트
-	    		    var carnum = carlist.length; // 전체 리스트의 갯수
-	    		    var page = pagingObject.page; // 페이지 번호
-	    		    var startPage = pagingObject.startpage; // 시작 페이지
-	    		    var endPage = pagingObject.endpage; // 끝 페이지
-	    		    var postNum = pagingObject.postNum; // 게시될 페이지 숫자
-	    		    var pageNum = pagingObject.pageNum; // 페이지 번호의 갯수
-	    		    var totalPage = Math.ceil(carnum/postNum); // 전체 페이지의 갯수
-	    		    
-	    		    if (endPage > totalPage) { // 끝 페이지가 총 페이지 수보다 많다면 같게끔 처리
-				        endPage = totalPage;
-				    }
-	    		    
-		        	//tr 초기화
-		        	$("#data-table-combine > tbody > tr").remove();
-		        	//페이지 넘버 박스 초기화
-			     	$("#pagebox *").remove(); 
-			    		
-			        var	insertTr = ""; // 채워넣을 HTML 초기화
-			     	
-			     	var indexcount = 1; // 인덱스번호 초기화
-			    		
-			    	
-			    	
-			    	
-			     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-				        if(carlist.length != 0) {
-				     	   if(carlist[i]) {
-							  insertTr += "<tr>";
-							  insertTr += " 	<td class='with-btn' nowrap>";
-							  insertTr += "		<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+ carlist[i].CN +" onChange='eachCheckedBox(this);'/>";
-							  insertTr += " 	</td>";
-							  insertTr += "<td class='font-weight-bold'>"+(carnum - (page*10)) +" </td>";
-							  insertTr += "<td>"+ carlist[i].CN +"</td>";
-							  
-							  if(!carlist[i].CPN){
-							  	insertTr+="<td>"+"N/A"+"</td><td>";
-							  }
-							  else {
-								insertTr += "<td>"+ carlist[i].CPN+"</td><td>";
-							  }
-							 
-						     if ( (moment(carlist[i].CA).format('DD')) == moment().format('DD') )
-						     {
-						       insertTr +=  moment(carlist[i].CA).format('HH:mm');
-						     }
-						     else {
-						      insertTr += moment(carlist[i].CA).format('YYYY-MM-DD');
-						     }
-						      insertTr += "</td><td class='with-btn' nowrap>"	
-							  insertTr += "<a href='/car_edit/"+carlist[i].CN+"'   class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>{{__('modify')}}</a>";
-							  insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this) class='btn btn-sm btn-white width-60' name =' "+ carlist[i].CN +"'></td> ";
-							  insertTr += "</tr>";
-							  carnum -= indexcount;
-				     	   }
-				        }
-				     	  else {
-				     	  	insertTr += "<tr>";
-							insertTr += "	<td colspan='10'>No Data</td>";
-							insertTr += "</tr>";
-
-                            break;
-				     	  }
-			     	}
-						  
-						  $("#memDiv").append(insertTr);
-						  insertTr = " ";
-				    	  insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>";
-						  insertTr +=	"<a href='javascript:;' onclick=pageBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>";
-	
-							for(var i = startPage; i < endPage; i ++) {
-								if(page == i)
-									insertTr +=	"<input type='button' onclick='pagebutton("+ i +")' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' style=' background-color: #00acac; color: white !important;' >";
-								else
-									insertTr +=	"<input type='button' onclick='pagebutton("+ i +")' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' >";
-							}
-							insertTr +=	"<a href='javascript:;' onclick=pageBtn('right',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-right'></i></a>";
-							insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('right',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-right'></i></a>";
-						  $("#pagebox").append(insertTr);
-						  $("#pagebox").show();
-	        	}
-	        	
-	        	else if (data.result == "nothing") {
-	        		alert("{{__('search_error')}}");
-	        	}
-	        	
-	        	else {
-	        		alert("{{__('search_error')}}");
-	        	}
-			});
-    }
+    
     
 	// 일반 삭제 기능
 	function delete_one(obj) {
@@ -501,39 +378,11 @@
 		}
 	}
 	
-	// 전체 선택 기능
-	function allCheckedBox(obj) {
-	   	// @brief 선택한 체크박스의 클래스 명칭을 가져온다.
-	   	const termClass = obj.getAttribute("class");
-	   	// @brief 선택한 클래스명과 같은 클래스의 갯수
-	   	Array.prototype.forEach.call(document.getElementsByClassName(termClass), function(element, index, array) {
-	        // @brief 엘리먼트의 값 출력
-	        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 되있는 경우
-	        if(document.getElementsByClassName(termClass)[0].checked == true) {
-	            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 완료 처리 한다.
-	            element.checked = true;
-	        }
-	        // @brief 선택한 클래스의 첫번째 checkbox의 상태가 체크가 해제된 경우
-	        else {
-	            // @brief 같은 클래스명을 가진 모든 checkbox의 상태를 선택 해제 처리 한다.
-	            element.checked = false;
-	        }
-	   	});
+	var searcherror = function () {
+    	return alert("{{__('search_error')}}");
     }
-
-	// 항목 선택 기능
-	function eachCheckedBox(obj) {
-      // @brief 선택한 체크박스의 상태가 선택해제인 경우
-      if(obj.checked == false) {
-            // @brief 선택한 체크박스의 클래스 명칭을 가져온다.
-            const termClass = obj.getAttribute("class");
-            // @brief 첫번째 checkbox의 상태가 체크가 되어있는경우
-            if(document.getElementsByClassName(termClass)[0].checked == true) {
-                // @brief 첫번째 checkbox의 상태를 체크해제한다.
-                document.getElementsByClassName(termClass)[0].checked = false;
-            }
-        }
-    }
+	
+	
 </script>
 {% endblock %}
 
@@ -555,7 +404,6 @@
 <script src="../assets/plugins/datatables.net-buttons/js/buttons.print.min.js"></script>
 <script src="../assets/plugins/pdfmake/build/pdfmake.min.js"></script>
 <script src="../assets/plugins/pdfmake/build/vfs_fonts.js"></script>
-<script src="../assets/plugins/jszip/dist/jszip.min.js"></script>
 
 <!--<script src="../assets/js/demo/table-manage-combine.demo.js"></script>-->
 {% endblock %}
