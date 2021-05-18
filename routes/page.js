@@ -2352,4 +2352,5 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
   const aclist = await Worker.find({ "CID": CID, "AC": false });
 
   res.render('ozone_spread', { company: req.decoded.company, aclist });
+})
 module.exports = router;
