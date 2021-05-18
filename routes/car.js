@@ -59,6 +59,7 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
   const { excelData } = req.body;
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
+  var current = moment().format('YYYY-MM-DD hh:mm:ss');
   var excelArr = [];
   
   try {
@@ -104,7 +105,7 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
     
     // 엑셀 데이터 DB에 upsert방식으로 넣기
     for(var h = 0; h < excelCN.length; h++) {
-      await Car.update({ "CID" : CID, "CN" : excelCN[h] }, { "CID" : CID, "CN" : excelCN[h], "CPN" : excelCPN[h] }, { upsert : true });
+      await Car.update({ "CID" : CID, "CN" : excelCN[h] }, { "CID" : CID, "CN" : excelCN[h], "CPN" : excelCPN[h], "CA" : current }, { upsert : true });
     }
     
     return res.send({ status: 'success' });

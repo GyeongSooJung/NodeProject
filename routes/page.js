@@ -10,8 +10,9 @@ const Order = require('../schemas/order');
 const Service = require('../schemas/service');
 const Publish = require('../schemas/publish');
 const Point = require('../schemas/point');
-const Alarm = require('../schemas/alarm_complete')
-const Notice = require('../schemas/notice')
+const Alarm = require('../schemas/alarm_complete');
+const Notice = require('../schemas/notice');
+const Goods = require('../schemas/goods');
 
 const moment = require('moment');
 const qrcode = require('qrcode');
@@ -151,7 +152,6 @@ router.get('/main', isNotLoggedIn, DataSet, async(req, res, next) => {
     
     psum += pcount;
   }
-
 
   var history_count2 = [0,0,0,0,0,0,0];
   const Days = 24 * 60 * 60 * 1000;
@@ -1086,9 +1086,10 @@ router.get('/test', isNotLoggedIn, DataSet, async(req, res, next) => {
 
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   const service = await Service.find({});
+  const goods = await Goods.find({});
   
   try {
-    res.render('test', { company: req.decoded.company, aclist, imp_code, HOME, service });
+    res.render('test', { company: req.decoded.company, aclist, imp_code, HOME, service, goods });
   }
   catch (err) {
     console.error(err);
@@ -2115,6 +2116,13 @@ router.get('/aboutapp', async(req, res, next) => {
 });
 
 //----------------------------------------------------------------------------//
+//                                  Manual                                    //
+//----------------------------------------------------------------------------//
+router.get('/manual', async(req, res, next) => {
+  res.render('manual');
+});
+
+//----------------------------------------------------------------------------//
 //                                  Ozone Spread                              //
 //----------------------------------------------------------------------------//
 
@@ -2124,15 +2132,6 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
   const aclist = await Worker.find({ "CID": CID, "AC": false });
 
   res.render('ozone_spread', { company: req.decoded.company, aclist });
-});
-
-//----------------------------------------------------------------------------//
-//                                  Test                                      //
-//----------------------------------------------------------------------------//
-
-router.get('/test', async(req, res, next)  =>  {
-  
-  res.render('company_list');
 });
 
 module.exports = router;
