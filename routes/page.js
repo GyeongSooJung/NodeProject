@@ -23,6 +23,7 @@ const { isLoggedIn, isNotLoggedIn, DataSet } = require('./middleware');
 const { pagination, timeset } = require('./modulebox');
 const axios = require('axios');
 var request = require('request');
+const Mongoose = require('mongoose');
 
 //메세지 조회 사용
 const { msg } = require('solapi'); 
@@ -2353,6 +2354,24 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
   const aclist = await Worker.find({ "CID": CID, "AC": false });
 
   res.render('ozone_spread', { company: req.decoded.company, aclist });
+});
+
+router.get('/gstest', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  var id = "113299152950678048527"
+  var email = "gsjung006@gmail.com"
+  var worker = await Worker.findOne({ "GID": id, "EM": email });
+  const ObjectId = Mongoose.Types.ObjectId;
+  var companyCUA = await Company.aggregate([
+              { $match : {"_id" : ObjectId(worker.CID)} },
+              { $project : {CUA : "$CUA"}}
+              ], function (err,result) {
+                if(err) throw err;
+              })
+  console.log(companyCUA[0].CUA)
+
+  res.render('company_list', { company: req.decoded.company, aclist });
 });
   
 module.exports = router;

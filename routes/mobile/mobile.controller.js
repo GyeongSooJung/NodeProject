@@ -15,9 +15,11 @@ const UNKOWN = "UNKOWN";
 const NO_SUCH_DATA = "NO_SUCH_DATA";
 const FAIL = "FAIL";
 const TOKEN_ERROR = "TOKEN_ERROR";
-const NO_POINT = "NO_POINT"
+const NO_POINT = "NO_POINT";
 
-const { config, Group } = require('solapi')
+const { config, Group } = require('solapi');
+const Mongoose = require('mongoose');
+const ObjectId = Mongoose.Types.ObjectId;
 
 
 
@@ -52,9 +54,15 @@ exports.findWorker = async(req, res) => {
 // 로그인 시도
 exports.signIn = async(req, res) => {
     const { type, id, email } = req.body;
-
     if (type == "GOOGLE") {
         var worker = await Worker.findOne({ "GID": id, "EM": email });
+        const companycua = await Company.aggregate([
+                { $match : {"_id" : ObjectId(worker.CID)} },
+                { $project : {CUA : "$CUA"}}
+            ], function (err,result) {
+                    if(err) throw err;
+            })
+        worker.carUA = companycua[0].CUA;
         if (worker != null) {
             // 토큰 생성
             const token = jwt.sign({

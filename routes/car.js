@@ -59,6 +59,7 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
   const { excelData } = req.body;
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
+  const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
   var current = moment().format('YYYY-MM-DD hh:mm:ss');
   var excelArr = [];
   
@@ -107,6 +108,10 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
     for(var h = 0; h < excelCN.length; h++) {
       await Car.update({ "CID" : CID, "CN" : excelCN[h] }, { "CID" : CID, "CN" : excelCN[h], "CPN" : excelCPN[h], "CA" : current }, { upsert : true });
     }
+    
+    await Company.where({"CNU" : CNU})
+      .update({ "CUA" : CUA }).setOptions({runValidators : true})
+      .exec();
     
     return res.send({ status: 'success' });
     
