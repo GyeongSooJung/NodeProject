@@ -515,18 +515,21 @@
 	        var NUM = $('input[name=list-count]');
 	        var TS = $('input[name=TS]').val();
 	        var goods = [];
-	        var item = {};
+	        
 	        
 	        for(var i = 0; i < shopItemLength; i++) {
-	        	// goods[i] = [GN.eq(i).val(), GP.eq(i).val(), ON.eq(i).val(), OP.eq(i).val(), NUM.eq(i).val()];
-	        	goods[i].GN = GN.eq(i).val();
-	        	// goods[i].GP = GP.eq(i).val();
-	        	// goods[i].ON = ON.eq(i).val();
-	        	// goods[i].OP = OP.eq(i).val();
-	        	// goods[i].NUM = NUM.eq(i).val();
+	        	goods[i] = JSON.stringify({"GN" : GN.eq(i).val(), "GP" : GP.eq(i).val(), "ON" : ON.eq(i).val(), "OP" : OP.eq(i).val(), "NUM" : NUM.eq(i).val()});
 	        }
 	        
-	        console.log(item);
+	        $.ajax({
+	        	url: "/shop/complete",
+                type: "POST",
+                traditional: true,
+                dataType: 'json',
+                data: {
+                    goods: goods
+                }
+	        });
 	        
 	        // var IMP = window.IMP;
 	        // IMP.init('{{imp_code}}');
@@ -545,7 +548,7 @@
 	        // }, function(rsp) {
 	        //     if (rsp.success) {
 	        //         $.ajax({
-	        //             url: "/payments/complete",
+	        //             url: "/shop/complete",
 	        //             type: "POST",
 	        //             traditional: true,
 	        //             dataType: 'json',
