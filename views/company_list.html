@@ -76,7 +76,7 @@
 								<td>{{device.NN}}</td>
 								<td class="with-btn" nowrap>
 									<a href="/device_edit/{{device.MAC}}" class="btn btn-sm btn-primary width-60 m-r-2 edit-btn">수정</a>
-									<a href="javascript:delete_one('{{device.MAC}}')" class="btn btn-sm btn-white width-60">삭제</a>
+									<a href="javascript:delete_one('device', '{{device.MAC}}', '{{companyone._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
 								</td>
 							</tr>
 							{% endfor %}
@@ -84,17 +84,20 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="d-flex justify-content-end align-item-center">
-				<a href="javascript:pageDoubleBtn('left', 'DEVICE')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
-				<a href="javascript:pageBtn('left', 'DEVICE')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
-				{% if (totalNum==0) %}
-				{% else %}
-					{% for i in range(startPage, endPage) %}
-					<a href="/company_list/?DEVICE={{companyone._id}}&page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
-					{% endfor %}
-				{% endif %}
-				<a href="javascript:pageBtn('right', 'DEVICE')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
-				<a href="javascript:pageDoubleBtn('right', 'DEVICE')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
+			<div class="d-flex justify-content-between align-item-center">
+				<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="delete_check('device', '{{companyone._id}}');">
+				<div class="d-flex justify-content-end align-item-center">
+					<a href="javascript:pageDoubleBtn('left', 'DEVICE')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
+					<a href="javascript:pageBtn('left', 'DEVICE')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
+					{% if (totalNum==0) %}
+					{% else %}
+						{% for i in range(startPage, endPage) %}
+						<a href="/company_list/?DEVICE={{companyone._id}}&page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
+						{% endfor %}
+					{% endif %}
+					<a href="javascript:pageBtn('right', 'DEVICE')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
+					<a href="javascript:pageDoubleBtn('right', 'DEVICE')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
+				</div>
 			</div>
 		</div>
 		<!-- end panel-body -->
@@ -192,7 +195,7 @@
 								</td>
 								<td class="with-btn" nowrap>
 									<a href="/car_edit/{{car.CN}}" class="btn btn-sm btn-primary width-60 m-r-2">수정</a>
-									<a href="javascript:delete_one('{{car.CN}}')" class="btn btn-sm btn-white width-60">삭제</a>
+									<a href="javascript:delete_one('car', '{{car.CN}}', '{{companyone._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
 								</td>
 							</tr>
 							{% endfor %}
@@ -200,17 +203,20 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="d-flex justify-content-end align-item-center">
-				<a href="javascript:pageDoubleBtn('left', 'CAR')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
-				<a href="javascript:pageBtn('left', 'CAR')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
-				{% if (totalNum==0) %}
-				{% else %}
-					{% for i in range(startPage, endPage) %}
-					<a href="/company_list/?CAR={{companyone._id}}&page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
-					{% endfor %}
-				{% endif %}
-				<a href="javascript:pageBtn('right', 'CAR')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
-				<a href="javascript:pageDoubleBtn('right', 'CAR')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
+			<div class="d-flex justify-content-between align-item-center">
+				<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="delete_check('car', '{{companyone._id}}');">
+				<div class="d-flex justify-content-end align-item-center">
+					<a href="javascript:pageDoubleBtn('left', 'CAR')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
+					<a href="javascript:pageBtn('left', 'CAR')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
+					{% if (totalNum==0) %}
+					{% else %}
+						{% for i in range(startPage, endPage) %}
+						<a href="/company_list/?CAR={{companyone._id}}&page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
+						{% endfor %}
+					{% endif %}
+					<a href="javascript:pageBtn('right', 'CAR')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
+					<a href="javascript:pageDoubleBtn('right', 'CAR')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
+				</div>
 			</div>
 		</div>
 		<!-- end panel-body -->
@@ -282,7 +288,7 @@
 									
 								</td>
 								<td>
-									<a class="btn btn-sm btn-white width-60" href="javascript:delete_one('{{worker.EM}}')">삭제</a>
+									<a class="btn btn-sm btn-white width-60" href="javascript:delete_one('worker', '{{worker.EM}}', '{{companyone._id}}')">삭제</a>
 									<!--<a class="btn btn-sm btn-white width-60" onclick ="confirm({{worker.EM}})">Delete</a>-->
 								</td>
 							</tr>
@@ -291,17 +297,20 @@
 					</tbody>
     			</table>
 			</div>
-			<div class="d-flex justify-content-end align-item-center">
-				<a href="javascript:pageDoubleBtn('left', 'WORKER')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
-				<a href="javascript:pageBtn('left', 'WORKER')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
-				{% if (totalNum==0) %}
-				{% else %}
-					{% for i in range(startPage, endPage) %}
-					<a href="/company_list/?WORKER={{companyone._id}}&page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
-					{% endfor %}
-				{% endif %}
-				<a href="javascript:pageBtn('right', 'WORKER')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
-				<a href="javascript:pageDoubleBtn('right', 'WORKER')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
+			<div class="d-flex justify-content-between align-item-center">
+				<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="delete_check('worker', '{{companyone._id}}');">
+				<div class="d-flex justify-content-end align-item-center">
+					<a href="javascript:pageDoubleBtn('left', 'WORKER')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
+					<a href="javascript:pageBtn('left', 'WORKER')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
+					{% if (totalNum==0) %}
+					{% else %}
+						{% for i in range(startPage, endPage) %}
+						<a href="/company_list/?WORKER={{companyone._id}}&page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
+						{% endfor %}
+					{% endif %}
+					<a href="javascript:pageBtn('right', 'WORKER')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
+					<a href="javascript:pageDoubleBtn('right', 'WORKER')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
+				</div>
 			</div>
 		</div>
 		<!-- end panel-body -->
@@ -345,7 +354,7 @@
 							<th class="text-nowrap">소독 시간</th>
 							<th class="text-nowrap">소독 결과</th>
 							<th class="text-nowrap">작업자</th>
-							<th width="1%"></th>
+							<th width="3%"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -356,9 +365,9 @@
 						{% else %}
 						{% set count = 0 %}
 	    					{% for history in historys %}
-							<tr onClick="location.href='/history_chart/{{history._id}}'" class="odd gradeX">
-		  						<td onclick='event.cancelBubble=true;' class="with-btn" nowrap>
-		 							<input id="ck" type="checkbox" name = "_id" class="neHeros" value={{history._id}} onChange="eachCheckedBox(this);"/>
+							<tr class="odd gradeX">
+		  						<td class="with-btn" nowrap>
+		 							<input id="ck" type="checkbox" name = "ck" class="neHeros" value={{history._id}} onChange="eachCheckedBox(this);"/>
 		  						</td>
 		  						<td class="font-weight-bold">{{totalNum - count - (currentPage*10)}} </td>
 		  						{% set totalNum = totalNum - 1 %}
@@ -406,8 +415,9 @@
 									  	N/A
 									{% endif %}
 								</td>
-		  						<td>
-		  							<a href="javascript:delete_one('{{history._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
+		  						<td class="with-btn" nowrap>
+		  							<a href="/history_chart/{{history._id}}" class="btn btn-sm btn-primary width-60 m-r-2">자세히</a>
+		  							<a href="javascript:delete_one('history', '{{history._id}}', '{{companyone._id}}')" class="btn btn-sm btn-white width-60">삭제</a>
 		  						</td>
 							</tr>
 							{% endfor %}
@@ -415,17 +425,20 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="d-flex justify-content-end align-item-center">
-				<a href="javascript:pageDoubleBtn('left', 'HISTORY')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
-				<a href="javascript:pageBtn('left', 'HISTORY')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
-				{% if (totalNum==0) %}
-				{% else %}
-					{% for i in range(startPage, endPage) %}
-					<a href="/company_list/?HISTORY={{companyone._id}}&page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
-					{% endfor %}
-				{% endif %}
-				<a href="javascript:pageBtn('right', 'HISTORY')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
-				<a href="javascript:pageDoubleBtn('right', 'HISTORY')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
+			<div class="d-flex justify-content-between align-item-center">
+				<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="delete_check('history', '{{companyone._id}}');">
+				<div class="d-flex justify-content-end align-item-center">
+					<a href="javascript:pageDoubleBtn('left', 'HISTORY')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
+					<a href="javascript:pageBtn('left', 'HISTORY')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
+					{% if (totalNum==0) %}
+					{% else %}
+						{% for i in range(startPage, endPage) %}
+						<a href="/company_list/?HISTORY={{companyone._id}}&page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
+						{% endfor %}
+					{% endif %}
+					<a href="javascript:pageBtn('right', 'HISTORY')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
+					<a href="javascript:pageDoubleBtn('right', 'HISTORY')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
+				</div>
 			</div>
 		</div>
 		<!-- end panel-body -->
@@ -684,6 +697,80 @@
 			}
         });
    });
+   
+   // 일반 삭제 기능
+	function delete_one(division, obj, id) {
+		var answer;
+	    	answer = confirm("{{__('delete_confirm')}}");
+		if(answer == true){
+			$.ajax({
+    		url: "/master/ajax/delete_one",
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                    	division : division,
+                    	select : obj,
+                    	CID : id
+                    }
+	    	}).done(function (data) {  
+	    		if(data.result == true) {
+	    			alert("{{__('delete_success')}}");
+	    			location.reload();
+	    		}
+	    		else {
+	    			alert("{{__('choice_error')}}");
+	    		}
+	    		
+	    	});
+		}
+		else {
+			return false;
+		}
+	}
+
+	// 선택항목 삭제 기능
+	function delete_check(division, id) {
+		var check = $("input:checkbox[name='ck']").is(":checked");
+		if(!check) {
+			alert("{{__('choice_error')}}");
+		}
+		else {
+			var select_obj = [];
+	        $('input[name="ck"]:checked').each(function (index) {
+	                select_obj[index] = $(this).val() ;
+	        });
+			var answer;
+		    	answer = confirm("{{__('delete_confirm')}}");
+			if(answer == true){
+				$.ajax({
+	    		url: "/master/ajax/delete_check",
+	                    type: "POST",
+	                    dataType: 'json',
+	                    data: {
+	                    	division: division,
+	                    	select : select_obj,
+	                    	CID: id,
+	                    }
+		    	}).done(function (data) {  
+		    		if(data.result == true) {
+		    			alert("{{__('delete_success')}}");
+		    			location.reload();
+		    		}
+		    		else {
+		    			alert("{{__('choice_error')}}");
+		    		}
+		    		
+		    	})
+	    	
+	    	
+			}
+			else {
+				$("input:checkbox[name='allck']").prop("checked", false);
+				$("input:checkbox[name='ck']").prop("checked", false);
+				return false;
+			}
+		}
+	}
 </script>
 
 {% endblock %}

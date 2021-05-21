@@ -227,25 +227,121 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
         // console.log("상태"+paymentData.status);
         
         // DB에서 결제되어야 하는 금액 조회
-        var goodsDB = [];
-        for(var i = 0; i < goods.length; i++) {
-            goodsDB[i] = await Goods.find({ "GN" : goodsJson[i].GN });
-        }
-        var optionDB = [];
-        for(var j = 0; j < goods.length; j++) {
-            var option = goodsJson[j].ON.split(",");
-            for(var h = 0; h < option.length; h++) {
-                optionDB[j] = await GoodsOption.find({ "GID" : goodsDB[j][0]._id, "ON" : option[h] });
-                console.log("헤이"+option[h])
-                console.log("길이"+option.length);
-            }
-            // console.log("길이"+option.length);
-        }
-        console.log("선택옵션"+option);
-        console.log("제이슨"+JSON.stringify(goodsJson));
-        console.log("굿즈"+goodsDB);
-        console.log("옵션"+optionDB);
         
+        // var newGoods = [];
+        // var option = [];
+        // for(var i = 0; i < goods.length; i++) {
+        //     option[i] = goodsJson[i].ON.split(",");
+        //     newGoods[i] = await Goods.aggregate([
+        //         {
+        //             $match: { "GN" : goodsJson[i].GN }
+        //         },
+        //         {
+        //             $project: { "_id" : 0, "GN" : 1, "GP" : 1 }
+        //         },
+        //         {
+        //             $lookup: {
+        //                 from: "Goods_Option",
+        //                 localField: "GN",
+        //                 foreignField: "GNA",
+        //                 as: "option"
+        //             }
+        //         }
+        //     ]);
+        // }
+        // // console.log("검색"+newGoods.length);
+        // // console.log("아오"+newGoods[0][0].option);
+        // console.log("뉴굿즈"+JSON.stringify(newGoods));
+        // // console.log("조건"+newGoods[1][0].option[1].ON)
+        
+        var newGoods = [];
+        var optionGoods = [];
+        for(var i = 0; i < goods.length; i++) {
+            if(goodsJson[i].ON == "undefined") {
+                newGoods[i] = await Goods.aggregate([
+                {
+                    $lookup: {
+                        from: "Goods_Option",
+                        localField: "GN",
+                        foreignField: "GNA",
+                        as: "option"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$option",
+                        preserveNullAndEmptyArrays: true
+                    }
+                },
+                { $match: { "GN" : goodsJson[i].GN } },
+                { $project: { "_id" : 0, "GN" : 1, "GP" : 1, "option.ON" : 1, "option.OP" : 1, "NUM" : goodsJson[i].NUM } }
+            ]);
+            }
+            else {
+                var option = goodsJson[i].ON.split(",");
+                for(var j = 0; j < option.length; j++) {
+                    optionGoods[j] = await Goods.aggregate([
+                        {
+                            $lookup: {
+                                from: "Goods_Option",
+                                localField: "GN",
+                                foreignField: "GNA",
+                                as: "option"
+                            }
+                        },
+                        {
+                            $unwind: {
+                                path: "$option",
+                                preserveNullAndEmptyArrays: true
+                            }
+                        },
+                        { $match: { "GN" : goodsJson[i].GN, "option.ON" : option[j] } },
+                        { $project: { "_id" : 0, "GN" : 1, "GP" : 1, "option.ON" : 1, "option.OP" : 1, "NUM" : goodsJson[i].NUM } }
+                    ]);
+                }
+                newGoods.push(optionGoods);
+            }
+            // newGoods[i] = await Goods.aggregate([
+            //     {
+            //         $lookup: {
+            //             from: "Goods_Option",
+            //             localField: "GN",
+            //             foreignField: "GNA",
+            //             as: "option"
+            //         }
+            //     },
+            //     {
+            //         $unwind: {
+            //             path: "$option",
+            //             preserveNullAndEmptyArrays: true
+            //         }
+            //     },
+            //     { $match: { "GN" : goodsJson[i].GN, "option.ON" : option[i][0] } },
+            //     { $project: { "_id" : 0, "GN" : 1, "GP" : 1, "option.ON" : 1, "option.OP" : 1 } }
+            // ]);
+        }
+        console.log("제이슨"+JSON.stringify(goodsJson));
+        console.log("뉴굿즈"+JSON.stringify(newGoods));
+        
+        /////////////////////////////////////////////////////////////////////////
+        // var goodsDB = [];
+        // for(var i = 0; i < goods.length; i++) {
+        //     goodsDB[i] = await Goods.find({ "GN" : goodsJson[i].GN });
+        // }
+        // var optionDB = [];
+        // var option = [];
+        // for(var j = 0; j < goods.length; j++) {
+        //     if(goodsDB.GO == true) {
+        //         // option[j] = goodsJson[j].ON.split(",");
+        //         // for(var h = 0; h < option[j].length; h++) {
+        //         //     optionDB[j] = await GoodsOption.find({ "GID" : goodsDB[j][0]._id, "ON" : option[j][h] });
+        //         // }
+        //     }
+        // }
+        // console.log("옵옵"+option[1][1]);
+        // console.log("굿즈"+goodsDB);
+        // console.log("옵션"+optionDB);
+        ///////////////////////////////////////////////////////////////////////////////
         // // 결제 검증하기
         // const { amount, status } = paymentData;
         // if(service) {
