@@ -62,7 +62,7 @@ exports.signIn = async(req, res) => {
             ], function (err,result) {
                     if(err) throw err;
             })
-        worker.carUA = companycua[0].CUA;
+        const carUA = companycua[0].CUA;
         if (worker != null) {
             // 토큰 생성
             const token = jwt.sign({
@@ -76,6 +76,7 @@ exports.signIn = async(req, res) => {
                 result: true,
                 data: JSON.stringify(worker),
                 token,
+                carUA
             });
         }
         else {

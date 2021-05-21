@@ -2357,21 +2357,23 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 router.get('/gstest', isNotLoggedIn, DataSet, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
-  var id = "113299152950678048527"
-  var email = "gsjung006@gmail.com"
-  var worker = await Worker.findOne({ "GID": id, "EM": email });
-  const ObjectId = Mongoose.Types.ObjectId;
-  var companyCUA = await Company.aggregate([
-              { $match : {"_id" : ObjectId(worker.CID)} },
-              { $project : {CUA : "$CUA"}}
-              ], function (err,result) {
-                if(err) throw err;
-              })
-  console.log(companyCUA[0].CUA)
+  // const CID = req.decoded.CID;
+  // const aclist = await Worker.find({ "CID": CID, "AC": false });
+  // var id = "113299152950678048527"
+  // var email = "gsjung006@gmail.com"
+  // var worker = await Worker.findOne({ "GID": id, "EM": email });
+  // const ObjectId = Mongoose.Types.ObjectId;
+  // var companyCUA = await Company.aggregate([
+  //             { $match : {"_id" : ObjectId(worker.CID)} },
+  //             { $project : {CUA : "$CUA"}}
+  //             ], function (err,result) {
+  //               if(err) throw err;
+  //             })
+  // worker.carUA = companyCUA[0].CUA;
+  // console.log(worker)
+  // console.log(companyCUA[0].CUA)
 
-  res.render('company_list', { company: req.decoded.company, aclist });
+  // res.render('company_list', { company: req.decoded.company, aclist });
 });
   
 module.exports = router;
