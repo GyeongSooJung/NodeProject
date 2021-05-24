@@ -46,9 +46,9 @@
 										<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>
 										<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
 										<div class="dropdown-menu dropdown-menu-right" style="">
-											<a href="javascript:searchoption('WN');" class="dropdown-item">{{__('name')}}</a>
-											<a href="javascript:searchoption('PN');" class="dropdown-item">{{__('mobile_number')}}</a>
-											<a href="javascript:searchoption('EM');" class="dropdown-item">{{__('email')}}</a>
+											<a href="javascript:searchoption('WN',pagingObject,i18nconvert,{WN : 'WN',PN : 'PN',EM : 'EM'});" class="dropdown-item">{{__('name')}}</a>
+											<a href="javascript:searchoption('PN',pagingObject,i18nconvert,{WN : 'WN',PN : 'PN',EM : 'EM'});" class="dropdown-item">{{__('mobile_number')}}</a>
+											<a href="javascript:searchoption('EM',pagingObject,i18nconvert,{WN : 'WN',PN : 'PN',EM : 'EM'});" class="dropdown-item">{{__('email')}}</a>
 										
 										</div>
 								</div> 
@@ -65,7 +65,7 @@
 			  			</div>
 			  			<div>
 			  				
-			  				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
+			  				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchtext(pagingObject, condition, i18nconvert)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
 			  			<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,condition,searcherror,'{{__('search')}}') class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
 		   			</div>      
 					
@@ -110,215 +110,181 @@
 	
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>	
 <script>
-	var pagingObject = new Object({name : "Worker" ,url : "/ajax/worker_list", array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : ""});
+	var pagingObject = new Object({name : "Worker" ,url : "/ajax/worker_list",CID : "{{company._id}}", array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : ""});
 		// 검색 기능
 		
 	$(document).ready(function(){
-		pagereload(pagingObject, condition, searcherror);
+		pagereload(pagingObject, condition, i18nconvert);
+		
 		
 		$('#selectpage').click(function() {
-	            if(pagingObject.postNum != $('#selectpage option:selected').val())
-				{
-					pagingObject.postNum = $('#selectpage option:selected').val()
-					pagereload(pagingObject, condition, searcherror);
-				}
-	        });
+			selectpage(pagingObject,condition,i18nconvert,{
+				option : $('#selectpage option:selected').val()
+			})
+		});
 		
-        $('.ck_au').change(function() {
-	          var post = 'POST METHOD CALL';
-	          var email = $(this).val();
-				
-		         if($(this).is(":checked")){
-	                //Ajax POST Method TEST
-					$.ajax({
-						url: '/ajax/post',
-						dataType: 'json',
-						type: 'POST',
-						data: {au_true:email},
-						success: function(result) {
-							if (result) {
-							 $('#post_output').html(result.result);
-							}
-						}
-					});
-		         }
-		         else {
-	                //Ajax POST Method TEST
-	                $.ajax({
-						url: '/ajax/post',
-						dataType: 'json',
-						type: 'POST',
-						data: {au_false:email},
-						success: function(result) {
-							if (result) {
-								$('#post_output').html(result.result);
-							}
-	                    }
-					});
-		         }
-	        });
-	        
-		$('.ck_ac').change(function() {
-			   var post = 'POST METHOD CALL';
-			   var email = $(this).val();
-				
-			     if($(this).is(":checked")){
-		            //Ajax POST Method TEST
-		            $.ajax({
-						url: '/ajax/post',
-						dataType: 'json',
-						type: 'POST',
-						data: {ac_true:email},
-						success: function(result) {
-							if (result) {
-								$('#post_output').html(result.result);
-							}
-						}
-					});
-			    }
-			    else {
-		            //Ajax POST Method TEST
-		            $.ajax({
-						url: '/ajax/post',
-						dataType: 'json',
-						type: 'POST',
-						data: {ac_false:email},
-						success: function(result) {
-							if (result) {
-								$('#post_output').html(result.result);
-							}
-						}
-					});
+		$('#searchtext').keyup(function(key) {
+				if(key.keyCode == 13) {
+					searchtext(pagingObject,condition,i18nconvert)
+				}
+				if(pagingObject.searchtext == "") {
+					pagereload(pagingObject, condition, i18nconvert);
 				}
 			});
-	        
-	        
-	        $('#searchtext').keyup(function(key) {
-        		if(key.keyCode == 13) {
-        			if(pagingObject.search == "")
-        			alert("{{__('choice_error')}}");
-        			else {
-        				pagingObject.searchtext = $(this).val();
-        				pagereload(pagingObject, condition, searcherror)
-        				document.getElementById('gotolist').classList.remove('d-none');
-        			}
-        		}
-        		if($(this).val() == "") {
-        			pagereload(pagingObject, condition, searcherror)
-        		}
-        	})
-        	
-	    })
-	    
-	function checkau(a) {
-    	if(a.checked){
-	                //Ajax POST Method TEST
-					$.ajax({
-						url: '/ajax/post',
-						dataType: 'json',
-						type: 'POST',
-						data: {au_true:a.value},
-						success: function(result) {
-							if (result) {
-							 $('#post_output').html(result.result);
-							}
-						}
-					});
-		         }
-		         else {
-	                //Ajax POST Method TEST
-	                $.ajax({
-						url: '/ajax/post',
-						dataType: 'json',
-						type: 'POST',
-						data: {au_false:a.value},
-						success: function(result) {
-							if (result) {
-								$('#post_output').html(result.result);
-							}
-	                    }
-					});
-		         }
-    }
-    
-    function checkac(a) {
-    	if(a.checked){
-	                //Ajax POST Method TEST
-					$.ajax({
-						url: '/ajax/post',
-						dataType: 'json',
-						type: 'POST',
-						data: {ac_true:a.value},
-						success: function(result) {
-							if (result) {
-							 $('#post_output').html(result.result);
-							}
-						}
-					});
-		         }
-		         else {
-	                //Ajax POST Method TEST
-	                $.ajax({
-						url: '/ajax/post',
-						dataType: 'json',
-						type: 'POST',
-						data: {ac_false:a.value},
-						success: function(result) {
-							if (result) {
-								$('#post_output').html(result.result);
-							}
-	                    }
-					});
-		         }
-    }
-	    
-		function searchoption(opt) {
-    	pagingObject.search = opt;
-    	$("#searchoption").empty();
-    	var string = opt;
-    	
-    	if (string == "WN")
-    	   string = "{{__('name')}}";
-    	   document.getElementById('searchtext').classList.remove('d-none');
-    	   document.getElementById('searchdatetext').classList.add('d-none');
-    	if (string == "PN")
-    	   string = "{{__('mobile_number')}}";
-    	   document.getElementById('searchtext').classList.remove('d-none');
-    	   document.getElementById('searchdatetext').classList.add('d-none');
-    	if (string == "EM") {
-       	   string = "{{__('email')}}";
-    	   document.getElementById('searchtext').classList.remove('d-none');
-    	   document.getElementById('searchdatetext').classList.add('d-none');
-    	   
-    	}
-    	
-    	$("#searchtext").val('');
-    	$("#searchoption").append(string);
-    	$("#searchoption").show();
-        }
 		
-		function searchbutton() {
-    	
-	    	if(pagingObject.search == "")
-	          alert("{{__('search_option_error')}}");
-	        else {
-				pagingObject.searchtext = $('#searchtext').val();
-				pagereload(pagingObject, condition, searcherror)
-				document.getElementById('gotolist').classList.remove('d-none');
-	        	document.getElementById('searchtext').classList.remove('d-none');
-    			document.getElementById('searchdatetext').classList.add('d-none');
-			}
+		$('.sort').click(function() {
 			$("#searchoption").empty();
 			$("#searchoption").append("{{__('search')}}");
-			$("#searchoption").show();
+			
+			sortpage(pagingObject,condition,i18nconvert,{
+				name : $(this).attr('name')
+			},
+			{
+				WN : "WN",
+				PN : "PN",
+				EM : "EM",
+			});
+		
+		})
+		
+		$('.ck_au').change(function() {
+			var post = 'POST METHOD CALL';
+			var email = $(this).val();
+			
+			if($(this).is(":checked")){
+				//Ajax POST Method TEST
+				$.ajax({
+					url: '/ajax/post',
+					dataType: 'json',
+					type: 'POST',
+					data: {au_true:email},
+					success: function(result) {
+						if (result) {
+						$('#post_output').html(result.result);
+						}
+					}
+				});
+			}
+			else {
+				//Ajax POST Method TEST
+				$.ajax({
+					url: '/ajax/post',
+					dataType: 'json',
+					type: 'POST',
+					data: {au_false:email},
+					success: function(result) {
+						if (result) {
+							$('#post_output').html(result.result);
+						}
+					}
+				});
+			}
+		});
+		
+		$('.ck_ac').change(function() {
+			var post = 'POST METHOD CALL';
+			var email = $(this).val();
+			
+			if($(this).is(":checked")){
+				//Ajax POST Method TEST
+				$.ajax({
+					url: '/ajax/post',
+					dataType: 'json',
+					type: 'POST',
+					data: {ac_true:email},
+					success: function(result) {
+						if (result) {
+						$('#post_output').html(result.result);
+						}
+					}
+				});
+			}
+			else {
+			//Ajax POST Method TEST
+				$.ajax({
+					url: '/ajax/post',
+					dataType: 'json',
+					type: 'POST',
+					data: {ac_false:email},
+					success: function(result) {
+						if (result) {
+							$('#post_output').html(result.result);
+						}
+					}
+				});
+			}
+		});
+	})
+	        
+	        
+	        
+	    
+	function checkau(a) {
+		if(a.checked){
+		//Ajax POST Method TEST
+			$.ajax({
+				url: '/ajax/post',
+				dataType: 'json',
+				type: 'POST',
+				data: {au_true:a.value},
+				success: function(result) {
+					if (result) {
+						$('#post_output').html(result.result);
+					}
+				}
+			});
 		}
-		
-		
+		else {
+		//Ajax POST Method TEST
+			$.ajax({
+				url: '/ajax/post',
+				dataType: 'json',
+				type: 'POST',
+				data: {au_false:a.value},
+				success: function(result) {
+					if (result) {
+						$('#post_output').html(result.result);
+					}
+				}
+			});
+		}
+	}
+	
+	function checkac(a) {
+		if(a.checked){
+			//Ajax POST Method TEST
+			$.ajax({
+				url: '/ajax/post',
+				dataType: 'json',
+				type: 'POST',
+				data: {ac_true:a.value},
+				success: function(result) {
+					if (result) {
+						$('#post_output').html(result.result);
+					}
+				}
+			});
+		}
+		else {
+			//Ajax POST Method TEST
+			$.ajax({
+			url: '/ajax/post',
+			dataType: 'json',
+			type: 'POST',
+			data: {ac_false:a.value},
+				success: function(result) {
+					if (result) {
+						$('#post_output').html(result.result);
+					}
+				}
+			});
+		}
+	}
 	var condition = function (Object) {
 		var num =  Object.array.length; 	
         var	insertTr = ""; // 채워넣을 HTML 초기화
      	var indexcount = 1; // 인덱스번호 초기화
-    	
+			   	
 		for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
 			if(Object.array.length != 0) {
 				if(Object.array[i]) {
@@ -363,82 +329,6 @@
 				     	
 		$("#memDiv").append(insertTr);
 	}
-		
-    
-    	// 일반 삭제 기능
-	function delete_one(obj) {
-		
-		var answer;
-	    	answer = confirm("{{__('delete_confirm')}}");
-		if(answer == true){
-			$.ajax({
-    		url: "/device/ajax/device_deleteone",
-                    type: "POST",
-                    dataType: 'json',
-                    data: {
-                    	select : $(obj).attr('name'),
-                    }
-	    	}).done(function (data) {  
-	    		if(data.result == true) {
-	    			alert("{{__('delete_success')}}");
-	    			location.reload();
-	    		}
-	    		else {
-	    			alert("{{__('choice_error')}}");
-	    		}
-	    		
-	    	});
-		}
-		else {
-			return false;
-		}
-	}
-
-	// 선택항목 삭제 기능
-	function delete_check(frm) {
-		var check = $("input:checkbox[name='ck']").is(":checked");
-		if(!check) {
-			alert("{{__('choice_error')}}");
-		}
-		else {
-			var select_obj = [];
-	        $('input[name="ck"]:checked').each(function (index) {
-	                select_obj[index] = $(this).val() ;
-	        });
-			var answer;
-		    	answer = confirm("{{__('delete_confirm')}}");
-			if(answer == true){
-				$.ajax({
-	    		url: "/device/ajax/device_delete",
-	                    type: "POST",
-	                    dataType: 'json',
-	                    data: {
-	                    	select : select_obj,
-	                    }
-		    	}).done(function (data) {  
-		    		if(data.result == true) {
-		    			alert("{{__('delete_success')}}");
-		    			location.reload();
-		    		}
-		    		else {
-		    			alert("{{__('choice_error')}}");
-		    		}
-		    		
-		    	})
-	    	
-	    	
-			}
-			else {
-				$("input:checkbox[name='allck']").prop("checked", false);
-				$("input:checkbox[name='ck']").prop("checked", false);
-				return false;
-			}
-		}
-	}
-    
-    var searcherror = function () {
-    	return alert("{{__('search_error')}}");
-    }
 
 	    
 	    // 에러 링크 기능

@@ -19,7 +19,6 @@ const NO_POINT = "NO_POINT";
 
 const { config, Group } = require('solapi');
 const Mongoose = require('mongoose');
-const ObjectId = Mongoose.Types.ObjectId;
 
 
 
@@ -274,6 +273,11 @@ exports.registerCar = async(req, res) => {
 
         var result = await Car.create({ CID, CC, CN, SN });
         console.log(result);
+        var ObjectId = Mongoose.Types.ObjectId;
+        console.log(ObjectId(CID))
+        await Company.where({"_id" : ObjectId(CID)})
+        .updateOne({ "CUA" : Date.now() }).setOptions({runValidators : true})
+        .exec();
 
         res.json({
             result: true,
@@ -320,9 +324,13 @@ exports.findCarByComID = async(req, res) => {
 exports.updateCar = async(req, res) => {
     try {
         const { _id, CC, CN, SN } = req.body;
-
         var result = await Car.where({ _id }).updateOne({ CC, CN, SN, UA: Date.now() });
-        console.log(result);
+        console.log("result : " +result);
+        var ObjectId = Mongoose.Types.ObjectId;
+        var car = await Car.findOne({"_id" : ObjectId(_id)});
+        await Company.where({"_id" : ObjectId(car.CID)})
+        .updateOne({ "CUA" : Date.now() }).setOptions({runValidators : true})
+        .exec();
 
         res.json({
             result: true,
@@ -337,13 +345,20 @@ exports.updateCar = async(req, res) => {
     }
 };
 
-// 소독기 삭제
+// 차량 삭제
 exports.deleteCar = async(req, res) => {
     try {
         const { _id, CN } = req.body;
-
+        
+        
+        var ObjectId = Mongoose.Types.ObjectId;
+        var car = await Car.findOne({"_id" : ObjectId(_id)});
+        await Company.where({"_id" : car.CID})
+        .updateOne({ "CUA" : Date.now() }).setOptions({runValidators : true})
+        .exec();
+        
         var result = await Car.remove({ _id, CN });
-        console.log(result);
+        console.log("result : " +result);
 
         res.json({
             result: true,

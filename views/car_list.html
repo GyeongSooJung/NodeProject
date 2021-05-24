@@ -47,10 +47,10 @@
 											<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>
 											<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
 											<div class="dropdown-menu dropdown-menu-right" style="">
-												<a href="javascript:searchoption('CN');" class="dropdown-item">{{__('car_number')}}</a>
-												<a href="javascript:searchoption('CPN');" class="dropdown-item">{{__('car_customer_phone')}}</a>
+												<a href="javascript:searchoption('CN',pagingObject,i18nconvert,{CN : 'CN',CPN : 'CPN',CA : 'CA'});" class="dropdown-item">{{__('car_number')}}</a>
+												<a href="javascript:searchoption('CPN',pagingObject,i18nconvert,{CN : 'CN',CPN : 'CPN',CA : 'CA'});" class="dropdown-item">{{__('car_customer_phone')}}</a>
 											
-												<a href="javascript:searchoption('CA');" class="dropdown-item">{{__('create_date')}}</a>
+												<a href="javascript:searchoption('CA',pagingObject,i18nconvert,{CN : 'CN',CPN : 'CPN',CA : 'CA'});" class="dropdown-item">{{__('create_date')}}</a>
 											</div>
 									</div> 
 								</div>
@@ -68,10 +68,10 @@
 						</div>
 						
 						<div>
-						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
+						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchtext(pagingObject, condition, i18nconvert)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
 						</div>
 						
-						<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,condition,searcherror,'{{__('search')}}') class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
+						<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,condition,i18nconvert,'{{__('search')}}') class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
 					</div>
 					
 					<div class="overflow-auto">
@@ -94,7 +94,7 @@
 								</tbody>
 							</table>
 							<div class="d-flex justify-content-between align-item-center">
-								<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="delete_check();">
+								<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="delete_check('/car/ajax/car_delete',i18nconvert);">
 								<div id="pagebox" class="justify-content-around align-item-center"></div>
 							</div>
 						</form>
@@ -112,281 +112,100 @@
 <!-- Script -->
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script>
-	var pagingObject = new Object({name : "Car",url : "/ajax/car_list", array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
+	var pagingObject = new Object({name : "Car",url : "/ajax/car_list", CID : "{{company._id}}", array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
 	
 	// i18n 용어 함수로 정리
 	// 각 리스트 별 CN같은거 배열에 담기 (종류별로 리스트별로)
 	
 	// 검색기능
 	$(document).ready(function() {
-		
-		pagereload(pagingObject, condition, searcherror); // 첫 화면 페이지 로드
-		
+		pagereload(pagingObject, condition, i18nconvert); // 첫 화면 페이지 로드
 		$('#selectpage').click(function() {
-	            if(pagingObject.postNum != $('#selectpage option:selected').val())
-				{
-					pagingObject.postNum = $('#selectpage option:selected').val()
-					pagereload(pagingObject, condition, searcherror);
-				}
-	        });
+			selectpage(pagingObject,condition,i18nconvert,{
+				option : $('#selectpage option:selected').val()
+			})
+		});
+		
 		
 		$('#searchtext').keyup(function(key) {
-				if(key.keyCode == 13) {
-					if(pagingObject.search == "")
-        			alert("{{__('choice_error')}}");
-	        		else {
-	        			if(($('#searchdatetext1').val() != "") && ($('#searchdatetext2').val() != "")) {
-							console.log($('#searchdatetext1').val());
-							console.log($('#searchdatetext2').val());
-							
-							pagingObject.searchtext = $(this).val();
-							pagingObject.searchdate ="";
-			        		pagingObject.searchdate += $('#searchdatetext1').val();
-			        		pagingObject.searchdate += "~";
-			        		pagingObject.searchdate += $('#searchdatetext2').val();
-							pagereload(pagingObject, condition, searcherror);
-							document.getElementById('gotolist').classList.remove('d-none');
-		        		}
-		        		else {
-		        			pagingObject.searchtext = $(this).val();
-							pagereload(pagingObject, condition, searcherror);
-							document.getElementById('gotolist').classList.remove('d-none');
-		        		}
-	        		}
-        		}
-        		if($(this).val() == "") {
-        			pagereload(pagingObject, condition, searcherror);
-        		}
+			if(key.keyCode == 13) {
+				searchtext(pagingObject,condition,i18nconvert)
+			}
+			if(pagingObject.searchtext == "") {
+				pagereload(pagingObject, condition, i18nconvert);
+			}
 		});
 		
 		
 		$('.sort').click(function() {
-			
 			$("#searchoption").empty();
-	    	$("#searchoption").append("{{__('search')}}");
+			$("#searchoption").append("{{__('search')}}");
 			
-			pagingObject.search = "";
-			pagingObject.searchtext = "";
+			sortpage(pagingObject,condition,i18nconvert,{
 			
-			var paglist = pagingObject.array;
-			
-			var check_sort = $(this).attr('name');
-			
-			
-			 if(document.getElementById(check_sort).classList.contains('d-none')) {
-			 	
-			 	document.getElementById(check_sort).classList.remove('fa-angle-up');
-	    		document.getElementById(check_sort).classList.add('fa-angle-down');
-			 	var check2 = check_sort;
-			 }
-			 else {
-			 	if (document.getElementById(check_sort).classList.contains('fa-angle-down')) {
-			 		
-	    		 	document.getElementById(check_sort).classList.remove('fa-angle-down');
-	    		 	document.getElementById(check_sort).classList.add('fa-angle-up');
-			 		var check2 = check_sort + "2";
-			 	}
-			 	else {
-			 		
-			 		document.getElementById(check_sort).classList.remove('fa-angle-up');
-	    		 	document.getElementById(check_sort).classList.add('fa-angle-down');
-			 		var check2 = check_sort;
-			 		
-			 	}
-			 }
-			document.getElementById('CN').classList.add('d-none');
-			document.getElementById('CPN').classList.add('d-none');
-			document.getElementById('CA').classList.add('d-none');
-			
-			
-			document.getElementById(check_sort).classList.remove('d-none');
-			
-			
-			pagingObject.array = paglist;
-			pagingObject.sort = check2;
-			pagingObject.page = 0;
-			pagereload(pagingObject, condition, searcherror);
+				name : $(this).attr('name')
+			},
+			{
+				CN : "CN",
+				CPN : "CPN",
+				CA : "CA"
+			});
 			
 		});
     });
     
-    
-    
-    
-    function searchoption(opt) {
-    	pagingObject.search = opt;
-    	$("#searchoption").empty();
-    	var string = opt;
-    	if (string == "CN") {
-    	   string = "{{__('car_number')}}";
-    	   document.getElementById('searchtext').classList.remove('d-none');
-    	}
-    	if (string == "CPN") {
-    	   string = "{{__('car_customer_phone')}}";
-    	   document.getElementById('searchtext').classList.remove('d-none');
-    	}
-    	if (string == "CA") {
-    		document.getElementById('searchtext').classList.add('d-none');
-    	   string = "{{__('create_date')}}";
-    	   $("#searchtext").val('');
-    	}
-    	$("#searchtext").val('');
-    	$("#searchdatetext1").val('');
-    	$("#searchdatetext2").val('');
-    	$("#searchoption").append(string);
-    	$("#searchoption").show();
-    }
-    
-    function searchbutton() {
-    	if(pagingObject.search == "") {
-		alert("{{__('choice_error')}}");
-    	}
-		else{
-	    	if(($('#searchdatetext1').val() != "") && ($('#searchdatetext2').val() != "")) {
-				
-				pagingObject.searchtext = $('#searchtext').val();
-				pagingObject.searchdate ="";
-	    		pagingObject.searchdate += $('#searchdatetext1').val();
-	    		pagingObject.searchdate += "~";
-	    		pagingObject.searchdate += $('#searchdatetext2').val();
-				pagereload(pagingObject, condition, searcherror);
-				document.getElementById('gotolist').classList.remove('d-none');
-			}
-			else {
-				pagingObject.searchtext = $('#searchtext').val();
-				pagereload(pagingObject, condition, searcherror);
-				document.getElementById('gotolist').classList.remove('d-none');
-			}
-		}
-	}
 	
 		
     
-    var condition = function (Object) {
-    	var num =  Object.array.length; 	
-        var	insertTr = ""; // 채워넣을 HTML 초기화
-     	var indexcount = 1; // 인덱스번호 초기화
-    	
-    	
-     	for (var i = ( Object.postNum *  Object.page) ; i < ( Object.postNum *  Object.page) +  Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-	        if( Object.array.length != 0) {
-	     	   if( Object.array[i]) {
-				  insertTr += "<tr>";
-				  insertTr += " 	<td class='with-btn' nowrap>";
-				  insertTr += "		<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+  Object.array[i].CN +" onChange='eachCheckedBox(this);'/>";
-				  insertTr += " 	</td>";
-				  insertTr += "<td class='font-weight-bold'>"+(num - ( Object.page*10)) +" </td>";
-				  insertTr += "<td>"+  Object.array[i].CN +"</td>";
-				  
-				  if(! Object.array[i].CPN){
-				  	insertTr+="<td>"+"N/A"+"</td><td>";
-				  }
-				  else {
-					insertTr += "<td>"+  Object.array[i].CPN+"</td><td>";
-				  }
-				  
-			     if ( (moment( Object.array[i].CA).format('DD')) == moment().format('DD') )
-			     {
-			       insertTr +=  moment( Object.array[i].CA).format('HH:mm');
-			     }
-			     else {
-			      insertTr += moment( Object.array[i].CA).format('YYYY-MM-DD');
-			     }
-			      insertTr += "</td><td class='with-btn' nowrap>"	
-				  insertTr += "<a href='/car_edit/"+ Object.array[i].CN+"'   class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>{{__('modify')}}</a>";
-				  insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this) class='btn btn-sm btn-white width-60' name =' "+  Object.array[i].CN +"'></td> ";
-				  insertTr += "</tr>";
-				  num -= indexcount;
-	     	   }
-	        }
-	     	  else {
-	     	  	insertTr += "<tr>";
+	var condition = function (Object) {
+		var num =  Object.array.length; 	
+		var	insertTr = ""; // 채워넣을 HTML 초기화
+		var indexcount = 1; // 인덱스번호 초기화
+		
+		
+		for (var i = ( Object.postNum *  Object.page) ; i < ( Object.postNum *  Object.page) +  Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+			if( Object.array.length != 0) {
+				if( Object.array[i]) {
+					insertTr += "<tr>";
+					insertTr += " 	<td class='with-btn' nowrap>";
+					insertTr += "		<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+  Object.array[i].CN +" onChange='eachCheckedBox(this);'/>";
+					insertTr += " 	</td>";
+					insertTr += "<td class='font-weight-bold'>"+(num - ( Object.page*10)) +" </td>";
+					insertTr += "<td>"+  Object.array[i].CN +"</td>";
+					
+					if(! Object.array[i].CPN){
+						insertTr+="<td>"+"N/A"+"</td><td>";
+					}
+					else {
+						insertTr += "<td>"+  Object.array[i].CPN+"</td><td>";
+					}
+					
+					if ( (moment( Object.array[i].CA).format('DD')) == moment().format('DD') )
+					{
+						insertTr +=  moment( Object.array[i].CA).format('HH:mm');
+					}
+					else {
+						insertTr += moment( Object.array[i].CA).format('YYYY-MM-DD');
+					}
+					insertTr += "</td><td class='with-btn' nowrap>"	
+					insertTr += "<a href='/car_edit/"+ Object.array[i].CN+"'   class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>{{__('modify')}}</a>";
+					insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this,'/car/ajax/car_deleteone',i18nconvert) class='btn btn-sm btn-white width-60' name =' "+  Object.array[i].CN +"'></td> ";
+					insertTr += "</tr>";
+					num -= indexcount;
+				}
+			}
+			else {
+				insertTr += "<tr>";
 				insertTr += "	<td colspan='10'>No Data</td>";
 				insertTr += "</tr>";
-
-                break;
-	     	  }
-     	}
-			  
-		$("#memDiv").append(insertTr);
-    }
-    
-    
-    
-	// 일반 삭제 기능
-	function delete_one(obj) {
+			
+			break;
+			}
+		}
 		
-		var answer;
-	    	answer = confirm("{{__('delete_confirm')}}");
-		if(answer == true){
-			$.ajax({
-    		url: "/car/ajax/car_deleteone",
-                    type: "POST",
-                    dataType: 'json',
-                    data: {
-                    	select : $(obj).attr('name'),
-                    }
-	    	}).done(function (data) {  
-	    		if(data.result == true) {
-	    			alert("{{__('delete_success')}}");
-	    			location.reload();
-	    		}
-	    		else {
-	    			alert("{{__('choice_error')}}");
-	    		}
-	    		
-	    	});
-		}
-		else {
-			return false;
-		}
-	}
-
-	// 선택항목 삭제 기능
-	function delete_check(frm) {
-		var check = $("input:checkbox[name='ck']").is(":checked");
-		if(!check) {
-			alert("{{__('choice_error')}}");
-		}
-		else {
-			var select_obj = [];
-	        $('input[name="ck"]:checked').each(function (index) {
-	                select_obj[index] = $(this).val() ;
-	        });
-			var answer;
-		    	answer = confirm("{{__('delete_confirm')}}");
-			if(answer == true){
-				$.ajax({
-	    		url: "/car/ajax/car_delete",
-	                    type: "POST",
-	                    dataType: 'json',
-	                    data: {
-	                    	select : select_obj,
-	                    }
-		    	}).done(function (data) {  
-		    		if(data.result == true) {
-		    			alert("{{__('delete_success')}}");
-		    			location.reload();
-		    		}
-		    		else {
-		    			alert("{{__('choice_error')}}");
-		    		}
-		    		
-		    	})
-	    	
-	    	
-			}
-			else {
-				$("input:checkbox[name='allck']").prop("checked", false);
-				$("input:checkbox[name='ck']").prop("checked", false);
-				return false;
-			}
-		}
+		$("#memDiv").append(insertTr);
 	}
 	
-	var searcherror = function () {
-    	return alert("{{__('search_error')}}");
-    }
 	
 	
 </script>

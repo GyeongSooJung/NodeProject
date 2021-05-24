@@ -352,6 +352,106 @@
             alert("{{__('purchase_failed')}}");
         }   
     }
+    
+    var searcherror = function () {
+    	return alert("{{__('search_error')}}");
+    }
+    var choiceerror = function () {
+    	return alert("{{__('choice_error')}}");
+    }
+    var i18nconvert = function (string) {
+    	if(string == "CN" ) {
+    		return "{{__('car_number')}}";
+    	} 
+    	else if(string == "CPN" ) {
+    		return "{{__('car_customer_phone')}}";
+    	} 
+    	else if(string == "MD" ) {
+    		return "{{__('device_model')}}";
+    	} 
+    	else if(string == "VER" ) {
+    		return "{{__('device_version')}}";
+    	} 
+    	else if(string == "MAC" ) {
+    		return "{{__('device_mac')}}";
+    	} 
+    	else if(string == "NN" ) {
+    		return "{{__('device_nick')}}";
+    	} 
+    	else if(string == "UN" ) {
+    		return "{{__('device_use_number')}}";
+    	}
+    	else if(string == "WN" ) {
+    		return "{{__('name')}}";
+    	}
+    	else if(string == "PN" ) {
+    		return "{{__('mobile_number')}}";
+    	}
+    	else if(string == "EM" ) {
+    		return "{{__('email')}}";
+    	}
+    	else if(string == "WNM" ) {
+    		return "{{__('worker')}}";
+    	}
+    	else if(string == "DNM" ) {
+    		return "{{__('device_model')}}";
+    	}
+    	else if(string == "CNM" ) {
+    		return "{{__('car_number')}}";
+    	}
+    	else if(string == "MID" ) {
+    		return "{{__('payment_ordernumber')}}";
+    	}
+    	else if(string == "payCA" ) {
+    		return "{{__('payment_date')}}";
+    	}
+    	else if(string == "GN" ) {
+    		return "{{__('payment_name')}}";
+    	}
+    	else if(string == "AM" ) {
+    		return "{{__('payment_amount')}}";
+    	}
+    	else if(string == "pointN" ) {
+    		return "{{__('payment_name')}}";
+    	}
+    	else if(string == "PO" ) {
+    		return "{{__('payment_point')}}";
+    	}
+    	else if(string == "pointCA" ) {
+    		return "{{__('payment_Dateofuse')}}";
+    	}
+    	else if(string == "payWNM" ) {
+    		return "{{__('payment_sender')}}";
+    	}
+    	else if(string == "RE" ) {
+    		return "{{__('payment_result')}}";
+    	}
+    	else if(string == "" ) {
+    		return "";
+    	}else if(string == "" ) {
+    		return "";
+    	}
+    	else if(string == "ET" ) {
+    		return "{{__('history_date')}}";
+    	}
+    	else if(string == "CA" ) {
+    		return "{{__('create_date')}}";
+    	}
+    	else if(string == "choiceerror" ) {
+    		return "{{__('choice_error')}}";
+    	} 
+    	else if(string == "searcherror" ) {
+    		return "{{__('search_error')}}";
+    	}
+    	else if(string == "deleteconfirm" ) {
+    		return "{{__('delete_confirm')}}";
+    	} 
+    	else if(string == "deletesuccess" ) {
+    		return "{{__('delete_success')}}";
+    	} else if(string == "" ) {
+    		return "";
+    	} 
+    }
 </script>
 
 <!-- ================== BEGIN BASE JS ================== -->

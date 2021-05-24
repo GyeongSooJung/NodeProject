@@ -46,10 +46,10 @@
 											<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>
 											<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
 											<div class="dropdown-menu dropdown-menu-right" style="">
-												<a href="javascript:searchoption('MID');" class="dropdown-item">{{__('payment_ordernumber')}}</a>
-												<a href="javascript:searchoption('CA');" class="dropdown-item">{{__('payment_date')}}</a>
-												<a href="javascript:searchoption('GN');" class="dropdown-item">{{__('payment_name')}}</a>
-												<a href="javascript:searchoption('AM');" class="dropdown-item">{{__('payment_amount')}}</a>
+												<a href="javascript:searchoption('MID',pagingObject,i18nconvert,{MID : 'MID',PCA : 'PCA',GN : 'GN',AM : 'AM'});" class="dropdown-item">{{__('payment_ordernumber')}}</a>
+												<a href="javascript:searchoption('payCA',pagingObject,i18nconvert,{MID : 'MID',payCA : 'payCA',GN : 'GN',AM : 'AM'});" class="dropdown-item">{{__('payment_date')}}</a>
+												<a href="javascript:searchoption('GN',pagingObject,i18nconvert,{MID : 'MID',PCA : 'PCA',GN : 'GN',AM : 'AM'});" class="dropdown-item">{{__('payment_name')}}</a>
+												<a href="javascript:searchoption('AM',pagingObject,i18nconvert,{MID : 'MID',PCA : 'PCA',GN : 'GN',AM : 'AM'});" class="dropdown-item">{{__('payment_amount')}}</a>
 											</div>
 									</div> 
 								</div>
@@ -67,7 +67,7 @@
 						</div>
 						
 						<div>
-						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
+						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchtext(pagingObject, condition, i18nconvert)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
 						</div>
 						
 						<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,condition,searcherror,'{{__('search')}}') class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
@@ -141,148 +141,42 @@
     </script>
   
     <script>
-   var pagingObject = new Object({name : "Pay" ,url : "/ajax/pay_list", array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
-		// 검색 기능
-		$(document).ready(function() {
-	        pagereload(pagingObject, condition, searcherror);
-	        
-	       $('#selectpage').click(function() {
-	            if(pagingObject.postNum != $('#selectpage option:selected').val())
-				{
-					pagingObject.postNum = $('#selectpage option:selected').val()
-					pagereload(pagingObject, condition, searcherror);
-				}
-	        });
-	        
-	        $('#searchtext').keyup(function(key) {
-        		if(key.keyCode == 13) {
-					if(pagingObject.search == "")
-        			alert("{{__('choice_error')}}");
-	        		else {
-	        			if(($('#searchdatetext1').val() != "") && ($('#searchdatetext2').val() != "")) {
-							
-							pagingObject.searchtext = $(this).val();
-							pagingObject.searchdate ="";
-			        		pagingObject.searchdate += $('#searchdatetext1').val();
-			        		pagingObject.searchdate += "~";
-			        		pagingObject.searchdate += $('#searchdatetext2').val();
-							pagereload(pagingObject, condition, searcherror);
-							document.getElementById('gotolist').classList.remove('d-none');
-		        		}
-		        		else {
-		        			pagingObject.searchtext = $(this).val();
-							pagereload(pagingObject, condition, searcherror);
-							document.getElementById('gotolist').classList.remove('d-none');
-		        		}
-	        		}
-        		}
-        		if($(this).val() == "") {
-        			pagereload(pagingObject, condition, searcherror);
-        		}
-        	})
-        	
-        	$('.sort').click(function() {
-        		$("#searchoption").empty();
-            	$("#searchoption").append("{{__('search')}}");
-        		
-        		pagingObject.search = "";
-        		pagingObject.searchtext = "";
-        		
-        		var paglist = pagingObject.array;
-        		
-        		var check_sort = $(this).attr('name');
-        		
-        		
-        		 if(document.getElementById(check_sort).classList.contains('d-none')) {
-        		 	
-        		 	document.getElementById(check_sort).classList.remove('fa-angle-up');
-	        		document.getElementById(check_sort).classList.add('fa-angle-down');
-        		 	var check2 = check_sort;
-        		 }
-        		 else {
-        		 	if (document.getElementById(check_sort).classList.contains('fa-angle-down')) {
-        		 		
-	        		 	document.getElementById(check_sort).classList.remove('fa-angle-down');
-	        		 	document.getElementById(check_sort).classList.add('fa-angle-up');
-        		 		var check2 = check_sort + "2";
-        		 	}
-        		 	else {
-        		 		
-        		 		document.getElementById(check_sort).classList.remove('fa-angle-up');
-	        		 	document.getElementById(check_sort).classList.add('fa-angle-down');
-        		 		var check2 = check_sort;
-        		 		
-        		 	}
-        		 }
+	var pagingObject = new Object({name : "Pay" ,url : "/ajax/pay_list",CID : "{{company._id}}", array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
+	// 검색 기능
+	$(document).ready(function() {
+		pagereload(pagingObject, condition, searcherror);
 
-        		document.getElementById('MID').classList.add('d-none');
-        		document.getElementById('GN').classList.add('d-none');
-        		document.getElementById('AM').classList.add('d-none');
-        		
-        		
-        		document.getElementById(check_sort).classList.remove('d-none');
-        		
-        		
-        		pagingObject.array = paglist;
-        		pagingObject.sort = check2;
-        		pagingObject.page = 0;
-        		pagereload(pagingObject, condition, searcherror);
-        		
-        	})
-	    })
-	    
-		function searchoption(opt) {
-    	pagingObject.search = opt;
-    	$("#searchoption").empty();
-    	var string = opt;
-    	if (string == "MID")
-    	   string = "{{__('payment_ordernumber')}}";
-    	   document.getElementById('searchtext').classList.remove('d-none');
-    	if (string == "CA"){
-    	    string = "{{__('payment_date')}}";
-    	   document.getElementById('searchtext').classList.add('d-none');
-    	   $("#searchtext").val('');
-    	}
-    	if (string == "GN") {
-	       	string = "{{__('payment_name')}}";
-	       	document.getElementById('searchtext').classList.remove('d-none');
-    	   
-    	}
-    	if (string == "AM") {
-	       	string = "{{__('payment_amount')}}";
-	       	document.getElementById('searchtext').classList.remove('d-none');
-    	   
-    	}
-    	
-    		$("#searchtext").val('');
-	    	$("#searchdatetext1").val('');
-	    	$("#searchdatetext2").val('');
-	    	$("#searchoption").append(string);
-	    	$("#searchoption").show();
-        }
-		
-		function searchbutton() {
-    	
-	    	if(pagingObject.search == "")
-			alert("{{__('choice_error')}}");
-			else{
-		    	if(($('#searchdatetext1').val() != "") && ($('#searchdatetext2').val() != "")) {
-					
-					pagingObject.searchtext = $('#searchtext').val();
-					pagingObject.searchdate ="";
-		    		pagingObject.searchdate += $('#searchdatetext1').val();
-		    		pagingObject.searchdate += "~";
-		    		pagingObject.searchdate += $('#searchdatetext2').val();
-					pagereload(pagingObject, condition, searcherror);
-					document.getElementById('gotolist').classList.remove('d-none');
+		$('#selectpage').click(function() {
+			selectpage(pagingObject,condition,i18nconvert,{
+				option : $('#selectpage option:selected').val()
+			})
+		});
+		$('#searchtext').keyup(function(key) {
+				if(key.keyCode == 13) {
+					searchtext(pagingObject,condition,i18nconvert)
 				}
-				else {
-					pagingObject.searchtext = $('#searchtext').val();
-					pagereload(pagingObject, condition, searcherror);
-					document.getElementById('gotolist').classList.remove('d-none');
+				if(pagingObject.searchtext == "") {
+					pagereload(pagingObject, condition, i18nconvert);
 				}
-			}
-		}
+		});
+				
+		$('.sort').click(function() {
+			$("#searchoption").empty();
+			$("#searchoption").append("{{__('search')}}");
+			
+			sortpage(pagingObject,condition,i18nconvert,{
+				name : $(this).attr('name')
+			},
+			{
+				MID : "MID",
+				CA : "CA",
+				GN : "GN",
+				AM : "AM"
+			});
+			
+		});
+	})
+
 		
 	
 	var condition = function (Object) {
@@ -292,8 +186,8 @@
 		
 		for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
 
-				     	   if(Object.array[i]) {
-				     	      
+						if(Object.array[i]) {
+							
 							  insertTr += "<tr>";
 							  insertTr += "<td class='font-weight-bold'>"+(num - (Object.page*10)) +" </td>";
 							  insertTr += "<td>"+ Object.array[i].MID +"</td><td>";
@@ -314,9 +208,9 @@
 							  num -= indexcount;
 							  
 				     	   }
-				     	}
-							  
-						$("#memDiv").append(insertTr);
+     	}
+			  
+		$("#memDiv").append(insertTr);
     }
 
     
@@ -328,10 +222,6 @@
         else{
             alert("{{__('purchase_failed')}}");
         }   
-    }
-   
-   var searcherror = function () {
-    	return alert("{{__('search_error')}}");
     }
     
 </script>

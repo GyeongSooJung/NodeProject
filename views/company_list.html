@@ -56,45 +56,16 @@
 							<th width="1%"></th>
 						</tr>
 					</thead>
-					<tbody>
-    					{% if (totalNum == 0) %}
-						<tr>
-							<td colspan="7">No Data</td>
-						</tr>
-						{% else %}	
-						{% set count = 0 %}
-							{% for device in devices %}
-							<tr>
-								<td class="with-btn" nowrap>
-									<input id ="ck" type="checkbox" name = "ck" class="neHeros" value={{device.MAC}} onChange="eachCheckedBox(this);"/>
-								</td>
-								<td class="font-weight-bold">{{totalNum - count - (currentPage*10)}} </td>
-		  							{% set totalNum = totalNum - 1 %}
-								<td>{{device.MD}}</td>
-								<td>{{device.VER}}</td>
-								<td>{{device.MAC}}</td>
-								<td>{{device.NN}}</td>
-								<td class="with-btn" nowrap>
-									<a href="/device_edit/{{device.MAC}}" class="btn btn-sm btn-primary width-60 m-r-2 edit-btn">수정</a>
-									<a href="javascript:delete_one('{{device.MAC}}')" class="btn btn-sm btn-white width-60">삭제</a>
-								</td>
-							</tr>
-							{% endfor %}
-						{% endif %}
+					<tbody id="memDiv">
 					</tbody>
 				</table>
-			</div>
-			<div class="d-flex justify-content-end align-item-center">
-				<a href="javascript:pageDoubleBtn('left', 'DEVICE')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-left"></i></a>
-				<a href="javascript:pageBtn('left', 'DEVICE')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-left"></i></a>
-				{% if (totalNum==0) %}
-				{% else %}
-					{% for i in range(startPage, endPage) %}
-					<a href="/company_list/?DEVICE={{companyone._id}}&page={{i}}" class="btn btn-white mr-1 px-2 text-primary" style="{% if(currentPage==i} %} background-color: #00acac; color: white !important; {% endif %} ">{{i+1}}</a>
-					{% endfor %}
-				{% endif %}
-				<a href="javascript:pageBtn('right', 'DEVICE')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-right"></i></a>
-				<a href="javascript:pageDoubleBtn('right', 'DEVICE')" class="btn btn-primary mr-1 px-2"><i class="fas fa-angle-double-right"></i></a>
+				<div class="justify-content-between align-item-center">
+  					<center>
+  							<div id="pagebox" class=" justify-content-around align-item-center">
+  								
+  							</div>
+  					</center>
+      			</div>
 			</div>
 		</div>
 		<!-- end panel-body -->
@@ -524,6 +495,8 @@
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>	
 
 <script>
+var pagingObject = new Object({name : "Company" ,url : "",CID : "{{company._id}}",  array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
+
 	// 검색 기능
 	$(document).ready(function() {
         $("#keyword").keyup(function() {
