@@ -185,107 +185,225 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
     try {
         const { imp_uid, merchant_uid, goods } = req.body;
         
-        console.log("확인"+imp_uid, merchant_uid, goods);
+        var goodsJson = [];
+        for(var i = 0; i < goods.length; i++) {
+            goodsJson[i] = JSON.parse(goods[i]);
+        }
         
-        // 엑세스 토큰 발급 받기
-        const getToken = await axios({
-            url: "https://api.iamport.kr/users/getToken",
-            method: "post", // POST method
-            headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
-            data: {
-              imp_key: process.env.imp_key, // REST API키
-              imp_secret: process.env.imp_secret // REST API Secret
-            }
-        });
-        const { access_token } = getToken.data.response; // 인증 토큰
+        // var a = goods[0];
         
-        // imp_uid로 아임포트 서버에서 결제 정보 조회
-        const getPaymentData = await axios({
-            url: 'https://api.iamport.kr/payments/'+imp_uid, // imp_uid 전달
-            method: "get", // GET method
-            headers: { "Authorization": access_token } // 인증 토큰 Authorization header에 추가
-        });
-        const paymentData = getPaymentData.data.response; // 조회한 결제 정보
-        console.log("어마운드"+paymentData.amount);
-        console.log("주소"+paymentData.buyer_addr);
-        console.log("전번"+paymentData.buyer_tel);
-        console.log("이메일"+paymentData.buyer_email);
-        console.log("구매자"+paymentData.buyer_name);
-        console.log("제품"+paymentData.name);
-        console.log("방식"+paymentData.pay_method);
-        console.log("사이트"+paymentData.pg_provider);
-        console.log("상태"+paymentData.status);
+        // var b = JSON.parse(a);
+        
+        // console.log(b)
+        // console.log(typeof(b))
+        
+        // // 엑세스 토큰 발급 받기
+        // const getToken = await axios({
+        //     url: "https://api.iamport.kr/users/getToken",
+        //     method: "post", // POST method
+        //     headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
+        //     data: {
+        //       imp_key: process.env.imp_key, // REST API키
+        //       imp_secret: process.env.imp_secret // REST API Secret
+        //     }
+        // });
+        // const { access_token } = getToken.data.response; // 인증 토큰
+        
+        // // imp_uid로 아임포트 서버에서 결제 정보 조회
+        // const getPaymentData = await axios({
+        //     url: 'https://api.iamport.kr/payments/'+imp_uid, // imp_uid 전달
+        //     method: "get", // GET method
+        //     headers: { "Authorization": access_token } // 인증 토큰 Authorization header에 추가
+        // });
+        // const paymentData = getPaymentData.data.response; // 조회한 결제 정보
+        // console.log("어마운드"+paymentData.amount);
+        // console.log("주소"+paymentData.buyer_addr);
+        // console.log("전번"+paymentData.buyer_tel);
+        // console.log("이메일"+paymentData.buyer_email);
+        // console.log("구매자"+paymentData.buyer_name);
+        // console.log("제품"+paymentData.name);
+        // console.log("방식"+paymentData.pay_method);
+        // console.log("사이트"+paymentData.pg_provider);
+        // console.log("상태"+paymentData.status);
         
         // DB에서 결제되어야 하는 금액 조회
-        var goodsDB = [];
+        
+        // var newGoods = [];
+        // var option = [];
+        // for(var i = 0; i < goods.length; i++) {
+        //     option[i] = goodsJson[i].ON.split(",");
+        //     newGoods[i] = await Goods.aggregate([
+        //         {
+        //             $match: { "GN" : goodsJson[i].GN }
+        //         },
+        //         {
+        //             $project: { "_id" : 0, "GN" : 1, "GP" : 1 }
+        //         },
+        //         {
+        //             $lookup: {
+        //                 from: "Goods_Option",
+        //                 localField: "GN",
+        //                 foreignField: "GNA",
+        //                 as: "option"
+        //             }
+        //         }
+        //     ]);
+        // }
+        // // console.log("검색"+newGoods.length);
+        // // console.log("아오"+newGoods[0][0].option);
+        // console.log("뉴굿즈"+JSON.stringify(newGoods));
+        // // console.log("조건"+newGoods[1][0].option[1].ON)
+        
+        var newGoods = [];
+        var optionGoods = [];
         for(var i = 0; i < goods.length; i++) {
-            goodsDB[i] = await Goods.find({ "GN" : goods[i].GN });
-        }
-        // const service = await Service.findOne({"SN" : paymentData.name});
-        // const 
-        
-        // 결제 검증하기
-        const { amount, status } = paymentData;
-        if(service) {
-            const amountToBePaid = service.PR; // 결제 되어야 하는 금액
-            console.log("오더"+service+"오더금액"+amountToBePaid);
-        
-            if ((amount === amountToBePaid)) { // 결제 금액 일치. 결제 된 금액 === 결제 되어야 하는 금액
-                switch (status) {
-                    // case "ready": // 가상계좌 발급
-                    //     // DB에 가상계좌 발급 정보 저장
-                    //     const { vbank_num, vbank_date, vbank_name } = paymentData;
-                    //     await Company.findByIdAndUpdate(company._id, { $set: { vbank_num, vbank_date, vbank_name }});
-                    //     // 가상계좌 발급 안내 문자메시지 발송
-                    //     SMS.send({ text: '가상계좌 발급이 성공되었습니다. 계좌 정보'+vbank_num+vbank_date+vbank_name });
-                    //     res.send({ status: "vbankIssued", message: "가상계좌 발급 성공" });
-                    //     break;
-                    case "paid": // 결제 완료
-                        await Order.create({
-                            GN : paymentData.name,
-                            AM : paymentData.amount,
-                            CID: company._id,
-                            BN : paymentData.buyer_name,
-                            BE : paymentData.buyer_email,
-                            BT : paymentData.buyer_tel,
-                            BA : paymentData.buyer_addr,
-                            MID : merchant_uid,
-                            IID : imp_uid,
-                            PAM : paymentData.pay_method,
-                            PG : paymentData.pg_provider,
-                            PS : paymentData.status,
-                        }); // DB에 결제 정보 저장
-                        await Company.update({"_id" : company._id}, {$inc : { SPO : service.PO }});
-                        res.send({ status: "success", message: "일반 결제 성공" });
-                        break;
-                    case "cancelled": // 결제 취소
-                        res.send({ status: "cancelled", message: "결제 취소" });
-                        break;
-                    case "failed": // 결제 실패
-                        res.send({ status: "failed", message: "결제 실패" });
-                        break;
-                }
-            } else { // 결제 금액 불일치. 위/변조 된 결제
-                return res.send({ status: "forgery", message: "위조된 결제시도" });
-            }
-        }
-        else {
-            const reason = "결제 실패";
-            
-            const getCancelData = await axios({
-                url: "https://api.iamport.kr/payments/cancel",
-                method: "post",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": access_token
+            if(goodsJson[i].ON == "undefined") {
+                newGoods[i] = await Goods.aggregate([
+                {
+                    $lookup: {
+                        from: "Goods_Option",
+                        localField: "GN",
+                        foreignField: "GNA",
+                        as: "option"
+                    }
                 },
-                data: {
-                    reason,
-                    imp_uid
+                {
+                    $unwind: {
+                        path: "$option",
+                        preserveNullAndEmptyArrays: true
+                    }
+                },
+                { $match: { "GN" : goodsJson[i].GN } },
+                { $project: { "_id" : 0, "GN" : 1, "GP" : 1, "option.ON" : 1, "option.OP" : 1, "NUM" : goodsJson[i].NUM } }
+            ]);
+            }
+            else {
+                var option = goodsJson[i].ON.split(",");
+                for(var j = 0; j < option.length; j++) {
+                    optionGoods[j] = await Goods.aggregate([
+                        {
+                            $lookup: {
+                                from: "Goods_Option",
+                                localField: "GN",
+                                foreignField: "GNA",
+                                as: "option"
+                            }
+                        },
+                        {
+                            $unwind: {
+                                path: "$option",
+                                preserveNullAndEmptyArrays: true
+                            }
+                        },
+                        { $match: { "GN" : goodsJson[i].GN, "option.ON" : option[j] } },
+                        { $project: { "_id" : 0, "GN" : 1, "GP" : 1, "option.ON" : 1, "option.OP" : 1, "NUM" : goodsJson[i].NUM } }
+                    ]);
                 }
-            });
-            return res.send({ status: "failed", message: "결제 실패" });
+                newGoods.push(optionGoods);
+            }
+            // newGoods[i] = await Goods.aggregate([
+            //     {
+            //         $lookup: {
+            //             from: "Goods_Option",
+            //             localField: "GN",
+            //             foreignField: "GNA",
+            //             as: "option"
+            //         }
+            //     },
+            //     {
+            //         $unwind: {
+            //             path: "$option",
+            //             preserveNullAndEmptyArrays: true
+            //         }
+            //     },
+            //     { $match: { "GN" : goodsJson[i].GN, "option.ON" : option[i][0] } },
+            //     { $project: { "_id" : 0, "GN" : 1, "GP" : 1, "option.ON" : 1, "option.OP" : 1 } }
+            // ]);
         }
+        console.log("제이슨"+JSON.stringify(goodsJson));
+        console.log("뉴굿즈"+JSON.stringify(newGoods));
+        
+        /////////////////////////////////////////////////////////////////////////
+        // var goodsDB = [];
+        // for(var i = 0; i < goods.length; i++) {
+        //     goodsDB[i] = await Goods.find({ "GN" : goodsJson[i].GN });
+        // }
+        // var optionDB = [];
+        // var option = [];
+        // for(var j = 0; j < goods.length; j++) {
+        //     if(goodsDB.GO == true) {
+        //         // option[j] = goodsJson[j].ON.split(",");
+        //         // for(var h = 0; h < option[j].length; h++) {
+        //         //     optionDB[j] = await GoodsOption.find({ "GID" : goodsDB[j][0]._id, "ON" : option[j][h] });
+        //         // }
+        //     }
+        // }
+        // console.log("옵옵"+option[1][1]);
+        // console.log("굿즈"+goodsDB);
+        // console.log("옵션"+optionDB);
+        ///////////////////////////////////////////////////////////////////////////////
+        // // 결제 검증하기
+        // const { amount, status } = paymentData;
+        // if(service) {
+        //     const amountToBePaid = service.PR; // 결제 되어야 하는 금액
+        //     console.log("오더"+service+"오더금액"+amountToBePaid);
+        
+        //     if ((amount === amountToBePaid)) { // 결제 금액 일치. 결제 된 금액 === 결제 되어야 하는 금액
+        //         switch (status) {
+        //             // case "ready": // 가상계좌 발급
+        //             //     // DB에 가상계좌 발급 정보 저장
+        //             //     const { vbank_num, vbank_date, vbank_name } = paymentData;
+        //             //     await Company.findByIdAndUpdate(company._id, { $set: { vbank_num, vbank_date, vbank_name }});
+        //             //     // 가상계좌 발급 안내 문자메시지 발송
+        //             //     SMS.send({ text: '가상계좌 발급이 성공되었습니다. 계좌 정보'+vbank_num+vbank_date+vbank_name });
+        //             //     res.send({ status: "vbankIssued", message: "가상계좌 발급 성공" });
+        //             //     break;
+        //             case "paid": // 결제 완료
+        //                 await Order.create({
+        //                     GN : paymentData.name,
+        //                     AM : paymentData.amount,
+        //                     CID: company._id,
+        //                     BN : paymentData.buyer_name,
+        //                     BE : paymentData.buyer_email,
+        //                     BT : paymentData.buyer_tel,
+        //                     BA : paymentData.buyer_addr,
+        //                     MID : merchant_uid,
+        //                     IID : imp_uid,
+        //                     PAM : paymentData.pay_method,
+        //                     PG : paymentData.pg_provider,
+        //                     PS : paymentData.status,
+        //                 }); // DB에 결제 정보 저장
+        //                 await Company.update({"_id" : company._id}, {$inc : { SPO : service.PO }});
+        //                 res.send({ status: "success", message: "일반 결제 성공" });
+        //                 break;
+        //             case "cancelled": // 결제 취소
+        //                 res.send({ status: "cancelled", message: "결제 취소" });
+        //                 break;
+        //             case "failed": // 결제 실패
+        //                 res.send({ status: "failed", message: "결제 실패" });
+        //                 break;
+        //         }
+        //     } else { // 결제 금액 불일치. 위/변조 된 결제
+        //         return res.send({ status: "forgery", message: "위조된 결제시도" });
+        //     }
+        // }
+        // else {
+        //     const reason = "결제 실패";
+            
+        //     const getCancelData = await axios({
+        //         url: "https://api.iamport.kr/payments/cancel",
+        //         method: "post",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //             "Authorization": access_token
+        //         },
+        //         data: {
+        //             reason,
+        //             imp_uid
+        //         }
+        //     });
+        //     return res.send({ status: "failed", message: "결제 실패" });
+        // }
     }
     catch(err) {
         console.error(err);

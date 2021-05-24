@@ -1,6 +1,6 @@
 const express = require('express');
 const Car = require('../schemas/car');
-const Cardelete = require('../schemas/car_delete')
+const Cardelete = require('../schemas/car_delete');
 var moment = require('moment');
 const {isNotLoggedIn} = require('./middleware');
 const multiparty = require('multiparty');

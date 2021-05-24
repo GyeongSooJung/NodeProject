@@ -1,6 +1,6 @@
 const express = require('express');
 const Worker = require('../schemas/worker');
-const Workerdelete = require('../schemas/worker_delete')
+const Workerdelete = require('../schemas/worker_delete');
 const moment = require('moment');
 const {isLoggedIn,isNotLoggedIn,DataSet} = require('./middleware');
 const router = express.Router();
@@ -173,14 +173,14 @@ router.get('/worker_delete/:EM',isNotLoggedIn ,async (req, res, next) => {
     
     const workerone = await Worker.findOne({ "EM" : req.params.EM });
     await Workerdelete.create({
-                   "CID" : workerone.CID,
-                    "WN" : workerone.WN,
-                    "PN" : workerone.PN,
-                    "GID" : workerone.GID,
-                    "EM" : workerone.EM,
-                    "PU" : workerone.PU,
-                    "AU" : workerone.AU,
-                    "AC" :workerone.AC
+       "CID" : workerone.CID,
+        "WN" : workerone.WN,
+        "PN" : workerone.PN,
+        "GID" : workerone.GID,
+        "EM" : workerone.EM,
+        "PU" : workerone.PU,
+        "AU" : workerone.AU,
+        "AC" :workerone.AC
     });
     
     await Worker.remove({ "EM" : req.params.EM });

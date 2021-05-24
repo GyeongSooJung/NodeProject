@@ -515,69 +515,77 @@
 	        var NUM = $('input[name=list-count]');
 	        var TS = $('input[name=TS]').val();
 	        var goods = [];
-	        // var item = {};
 	        
-	        // item["GN"] = ;
 	        
 	        for(var i = 0; i < shopItemLength; i++) {
-	        	goods[i] = [GN.eq(i).val(), GP.eq(i).val(), ON.eq(i).val(), OP.eq(i).val(), NUM.eq(i).val()];
+	        	goods[i] = JSON.stringify({"GN" : GN.eq(i).val(), "GP" : GP.eq(i).val(), "ON" : ON.eq(i).val(), "OP" : OP.eq(i).val(), "NUM" : NUM.eq(i).val()});
 	        }
 	        
-	        var IMP = window.IMP;
-	        IMP.init('{{imp_code}}');
-	        
-	        IMP.request_pay({
-	            pg : 'inicis', // version 1.1.0부터 지원.
-	            pay_method : 'card',
-	            merchant_uid : 'merchant_' + new Date().getTime(),
-	            name : 'OASIS 상품',
-	            amount : TS,
-	            buyer_name : '{{company.CNA}}',
-	            buyer_email : '{{company.EA}}',
-	            buyer_tel : '{{company.PN}}',
-	            buyer_addr : '{{company.ADR}}',
-	            m_redirect_url : '{{HOME}}/payments/complete/mobile'
-	        }, function(rsp) {
-	            if (rsp.success) {
-	                $.ajax({
-	                    url: "/payments/complete",
-	                    type: "POST",
-	                    traditional: true,
-	                    dataType: 'json',
-	                    data: {
-	                        imp_uid: rsp.imp_uid,
-	                        merchant_uid: rsp.merchant_uid,
-	                        goods: goods
-	                    }
-	                }).done(function (data) {
-	                    switch(data.status) {
-	                        // case "vbankIssued":
-	                        //     var msg = "가상계좌가 생성되었습니다.";
-	                        //     msg += '\n가상계좌명' + rsp.vbank_name;
-	                        //     msg += '\n가상계좌번호' + rsp.vbank_num;
-	                        //     msg += '\n생성일' + rsp.vbank_date;
-	                        //     break;
-	                        case "success":
-	                            var msg = "{{__('payment_success')}}";
-	                            alert(msg);
-	                            window.location.href = '/pay_confirm?imp_uid='+rsp.imp_uid;
-	                            break;
-	                        case "cancelled":
-	                            var msg = "{{__('payment_cancelled')}}";
-	                            break;
-	                        case "failed":
-	                            var msg = "{{__('payment_failed')}}";
-	                            break;
-	                        case "forgery":
-	                            var msg = "{{__('payment_forgery')}}";
-	                            break;
-	                    }
-	                    return alert(msg);
-	                });
-	            } else {
-	                return alert("{{__('payment_failed')}} " +  rsp.error_msg);
-	            }
+	        $.ajax({
+	        	url: "/shop/complete",
+                type: "POST",
+                traditional: true,
+                dataType: 'json',
+                data: {
+                    goods: goods
+                }
 	        });
+	        
+	        // var IMP = window.IMP;
+	        // IMP.init('{{imp_code}}');
+	        
+	        // IMP.request_pay({
+	        //     pg : 'inicis', // version 1.1.0부터 지원.
+	        //     pay_method : 'card',
+	        //     merchant_uid : 'merchant_' + new Date().getTime(),
+	        //     name : 'OASIS 상품',
+	        //     amount : TS,
+	        //     buyer_name : '{{company.CNA}}',
+	        //     buyer_email : '{{company.EA}}',
+	        //     buyer_tel : '{{company.PN}}',
+	        //     buyer_addr : '{{company.ADR}}',
+	        //     m_redirect_url : '{{HOME}}/payments/complete/mobile'
+	        // }, function(rsp) {
+	        //     if (rsp.success) {
+	        //         $.ajax({
+	        //             url: "/shop/complete",
+	        //             type: "POST",
+	        //             traditional: true,
+	        //             dataType: 'json',
+	        //             data: {
+	        //                 imp_uid: rsp.imp_uid,
+	        //                 merchant_uid: rsp.merchant_uid,
+	        //                 goods: goods
+	        //             }
+	        //         }).done(function (data) {
+	        //             switch(data.status) {
+	        //                 // case "vbankIssued":
+	        //                 //     var msg = "가상계좌가 생성되었습니다.";
+	        //                 //     msg += '\n가상계좌명' + rsp.vbank_name;
+	        //                 //     msg += '\n가상계좌번호' + rsp.vbank_num;
+	        //                 //     msg += '\n생성일' + rsp.vbank_date;
+	        //                 //     break;
+	        //                 case "success":
+	        //                     var msg = "{{__('payment_success')}}";
+	        //                     alert(msg);
+	        //                     window.location.href = '/pay_confirm?imp_uid='+rsp.imp_uid;
+	        //                     break;
+	        //                 case "cancelled":
+	        //                     var msg = "{{__('payment_cancelled')}}";
+	        //                     break;
+	        //                 case "failed":
+	        //                     var msg = "{{__('payment_failed')}}";
+	        //                     break;
+	        //                 case "forgery":
+	        //                     var msg = "{{__('payment_forgery')}}";
+	        //                     break;
+	        //             }
+	        //             return alert(msg);
+	        //         });
+	        //     } else {
+	        //         return alert("{{__('payment_failed')}} " +  rsp.error_msg);
+	        //     }
+	        // });
 	    }
     
 	</script>
