@@ -762,89 +762,191 @@ router.get('/worker_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 
 router.post('/ajax/worker_list', isNotLoggedIn, DataSet, async function(req, res) {
   const CID = req.body.CID;
-  
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
   
-  if ((search!="") && (searchtext!="")) {
-    try{
-      if (search =="WN") {
-        var workers = await Worker.find({ "CID": CID, "WN" : {$regex:searchtext} });
-        if(workers.length == 0) 
-        res.json({result : "nothing"});
-      }
-      else if (search =="PN") {
-        var workers = await Worker.find({ "CID": CID, "PN" : {$regex:searchtext} });
-        if(workers.length == 0) 
-        res.json({result : "nothing"});
-      }
-      else if (search =="EM") {
-        var workers = await Worker.find({ "CID": CID, "EM" : {$regex:searchtext} });
-        if(workers.length == 0) 
-        res.json({result : "nothing"});
-      }
-      else {
-        var workers = await Worker.find({ "CID": CID }).sort({ ET: -1 });
-      }
-    }catch(e) {
-      res.json({ result: false});
+  if(CID == "5fd6c731a26c914fbad53ebe") {
+    
+    var franchiseCIDlist = await Company.aggregate([
+            
+                          { $match : {CK : "MK 대리점"} },
+                          { $project : {CID : 1}},
+                             
+                          ], function (err,result) {
+                            if(err) throw err;
+                          });
+    var CIDlist = [];
+    for (var i = 0; i < franchiseCIDlist.length; i ++) {
+      CIDlist.push(String(franchiseCIDlist[i]._id))
     }
     
-  }
-  
-  else {
+    CIDlist.push(CID);
     
-      var workers = await Worker.find({ "CID": CID });
+    console.log(CIDlist)
     
-      if(sort == "WN") {
-          workers.sort(function (a,b) {
-            
-            if(typeof(a.WN) == "object")
-            a.WN = JSON.stringify(a.WN);
-            return (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      
-      else if(sort == "WN2") {
-          workers.sort(function (a,b) {
-            if(typeof(a.WN) == "object")
-            a.WN = JSON.stringify(a.WN);
-            return (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      
-      else if(sort == "PN") { 
-          workers.sort(function (a,b) {
-            if(typeof(a.PN) == "object")
-            a.PN = parseInt(a.PN);
-            return (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      
-      else if(sort == "PN2"){
-          workers.sort(function (a,b) {
-            if(typeof(a.PN) == "object")
-            a.PN = JSON.stringify(a.PN);
-            return (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? 1 : 0;
-          })
-       }
-      else if(sort == "EM") {
-          workers.sort(function (a,b) {
-            return (a.EM).length < (b.EM).length ? -1 : (a.EM).length > (b.EM).length ? 1 : 0;
-          });
-          
-      }
-      else if(sort == "EM2") {
-          workers.sort(function (a,b) {
-            return (a.EM).length > (b.EM).length ? -1 : (a.EM).length < (b.EM).length ? 1 : 0;
-          });
-      }
-      else {
-        var workers = await Worker.find({ "CID": CID }).sort({ CA: -1 });
+    if ((search!="") && (searchtext!="")) {
+        try{
+          if (search =="WN") {
+            var workers = await Worker.find({ "CID": {$in : CIDlist}, "WN" : {$regex:searchtext} });
+            if(workers.length == 0) 
+            res.json({result : "nothing"});
+          }
+          else if (search =="PN") {
+            var workers = await Worker.find({ "CID": {$in : CIDlist}, "PN" : {$regex:searchtext} });
+            if(workers.length == 0) 
+            res.json({result : "nothing"});
+          }
+          else if (search =="EM") {
+            var workers = await Worker.find({ "CID": {$in : CIDlist}, "EM" : {$regex:searchtext} });
+            if(workers.length == 0) 
+            res.json({result : "nothing"});
+          }
+          else {
+            var workers = await Worker.find({ "CID": {$in : CIDlist} }).sort({ ET: -1 });
+          }
+        }catch(e) {
+          res.json({ result: false});
+        }
         
       }
+      
+      else {
+        
+          var workers = await Worker.find({ "CID": {$in : CIDlist} });
+        
+          if(sort == "WN") {
+              workers.sort(function (a,b) {
+                
+                if(typeof(a.WN) == "object")
+                a.WN = JSON.stringify(a.WN);
+                return (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? 1 : 0;
+              })
+          }
+          
+          else if(sort == "WN2") {
+              workers.sort(function (a,b) {
+                if(typeof(a.WN) == "object")
+                a.WN = JSON.stringify(a.WN);
+                return (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? 1 : 0;
+              })
+          }
+          
+          else if(sort == "PN") { 
+              workers.sort(function (a,b) {
+                if(typeof(a.PN) == "object")
+                a.PN = parseInt(a.PN);
+                return (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? 1 : 0;
+              })
+          }
+          
+          else if(sort == "PN2"){
+              workers.sort(function (a,b) {
+                if(typeof(a.PN) == "object")
+                a.PN = JSON.stringify(a.PN);
+                return (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? 1 : 0;
+              })
+           }
+          else if(sort == "EM") {
+              workers.sort(function (a,b) {
+                return (a.EM).length < (b.EM).length ? -1 : (a.EM).length > (b.EM).length ? 1 : 0;
+              });
+              
+          }
+          else if(sort == "EM2") {
+              workers.sort(function (a,b) {
+                return (a.EM).length > (b.EM).length ? -1 : (a.EM).length < (b.EM).length ? 1 : 0;
+              });
+          }
+          else {
+            var workers = await Worker.find({ "CID": {$in : CIDlist} }).sort({ CA: -1 });
+            
+          }
+      }
+    
+    
   }
+  else {
+      if ((search!="") && (searchtext!="")) {
+        try{
+          if (search =="WN") {
+            var workers = await Worker.find({ "CID": CID, "WN" : {$regex:searchtext} });
+            if(workers.length == 0) 
+            res.json({result : "nothing"});
+          }
+          else if (search =="PN") {
+            var workers = await Worker.find({ "CID": CID, "PN" : {$regex:searchtext} });
+            if(workers.length == 0) 
+            res.json({result : "nothing"});
+          }
+          else if (search =="EM") {
+            var workers = await Worker.find({ "CID": CID, "EM" : {$regex:searchtext} });
+            if(workers.length == 0) 
+            res.json({result : "nothing"});
+          }
+          else {
+            var workers = await Worker.find({ "CID": CID }).sort({ ET: -1 });
+          }
+        }catch(e) {
+          res.json({ result: false});
+        }
+        
+      }
+      
+      else {
+        
+          var workers = await Worker.find({ "CID": {$in : CIDlist} });
+        
+          if(sort == "WN") {
+              workers.sort(function (a,b) {
+                
+                if(typeof(a.WN) == "object")
+                a.WN = JSON.stringify(a.WN);
+                return (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? 1 : 0;
+              })
+          }
+          
+          else if(sort == "WN2") {
+              workers.sort(function (a,b) {
+                if(typeof(a.WN) == "object")
+                a.WN = JSON.stringify(a.WN);
+                return (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? 1 : 0;
+              })
+          }
+          
+          else if(sort == "PN") { 
+              workers.sort(function (a,b) {
+                if(typeof(a.PN) == "object")
+                a.PN = parseInt(a.PN);
+                return (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? 1 : 0;
+              })
+          }
+          
+          else if(sort == "PN2"){
+              workers.sort(function (a,b) {
+                if(typeof(a.PN) == "object")
+                a.PN = JSON.stringify(a.PN);
+                return (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? 1 : 0;
+              })
+           }
+          else if(sort == "EM") {
+              workers.sort(function (a,b) {
+                return (a.EM).length < (b.EM).length ? -1 : (a.EM).length > (b.EM).length ? 1 : 0;
+              });
+              
+          }
+          else if(sort == "EM2") {
+              workers.sort(function (a,b) {
+                return (a.EM).length > (b.EM).length ? -1 : (a.EM).length < (b.EM).length ? 1 : 0;
+              });
+          }
+          else {
+            var workers = await Worker.find({ "CID": CID }).sort({ CA: -1 });
+            
+          }
+      }
+  }
+  console.log(workers)
   
   var workerlist = [];
   if(workers.length) {
@@ -863,6 +965,8 @@ router.post('/ajax/post', isNotLoggedIn, DataSet, async function(req, res) {
   var au_false = req.body.au_false;
   var ac_true = req.body.ac_true;
   var ac_false = req.body.ac_false;
+  
+  var com_audata = req.body.com_audata;
 
 
 
@@ -870,12 +974,16 @@ router.post('/ajax/post', isNotLoggedIn, DataSet, async function(req, res) {
   const CNU = req.decoded.CNU;
 
   let workerone;
-
-  if (au_true) {
-    workerone = await Worker.where({ "EM": au_true }).update({ "AU": 1 }).setOptions({ runValidators: true }).exec();
+  
+  if (com_audata) {
+    var comaudata = com_audata.split(",")
+    workerone = await Worker.where({ "EM": comaudata[0] }).update({ "AU": comaudata[1] }).setOptions({ runValidators: true }).exec();
+  }
+  else if (au_true) {
+    workerone = await Worker.where({ "EM": au_true }).update({ "AU": 2 }).setOptions({ runValidators: true }).exec();
   }
   else if (au_false) {
-    workerone = await Worker.where({ "EM": au_false }).update({ "AU": 2 }).setOptions({ runValidators: true }).exec();
+    workerone = await Worker.where({ "EM": au_false }).update({ "AU": 1 }).setOptions({ runValidators: true }).exec();
   }
   else if (ac_true) {
     workerone = await Worker.where({ "EM": ac_true }).update({ "AC": true }).setOptions({ runValidators: true }).exec();

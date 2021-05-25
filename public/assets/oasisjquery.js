@@ -78,7 +78,7 @@
     
     // ------------------------------- 페이지네이션 ------------------------------------
     
-    function pagereload(Object,condition,i18nconvert) {
+    function pagereload(Object,condition,i18nconvert,condition2) {
     	// console.log(JSON.stringify(Object));
 			$("input:checkbox[name='allck']").prop("checked", false);
 			$("input:checkbox[name='ck']").prop("checked", false);
@@ -113,8 +113,13 @@
 		        	//페이지 넘버 박스 초기화
 			     	$("#pagebox *").remove(); 
 			    		
-			    		
-			    	condition(Object);
+			    	if(condition2)
+			    	{
+			    		console.log("@@")
+			    	}else
+			    	{
+			    		condition(Object);
+			    	}
 			    	
 						  var insertTr = " ";
 				    	  insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('left',pagingObject,condition,i18nconvert) class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>";
