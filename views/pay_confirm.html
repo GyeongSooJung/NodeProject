@@ -3,7 +3,7 @@
 {% block content %}
 <div id="content" class="content">
    <!-- begin page-header -->
-   <h1 class="page-header">A/S</h1>
+   <h1 class="page-header">{{__('payment_complete')}}</h1>
    <!-- end page-header -->
    <!-- begin row -->
    <div class="row">
@@ -46,16 +46,44 @@
                     </tr>
                 </table>
                 <table class="col-md-8 table table-bordered table-td-valign-middle mx-auto mt-4 text-center">
-                    <caption class="text-black font-weight-bold" style="caption-side:top">{{__('payment_p_info')}}</caption>
-                    <tr>
-                        <th width="30%" class="table-secondary">{{__('payment_point')}}</th>
-                        <td>{{serviceone.PO}} p</td>
-                    </tr>
+                    <caption class="text-black font-weight-bold" style="caption-side:top">{{__('payment_detail')}}</caption>
+                    <!--<tr>-->
+                    <!--    <th width="30%" class="table-secondary">{{__('payment_point')}}</th>-->
+                    <!--    <td>{{orderGoods}} p</td>-->
+                    <!--</tr>-->
+                    <thead>
+                        <tr>
+                            <th width="50%" class="table-secondary">{{__('payment_name')}}</th>
+                            <th width="20%" class="table-secondary">{{__('payment_number')}}</th>
+                            <th width="30%" class="table-secondary">{{__('payment_amount')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in orderGoods %}
+                        <tr>
+                            <td>{{item.OGN}}
+                                {% if item.OON %}
+                                    ({{item.OON}})
+                                {% else %}
+                                {% endif %}
+                            </td>
+                            <td>{{item.ONU}}</td>
+                            <td>{{item.OTP}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr class="font-weight-bold">
+                           <td>{{__('payment_amount_all')}}</td>
+                           <td>{{orderAllCount}}</td>
+                           <td>{{paymentData.amount}}</td>
+                        </tr>
+                    </tfoot>
                 </table>
                 <div class="d-flex justify-content-center align-items-center mt-5">
                    <a href="/pay_point" class="btn btn-primary text-white px-4 mx-2">{{__('payment_buymore')}}</a>
                     <a href="/pay_list" class="btn btn-primary text-white px-4 mx-2">{{__('layout_payment_list')}}</a>
-                    <a href="javascript:receiptPay('{{paymentData.imp_uid}}')" class="btn btn-primary text-white px-4 mx-2">{{__('payment_printreceipt')}}</a>
+                    <a href='javascript:;' onclick='receiptPay(this);' class="btn btn-primary text-white px-4 mx-2" name="{{paymentData.imp_uid}}">{{__('payment_printreceipt')}}</a>
                     </div>
                 </div>
             <!-- end panel-body -->
@@ -65,6 +93,19 @@
    </div>
    <!-- end row -->
 </div>
+
+<script>
+    //영수증 출력 화면
+    function receiptPay(obj) {
+        var imp_code = $(obj).attr('name');
+        if (imp_code)
+            window.open("/receipt?imp_uid="+imp_code,"pop","width=620, height=700, scrollbars=yes, resizable=yes"); 
+        else{
+            alert("{{__('purchase_failed')}}");
+        }   
+    }
+</script>
+
 {% endblock %}
 
 {% block script %}

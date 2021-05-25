@@ -7,6 +7,7 @@ const Car = require('../schemas/car');
 const Worker = require('../schemas/worker');
 const History = require('../schemas/history');
 const Order = require('../schemas/order');
+const OrderDetail = require('../schemas/order_detail');
 const Service = require('../schemas/service');
 const Publish = require('../schemas/publish');
 const Point = require('../schemas/point');
@@ -1183,30 +1184,30 @@ router.get('/history_chart/:_id', isNotLoggedIn, DataSet, async(req, res, next) 
 //                                  pay                                       //
 //----------------------------------------------------------------------------//
 
+// // 테스트
+// router.get('/pay_point', isNotLoggedIn, DataSet, async(req, res, next) => {
+//   const CID = req.decoded.CID;
+//   const CNU = req.decoded.CNU;
+//   const imp_code = process.env.imp_code;
+//   const HOME = process.env.IP;
+
+//   const aclist = await Worker.find({ "CID": CID, "AC": false });
+//   const service = await Service.find({});
+//   const noticethree = await Notice.find().limit(3).sort({CA : -1});
+
+
+//   try {
+//     res.render('pay_point', { company: req.decoded.company, aclist, noticethree, imp_code, HOME, service });
+//   }
+//   catch (err) {
+//     console.error(err);
+//     next(err);
+//   }
+// });
+
+
 //포인트 결제
 router.get('/pay_point', isNotLoggedIn, DataSet, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const CNU = req.decoded.CNU;
-  const imp_code = process.env.imp_code;
-  const HOME = process.env.IP;
-
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
-  const service = await Service.find({});
-  const noticethree = await Notice.find().limit(3).sort({CA : -1});
-
-
-  try {
-    res.render('pay_point', { company: req.decoded.company, aclist, noticethree, imp_code, HOME, service });
-  }
-  catch (err) {
-    console.error(err);
-    next(err);
-  }
-});
-
-
-//테스트
-router.get('/test', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const imp_code = process.env.imp_code;
@@ -1217,7 +1218,7 @@ router.get('/test', isNotLoggedIn, DataSet, async(req, res, next) => {
   const goods = await Goods.find({});
   
   try {
-    res.render('test', { company: req.decoded.company, aclist, imp_code, HOME, service, goods });
+    res.render('pay_point', { company: req.decoded.company, aclist, imp_code, HOME, service, goods });
   }
   catch (err) {
     console.error(err);
@@ -1281,9 +1282,15 @@ router.get('/pay_confirm', isNotLoggedIn, DataSet, async(req, res, next) => {
   });
   const paymentData = getPaymentData.data.response; // 조회한 결제 정보
 
-  const serviceone = await Service.findOne({ "SN": paymentData.name });
+  const orderGoods = await OrderDetail.find({ "OID": paymentData.merchant_uid });
+  var orderAllCount = 0;
+  for(var i = 0; i < orderGoods.length; i ++) {
+    var orderCount = orderGoods[i].ONU;
+    orderAllCount += orderCount;
+  }
+  
   try {
-    res.render('pay_confirm', { company: req.decoded.company, aclist, imp_code, paymentData, noticethree, serviceone });
+    res.render('pay_confirm', { company: req.decoded.company, aclist, imp_code, paymentData, noticethree, orderGoods, orderAllCount });
   }
   catch (err) {
     console.error(err);
@@ -1455,6 +1462,14 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res) {
  
 });
 
+router.post('/ajax/pay_list_detail', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const { merchant_uid } = req.body;
+
+  const orderGoods = await OrderDetail.find({ "OID" : merchant_uid });
+  
+  res.send({ status : "success", orderGoods : orderGoods });
+});
+
 // 영수증
 router.get('/receipt', isNotLoggedIn, DataSet, async(req, res, next) => {
 
@@ -1484,8 +1499,14 @@ router.get('/receipt', isNotLoggedIn, DataSet, async(req, res, next) => {
 
 
   const orderone = await Order.find({ "IID": imp_uid });
+  const orderGoods = await OrderDetail.find({ "OID" : paymentData.merchant_uid });
+  var orderAllCount = 0;
+  for(var i = 0; i < orderGoods.length; i ++) {
+    var orderCount = orderGoods[i].ONU;
+    orderAllCount += orderCount;
+  }
 
-  res.render('receipt', { company: req.decoded.company, aclist, paymentData, orderone, moment });
+  res.render('receipt', { company: req.decoded.company, aclist, paymentData, orderone, orderGoods, orderAllCount, moment });
 
 })
 

@@ -1,0 +1,508 @@
+{% extends 'layout.html' %}
+
+{% block css %}
+<link href="../assets/css/custom.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<div id="content" class="content">
+   <!-- begin page-header -->
+   <h1 class="page-header">{{__('payment')}}</h1>
+   <!-- end page-header -->
+   <!-- begin row -->
+   <div class="row">
+      <!-- begin col-6 -->
+      <div class="col-xl-12">
+         <!-- begin panel -->
+         <div class="panel panel-inverse" data-sortable-id="form-validation-1">
+            <!-- begin panel-heading -->
+            <div class="panel-heading">
+               <h4 class="panel-title">{{__('layout_payment_point_purchase')}} ({{__('payment_tax_guide')}})</h4>
+               <p class="m-0"></p>
+            </div>
+            <!-- end panel-heading -->
+            <!-- begin panel-body -->
+            <div class="panel-body">
+                  <form method="post" data-parsley-validate="true">
+                      <div class="d-flex justify-content-center align-items-center flex-wrap">
+                         {% for goods in service %}
+                         <div class="radio-tile">
+                            <input type="radio" class="radio-btn" name="point" value="{{goods.PR}}" onclick="check(this.value)" />
+                            <div class="radio-text">
+                                <i class="fas fa-4x fa-sms mb-2 icolor"></i>
+                                <p class="mb-2 font-weight-bold">+ {{goods.PO}} point</p>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <h1 class="mb-0 mr-1">
+                                        <script>
+                                            var pr = Math.floor("{{goods.PR * 1.1}}");
+                                            document.write(pr);
+                                        </script>
+                                    </h1>
+                                    <h4 class="mb-0 mt-1">{{__('payment_won')}}</h4>
+                                </div>
+                            </div>
+                         </div>
+                         {% endfor %}
+                     </div>
+                     <div class="col-md-5 mx-auto my-4 py-2 bg-gray-200 rounded border">
+                        <table class="table table-borderless table-last table-td-valign-middle mb-0">
+                            <tr class="guide">
+                                <th colspan="2" class="text-center">{{__('payment_guide')}}</th>
+                            </tr>
+                            <tr class="goodsInfo">
+                                <th width=35% class="text-left">{{__('payment_selected_goods')}}</th>
+                                <td width=65% id="check_name" class="text-right h5 mb-0"></td>
+                            </tr>
+                            <tr class="goodsInfo">
+                                <th class="text-left">{{__('payment_buy_point')}}</th>
+                                <td id="check_point" class="text-right h5 mb-0"></td>
+                            </tr>
+                            <tr class="goodsInfo">
+                                <th class="text-left">{{__('payment_amount')}}<br><small>({{__('payment_theamountofgoods')}} + {{__('payment_tax')}})</small></th>
+                                <td id="check_amount" class="text-right h5 mb-0"></td>
+                            </tr>
+                            <tr class="goodsInfo">
+                                <th class="text-left">{{__('payment_current')}}</th>
+                                <td id="check_current" class="text-right h5 mb-0"></td>
+                            </tr>
+                            <tr class="goodsInfo">
+                                <th></th>
+                                <td id="b-arrow" class="text-right"></td>
+                            </tr>
+                            <tr class="goodsInfo">
+                                <th class="text-left">{{__('payment_after')}}</th>
+                                <td id="check_after" class="text-right h5 mb-0"></td>
+                            </tr>
+                        </table>
+                     </div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <a href="javascript:payments('point')" class="btn btn-primary text-white px-4"><i class="fas fa-credit-card mr-2"></i>{{__('payment')}}</a>
+                        <!--<a href="javascript:payments2('sms')" class="btn btn-primary text-white px-4"><i class="fas fa-credit-card mr-2"></i>정기 결제</a>-->
+                        </div>
+                  </form>
+                </div>
+            <!-- end panel-body -->
+         </div>
+         <!-- end panel -->
+      </div>
+      <!--<div class="col-xl-12">-->
+      <!--   <div class="panel panel-inverse" data-sortable-id="form-validation-1">-->
+      <!--      <div class="panel-heading">-->
+      <!--         <h4 class="panel-title">포인트 정기 구매</h4>-->
+      <!--         <p class="m-0"></p>-->
+      <!--      </div>-->
+      <!--      <div class="panel-body">-->
+  <!--                <form method="post" data-parsley-validate="true">-->
+  <!--                    <div class="d-flex justify-content-center align-items-center flex-wrap">-->
+  <!--                        {% for goods in service %}-->
+  <!--                       <div class="radio-tile">-->
+  <!--                           <input type="radio" class="radio-btn" name="sms2" value="{{goods.PR}}" onclick="check2(this.value)" />-->
+  <!--                          <div class="radio-text">-->
+  <!--                              <i class="fas fa-4x fa-sms mb-2 icolor"></i>-->
+  <!--                              <p class="mb-2 font-weight-bold">+ {{goods.PO}} point</p>-->
+  <!--                              <div class="d-flex justify-content-center align-items-center">-->
+  <!--                                  <h1 class="mb-0 mr-1">{{goods.PR}}</h1>-->
+  <!--                                  <h4 class="mb-0 mt-1">원</h4>-->
+  <!--                              </div>-->
+  <!--                          </div>-->
+  <!--                       </div>-->
+  <!--                       {% endfor %}-->
+  <!--                   </div>-->
+  <!--                   <div class="d-flex justify-content-center align-items-center flex-wrap">-->
+  <!--                       <div class="col-md-4 mr-8 my-4 py-2 bg-gray-200 rounded border">-->
+  <!--                           <table class="table table-borderless table-last table-td-valign-middle mb-0">-->
+  <!--                               <tr>-->
+  <!--                                   <th width=60% class="text-left">선택 상품</th>-->
+  <!--                                   <td width=40% id="check_name2" class="text-right h5 mb-0"></td>-->
+  <!--                               </tr>-->
+  <!--                               <tr>-->
+  <!--                                   <th class="text-left">획득 예정 포인트</th>-->
+  <!--                                   <td id="check_point2" class="text-right h5 mb-0"></td>-->
+  <!--                               </tr>-->
+  <!--                               <tr>-->
+  <!--                                   <th class="text-left">상품 금액</th>-->
+  <!--                                   <td id="check_amount2" class="text-right h5 mb-0"></td>-->
+  <!--                               </tr>-->
+  <!--                           </table>-->
+                             
+  <!--                       </div>-->
+  <!--                       <div class="col-md-6 ml-4 my-4 py-2 bg-white-200 rounded border">-->
+  <!--                           <table class="table table-borderless  table-td-valign-middle mb-0">-->
+  <!--                               <tr>-->
+  <!--                                   <th width=60% class="text-left">카드 번호</th>-->
+  <!--                                   <td><input class="text-right h5 mb-0" type="String" id="Cnum" name="Cnum" placeholder="XXXX-XXXX-XXXX-XXXX" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." data-parsley-trim-value="true" /></td>-->
+  <!--                               </tr>-->
+  <!--                               <tr>-->
+  <!--                                   <th class="text-left">카드 유효기간</th>-->
+  <!--                                   <td><input class="text-right h5 mb-0" type="String" id="Cday" name="Cday" placeholder="YYYY-MM" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." data-parsley-trim-value="true" /></td></td>-->
+  <!--                               </tr>-->
+  <!--                               <tr>-->
+  <!--                                   <th class="text-left">생년 월일</th>-->
+  <!--                                   <td> <input class="text-right h5 mb-0" type="String" id="Bday" name="Bday" placeholder="YYMMDD" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." data-parsley-trim-value="true" /></td>-->
+  <!--                               </tr>-->
+  <!--                               <tr>-->
+  <!--                                   <th class="text-left">카드 비밀번호 앞 두자리</th>-->
+  <!--                                   <td><input class="text-right h5 mb-0" type="String" id="PFnum" name="PFnum" placeholder="XX" data-parsley-required="true" data-parsley-error-message="필수 입력사항입니다." data-parsley-trim-value="true" /></td>-->
+  <!--                               </tr>-->
+  <!--                           </table>-->
+  <!--                       </div>-->
+  <!--                   </div>-->
+  <!--                  <div class="d-flex justify-content-center align-items-center">-->
+  <!--                      <button id="regular_button" class="btn btn-primary text-white px-4"><i class="fas fa-credit-card mr-2"></i>카드 확인</button>-->
+  <!--                      <button style="display:none;" id="regular_pay" onclick="payments2('sms2')" class="btn btn-primary text-white px-4"><i class="fas fa-credit-card mr-2"></i>결제 하기</button>-->
+  <!--                      </div>-->
+  <!--                </form>-->
+  <!--              </div>-->
+      <!--   </div>-->
+         
+         
+      <!--</div>-->
+      <div style="display:flex;">
+             <div >
+                {{__('payment_regulation1')}}</br>
+                 {{__('payment_regulation2')}}</br>
+                   {{__('payment_regulation3')}}</br>
+                   {{__('payment_regulation4')}}</br>
+                   {{__('payment_regulation5')}}
+                </div>
+            </div>
+   </div>
+   <!-- end row -->
+</div>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+
+<script>
+    window.addEventListener('load', function() {
+        $('.goodsInfo').hide();
+    });
+   
+    // 체크 시 텍스트 반영 기능
+    function check(value) {
+        const ckn = document.getElementById("check_name");
+        const cka = document.getElementById("check_amount");
+        const ckp = document.getElementById("check_point");
+        const ckc = document.getElementById("check_current");
+        const ckf = document.getElementById("check_after");
+        const ba = document.getElementById("b-arrow");
+        var goods_name;
+        var goods_amount;
+        var goods_point;
+        
+        if(value == 10000)
+        goods_name = "{{__('payment_point')}} "+10000;
+        else if(value == 50000)
+        goods_name = "{{__('payment_point')}} "+50000;
+        else if(value == 100000)
+        goods_name = "{{__('payment_point')}} "+100000;
+        
+        goods_amount = value;
+        goods_point = value;
+        
+        $(".guide").hide();
+        $(".goodsInfo").show();
+        ckn.innerHTML = goods_name;
+        cka.innerHTML = "<span class='text-realred h2 mb-0'>"+Math.floor(goods_amount*1.1)+"</span>"+" {{__('payment_won')}}\
+        <br><small>("+goods_amount+"{{__('payment_won')}} + "+Math.floor(goods_amount*0.1)+"{{__('payment_won')}})</small>";
+        ckp.innerHTML = "<span class='text-realred mb-0'>"+goods_point+"</span>"+" p";
+        ckc.innerHTML = "{{company.SPO}}"+ " p";
+        ckf.innerHTML = parseInt("{{company.SPO}}")+parseInt(goods_point)+ " p";
+        ba.innerHTML = "<i class='fas fa-lg fa-chevron-down mr-4 text-realred'></i>";
+    }
+    
+    // $(".radio-btn").on("click", function() {
+    //     var goods_amount = $('input[name=sms]').val();
+    //     $.ajax({
+    //         url: "/ajax/check",
+    //         type: "POST",
+    //         dataType: "JSON",
+    //         data: { "pr" : goods_amount }
+    //     })
+    //     .done(function (json) {
+    //         $("#check_name").
+    //     })
+    // });
+    
+    // 결제 기능
+    function payments(objName) {
+        var goods = document.getElementsByName(objName);
+        var checktest;
+        var goods_name;
+        var goods_amount;
+        
+        for (var i=0; i<goods.length; i++) {
+            if (goods[i].checked == true) {
+                if(goods[i].value == 10000) {
+                  goods_name = "{{__('payment_point')}} "+"10000";
+                  goods_amount = Math.floor(10000*1.1);
+                  checktest = true;
+                }
+                else if(goods[i].value == 50000) {
+                  goods_name = "{{__('payment_point')}} "+"50000";
+                  goods_amount = Math.floor(50000*1.1);
+                  checktest = true;
+                }
+                else if(goods[i].value == 100000) {
+                  goods_name = "{{__('payment_point')}} "+"100000";
+                  goods_amount = Math.floor(100000*1.1);
+                  checktest = true;
+                }
+            }
+        }
+        
+        if(!checktest) {
+            return alert("{{__('choice_error')}}");
+        }
+        
+        var IMP = window.IMP;
+        IMP.init('{{imp_code}}');
+        
+        IMP.request_pay({
+            pg : 'inicis', // version 1.1.0부터 지원.
+            pay_method : 'card',
+            merchant_uid : 'merchant_' + new Date().getTime(),
+            name : goods_name,
+            amount : goods_amount,
+            buyer_name : '{{company.CNA}}',
+            buyer_email : '{{company.EA}}',
+            buyer_tel : '{{company.PN}}',
+            buyer_addr : '{{company.ADR}}',
+            m_redirect_url : '{{HOME}}/payments/complete/mobile'
+        }, function(rsp) {
+            if (rsp.success) {
+                $.ajax({
+                    url: "/payments/complete",
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        imp_uid: rsp.imp_uid,
+                        merchant_uid: rsp.merchant_uid
+                    }
+                }).done(function (data) {
+                    switch(data.status) {
+                        // case "vbankIssued":
+                        //     var msg = "가상계좌가 생성되었습니다.";
+                        //     msg += '\n가상계좌명' + rsp.vbank_name;
+                        //     msg += '\n가상계좌번호' + rsp.vbank_num;
+                        //     msg += '\n생성일' + rsp.vbank_date;
+                        //     break;
+                        case "success":
+                            var msg = "{{__('payment_success')}}";
+                            alert(msg);
+                            window.location.href = '/pay_confirm?imp_uid='+rsp.imp_uid;
+                            break;
+                        case "cancelled":
+                            var msg = "{{__('payment_cancelled')}}";
+                            break;
+                        case "failed":
+                            var msg = "{{__('payment_failed')}}";
+                            break;
+                        case "forgery":
+                            var msg = "{{__('payment_forgery')}}";
+                            break;
+                    }
+                    return alert(msg);
+                });
+            } else {
+                return alert("{{__('payment_failed')}} " +  rsp.error_msg);
+                amount : 10000
+            }
+        });
+    }
+    
+    // $("#regular_button").on("click", function() {
+        
+    //     console.log("@@@");
+                 
+    //     const card_number = document.getElementsByName('Cnum');
+    //     const expiry = document.getElementsByName('Cday');
+    //     const birth = document.getElementsByName('Bday');
+    //     const pwd_2digit = document.getElementsByName('PFnum');
+         
+    //         $.ajax({
+    //         url : "/paments/regular",
+    //         type: "POST",
+    //         dataType: 'json',
+    //         data: {
+    //             card_number : card_number,
+    //             expiry : expiry,
+    //             birth : birth,
+    //             pwd_2digit : pwd_2digit,
+    //             customer_uid : "mk_" + card_number + new Date().getTime()
+    //         }
+    //     }).done(function (data) {
+    //         console.log(data)
+    //         });
+    // });
+    
+   $('#reqular_card').click(function () {  
+        
+        var goods = document.getElementsByName('sms2');
+        var checktest;
+        var goods_name;
+        var goods_amount;
+        
+        for (var i=0; i<goods.length; i++) {
+            if (goods[i].checked == true) {
+                if(goods[i].value == 10000) {
+                  goods_name = "{{__('payment_point')}} "+"10000";
+                  goods_amount = 10000;
+                  checktest = true;
+                }
+                else if(goods[i].value == 50000) {
+                  goods_name = "{{__('payment_point')}} "+"50000";
+                  goods_amount = 50000;
+                  checktest = true;
+                }
+                else if(goods[i].value == 100000) {
+                  goods_name = "{{__('payment_point')}} "+"100000";
+                  goods_amount = 100000;
+                  checktest = true;
+                }
+            }
+        }
+        
+        if(!checktest) {
+            return alert("{{__('choice_error')}}");
+        }
+        
+        const card_number = document.getElementsByName('Cnum');
+        const expiry = document.getElementsByName('Cday');
+        const birth = document.getElementsByName('Bday');
+        const pwd_2digit = document.getElementsByName('PFnum');
+        
+        console.log(card_number);
+        console.log(expiry);
+        console.log(birth);
+        console.log(pwd_2digit);
+        
+        
+    if($("#id").css("display") == "none"){   
+        jQuery('#id').css("display", "block");   
+    } else {  
+        jQuery('#id').css("display", "none");   
+    }  
+});  
+
+    
+    
+    // function check2(value) {
+    //     const ckn = document.getElementById("check_name2");
+    //     const cka = document.getElementById("check_amount2");
+    //     const ckp = document.getElementById("check_point2");
+    //     var goods_name;
+    //     var goods_amount;
+    //     var goods_point;
+        
+    //     if(value == 10000)
+    //     goods_name = "{{__('payment_point')}} "+"10000";
+    //     else if(value == 50000)
+    //     goods_name = "{{__('payment_point')}} "+"50000";
+    //     else if(value == 100000)
+    //     goods_name = "{{__('payment_point')}} "+"100000";
+        
+    //     goods_amount = value;
+    //     goods_point = value;
+        
+    //     ckn.innerHTML = goods_name;
+    //     cka.innerHTML = "<span class='text-realred h2 mb-0'>"+goods_amount+"</span>"+"{{__('payment_won')}}";
+    //     ckp.innerHTML = goods_point+" p";
+    // }
+    
+    // //정기 결제 기능
+    // function payments2(objName) {
+        
+        // var goods = document.getElementsByName(objName);
+        // var checktest;
+        // var goods_name;
+        // var goods_amount;
+        
+        // for (var i=0; i<goods.length; i++) {
+        //     if (goods[i].checked == true) {
+        //         if(goods[i].value == 10000) {
+        //           goods_name = "포인트 10000";
+        //           goods_amount = 10000;
+        //           checktest = true;
+        //         }
+        //         else if(goods[i].value == 50000) {
+        //           goods_name = "포인트 50000";
+        //           goods_amount = 50000;
+        //           checktest = true;
+        //         }
+        //         else if(goods[i].value == 100000) {
+        //           goods_name = "포인트 100000";
+        //           goods_amount = 100000;
+        //           checktest = true;
+        //         }
+        //     }
+        // }
+        
+        // if(!checktest) {
+        //     return alert("항목을 선택해주세요.");
+        // }
+        
+        
+        // var IMP = window.IMP;
+        // IMP.init('{{imp_code}}');
+        
+        // IMP.request_pay({
+        //     pg : 'inicis', // version 1.1.0부터 지원.
+        //     pay_method : 'card',
+        //     merchant_uid : 'merchant_' + new Date().getTime(),
+        //     name : goods_name,
+        //     amount : goods_amount,
+        //     buyer_name : '{{company.CNA}}',
+        //     buyer_email : '{{company.EA}}',
+        //     buyer_tel : '{{company.PN}}',
+        //     buyer_addr : '{{company.ADR}}',
+        //     m_redirect_url : '{{HOME}}/payments/complete/mobile'
+        // }, function(rsp) {
+        //     if (rsp.success) {
+        //         $.ajax({
+        //             url: "/payments/complete",
+        //             type: "POST",
+        //             dataType: 'json',
+        //             data: {
+        //                 imp_uid: rsp.imp_uid,
+        //                 merchant_uid: rsp.merchant_uid
+        //             }
+        //         }).done(function (data) {
+        //             switch(data.status) {
+        //                 // case "vbankIssued":
+        //                 //     var msg = "가상계좌가 생성되었습니다.";
+        //                 //     msg += '\n가상계좌명' + rsp.vbank_name;
+        //                 //     msg += '\n가상계좌번호' + rsp.vbank_num;
+        //                 //     msg += '\n생성일' + rsp.vbank_date;
+        //                 //     break;
+        //                 case "success":
+        //                     var msg = "결제가 완료되었습니다.";
+        //                     alert(msg);
+        //                     window.location.href = '/pay_confirm?imp_uid='+rsp.imp_uid;
+        //                     break;
+        //                 case "cancelled":
+        //                     var msg = "결제가 취소되었습니다.";
+        //                     break;
+        //                 case "failed":
+        //                     var msg = "결제에 실패하였습니다.";
+        //                     break;
+        //                 case "forgery":
+        //                     var msg = "위조된 결제시도입니다.";
+        //                     break;
+        //             }
+        //             return alert(msg);
+        //         });
+        //     } else {
+        //         return alert("결제에 실패하였습니다. " +  rsp.error_msg);
+        //         amount : 10000
+        //     }
+        // });
+    // }
+</script>
+{% endblock %}
+
+{% block script %}
+<script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
+<script src="../assets/plugins/highlight.js/highlight.min.js"></script>
+<script src="../assets/js/demo/render.highlight.js"></script>
+{% endblock %}
