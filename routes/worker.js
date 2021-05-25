@@ -168,12 +168,12 @@ router.post('/worker_select_manager',isNotLoggedIn ,async (req, res, next) => {
 
 
 //작업자 삭제
-router.get('/worker_delete/:EM',isNotLoggedIn ,async (req, res, next) => {
+router.post('/worker_delete',isNotLoggedIn ,async (req, res, next) => {
   try {
-    
-    const workerone = await Worker.findOne({ "EM" : req.params.EM });
+    console.log(req.body["select"])
+    const workerone = await Worker.findOne({ "EM" : req.body["select"] });
     await Workerdelete.create({
-       "CID" : workerone.CID,
+      "CID" : workerone.CID,
         "WN" : workerone.WN,
         "PN" : workerone.PN,
         "GID" : workerone.GID,
@@ -183,9 +183,10 @@ router.get('/worker_delete/:EM',isNotLoggedIn ,async (req, res, next) => {
         "AC" :workerone.AC
     });
     
-    await Worker.remove({ "EM" : req.params.EM });
-    res.redirect('/worker_list');
+    await Worker.remove({ "EM" : req.body["select"] });
+    res.json({ result : true });
   } catch (err) {
+    res.json({ result : false });
     console.error(err);
     next(err);
   }

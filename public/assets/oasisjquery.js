@@ -1,3 +1,4 @@
+
     //리스트 시간 출력
     function Timefunction(time) {
     	var cca = Date.UTC();
@@ -77,8 +78,7 @@
     
     // ------------------------------- 페이지네이션 ------------------------------------
     
-    function pagereload(Object,condition,searcherror) {
-    	
+    function pagereload(Object,condition,i18nconvert,condition2) {
     	// console.log(JSON.stringify(Object));
 			$("input:checkbox[name='allck']").prop("checked", false);
 			$("input:checkbox[name='ck']").prop("checked", false);
@@ -88,6 +88,7 @@
                 async: false,
                 dataType: 'json',
                 data: {
+                	CID : Object.CID,
                     sort : Object.sort,
                     search : Object.search,
                     searchtext : Object.searchtext,
@@ -112,34 +113,40 @@
 		        	//페이지 넘버 박스 초기화
 			     	$("#pagebox *").remove(); 
 			    		
-			    		
-			    	condition(Object);
+			    	if(condition2)
+			    	{
+			    		console.log("@@")
+			    	}else
+			    	{
+			    		condition(Object);
+			    	}
 			    	
 						  var insertTr = " ";
-				    	  insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('left',pagingObject,condition,searcherror) class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>";
-						  insertTr +=	"<a href='javascript:;' onclick=pageBtn('left',pagingObject,condition,searcherror) class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>";
+				    	  insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('left',pagingObject,condition,i18nconvert) class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>";
+						  insertTr +=	"<a href='javascript:;' onclick=pageBtn('left',pagingObject,condition,i18nconvert) class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>";
 																		
 							for(var i = Object.startpage; i < Object.endpage; i ++) {
 								if(Object.page == i)
-									insertTr +=	"<input type='button' onclick='pagebutton(pagingObject,"+ i +",condition,searcherror)' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' style=' background-color: #00acac; color: white !important;' >";
+									insertTr +=	"<input type='button' onclick='pagebutton(pagingObject,"+ i +",condition,i18nconvert)' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' style=' background-color: #00acac; color: white !important;' >";
 								else
-									insertTr +=	"<input type='button' onclick='pagebutton(pagingObject,"+ i +",condition,searcherror)' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' >";
+									insertTr +=	"<input type='button' onclick='pagebutton(pagingObject,"+ i +",condition,i18nconvert)' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' >";
 							}
-							insertTr +=	"<a href='javascript:;' onclick=pageBtn('right',pagingObject,condition,searcherror) class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-right'></i></a>";
-							insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('right',pagingObject,condition,searcherror) class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-right'></i></a>";
+							insertTr +=	"<a href='javascript:;' onclick=pageBtn('right',pagingObject,condition,i18nconvert) class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-right'></i></a>";
+							insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('right',pagingObject,condition,i18nconvert) class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-right'></i></a>";
 						  $("#pagebox").append(insertTr);
 						  $("#pagebox").show();
 	        	}
 	        	
 	        	else if (data.result == "nothing") {
-	        		searcherror();
+	        		
+	        		alert(i18nconvert('searcherror'));
 	        		$("#searchtext").val('');
 			    	$("#searchdatetext1").val('');
 			    	$("#searchdatetext2").val('');
 	        	}
 	        	
 	        	else {
-	        		searcherror();
+	        		alert(i18nconvert('searcherror'));
 			    	$("#searchdatetext1").val('');
 			    	$("#searchdatetext2").val('');
 	        	}
@@ -175,9 +182,9 @@
     }
     
     	// 전체 목록으로
-	function gotolist(Object,condition, searcherror, searchappend) {
+	function gotolist(Object,condition, i18nconvert, searchappend) {
 		refresh(Object);
-		pagereload(Object, condition, searcherror);
+		pagereload(Object, condition, i18nconvert);
 		
 		$("#searchtext").val('');
 		$("#searchdatetext1").val('');
@@ -190,42 +197,42 @@
 	}
     
     // 페이지 기능
-	function pagebutton(Object,num,condition,searcherror) {
+	function pagebutton(Object,num,condition,i18nconvert) {
 		Object.page = num;
-    	pagereload(Object, condition, searcherror);
+    	pagereload(Object, condition, i18nconvert);
     }
     
     // 다음 페이지 기능
-    function pageBtn(dir,Object,condition, searcherror) {
+    function pageBtn(dir,Object,condition, i18nconvert) {
     	
 		if(dir == 'left') {
 			if((Object.page - 1) > -1)
 			{
 				Object.page -= 1;
-				pagereload(Object, condition, searcherror);
+				pagereload(Object, condition, i18nconvert);
 			}
 		}
 		if(dir == 'right') {
 			if((Object.page + 1) < Math.ceil(Object.array.length / Object.postNum))
 			{
 				Object.page += 1;
-				pagereload(Object, condition, searcherror);
+				pagereload(Object, condition, i18nconvert);
 				
 			}
 			
 		}
 	}
 	
-	function pageDoubleBtn(dir, Object, condition, searcherror) {
+	function pageDoubleBtn(dir, Object, condition, i18nconvert) {
 		if(dir == 'left') {
 			if((Object.page - Object.pageNum) < 0) {
 				Object.page = 0;
-				pagereload(Object, condition, searcherror);
+				pagereload(Object, condition, i18nconvert);
 			}
 			else {
 				Object.startpage -= 1;
 				Object.page -= 5;
-				pagereload(Object, condition, searcherror);
+				pagereload(Object, condition, i18nconvert);
 			}
 		}
 		if(dir == 'right') {
@@ -233,17 +240,190 @@
 			if ((Object.page + Object.pageNum) >= Math.ceil(Object.array.length / Object.postNum))
 			{
 				Object.page = Math.ceil(Object.array.length / Object.postNum)-1;
-				pagereload(Object, condition, searcherror);
+				pagereload(Object, condition, i18nconvert);
 			}
 			else {
 				Object.startpage += 1;
 				Object.page += 5;
-				pagereload(Object, condition, searcherror);
+				pagereload(Object, condition, i18nconvert);
 			}
 		}
 	}
 	
-	// 페이지 찾기, 정렬 함수
+	// 페이지 개수 지정
 	
+	function selectpage(Object, condition, i18nconvert,jsondata) {
+		console.log(jsondata.option)
+        if(Object.postNum != jsondata.option)
+		{
+			Object.postNum = jsondata.option
+			pagereload(Object, condition, i18nconvert);
+		}
+    }     
+	        
+	// 정렬 기능
+	function sortpage(Object, condition, i18nconvert,jsondata,jsondata2) {
+		
+		Object.search = "";
+		Object.searchtext = "";
+		
+		var paglist = Object.array;
+			
+			var check_sort = jsondata.name;
+			
+			 if(document.getElementById(check_sort).classList.contains('d-none')) {
+			 	
+			 	document.getElementById(check_sort).classList.remove('fa-angle-up');
+	    		document.getElementById(check_sort).classList.add('fa-angle-down');
+			 	var check2 = check_sort;
+			 }
+			 else {
+			 	if (document.getElementById(check_sort).classList.contains('fa-angle-down')) {
+			 		
+	    		 	document.getElementById(check_sort).classList.remove('fa-angle-down');
+	    		 	document.getElementById(check_sort).classList.add('fa-angle-up');
+			 		var check2 = check_sort + "2";
+			 	}
+			 	else {
+			 		
+			 		document.getElementById(check_sort).classList.remove('fa-angle-up');
+	    		 	document.getElementById(check_sort).classList.add('fa-angle-down');
+			 		var check2 = check_sort;
+			 		
+			 	}
+			 }
+			 
+			for (var item in jsondata2)
+			{
+			document.getElementById(item).classList.add('d-none');	
+			}
+			
+			
+			document.getElementById(check_sort).classList.remove('d-none');
+			
+			Object.array = paglist;
+			Object.sort = check2;
+			Object.page = 0;
+			pagereload(Object, condition, i18nconvert);
+		
+	}
 	
+	//검색 옵션 지정
+	function searchoption(opt,Object,i18nconvert,jsondata) {
+    	Object.search = opt;
+    	$("#searchoption").empty();
+    	
+    	var string = "";
+    	
+    	for (var item in jsondata) {
+    		if (opt === item) {
+    			string = i18nconvert(item);
+    		
+    			if((opt == "CA") || (opt == "ET")|| (opt == "payCA")|| (opt == "UCA")) {
+    				document.getElementById('searchtext').classList.add('d-none');
+	    			$("#searchtext").val('');
+    			}
+    			else {
+	    			document.getElementById('searchtext').classList.remove('d-none');
+    			}
+    		}
+    	}
+    	$("#searchtext").val('');
+    	$("#searchdatetext1").val('');
+    	$("#searchdatetext2").val('');
+    	$("#searchoption").append(string);
+    	$("#searchoption").show();
+    }
+    
+    //검색기능
+    function searchtext (Object, condition, i18nconvert) {
+		if(Object.search == "")
+			alert(i18nconvert('choiceerror'));
+		else{
+	    	if(($('#searchdatetext1').val() != "") && ($('#searchdatetext2').val() != "")) {
+				Object.searchtext = $('#searchtext').val();
+				Object.searchdate ="";
+	    		Object.searchdate += $('#searchdatetext1').val();
+	    		Object.searchdate += "~";
+	    		Object.searchdate += $('#searchdatetext2').val();
+				pagereload(Object, condition, i18nconvert);
+				document.getElementById('gotolist').classList.remove('d-none');
+			}
+			else {
+				Object.searchtext = $('#searchtext').val();
+				pagereload(Object, condition, i18nconvert);
+				document.getElementById('gotolist').classList.remove('d-none');
+			}
+		}
+	}
 	
+	// 일반 삭제 기능
+	function delete_one(obj,url,i18nconvert) {
+		
+		var answer;
+	    	answer = confirm(i18nconvert('deleteconfirm'));
+		if(answer == true){
+			$.ajax({
+    		url: url,
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                    	select : $(obj).attr('name'),
+                    }
+	    	}).done(function (data) {  
+	    		if(data.result == true) {
+	    			alert(i18nconvert('deletesuccess'));
+	    			location.reload();
+	    		}
+	    		else {
+	    			alert(i18nconvert('choiceerror'));
+	    		}
+	    		
+	    	});
+		}
+		else {
+			return false;
+		}
+	}
+	
+	// 선택항목 삭제 기능
+	function delete_check(url,i18nconvert) {
+		var check = $("input:checkbox[name='ck']").is(":checked");
+		if(!check) {
+			alert(i18nconvert('choiceerror'));
+		}
+		else {
+			var select_obj = [];
+	        $('input[name="ck"]:checked').each(function (index) {
+	                select_obj[index] = $(this).val() ;
+	        });
+			var answer;
+		    	answer = confirm(i18nconvert('deleteconfirm'));
+			if(answer == true){
+				$.ajax({
+	    		url: url,
+	                    type: "POST",
+	                    dataType: 'json',
+	                    data: {
+	                    	select : select_obj,
+	                    }
+		    	}).done(function (data) {  
+		    		if(data.result == true) {
+		    			alert(i18nconvert('deletesuccess'));
+		    			location.reload();
+		    		}
+		    		else {
+		    			alert(i18nconvert('choiceerror'));
+		    		}
+		    		
+		    	})
+	    	
+	    	
+			}
+			else {
+				$("input:checkbox[name='allck']").prop("checked", false);
+				$("input:checkbox[name='ck']").prop("checked", false);
+				return false;
+			}
+		}
+	}

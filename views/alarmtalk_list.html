@@ -46,9 +46,9 @@
 											<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>
 											<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
 											<div class="dropdown-menu dropdown-menu-right" style="">
-												<a href="javascript:searchoption('WNM');" class="dropdown-item">{{__('payment_sender')}}</a>
-												<a href="javascript:searchoption('CA');" class="dropdown-item">{{__('payment_Dateofuse')}}</a>
-												<a href="javascript:searchoption('RE');" class="dropdown-item">{{__('payment_result')}}</a>
+												<a href="javascript:searchoption('payWNM',pagingObject,i18nconvert,{payWNM : 'payWNM',pointCA : 'pointCA',RE : 'RE'});" class="dropdown-item">{{__('payment_sender')}}</a>
+												<a href="javascript:searchoption('pointCA',pagingObject,i18nconvert,{payWNM : 'payWNM',pointCA : 'pointCA',RE : 'RE'});" class="dropdown-item">{{__('payment_Dateofuse')}}</a>
+												<a href="javascript:searchoption('RE',pagingObject,i18nconvert,{payWNM : 'payWNM',pointCA : 'pointCA',RE : 'RE'});" class="dropdown-item">{{__('payment_result')}}</a>
 											</div>
 									</div> 
 								</div>
@@ -66,7 +66,7 @@
 						</div>
 						
 						<div>
-						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
+						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchtext(pagingObject, condition, i18nconvert)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
 						</div>
 						
 						<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,condition,searcherror,'{{__('search')}}') class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
@@ -150,146 +150,43 @@
     </script>
   
     <script>
-   var pagingObject = new Object({name : "Alarmtalk" ,url : "/ajax/alarmtalk_list", array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
+   var pagingObject = new Object({name : "Alarmtalk" ,url : "/ajax/alarmtalk_list",CID : "{{company._id}}",  array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
 		// 검색 기능
 		$(document).ready(function() {
 			
 	        pagereload(pagingObject, condition, searcherror);
 	        
 	        $('#selectpage').click(function() {
-	            if(pagingObject.postNum != $('#selectpage option:selected').val())
-				{
-					pagingObject.postNum = $('#selectpage option:selected').val()
-					pagereload(pagingObject, condition, searcherror);
-				}
-	        });
-	        
-	        $('#searchtext').keyup(function(key) {
-        		if(key.keyCode == 13) {
-					if(pagingObject.search == "")
-        			alert("{{__('choice_error')}}");
-	        		else {
-	        			if(($('#searchdatetext1').val() != "") && ($('#searchdatetext2').val() != "")) {
-							
-							pagingObject.searchtext = $(this).val();
-							pagingObject.searchdate ="";
-			        		pagingObject.searchdate += $('#searchdatetext1').val();
-			        		pagingObject.searchdate += "~";
-			        		pagingObject.searchdate += $('#searchdatetext2').val();
-							pagereload(pagingObject, condition, searcherror);
-							document.getElementById('gotolist').classList.remove('d-none');
-		        		}
-		        		else {
-		        			pagingObject.searchtext = $(this).val();
-							pagereload(pagingObject, condition, searcherror);
-							document.getElementById('gotolist').classList.remove('d-none');
-		        		}
-	        		}
-        		}
-        		if($(this).val() == "") {
-        			pagereload(pagingObject, condition, searcherror);
-        		}
-        	})
+				selectpage(pagingObject,condition,i18nconvert,{
+					option : $('#selectpage option:selected').val()
+				})
+			});
+			$('#searchtext').keyup(function(key) {
+					if(key.keyCode == 13) {
+						searchtext(pagingObject,condition,i18nconvert)
+					}
+					if(pagingObject.searchtext == "") {
+						pagereload(pagingObject, condition, i18nconvert);
+					}
+			});
         	
         	
         	$('.sort').click(function() {
-        		
-        		$("#searchoption").empty();
-            	$("#searchoption").append("{{__('search')}}");
-        		
-        		pagingObject.search = "";
-        		pagingObject.searchtext = "";
-        		
-        		var paglist = pagingObject.array;
-        		
-        		var check_sort = $(this).attr('name');
-        		
-        		
-        		 if(document.getElementById(check_sort).classList.contains('d-none')) {
-        		 	
-        		 	document.getElementById(check_sort).classList.remove('fa-angle-up');
-	        		document.getElementById(check_sort).classList.add('fa-angle-down');
-        		 	var check2 = check_sort;
-        		 }
-        		 else {
-        		 	if (document.getElementById(check_sort).classList.contains('fa-angle-down')) {
-        		 		
-	        		 	document.getElementById(check_sort).classList.remove('fa-angle-down');
-	        		 	document.getElementById(check_sort).classList.add('fa-angle-up');
-        		 		var check2 = check_sort + "2";
-        		 	}
-        		 	else {
-        		 		
-        		 		document.getElementById(check_sort).classList.remove('fa-angle-up');
-	        		 	document.getElementById(check_sort).classList.add('fa-angle-down');
-        		 		var check2 = check_sort;
-        		 		
-        		 	}
-        		 }
-        		 
-        		document.getElementById('WNM').classList.add('d-none');
-        		document.getElementById('CA').classList.add('d-none');
-        		document.getElementById('RE').classList.add('d-none');
-        		
-        		
-        		document.getElementById(check_sort).classList.remove('d-none');
-        		
-        		
-        		pagingObject.array = paglist;
-        		pagingObject.sort = check2;
-        		pagingObject.page = 0;
-        		pagereload(pagingObject, condition, searcherror);
-        		
-        	})
+			$("#searchoption").empty();
+			$("#searchoption").append("{{__('search')}}");
+			
+			sortpage(pagingObject,condition,i18nconvert,{
+				name : $(this).attr('name')
+			},
+			{
+				WNM : "WNM",
+				CA : "CA",
+				RE : "RE"
+			});
+			
+		});
 	    })
-	    
-	    
-		function searchoption(opt) {
-    	pagingObject.search = opt;
-    	$("#searchoption").empty();
-    	var string = opt;
-    	if (string == "WNM")
-    	   string = "{{__('payment_sender')}}";
-    	   document.getElementById('searchtext').classList.remove('d-none');
-    	if (string == "CA"){
-    	    string = "{{__('payment_point_Dateofuse')}}";
-    	   document.getElementById('searchtext').classList.add('d-none');
-    	   $("#searchtext").val('');
-    	}
-    	if (string == "RE") {
-       	   string = "{{__('payment_result')}}";
-    	   document.getElementById('searchtext').classList.remove('d-none');
-    	}
-    	
-    		$("#searchtext").val('');
-	    	$("#searchdatetext1").val('');
-	    	$("#searchdatetext2").val('');
-	    	$("#searchoption").append(string);
-	    	$("#searchoption").show();
-        }
-		
-		function searchbutton() {
-    	
-	    	if(pagingObject.search == "")
-			alert("{{__('choice_error')}}");
-			else{
-		    	if(($('#searchdatetext1').val() != "") && ($('#searchdatetext2').val() != "")) {
-					
-					pagingObject.searchtext = $('#searchtext').val();
-					pagingObject.searchdate ="";
-		    		pagingObject.searchdate += $('#searchdatetext1').val();
-		    		pagingObject.searchdate += "~";
-		    		pagingObject.searchdate += $('#searchdatetext2').val();
-					pagereload(pagingObject, condition, searcherror);
-					document.getElementById('gotolist').classList.remove('d-none');
-				}
-				else {
-					pagingObject.searchtext = $('#searchtext').val();
-					pagereload(pagingObject, condition, searcherror);
-					document.getElementById('gotolist').classList.remove('d-none');
-				}
-			}
-		}
+
 		
 	var condition = function (Object) {
     	var num =  Object.array.length; 	
@@ -327,10 +224,6 @@
 		$("#memDiv").append(insertTr);
     }
 		
-    
-    var searcherror = function () {
-    	return alert("{{__('search_error')}}");
-    }
    
 </script>
 {% endblock %}

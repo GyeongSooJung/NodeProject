@@ -25,6 +25,7 @@ const { pagination, timeset } = require('./modulebox');
 const axios = require('axios');
 var request = require('request');
 const Mongoose = require('mongoose');
+const ObjectId = Mongoose.Types.ObjectId;
 
 //메세지 조회 사용
 const { msg } = require('solapi'); 
@@ -342,7 +343,7 @@ router.get('/device_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 router.post('/ajax/device_list', isNotLoggedIn, DataSet, async function(req, res) {
-  const CID = req.decoded.CID;
+  const CID = req.body.CID;
   
   var sort = req.body.sort;
   var search = req.body.search;
@@ -580,6 +581,7 @@ router.get('/car_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   let page = req.query.page;
   const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
+  console.log(req.decoded.company)
   try {
     const totalNum = await Car.countDocuments({ "CID": CID });
     let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
@@ -594,8 +596,7 @@ router.get('/car_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 router.post('/ajax/car_list', isNotLoggedIn, DataSet, async function(req, res) {
-  const CID = req.decoded.CID;
-  
+  const CID = req.body.CID;
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
@@ -761,90 +762,192 @@ router.get('/worker_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 router.post('/ajax/worker_list', isNotLoggedIn, DataSet, async function(req, res) {
-  const CID = req.decoded.CID;
-  
+  const CID = req.body.CID;
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
   
-  if ((search!="") && (searchtext!="")) {
-    try{
-      if (search =="WN") {
-        var workers = await Worker.find({ "CID": CID, "WN" : {$regex:searchtext} });
-        if(workers.length == 0) 
-        res.json({result : "nothing"});
-      }
-      else if (search =="PN") {
-        var workers = await Worker.find({ "CID": CID, "PN" : {$regex:searchtext} });
-        if(workers.length == 0) 
-        res.json({result : "nothing"});
-      }
-      else if (search =="EM") {
-        var workers = await Worker.find({ "CID": CID, "EM" : {$regex:searchtext} });
-        if(workers.length == 0) 
-        res.json({result : "nothing"});
-      }
-      else {
-        var workers = await Worker.find({ "CID": CID }).sort({ ET: -1 });
-      }
-    }catch(e) {
-      res.json({ result: false});
+  if(CID == "5fd6c731a26c914fbad53ebe") {
+    
+    var franchiseCIDlist = await Company.aggregate([
+            
+                          { $match : {CK : "MK 대리점"} },
+                          { $project : {CID : 1}},
+                             
+                          ], function (err,result) {
+                            if(err) throw err;
+                          });
+    var CIDlist = [];
+    for (var i = 0; i < franchiseCIDlist.length; i ++) {
+      CIDlist.push(String(franchiseCIDlist[i]._id))
     }
     
-  }
-  
-  else {
+    CIDlist.push(CID);
     
-      var workers = await Worker.find({ "CID": CID });
+    console.log(CIDlist)
     
-      if(sort == "WN") {
-          workers.sort(function (a,b) {
-            
-            if(typeof(a.WN) == "object")
-            a.WN = JSON.stringify(a.WN);
-            return (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      
-      else if(sort == "WN2") {
-          workers.sort(function (a,b) {
-            if(typeof(a.WN) == "object")
-            a.WN = JSON.stringify(a.WN);
-            return (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      
-      else if(sort == "PN") { 
-          workers.sort(function (a,b) {
-            if(typeof(a.PN) == "object")
-            a.PN = JSON.stringify(a.PN);
-            return (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      
-      else if(sort == "PN2"){
-          workers.sort(function (a,b) {
-            if(typeof(a.PN) == "object")
-            a.PN = JSON.stringify(a.PN);
-            return (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? 1 : 0;
-          })
-       }
-      else if(sort == "EM") {
-          workers.sort(function (a,b) {
-            return (a.EM).length < (b.EM).length ? -1 : (a.EM).length > (b.EM).length ? 1 : 0;
-          });
-          
-      }
-      else if(sort == "EM2") {
-          workers.sort(function (a,b) {
-            return (a.EM).length > (b.EM).length ? -1 : (a.EM).length < (b.EM).length ? 1 : 0;
-          });
-      }
-      else {
-        var workers = await Worker.find({ "CID": CID }).sort({ CA: -1 });
+    if ((search!="") && (searchtext!="")) {
+        try{
+          if (search =="WN") {
+            var workers = await Worker.find({ "CID": {$in : CIDlist}, "WN" : {$regex:searchtext} });
+            if(workers.length == 0) 
+            res.json({result : "nothing"});
+          }
+          else if (search =="PN") {
+            var workers = await Worker.find({ "CID": {$in : CIDlist}, "PN" : {$regex:searchtext} });
+            if(workers.length == 0) 
+            res.json({result : "nothing"});
+          }
+          else if (search =="EM") {
+            var workers = await Worker.find({ "CID": {$in : CIDlist}, "EM" : {$regex:searchtext} });
+            if(workers.length == 0) 
+            res.json({result : "nothing"});
+          }
+          else {
+            var workers = await Worker.find({ "CID": {$in : CIDlist} }).sort({ ET: -1 });
+          }
+        }catch(e) {
+          res.json({ result: false});
+        }
         
       }
+      
+      else {
+        
+          var workers = await Worker.find({ "CID": {$in : CIDlist} });
+        
+          if(sort == "WN") {
+              workers.sort(function (a,b) {
+                
+                if(typeof(a.WN) == "object")
+                a.WN = JSON.stringify(a.WN);
+                return (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? 1 : 0;
+              })
+          }
+          
+          else if(sort == "WN2") {
+              workers.sort(function (a,b) {
+                if(typeof(a.WN) == "object")
+                a.WN = JSON.stringify(a.WN);
+                return (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? 1 : 0;
+              })
+          }
+          
+          else if(sort == "PN") { 
+              workers.sort(function (a,b) {
+                if(typeof(a.PN) == "object")
+                a.PN = parseInt(a.PN);
+                return (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? 1 : 0;
+              })
+          }
+          
+          else if(sort == "PN2"){
+              workers.sort(function (a,b) {
+                if(typeof(a.PN) == "object")
+                a.PN = JSON.stringify(a.PN);
+                return (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? 1 : 0;
+              })
+           }
+          else if(sort == "EM") {
+              workers.sort(function (a,b) {
+                return (a.EM).length < (b.EM).length ? -1 : (a.EM).length > (b.EM).length ? 1 : 0;
+              });
+              
+          }
+          else if(sort == "EM2") {
+              workers.sort(function (a,b) {
+                return (a.EM).length > (b.EM).length ? -1 : (a.EM).length < (b.EM).length ? 1 : 0;
+              });
+          }
+          else {
+            var workers = await Worker.find({ "CID": {$in : CIDlist} }).sort({ CA: -1 });
+            
+          }
+      }
+    
+    
   }
+  else {
+      if ((search!="") && (searchtext!="")) {
+        try{
+          if (search =="WN") {
+            var workers = await Worker.find({ "CID": CID, "WN" : {$regex:searchtext} });
+            if(workers.length == 0) 
+            res.json({result : "nothing"});
+          }
+          else if (search =="PN") {
+            var workers = await Worker.find({ "CID": CID, "PN" : {$regex:searchtext} });
+            if(workers.length == 0) 
+            res.json({result : "nothing"});
+          }
+          else if (search =="EM") {
+            var workers = await Worker.find({ "CID": CID, "EM" : {$regex:searchtext} });
+            if(workers.length == 0) 
+            res.json({result : "nothing"});
+          }
+          else {
+            var workers = await Worker.find({ "CID": CID }).sort({ ET: -1 });
+          }
+        }catch(e) {
+          res.json({ result: false});
+        }
+        
+      }
+      
+      else {
+        
+          var workers = await Worker.find({ "CID": {$in : CIDlist} });
+        
+          if(sort == "WN") {
+              workers.sort(function (a,b) {
+                
+                if(typeof(a.WN) == "object")
+                a.WN = JSON.stringify(a.WN);
+                return (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? 1 : 0;
+              })
+          }
+          
+          else if(sort == "WN2") {
+              workers.sort(function (a,b) {
+                if(typeof(a.WN) == "object")
+                a.WN = JSON.stringify(a.WN);
+                return (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? 1 : 0;
+              })
+          }
+          
+          else if(sort == "PN") { 
+              workers.sort(function (a,b) {
+                if(typeof(a.PN) == "object")
+                a.PN = parseInt(a.PN);
+                return (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? 1 : 0;
+              })
+          }
+          
+          else if(sort == "PN2"){
+              workers.sort(function (a,b) {
+                if(typeof(a.PN) == "object")
+                a.PN = JSON.stringify(a.PN);
+                return (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? 1 : 0;
+              })
+           }
+          else if(sort == "EM") {
+              workers.sort(function (a,b) {
+                return (a.EM).length < (b.EM).length ? -1 : (a.EM).length > (b.EM).length ? 1 : 0;
+              });
+              
+          }
+          else if(sort == "EM2") {
+              workers.sort(function (a,b) {
+                return (a.EM).length > (b.EM).length ? -1 : (a.EM).length < (b.EM).length ? 1 : 0;
+              });
+          }
+          else {
+            var workers = await Worker.find({ "CID": CID }).sort({ CA: -1 });
+            
+          }
+      }
+  }
+  console.log(workers)
   
   var workerlist = [];
   if(workers.length) {
@@ -863,6 +966,8 @@ router.post('/ajax/post', isNotLoggedIn, DataSet, async function(req, res) {
   var au_false = req.body.au_false;
   var ac_true = req.body.ac_true;
   var ac_false = req.body.ac_false;
+  
+  var com_audata = req.body.com_audata;
 
 
 
@@ -870,12 +975,16 @@ router.post('/ajax/post', isNotLoggedIn, DataSet, async function(req, res) {
   const CNU = req.decoded.CNU;
 
   let workerone;
-
-  if (au_true) {
-    workerone = await Worker.where({ "EM": au_true }).update({ "AU": 1 }).setOptions({ runValidators: true }).exec();
+  
+  if (com_audata) {
+    var comaudata = com_audata.split(",")
+    workerone = await Worker.where({ "EM": comaudata[0] }).update({ "AU": comaudata[1] }).setOptions({ runValidators: true }).exec();
+  }
+  else if (au_true) {
+    workerone = await Worker.where({ "EM": au_true }).update({ "AU": 2 }).setOptions({ runValidators: true }).exec();
   }
   else if (au_false) {
-    workerone = await Worker.where({ "EM": au_false }).update({ "AU": 2 }).setOptions({ runValidators: true }).exec();
+    workerone = await Worker.where({ "EM": au_false }).update({ "AU": 1 }).setOptions({ runValidators: true }).exec();
   }
   else if (ac_true) {
     workerone = await Worker.where({ "EM": ac_true }).update({ "AC": true }).setOptions({ runValidators: true }).exec();
@@ -928,8 +1037,7 @@ router.get('/history_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, res) {
-  const CID = req.decoded.CID;
-  
+  const CID = req.body.CID;
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
@@ -942,7 +1050,6 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
         var historys = await History.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
         
         for( var i in historys) {
-          console.log(historys[i].PD)
           historys[i].PD = historys[i].PD.length
         }
         
@@ -1330,8 +1437,7 @@ router.get('/pay_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res) {
-  const CID = req.decoded.CID;
-  
+  const CID = req.body.CID;
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
@@ -1543,8 +1649,7 @@ router.get('/point_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 router.post('/ajax/point_list', isNotLoggedIn, DataSet, async function(req, res) {
-  const CID = req.decoded.CID;
-  
+  const CID = req.body.CID;
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
@@ -2050,7 +2155,7 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, res) {
-  const CID = req.decoded.CID;
+  const CID = req.body.CID;
   
   var sort = req.body.sort;
   var search = req.body.search;
@@ -2378,23 +2483,71 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 router.get('/gstest', isNotLoggedIn, DataSet, async(req, res, next) => {
-  // const CID = req.decoded.CID;
-  // const aclist = await Worker.find({ "CID": CID, "AC": false });
-  // var id = "113299152950678048527"
-  // var email = "gsjung006@gmail.com"
-  // var worker = await Worker.findOne({ "GID": id, "EM": email });
-  // const ObjectId = Mongoose.Types.ObjectId;
-  // var companyCUA = await Company.aggregate([
-  //             { $match : {"_id" : ObjectId(worker.CID)} },
-  //             { $project : {CUA : "$CUA"}}
-  //             ], function (err,result) {
-  //               if(err) throw err;
-  //             })
-  // worker.carUA = companyCUA[0].CUA;
-  // console.log(worker)
-  // console.log(companyCUA[0].CUA)
-
-  // res.render('company_list', { company: req.decoded.company, aclist });
+            
+            const historyid = "60a3773e6a7cf707bb4d6880";
+            const number = "01021128228";
+            
+            let apiSecret = process.env.sol_secret;
+            let apiKey = process.env.sol_key;
+            
+            const { config, Group, msg } = require('solapi');
+           
+            
+            const historyone = await History.findOne({'_id' : historyid});
+            var companyone = await Company.findOne({'_id' : historyone.CID});
+            var companypoint = companyone.SPO;
+            
+            
+            
+                
+                config.init({ apiKey, apiSecret })
+                
+                var fn = async function send (params = {}) {
+                    try {
+                      const response = await Group.sendSimpleMessage(params);
+                      const pointone = await Point.insertMany({
+                        "CID": companyone._id,
+                        "PN": "알림톡 전송",
+                        "PO": 50,
+                        "MID" : response.messageId,
+                        "WNM" : historyone.WNM,
+                      });
+                      console.log(pointone);
+                    
+                      console.log(companypoint);
+                      companypoint = companypoint - 50;
+                      console.log(companypoint);
+                    
+                      await Company.where({ '_id': historyone.CID })
+                        .update({ "SPO": companypoint }).setOptions({ runValidators: true })
+                        .exec();
+                      
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                  
+                  const params = {
+                    autoTypeDetect: true,
+                    text: companyone.CNA + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
+                    to: number, // 수신번호 (받는이)
+                    from: '16443486', // 발신번호 (보내는이)
+                    type: 'ATA',
+                    kakaoOptions: {
+                      pfId: 'KA01PF210319072804501wAicQajTRe4',
+                      templateId: 'KA01TP210319074611283wL0AjgZVdog',
+                            buttons: [{
+                              buttonType: 'WL',
+                              buttonName: '확인하기',
+                              linkMo: process.env.IP + '/publish?cat=1&hid=' + historyid,
+                              linkPc: process.env.IP + '/publish?cat=1&hid=' + historyid
+                            }]
+                    }
+                  }
+                  
+                  fn(params)
+  
+  res.render('company_list', { company: req.decoded.company });
 });
   
 module.exports = router;

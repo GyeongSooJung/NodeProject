@@ -40,6 +40,7 @@
 	"company_type5" : "Taxi Service",
 	"company_type6" : "Bus Service",
 	"company_type7" : "Tire Shop",
+	"company_type8" : "MK Franchisee",
 	"address" : "Address",
 	"address_1" : "Basic Address",
 	"address_2" : "Detail Address",

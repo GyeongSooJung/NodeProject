@@ -43,11 +43,10 @@
 										<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>
 										<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
 										<div class="dropdown-menu dropdown-menu-right" style="">
-											<a href="javascript:searchoption('CNM');" class="dropdown-item">{{__('car_number')}}</a>
-											<a href="javascript:searchoption('DNM');" class="dropdown-item">{{__('device_model')}}</a>
-											<a href="javascript:searchoption('ET');" class="dropdown-item">{{__('history_date')}}</a>
-											<!--<a href="javascript:searchoption('PD');" class="dropdown-item">{{__('history_time')}}</a>-->
-											<a href="javascript:searchoption('WNM');" class="dropdown-item">{{__('worker')}}</a>
+											<a href="javascript:searchoption('CNM',pagingObject,i18nconvert,{CNM : 'CNM',DNM : 'DNM',ET : 'ET',WNM : 'WNM'});" class="dropdown-item">{{__('car_number')}}</a>
+											<a href="javascript:searchoption('DNM',pagingObject,i18nconvert,{CNM : 'CNM',DNM : 'DNM',ET : 'ET',WNM : 'WNM'});" class="dropdown-item">{{__('device_model')}}</a>
+											<a href="javascript:searchoption('ET',pagingObject,i18nconvert,{CNM : 'CNM',DNM : 'DNM',ET : 'ET',WNM : 'WNM'});" class="dropdown-item">{{__('history_date')}}</a>
+											<a href="javascript:searchoption('WNM',pagingObject,i18nconvert,{CNM : 'CNM',DNM : 'DNM',ET : 'ET',WNM : 'WNM'});" class="dropdown-item">{{__('worker')}}</a>
 										
 										</div>
 								</div> 
@@ -66,7 +65,7 @@
 					</div>
 					
 					<div>
-					<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
+					<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchtext(pagingObject, condition, i18nconvert)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
 					</div>
 					
 					<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,condition,searcherror,'{{__('search')}}') class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
@@ -109,207 +108,93 @@
 
 <!--Script-->
     <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-	<script>
-	var pagingObject = new Object({name : "History",url : "/ajax/history_list", array : [], sort : "ET", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
+<script>
+	var pagingObject = new Object({name : "History",url : "/ajax/history_list",CID : "{{company._id}}", array : [], sort : "ET", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
 		// 검색 기능
-		$(document).ready(function() {
-			
-	        pagereload(pagingObject, condition, searcherror);
-	        
-	        $('#selectpage').click(function() {
-	            if(pagingObject.postNum != $('#selectpage option:selected').val())
-				{
-					pagingObject.postNum = $('#selectpage option:selected').val()
-					pagereload(pagingObject, condition, searcherror);
-				}
-	        });
-	        
-	        $('#searchtext').keyup(function(key) {
-        		if(key.keyCode == 13) {
-        			if(pagingObject.search == "")
-        			alert("{{__('choice_error')}}");
-        			else {
-	        			if(($('#searchdatetext1').val() != "") && ($('#searchdatetext2').val() != "")) {
-							
-							pagingObject.searchtext = $(this).val();
-							pagingObject.searchdate ="";
-			        		pagingObject.searchdate += $('#searchdatetext1').val();
-			        		pagingObject.searchdate += "~";
-			        		pagingObject.searchdate += $('#searchdatetext2').val();
-							pagereload(pagingObject, condition, searcherror);
-							document.getElementById('gotolist').classList.remove('d-none');
-		        		}
-		        		else {
-		        			pagingObject.searchtext = $(this).val();
-							pagereload(pagingObject, condition, searcherror);
-							document.getElementById('gotolist').classList.remove('d-none');
-		        		}
-        			}
-        		}
-        		if($(this).val() == "") {
-        			pagereload(pagingObject, condition, searcherror);
-        		}
-        	});
-        	
-        	
-        	$('.sort').click(function() {
-        		
-        		$("#searchoption").empty();
-            	$("#searchoption").append("{{__('search')}}");
-        		
-        		pagingObject.search = "";
-        		pagingObject.searchtext = "";
-        		
-        		var paglist = pagingObject.array;
-        		
-        		var check_sort = $(this).attr('name');
-        		
-        		
-        		 if(document.getElementById(check_sort).classList.contains('d-none')) {
-        		 	
-        		 	document.getElementById(check_sort).classList.remove('fa-angle-up');
-	        		document.getElementById(check_sort).classList.add('fa-angle-down');
-        		 	var check2 = check_sort;
-        		 }
-        		 else {
-        		 	if (document.getElementById(check_sort).classList.contains('fa-angle-down')) {
-        		 		
-	        		 	document.getElementById(check_sort).classList.remove('fa-angle-down');
-	        		 	document.getElementById(check_sort).classList.add('fa-angle-up');
-        		 		var check2 = check_sort + "2";
-        		 	}
-        		 	else {
-        		 		
-        		 		document.getElementById(check_sort).classList.remove('fa-angle-up');
-	        		 	document.getElementById(check_sort).classList.add('fa-angle-down');
-        		 		var check2 = check_sort;
-        		 		
-        		 	}
-        		 }
-
-        		document.getElementById('CNM').classList.add('d-none');
-        		document.getElementById('DNM').classList.add('d-none');
-        		document.getElementById('ET').classList.add('d-none');
-        		document.getElementById('PD').classList.add('d-none');
-        		document.getElementById('WNM').classList.add('d-none');
-        		
-        		
-        		document.getElementById(check_sort).classList.remove('d-none');
-        		
-        		
-        		pagingObject.array = paglist;
-        		pagingObject.sort = check2;
-        		pagingObject.page = 0;
-        		pagereload(pagingObject, condition, searcherror);
-        		
-        	})
-	    })
-	    
-		function searchoption(opt) {
-	    	pagingObject.search = opt;
-	    	$("#searchoption").empty();
-	    	var string = opt;
-	    	
-	    	if (string == "CNM")
-	    	   string = "{{__('car_number')}}";
-	    	   document.getElementById('searchtext').classList.remove('d-none');
-	    	if (string == "DNM")
-	    	   string = "{{__('device_model')}}";
-	    	   document.getElementById('searchtext').classList.remove('d-none');
-	    	if (string == "ET") {
-	       	   string = "{{__('history_date')}}";
-	    	   document.getElementById('searchtext').classList.add('d-none');
-	    	   $("#searchtext").val('');
-	    	   
-	    	}
-	    	if (string == "WNM")  {
-	    	   string = "{{__('worker')}}";
-	    	   document.getElementById('searchtext').classList.remove('d-none');
-	    	   document.getElementById('searchdatetext').classList.add('d-none');
-	    	}
-	    	
-	    	$("#searchtext").val('');
-	    	$("#searchdatetext1").val('');
-	    	$("#searchdatetext2").val('');
-	    	$("#searchoption").append(string);
-	    	$("#searchoption").show();
-        }
-		
-		function searchbutton() {
-			if(pagingObject.search == "")
-			alert("{{__('choice_error')}}");
-			else{
-    	
-		    	if(($('#searchdatetext1').val() != "") && ($('#searchdatetext2').val() != "")) {
-					
-					pagingObject.searchtext = $('#searchtext').val();
-					pagingObject.searchdate ="";
-		    		pagingObject.searchdate += $('#searchdatetext1').val();
-		    		pagingObject.searchdate += "~";
-		    		pagingObject.searchdate += $('#searchdatetext2').val();
-					pagereload(pagingObject, condition, searcherror);
-					document.getElementById('gotolist').classList.remove('d-none');
-				}
-				else {
-					alert("")
-				}
-			}
-			
+	$(document).ready(function() {
+	
+	pagereload(pagingObject, condition, i18nconvert); // 첫 화면 페이지 로드
+	
+	$('#selectpage').click(function() {
+		selectpage(pagingObject,condition,i18nconvert,{
+			option : $('#selectpage option:selected').val()
+		})
+	});
+	
+	$('#searchtext').keyup(function(key) {
+		if(key.keyCode == 13) {
+			searchtext(pagingObject,condition,i18nconvert)
 		}
+		if(pagingObject.searchtext == "") {
+			pagereload(pagingObject, condition, i18nconvert);
+		}
+		});
+		
+		$('.sort').click(function() {
+			$("#searchoption").empty();
+			$("#searchoption").append("{{__('search')}}");
+			
+			sortpage(pagingObject,condition,i18nconvert,{
+			name : $(this).attr('name')
+			},
+			{
+			CNM : "CNM",
+			DNM : "DNM",
+			WNM : "WNM",
+			ET : "ET"
+			});
+			
+		});
+	})
 		
 	var condition = function (Object) {
-    	var num =  Object.array.length; 	
-        var	insertTr = ""; // 채워넣을 HTML 초기화
-     	var indexcount = 1; // 인덱스번호 초기화
-    	
+		var num =  Object.array.length; 	
+		var	insertTr = ""; // 채워넣을 HTML 초기화
+		var indexcount = 1; // 인덱스번호 초기화
+		
 		
 		for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-				     	  if(Object.array.length != 0) {
-				     	  	console.log(Object.array[i].PD)
-					     	   if(Object.array[i]) {
-								  insertTr += "<tr>";
-								  insertTr += "<td class='font-weight-bold'>"+(num - (Object.page*10)) +" </td>";
-								  insertTr += "<td>"+ Object.array[i].CNM +"</td>";
-								  insertTr += "<td>"+ Object.array[i].DNM+"</td><td>";
-								  if ( (moment(Object.array[i].ET).format('DD')) == moment().format('DD') )
-								     {
-								       insertTr +=  moment(Object.array[i].ET).format('HH:mm');
-								  }
-								  else {
-								      insertTr += moment(Object.array[i].ET).format('YYYY-MM-DD');
-								  }
-								  if (parseInt(Object.array[i].PD/60)==0)  
-	                                  insertTr +=  "</td><td>"+((Object.array[i].PD)%60)+"s</td>"
-	                              else 
-	                                  insertTr +=  "</td><td>"+parseInt((Object.array[i].PD)/60)+"m "+(parseInt(parseInt(Object.array[i].PD)%60))+"s</td>"
-	                         
-	
-								  insertTr += "<td>"+ Object.array[i].WNM+"</td>";
-								 
-							     
-							      insertTr += "<td class='with-btn' nowrap>"	
-							      insertTr += "<a href='/history_chart/"+Object.array[i]._id+"' class='btn btn-sm btn-white width-60'>{{__('main_indetail')}}</a>"
-								  insertTr += "</tr>";
-								  num -= indexcount;
-					     	   }
-				     	  }
-				     	  else {
-				     	  	insertTr += "<tr>";
-							insertTr += "	<td colspan='10'>No Data</td>";
-							insertTr += "</tr>";
-							
-							break;
-				     	  }
-				     	}
-							  
-					    $("#memDiv").append(insertTr);
-    }
+			if(Object.array.length != 0) {
+				if(Object.array[i]) {
+					insertTr += "<tr>";
+					insertTr += "<td class='font-weight-bold'>"+(num - (Object.page*10)) +" </td>";
+					insertTr += "<td>"+ Object.array[i].CNM +"</td>";
+					insertTr += "<td>"+ Object.array[i].DNM+"</td><td>";
+					if ( (moment(Object.array[i].ET).format('DD')) == moment().format('DD') )
+					{
+						insertTr +=  moment(Object.array[i].ET).format('HH:mm');
+					}
+					else {
+						insertTr += moment(Object.array[i].ET).format('YYYY-MM-DD');
+					}
+					if (parseInt(Object.array[i].PD/60)==0)  
+						insertTr +=  "</td><td>"+((Object.array[i].PD)%60)+"s</td>"
+					else 
+						insertTr +=  "</td><td>"+parseInt((Object.array[i].PD)/60)+"m "+(parseInt(parseInt(Object.array[i].PD)%60))+"s</td>"
+					
+					
+					insertTr += "<td>"+ Object.array[i].WNM+"</td>";
+					
+					
+					insertTr += "<td class='with-btn' nowrap>"	
+					insertTr += "<a href='/history_chart/"+Object.array[i]._id+"' class='btn btn-sm btn-white width-60'>{{__('main_indetail')}}</a>"
+					insertTr += "</tr>";
+					num -= indexcount;
+				}
+			}
+			else {
+				insertTr += "<tr>";
+				insertTr += "	<td colspan='10'>No Data</td>";
+				insertTr += "</tr>";
+				
+				break;
+			}
+		}
+		
+		$("#memDiv").append(insertTr);
+	}
 		
 	
-    
-        var searcherror = function () {
-    	return alert("{{__('search_error')}}");
-    }
 
 	    
 	    // 에러 링크 기능
