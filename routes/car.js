@@ -10,6 +10,8 @@ const path = require('path');
 const router = express.Router();
 const Company = require('../schemas/company');
 
+const Mongoose = require('mongoose');
+
 //자동차 등록
   // 수기 입력(하나씩) 차량 등록
 router.post('/car_join', isNotLoggedIn, async (req, res, next) => {
@@ -239,6 +241,22 @@ router.post('/car_edit/upreg/:CN', isNotLoggedIn, async (req, res, next) => {
     console.error(error);
     return next(error);
   }
+});
+
+router.post('/ajax/car_list_edit1', isNotLoggedIn, async(req, res, next) => {
+  const { car_id } = req.body;
+  
+  var ObjectId = Mongoose.Types.ObjectId;
+  const carone = await Car.find({ _id : ObjectId(car_id) });
+  console.log(carone)
+  res.send({ status : "success", carone : carone });
+});
+
+router.post('/ajax/car_list_edit2', isNotLoggedIn, async(req, res, next) => {
+  const { CN, CPN, CID, car_id } = req.body;
+  
+  console.log(CN, CPN, CID, car_id);
+  res.send({ status : "success" });
 });
 
 //차량 한개 삭제

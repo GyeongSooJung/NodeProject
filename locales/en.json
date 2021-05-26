@@ -203,6 +203,7 @@
     "registration" : "Register",
     "reset" : "Reset",
     "modify" : "Modify",
+    "modify_failed": "Modify failed.",
     "delete" : "Delete",
     "confirm" : "Confirm",
     "null" : "Not Selected",

@@ -203,6 +203,7 @@
 	"registration": "등록",
 	"reset": "초기화",
 	"modify": "수정",
+	"modify_failed": "수정에 실패하였습니다.",
 	"delete": "삭제",
 	"confirm": "확인",
 	"null": "선택안됨",
