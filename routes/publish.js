@@ -28,12 +28,15 @@ router.get('/', async (req, res, next) => {
           await Publish.update({"PUC" : cat}, {$inc : {"PUN" : 1}}, {upsert: true});
           
           const companyone = await Company.findOne({"_id" : historyone.CID});
+          const deviceone = await Device.findOne({"_id" : historyone.DID});
+          console.log("히스1"+historyone);
+          console.log("디바1"+deviceone);
           const history_array = await historyone.PD;
           
           const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
           const term = await moment(timenow).diff(et, 'hours');
           
-          res.render('publish', {companyone, historyone, history_array, term, kakao});
+          res.render('publish', {companyone, deviceone, historyone, history_array, term, kakao});
         }
         else {
           res.redirect('/inflow?cat='+cat+'&nodata=true');
@@ -46,12 +49,15 @@ router.get('/', async (req, res, next) => {
           await Publish.update({"PUC" : cat}, {$inc : {"PUN" : 1}}, {upsert: true});
           
           const companyone = await Company.findOne({"_id" : historyone.CID});
+          const deviceone = await Device.findOne({"_id" : historyone.DID});
+          console.log("히스2"+historyone);
+          console.log("디바2"+deviceone);
           const history_array = await historyone.PD;
           
           const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
           const term = await moment(timenow).diff(et, 'hours');
           
-          res.render('publish', {companyone, historyone, history_array, term, kakao, cat});
+          res.render('publish', {companyone, deviceone, historyone, history_array, term, kakao, cat});
         }
         else {
           res.redirect('/inflow?cat='+cat+'&nodata=true');

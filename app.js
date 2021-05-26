@@ -13,6 +13,7 @@ const i18n = require('./i18n');
 //login with AuthRouter
 const authRouter = require('./routes/auth');
 const ProfileRouter = require('./routes/profile');
+const MasterRouter = require('./routes/master');
 const CompanyRouter = require('./routes/company');
 const pageRouter = require('./routes/page');
 const deviceRouter = require('./routes/device');
@@ -58,6 +59,7 @@ app.use('/', pageRouter);
 app.use('/auth', authRouter);
 app.use('/company', CompanyRouter);
 app.use('/profile', ProfileRouter);
+app.use('/master', MasterRouter);
 app.use('/find', findRouter);
 app.use('/device', deviceRouter);
 app.use('/car', carRouter);

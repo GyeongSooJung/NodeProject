@@ -30,13 +30,9 @@ const CompanySchema = new Schema({
     }, //Company Phone Number
     PN: {
         type: String,
-        required: true,
-        unique: true
     }, //Company Mobile Number
     MN: {
         type: String,
-        required: true,
-        unique: true
     }, // PassWord
     PW: {
         type: String,

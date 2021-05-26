@@ -232,6 +232,26 @@
                           {% endif %}
                         </td>
                       </tr>
+                      <tr>
+                        <th>담당 소독기<br><small>(뒤 4자리)</small></th>
+                        <td>
+                          <script>
+                            function macCut() {
+                              var mac = "{{deviceone.MAC}}";
+                              var result;
+                              if(mac) {
+                                result = mac.substring(mac.length-5, mac.length);
+                              }
+                              else {
+                                result = "N/A"
+                              }
+                              console.log(mac+"/"+result);
+                              return document.write(result);
+                            }
+                             macCut();
+                          </script>
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                   <hr>
@@ -514,7 +534,7 @@
         </div>
       </section>
       <section class="section mt-10 mb-8 has-text-centered">
-        <a href="/inflow?cat={{cat}}" class="button re-enter is-medium">다른 차량 확인하기</a>
+        <a href="/inflow?cat=1" class="button re-enter is-medium">다른 차량 확인하기</a>
       </section>
 
     </main>
