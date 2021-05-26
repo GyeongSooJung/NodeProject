@@ -308,7 +308,7 @@
 	"payment_current" : "Current point",
 	"payment_after" : "Point after purchase",
 	"payment_theamountofgoods" : "Amount",
-	"payment_regulation1" : "This service provides SMS notification to customers after the disinfection process is completed.",
+	"payment_refund_policy" : "Refund Policy",
 	"payment_regulation2" : "※ Refund Regulations and Complaint Handling",
 	"payment_regulation3" : "- This service cannot be refunded on the same day.",
 	"payment_regulation4" : "- You can get a refund within 3 months of payment.",

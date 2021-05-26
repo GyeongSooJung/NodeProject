@@ -308,7 +308,7 @@
 	"payment_current" : "현재 포인트",
 	"payment_after" : "구매 후 포인트",
 	"payment_theamountofgoods": "상품 금액",
-	"payment_regulation1": "본 서비스는 소독공정 완료 후 업체 고객들에게 SMS 알림을 주는 서비스입니다.",
+	"payment_refund_policy" : "환불 규정",
 	"payment_regulation2": "※ 환불 규정 및 민원 처리",
 	"payment_regulation3": "- 본 서비스는 당일 환불이 불가능 합니다.",
 	"payment_regulation4": "- 결제 후 3개월 이내에 환불이 가능합니다.",

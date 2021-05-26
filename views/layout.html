@@ -68,7 +68,7 @@
 						<a href="/profile" class="dropdown-item">{{__('layout_modify')}}</a>
 						<a href="/setting" class="dropdown-item">{{__('layout_setting')}}</a>
 						<div class="dropdown-divider"></div>
-						<a href="/pay_point" class="dropdown-item">{{__('layout_payment_point_purchase')}}</a>
+						<a href="/shop" class="dropdown-item">{{__('layout_payment_point_purchase')}}</a>
 						<a href="javascript:logout()" class="dropdown-item">{{__('layout_signout')}}</a>
 						<a href="javascript:withdrawal()" class="dropdown-item">{{__('layout_withdrawal')}}</a>
 					</div>
@@ -208,8 +208,7 @@
 							<span> {{__('layout_purchase')}} </span> 
 						</a>
 						<ul class="sub-menu">
-							<li><a href="/test">테스트</a></li>
-							<li><a href="/pay_point">{{__('layout_goods_purchase')}}</a></li>
+							<li><a href="/shop">{{__('layout_goods_purchase')}}</a></li>
 							<li><a href="/pay_list">{{__('layout_purchase_list')}}</a></li>
 							<li><a href="/point_list">{{__('layout_payment_point_usage')}}</a></li>
 							<li><a href="/alarmtalk_list">{{__('layout_payment_alarmtalk')}}</a></li>
@@ -285,7 +284,7 @@
 			cut[1] = 'history_list';
 		}
 		if (cut[1] == 'pay_confirm') {
-			cut[1] = 'pay_point';
+			cut[1] = 'shop';
 		}
 		$('#active-menu').find('a[href="' + '/' + cut[1] + '"]').parents('li').addClass('active');
 		
