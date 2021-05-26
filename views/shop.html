@@ -55,6 +55,38 @@
 										<i class="fa fa-fw fa-shopping-basket my-2"></i> {{__('payment_goods')}}
 									</a>
 								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="#" data-toggle="modal" data-target="#refund">
+									  <i class="fa fa-fw fa-exclamation-circle my-2"></i> {{__('payment_refund_policy')}}
+									</a>
+								</li>
+								<!-- Modal -->
+								<div class="modal fade" id="refund" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								  <div class="modal-dialog modal-dialog-centered" role="document">
+								    <div class="modal-content">
+								      <div class="modal-header">
+								        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+								        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								          <span aria-hidden="true">&times;</span>
+								        </button>
+								      </div>
+								      <div class="modal-body">
+								      	<div style="display:flex;">
+											<div >
+												{{__('payment_regulation2')}}</br>
+												{{__('payment_regulation3')}}</br>
+												{{__('payment_regulation4')}}</br>
+												{{__('payment_regulation5')}}
+											</div>
+										</div>
+								      </div>
+								      <div class="modal-footer">
+								        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								        <button type="button" class="btn btn-primary">Save changes</button>
+								      </div>
+								    </div>
+								  </div>
+								</div>
 							</ul>
 						</div>
 					</div>
@@ -72,7 +104,11 @@
 								<div class="product-container" data-type="goods">
 								{% endif %}
 								<a href="#" class="product" data-toggle="modal" data-target="#modalPosItem">
-									<div class="img" style="background-image: url(../assets/img/pos/product-2.jpg)"></div>
+									{% if (item.GI == null) %}
+									<div class="img" style="background-image: url(../assets/img/oasis_logo_shop.png)"></div>
+									{% else %}
+									<div class="img" style="background-image: url({{item.GI}})"></div>
+									{% endif %}
 									<div class="text">
 										<div class="title">{{item.GN}}</div>
 										<div class="desc">{{item.GE}}</div>
@@ -142,7 +178,6 @@
 					<a href="#" data-dismiss="modal" class="close"><i class="fa fa-times"></i></a>
 					<div class="pos-product position-relative">
 						<div class="pos-product-img">
-							<div class="img" style="background-image: url(../assets/img/pos/product-1.jpg)"></div>
 						</div>
 						<div class="pos-product-info d-flex flex-column justify-content-between">
 							<div class="title modal-title"></div>
@@ -175,12 +210,13 @@
 	<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
 	<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 	<script>
-		var shopObject = new Object({ GN: "", GE: "", GP: 0, GO: false, OT: [], ON: [], OP: [], TT: 0, NUM: 1 });
+		var shopObject = new Object({ GN: "", GE: "", GI: "", GP: 0, GO: false, OT: [], ON: [], OP: [], TT: 0, NUM: 1 });
 		showCart();
 		
 		function shopInit() {
 			shopObject.GN = "";
 			shopObject.GE = "";
+			shopObject.GI = "";
 			shopObject.GP = 0;
 			shopObject.GO = false;
 			shopObject.OT = [];
@@ -211,6 +247,7 @@
 					
 					shopObject.GN = result.goods.GN;
 					shopObject.GP = result.goods.GP;
+					shopObject.GI = result.goods.GI;
 					shopObject.GE = result.goods.GE;
 					shopObject.GO = result.goods.GO;
 					shopObject.TT = result.goods.GP;
@@ -222,6 +259,12 @@
 					}
 					else {
 						$(".modal-price").html(shopObject.GP);
+					}
+					if(!shopObject.GI) {
+						$(".pos-product-img").html("<div class='img' style='background-image: url(../assets/img/oasis_logo_shop.png)'></div>");
+					}
+					else {
+						$(".pos-product-img").html("<div class='img' style='background-image: url("+shopObject.GI+")'></div>");
 					}
 					
                 	if(result.status == 'option') {
@@ -349,6 +392,7 @@
 					data: {
 						GN : shopObject.GN,
 						GP : shopObject.GP,
+						GI : shopObject.GI,
 						TT : shopObject.TT,
 						OT : shopObject.OT,
 						ON : shopObject.ON,
@@ -396,11 +440,18 @@
 							else {
 								cartON = "";
 							}
+							var cartImg = "";
+							if(result.cart[i].GI == null) {
+								cartImg = "<div class='img' style='background-image: url(../assets/img/oasis_logo_shop.png)'></div>"
+							}
+							else {
+								cartImg = "<div class='img' style='background-image: url("+result.cart[i].GI+")'></div>"
+							}
 					    	$(".pos-table").append("\
 						    	<div class='row pos-table-row'>\
 									<div class='col-9'>\
 										<div class='pos-product-thumb'>\
-											<div class='img' style='background-image: url(../assets/img/pos/product-2.jpg)'></div>\
+											"+cartImg+"\
 											<div class='info'>\
 													<input type='hidden' id='index' name='index' value='"+i+"' />\
 												<div class='title'>"+result.cart[i].GN+"</div>\

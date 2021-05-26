@@ -270,6 +270,7 @@
 		var paglist = Object.array;
 			
 			var check_sort = jsondata.name;
+			console.log(check_sort)
 			
 			 if(document.getElementById(check_sort).classList.contains('d-none')) {
 			 	
@@ -297,7 +298,6 @@
 			{
 			document.getElementById(item).classList.add('d-none');	
 			}
-			
 			
 			document.getElementById(check_sort).classList.remove('d-none');
 			

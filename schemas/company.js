@@ -30,7 +30,6 @@ const CompanySchema = new Schema({
     }, //Company Phone Number
     PN: {
         type: String,
-        required: true
     }, //Company Mobile Number
     MN: {
         type: String,
