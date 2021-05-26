@@ -188,7 +188,7 @@
 						insertTr += moment( Object.array[i].CA).format('YYYY-MM-DD');
 					}
 					insertTr += "</td><td class='with-btn' nowrap>"	
-					insertTr += "<a id = 'carid' href='javascript:;' onclick='editone(this);' data-type='show' name='"+ Object.array[i]._id +"'   class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>{{__('modify')}}</a>";
+					insertTr += "<a href='javascript:;' id = 'carid' onclick='editone(this);' data-type='show' name='"+ Object.array[i]._id +"'   class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>{{__('modify')}}</a>";
 					insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this,'/car/ajax/car_deleteone',i18nconvert) class='btn btn-sm btn-white width-60' name =' "+  Object.array[i].CN +"'></td> ";
 					insertTr += "</tr>";
 					num -= indexcount;
@@ -207,7 +207,6 @@
 	}
 	
 	function editone(obj) {
-		console.log(typeof(obj))
 		var type = $(obj).data().type;
 		$('.tr-edit').empty();
 		$(obj).parents('tr').siblings().find('.edit-btn').text("{{__('modify')}}");
@@ -251,7 +250,7 @@
 							insertTr +=	"		<div class='form-group row m-b-0'>"
 							insertTr +=	"			<label class='col-md-4 col-sm-4 col-form-label'>&nbsp;</label>"
 							insertTr +=	"			<div class='col-md-8 col-sm-8'>"
-							insertTr +=	"				<a href='javascript:;' onclick='carEdit(pagingObject,'"+obj+"');' class='btn btn-primary width-80'>{{__('modify')}}</a>"
+							insertTr +=	"				<a href='javascript:;' onclick='carEdit(pagingObject);' class='btn btn-primary width-80'>{{__('modify')}}</a>"
 							insertTr +=	"				<button type='reset' class='btn btn-primary width-80'>{{__('reset')}}</button>"
 							insertTr +=	"			</div>"
 							insertTr +=	"		</div>"
@@ -280,39 +279,42 @@
 		}
 	}
 	
-	function carEdit(Object,obj) {
+	function carEdit(Object) {
 		
-		console.log($('#car-edit-form [name="CN"]').val())
-		console.log($('#car-edit-form [name="CPN"]').val())
-		console.log($('#car-edit-form [name="car_id"]').val())
 		
 		console.log(Object)
-		console.log(obj)
-		// $.ajax({
-		// 			type: 'POST',
-		// 			url: '/car/ajax/car_list_edit2',
-		// 			dataType: 'json',
-		// 			data: {
-		// 				CN : $('#car-edit-form [name="CN"]').val(),
-		// 				CPN : $('#car-edit-form [name="CPN"]').val(),
-		// 				CID : Object.CID,
-		// 				car_id : car_id
-		// 			},
-		// 			success: function(result) {
-		// 				if(result.status == 'success') {
-		// 					console.log("@@@")
-		// 					$(obj).text("{{__('modify')}}");
-		// 					$(obj).removeData().type;
-		// 					$(obj).data('type', 'show');
-		// 					// alert($('.tr-edit').html());
-		// 					$('.tr-edit').remove();
-		// 				}
-		// 				else {
-		// 					alert("{{__('purchase_failed')}}");
-		// 				}
-		// 			 }
-		// 		});
-
+		$.ajax({
+					type: 'POST',
+					url: '/car/ajax/car_list_edit2',
+					dataType: 'json',
+					data: {
+						CN : $('#car-edit-form [name="CN"]').val(),
+						CPN : $('#car-edit-form [name="CPN"]').val(),
+						CID : Object.CID,
+						car_id : $('#car-edit-form [name="car_id"]').val()
+					},
+					success: function(result) {
+						if(result.status == 'success') {
+							$('.tr-edit').remove();
+							pagereload(pagingObject, condition, i18nconvert);
+							alert("{{__('car_modify_success')}}");
+							
+						}
+						else if(result.status == 'length') {
+							alert("{{__('car_length_error')}}");
+						}
+						else if(result.status == 'type') {
+							alert("{{__('car_type_error')}}");
+						}
+						else if(result.status == 'exist') {
+						alert("{{__('car_exist_error')}}");
+						}
+						else {
+							alert("{{__('modify_failed')}}");
+						}
+					 }
+				});
+		
 	}
 	
 	

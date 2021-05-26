@@ -10,6 +10,7 @@ const xlsx = require('xlsx');
 const path = require('path');
 const router = express.Router();
 
+const Mongoose = require('mongoose');
 
 //장비 등록
   //DB에 등록
@@ -68,13 +69,38 @@ router.post('/device_edit/upreg/:MAC', isNotLoggedIn, async (req, res, next) => 
   }
 });
 
+router.post('/ajax/device_list_edit1', isNotLoggedIn, async(req, res, next) => {
+  const { device_id } = req.body;
+  
+  var ObjectId = Mongoose.Types.ObjectId;
+  const deviceone = await Device.find({ _id : ObjectId(device_id) });
+  res.send({ status : "success", deviceone : deviceone });
+});
+
+router.post('/ajax/device_list_edit2', isNotLoggedIn, async(req, res, next) => {
+  const { VER, NN, CID, device_id } = req.body;
+  
+  try{
+    await Device.where({"_id" : device_id})
+      .update({ "CID" : CID,
+                "VER" : String(VER),
+                "NN" : NN,
+        }).setOptions({runValidators : true})
+          .exec();
+      return res.send({ status: 'success' });
+   
+  }catch(e) {
+    console.log(e)
+    res.send({ status : "failed" });
+  }
+});
+
 //장비 한개 삭제
 router.post('/ajax/device_deleteone', async (req, res, next) => {
   var select = req.body["select"];
   console.log(select)
   try {
     const deviceone = await Device.findOne({ "MAC" : select.split(' ') });
-    console.log(deviceone)
     await Devicedelete.create({
                   "CID" : deviceone.CID,
                     "MD" : deviceone.MD,
