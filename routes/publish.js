@@ -29,8 +29,6 @@ router.get('/', async (req, res, next) => {
           
           const companyone = await Company.findOne({"_id" : historyone.CID});
           const deviceone = await Device.findOne({"_id" : historyone.DID});
-          console.log("히스1"+historyone);
-          console.log("디바1"+deviceone);
           const history_array = await historyone.PD;
           
           const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');

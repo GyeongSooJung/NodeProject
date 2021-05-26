@@ -15,9 +15,10 @@ const UNKOWN = "UNKOWN";
 const NO_SUCH_DATA = "NO_SUCH_DATA";
 const FAIL = "FAIL";
 const TOKEN_ERROR = "TOKEN_ERROR";
-const NO_POINT = "NO_POINT"
+const NO_POINT = "NO_POINT";
 
-const { config, Group } = require('solapi')
+const { config, Group } = require('solapi');
+const Mongoose = require('mongoose');
 
 
 
@@ -52,9 +53,15 @@ exports.findWorker = async(req, res) => {
 // 로그인 시도
 exports.signIn = async(req, res) => {
     const { type, id, email } = req.body;
-
     if (type == "GOOGLE") {
         var worker = await Worker.findOne({ "GID": id, "EM": email });
+        const companycua = await Company.aggregate([
+                { $match : {"_id" : ObjectId(worker.CID)} },
+                { $project : {CUA : "$CUA"}}
+            ], function (err,result) {
+                    if(err) throw err;
+            })
+        const carUA = companycua[0].CUA;
         if (worker != null) {
             // 토큰 생성
             const token = jwt.sign({
@@ -68,6 +75,7 @@ exports.signIn = async(req, res) => {
                 result: true,
                 data: JSON.stringify(worker),
                 token,
+                carUA
             });
         }
         else {
@@ -265,6 +273,11 @@ exports.registerCar = async(req, res) => {
 
         var result = await Car.create({ CID, CC, CN, SN });
         console.log(result);
+        var ObjectId = Mongoose.Types.ObjectId;
+        console.log(ObjectId(CID))
+        await Company.where({"_id" : ObjectId(CID)})
+        .updateOne({ "CUA" : Date.now() }).setOptions({runValidators : true})
+        .exec();
 
         res.json({
             result: true,
@@ -311,9 +324,13 @@ exports.findCarByComID = async(req, res) => {
 exports.updateCar = async(req, res) => {
     try {
         const { _id, CC, CN, SN } = req.body;
-
         var result = await Car.where({ _id }).updateOne({ CC, CN, SN, UA: Date.now() });
-        console.log(result);
+        console.log("result : " +result);
+        var ObjectId = Mongoose.Types.ObjectId;
+        var car = await Car.findOne({"_id" : ObjectId(_id)});
+        await Company.where({"_id" : ObjectId(car.CID)})
+        .updateOne({ "CUA" : Date.now() }).setOptions({runValidators : true})
+        .exec();
 
         res.json({
             result: true,
@@ -328,13 +345,20 @@ exports.updateCar = async(req, res) => {
     }
 };
 
-// 소독기 삭제
+// 차량 삭제
 exports.deleteCar = async(req, res) => {
     try {
         const { _id, CN } = req.body;
-
+        
+        
+        var ObjectId = Mongoose.Types.ObjectId;
+        var car = await Car.findOne({"_id" : ObjectId(_id)});
+        await Company.where({"_id" : car.CID})
+        .updateOne({ "CUA" : Date.now() }).setOptions({runValidators : true})
+        .exec();
+        
         var result = await Car.remove({ _id, CN });
-        console.log(result);
+        console.log("result : " +result);
 
         res.json({
             result: true,

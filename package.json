@@ -42,7 +42,8 @@
     "socket.io": "^3.0.4",
     "solapi": "^4.1.1",
     "xlsx": "^0.16.9",
-    "xml2js": "^0.4.23"
+    "xml2js": "^0.4.23",
+    "zip": "^1.2.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"

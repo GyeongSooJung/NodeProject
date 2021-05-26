@@ -1,28 +1,29 @@
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
-const ServiceSchema = new Schema({
-    //Service Name
-    SN: {
+const GoodsSchema = new Schema({
+    //Goods Name
+    GN: {
         type: String,
         unique: true
     }, //Price
-    PR: {
+    GP: {
         type: Number
-    }, //Point
-    PO: {
-        type: Number
+    }, //Option
+    GO: {
+        type: Boolean,
+        default: false
     }, //Explanation
-    SE: {
+    GE: {
         type: String
     }, //Img
-    SI: {
+    GI: {
         type: String
-    },//Create Time
+    }, //Create Time
     CA: {
         type: Date,
         default: Date.now
     },
-}, { collection: 'Service' });
+}, { collection: 'Goods' });
 
-module.exports = mongoose.model('Service', ServiceSchema, 'Service');
+module.exports = mongoose.model('Goods', GoodsSchema, 'Goods');

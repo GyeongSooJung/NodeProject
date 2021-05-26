@@ -36,24 +36,39 @@
 			<!-- begin navbar-header -->
 			<div class="navbar-header">
 				<a href="/main" class="navbar-brand ml-3"><img src="../assets/img/oasis.png"></a>
-				<button type="button" class="navbar-toggle" data-click="sidebar-toggled">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
+				
 			</div>
-			<!-- end navbar-header --><!-- begin header-nav -->
+			<div class="navbar-nav navbar-right">
+				{% if noticethree %}
+				<div class="d-flex justify-content-center align-items-center font-weight-bold">
+					<p class="width-80 mb-0 height-20">공지사항 &nbsp;:&nbsp;</p>
+					<div class="notice overflow-hidden height-20">
+						<ul class="rolling position-relative mb-0" style="list-style: none;">
+							{% for notice in noticethree %}
+							<li class="height-20 mb-0" style="line-height:1.5;">
+								<a href="#" onclick="noticepop(this)" name="{{notice._id}}">{{notice.TI}}</a>
+							</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+				{% else %}
+				{% endif %}
+			</div>
+			<!-- end navbar-header -->
+			<!-- begin header-nav -->
 			<ul class="navbar-nav navbar-right">
 				<li class="dropdown navbar-user">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<span class="d-none d-md-inline font-weight-bold">{{company.CNA}}</span>
-						<small class="font-weight-bold">({{__('main_point')}} : <span id="pointbox" class="text-primary">{{company.SPO}} p</span>)</small>
+						<span class="font-weight-bold">({{__('main_point')}} : <span id="pointbox" class="text-primary">{{company.SPO}} p</span>)</span>
 						<b class="caret"></b>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right">
 						<a href="/profile" class="dropdown-item">{{__('layout_modify')}}</a>
+						<a href="/setting" class="dropdown-item">{{__('layout_setting')}}</a>
 						<div class="dropdown-divider"></div>
-						<a href="/pay_point" class="dropdown-item">{{__('layout_payment_point_purchase')}}</a>
+						<a href="/shop" class="dropdown-item">{{__('layout_payment_point_purchase')}}</a>
 						<a href="javascript:logout()" class="dropdown-item">{{__('layout_signout')}}</a>
 						<a href="javascript:withdrawal()" class="dropdown-item">{{__('layout_withdrawal')}}</a>
 					</div>
@@ -78,7 +93,14 @@
 			<div id="active-menu" data-scrollbar="true" data-height="100%">
 				<ul class="nav">
 				<li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>
-				
+					<li class="has-sub">
+						<a href="/notice_list">
+							<b class="caret"></b>
+							<i class="fas fa-lg fa-fw m-r-10 fa-volume-up"></i>
+							<span> {{__('notice_list')}} </span> 
+						</a>
+					</li>
+					<!--사업자만-->
 					{% if(company.AH == true) %}
 					<li class="has-sub">
 						<a href="javascript:;">
@@ -102,6 +124,17 @@
 							</ul>
 							</li>
 					<li class="has-sub">
+						<a href="javascript:;">
+							<b class="caret"></b>
+							<i class="fas fa-lg fa-fw m-r-10 fa-chart-bar"></i>
+							<span> {{__('statistics')}} 테스트 </span> 
+						</a>
+						<ul class="sub-menu">
+							<li><a href="/device_static2">{{__('statistics_device')}}</a></li>
+							<li><a href="/history_static2">{{__('statistics_history')}}</a></li>
+							</ul>
+							</li>
+					<li class="has-sub">
 							<a href="javascript:;">
 								<b class="caret"></b>
 								<i class="fab fa-lg fa-fw m-r-10 fa-python"></i>
@@ -114,6 +147,7 @@
 					</li>					
 					{% else %}
 					{% endif %}
+					<!--//-->
 					<li class="has-sub">
 						<a href="javascript:;">
 							<b class="caret"></b>
@@ -171,26 +205,15 @@
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-shopping-cart m-r-10 fa-qrcode"></i>
-							<span> {{__('payment')}} </span> 
+							<span> {{__('layout_purchase')}} </span> 
 						</a>
 						<ul class="sub-menu">
-							<li><a href="/pay_point">{{__('layout_payment_point_purchase')}}</a></li>
+							<li><a href="/shop">{{__('layout_goods_purchase')}}</a></li>
+							<li><a href="/pay_list">{{__('layout_purchase_list')}}</a></li>
 							<li><a href="/point_list">{{__('layout_payment_point_usage')}}</a></li>
 							<li><a href="/alarmtalk_list">{{__('layout_payment_alarmtalk')}}</a></li>
-							<li><a href="/pay_list">{{__('layout_payment_list')}}</a></li>
-							
 						</ul>
 					</li>
-					<!--<li class="has-sub">-->
-					<!--	<a href="javascript:;">-->
-					<!--		<b class="caret"></b>-->
-					<!--		<i class="fas fa-lg fa-shopping-cart m-r-10 fa-qrcode"></i>-->
-					<!--		<span> 서비스 </span> -->
-					<!--	</a>-->
-					<!--	<ul class="sub-menu">-->
-					<!--		<li><a href="/sms_send">메일 보내기</a></li>-->
-					<!--	</ul>-->
-					<!--</li>-->
 					<li class="has-sub">
 						<a href="javascript:;">
 							<b class="caret"></b>
@@ -261,9 +284,33 @@
 			cut[1] = 'history_list';
 		}
 		if (cut[1] == 'pay_confirm') {
-			cut[1] = 'pay_sms';
+			cut[1] = 'shop';
 		}
 		$('#active-menu').find('a[href="' + '/' + cut[1] + '"]').parents('li').addClass('active');
+		
+		// 공지사항 rolling 기능
+		var height =  $(".notice").height();
+		var num = $(".rolling li").length;
+		var max = height * num;
+		var move = 0;
+		function noticeRolling(){
+			move += height;
+			$(".rolling").animate({"top":-move},600,function(){
+				if( move >= max ){
+					$(this).css("top",0);
+					move = 0;
+				};
+			});
+		};
+		noticeRollingOff = setInterval(noticeRolling,2000);
+		$(".rolling").append($(".rolling li").first().clone());
+	
+		$(".rolling_stop").click(function(){
+			clearInterval(noticeRollingOff);
+		});
+		$(".rolling_start").click(function(){
+			noticeRollingOff = setInterval(noticeRolling,1000);
+		});
 	});
 	
 	// 회원탈퇴 기능
@@ -295,6 +342,115 @@
 			location = '/main';
 		}
 	}
+	// 공지사항
+	function noticepop(obj) {
+       var noticeid = $(obj).attr('name');
+        if (noticeid)
+        window.open("/noticepop?noticeid="+noticeid,"pop","width=620, height=700, scrollbars=yes, resizable=yes"); 
+        else{
+            alert("{{__('purchase_failed')}}");
+        }   
+    }
+    
+    var searcherror = function () {
+    	return alert("{{__('search_error')}}");
+    }
+    var choiceerror = function () {
+    	return alert("{{__('choice_error')}}");
+    }
+    var i18nconvert = function (string) {
+    	if(string == "CN" ) {
+    		return "{{__('car_number')}}";
+    	} 
+    	else if(string == "CPN" ) {
+    		return "{{__('car_customer_phone')}}";
+    	} 
+    	else if(string == "MD" ) {
+    		return "{{__('device_model')}}";
+    	} 
+    	else if(string == "VER" ) {
+    		return "{{__('device_version')}}";
+    	} 
+    	else if(string == "MAC" ) {
+    		return "{{__('device_mac')}}";
+    	} 
+    	else if(string == "NN" ) {
+    		return "{{__('device_nick')}}";
+    	} 
+    	else if(string == "UN" ) {
+    		return "{{__('device_use_number')}}";
+    	}
+    	else if(string == "WN" ) {
+    		return "{{__('name')}}";
+    	}
+    	else if(string == "PN" ) {
+    		return "{{__('mobile_number')}}";
+    	}
+    	else if(string == "EM" ) {
+    		return "{{__('email')}}";
+    	}
+    	else if(string == "WNM" ) {
+    		return "{{__('worker')}}";
+    	}
+    	else if(string == "DNM" ) {
+    		return "{{__('device_model')}}";
+    	}
+    	else if(string == "CNM" ) {
+    		return "{{__('car_number')}}";
+    	}
+    	else if(string == "MID" ) {
+    		return "{{__('payment_ordernumber')}}";
+    	}
+    	else if(string == "payCA" ) {
+    		return "{{__('payment_date')}}";
+    	}
+    	else if(string == "GN" ) {
+    		return "{{__('payment_name')}}";
+    	}
+    	else if(string == "AM" ) {
+    		return "{{__('payment_amount')}}";
+    	}
+    	else if(string == "pointN" ) {
+    		return "{{__('payment_name')}}";
+    	}
+    	else if(string == "PO" ) {
+    		return "{{__('payment_point')}}";
+    	}
+    	else if(string == "pointCA" ) {
+    		return "{{__('payment_Dateofuse')}}";
+    	}
+    	else if(string == "payWNM" ) {
+    		return "{{__('payment_sender')}}";
+    	}
+    	else if(string == "RE" ) {
+    		return "{{__('payment_result')}}";
+    	}
+    	else if(string == "" ) {
+    		return "";
+    	}else if(string == "" ) {
+    		return "";
+    	}
+    	else if(string == "ET" ) {
+    		return "{{__('history_date')}}";
+    	}
+    	else if(string == "CA" ) {
+    		return "{{__('create_date')}}";
+    	}
+    	else if(string == "choiceerror" ) {
+    		return "{{__('choice_error')}}";
+    	} 
+    	else if(string == "searcherror" ) {
+    		return "{{__('search_error')}}";
+    	}
+    	else if(string == "deleteconfirm" ) {
+    		return "{{__('delete_confirm')}}";
+    	} 
+    	else if(string == "deletesuccess" ) {
+    		return "{{__('delete_success')}}";
+    	} else if(string == "" ) {
+    		return "";
+    	} 
+    }
 </script>
 
 <!-- ================== BEGIN BASE JS ================== -->

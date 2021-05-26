@@ -25,9 +25,9 @@
             <div class="panel-body">
                   <form method="post" data-parsley-validate="true">
                       <div class="d-flex justify-content-center align-items-center flex-wrap">
-                          {% for goods in service %}
+                         {% for goods in service %}
                          <div class="radio-tile">
-                             <input type="radio" class="radio-btn" name="sms" value="{{goods.PR}}" onclick="check(this.value)" />
+                            <input type="radio" class="radio-btn" name="point" value="{{goods.PR}}" onclick="check(this.value)" />
                             <div class="radio-text">
                                 <i class="fas fa-4x fa-sms mb-2 icolor"></i>
                                 <p class="mb-2 font-weight-bold">+ {{goods.PO}} point</p>
@@ -76,7 +76,7 @@
                         </table>
                      </div>
                     <div class="d-flex justify-content-center align-items-center">
-                        <a href="javascript:payments('sms')" class="btn btn-primary text-white px-4"><i class="fas fa-credit-card mr-2"></i>{{__('payment')}}</a>
+                        <a href="javascript:payments('point')" class="btn btn-primary text-white px-4"><i class="fas fa-credit-card mr-2"></i>{{__('payment')}}</a>
                         <!--<a href="javascript:payments2('sms')" class="btn btn-primary text-white px-4"><i class="fas fa-credit-card mr-2"></i>정기 결제</a>-->
                         </div>
                   </form>

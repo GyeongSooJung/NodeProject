@@ -1,6 +1,6 @@
 const express = require('express');
 const Worker = require('../schemas/worker');
-const Workerdelete = require('../schemas/worker_delete')
+const Workerdelete = require('../schemas/worker_delete');
 const moment = require('moment');
 const {isLoggedIn,isNotLoggedIn,DataSet} = require('./middleware');
 const router = express.Router();
@@ -168,24 +168,25 @@ router.post('/worker_select_manager',isNotLoggedIn ,async (req, res, next) => {
 
 
 //작업자 삭제
-router.get('/worker_delete/:EM',isNotLoggedIn ,async (req, res, next) => {
+router.post('/worker_delete',isNotLoggedIn ,async (req, res, next) => {
   try {
-    
-    const workerone = await Worker.findOne({ "EM" : req.params.EM });
+    console.log(req.body["select"])
+    const workerone = await Worker.findOne({ "EM" : req.body["select"] });
     await Workerdelete.create({
-                   "CID" : workerone.CID,
-                    "WN" : workerone.WN,
-                    "PN" : workerone.PN,
-                    "GID" : workerone.GID,
-                    "EM" : workerone.EM,
-                    "PU" : workerone.PU,
-                    "AU" : workerone.AU,
-                    "AC" :workerone.AC
+      "CID" : workerone.CID,
+        "WN" : workerone.WN,
+        "PN" : workerone.PN,
+        "GID" : workerone.GID,
+        "EM" : workerone.EM,
+        "PU" : workerone.PU,
+        "AU" : workerone.AU,
+        "AC" :workerone.AC
     });
     
-    await Worker.remove({ "EM" : req.params.EM });
-    res.redirect('/worker_list');
+    await Worker.remove({ "EM" : req.body["select"] });
+    res.json({ result : true });
   } catch (err) {
+    res.json({ result : false });
     console.error(err);
     next(err);
   }

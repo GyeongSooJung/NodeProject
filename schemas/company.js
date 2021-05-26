@@ -50,6 +50,10 @@ const CompanySchema = new Schema({
     SPO: {
         type: Number,
         default: 0
+    }, //Service Point Set Alarm
+    POA: {
+        type: Number,
+        default: 5000
     }, //Virtual Account Number
     VAN: {
         type: Number

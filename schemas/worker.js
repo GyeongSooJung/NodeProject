@@ -34,11 +34,11 @@ const workerSchema = new Schema({
         type: Date,
         default: Date.now,
     },
-    AU: { // Auth, 0: MK 관리자, 1: 사업주, 2: 직업
+    AU: { // Auth, 0: MK 관리자, 1: 사업주, 2: 작업자, 3: 대리점(장비,차량등록 권한)
         type: Number,
         default:2,
     },
-    AC: { // Activated
+    AC: { // Activated(장비작동권한)
         type: Boolean,
         default: false,
     },

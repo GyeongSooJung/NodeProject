@@ -1,6 +1,6 @@
 const express = require('express');
 const Car = require('../schemas/car');
-const Cardelete = require('../schemas/car_delete')
+const Cardelete = require('../schemas/car_delete');
 var moment = require('moment');
 const {isNotLoggedIn} = require('./middleware');
 const multiparty = require('multiparty');
@@ -59,6 +59,8 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
   const { excelData } = req.body;
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
+  const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
+  var current = moment().format('YYYY-MM-DD hh:mm:ss');
   var excelArr = [];
   
   try {
@@ -104,8 +106,12 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
     
     // 엑셀 데이터 DB에 upsert방식으로 넣기
     for(var h = 0; h < excelCN.length; h++) {
-      await Car.update({ "CID" : CID, "CN" : excelCN[h] }, { "CID" : CID, "CN" : excelCN[h], "CPN" : excelCPN[h] }, { upsert : true });
+      await Car.update({ "CID" : CID, "CN" : excelCN[h] }, { "CID" : CID, "CN" : excelCN[h], "CPN" : excelCPN[h], "CA" : current }, { upsert : true });
     }
+    
+    await Company.where({"CNU" : CNU})
+      .update({ "CUA" : CUA }).setOptions({runValidators : true})
+      .exec();
     
     return res.send({ status: 'success' });
     
