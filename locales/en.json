@@ -55,6 +55,7 @@
 	"submit" : "Submit",
 	"enter" : "Enter",
 	"reenter" : "Re-Enter",
+	"close": "Close",
 	"reenter_guide" : "Please Re-Enter.",
 	"wrong_authnum_guide" : "Wrong Authentication Number.",
 	
@@ -163,6 +164,7 @@
     "layout_history_list" : "History List",
     "layout_purchase": "Purchase",
 	"layout_goods_purchase": "Goods Purchase",
+	"layout_goods_join": "Goods Registration",
 	"layout_purchase_list": "Purchase List",
     "layout_payment_point_purchase" : "Point Purchase",
     "layout_payment_point_usage" : "Point Usage History",
@@ -313,6 +315,7 @@
 	"payment_regulation3" : "- This service cannot be refunded on the same day.",
 	"payment_regulation4" : "- You can get a refund within 3 months of payment.",
 	"payment_regulation5" : "- Please email mk@mklc.co.kr for refund requests and complaints.",
+	"payment_shoplist_add": "Add to cart",
 	"payment_empty": "Your shopping cart is empty.",
 	"payment_success" : "Your payment has been completed.",
 	"payment_cancelled" : "Your payment has been canceled.",
