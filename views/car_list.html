@@ -68,29 +68,19 @@
 						</div>
 						
 						<div>
-						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchtext(pagingObject, condition, i18nconvert)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
+						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchtext(pagingObject,  i18nconvert)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
 						</div>
 						
-						<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,condition,i18nconvert,'{{__('search')}}') class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
+						<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,i18nconvert,'{{__('search')}}') class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
 					</div>
 					
 					<div class="overflow-auto">
 						<!--<form action="/car/car_select_delete" method="post">-->
 						<form method="post">
 							<table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle text-center">
-								<thead>
-									<tr>
-										<th width="1%">
-											<input type="checkbox" name="allck" class="neHeros" value="" onChange="allCheckedBox(this);"/>
-										</th>
-										<th width="2.5%"></th>
-										<th width="33%" class="sort" name="CN">{{__('car_number')}}<i id = "CN" class="d-none  float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="33%" class="sort" name="CPN">{{__('car_customer_phone')}}<i id = "CPN" class="d-none  float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="30.5%" class="sort" name="CA">{{__('create_date')}}<i id = "CA" class="float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="1%"></th>
-									</tr>
+								<thead id="memDiv1">
 								</thead>
-								<tbody id="memDiv">
+								<tbody id="memDiv2">
 								</tbody>
 							</table>
 							<div class="d-flex justify-content-between align-item-center">
@@ -119,9 +109,9 @@
 	
 	// 검색기능
 	$(document).ready(function() {
-		pagereload(pagingObject, condition, i18nconvert); // 첫 화면 페이지 로드
+		pagereload(pagingObject,  i18nconvert); // 첫 화면 페이지 로드
 		$('#selectpage').click(function() {
-			selectpage(pagingObject,condition,i18nconvert,{
+			selectpage(pagingObject,i18nconvert,{
 				option : $('#selectpage option:selected').val()
 			})
 		});
@@ -129,82 +119,19 @@
 		
 		$('#searchtext').keyup(function(key) {
 			if(key.keyCode == 13) {
-				searchtext(pagingObject,condition,i18nconvert)
+				searchtext(pagingObject,i18nconvert)
 			}
 			if(pagingObject.searchtext == "") {
-				pagereload(pagingObject, condition, i18nconvert);
+				pagereload(pagingObject,  i18nconvert);
 			}
-		});
-		
-		
-		$('.sort').click(function() {
-			$("#searchoption").empty();
-			$("#searchoption").append("{{__('search')}}");
-			
-			sortpage(pagingObject,condition,i18nconvert,{
-			
-				name : $(this).attr('name')
-			},
-			{
-				CN : "CN",
-				CPN : "CPN",
-				CA : "CA"
-			});
-			
 		});
     });
     
+		
+
 	
-		
-    
-	var condition = function (Object) {
-		var num =  Object.array.length; 	
-		var	insertTr = ""; // 채워넣을 HTML 초기화
-		var indexcount = 1; // 인덱스번호 초기화
-		
-		
-		for (var i = ( Object.postNum *  Object.page) ; i < ( Object.postNum *  Object.page) +  Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-			if( Object.array.length != 0) {
-				if( Object.array[i]) {
-					insertTr += "<tr>";
-					insertTr += " 	<td class='with-btn' nowrap>";
-					insertTr += "		<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+  Object.array[i].CN +" onChange='eachCheckedBox(this);'/>";
-					insertTr += " 	</td>";
-					insertTr += "<td class='font-weight-bold'>"+(num - ( Object.page*10)) +" </td>";
-					insertTr += "<td>"+  Object.array[i].CN +"</td>";
-					
-					if(! Object.array[i].CPN){
-						insertTr+="<td>"+"N/A"+"</td><td>";
-					}
-					else {
-						insertTr += "<td>"+  Object.array[i].CPN+"</td><td>";
-					}
-					
-					if ( (moment( Object.array[i].CA).format('DD')) == moment().format('DD') )
-					{
-						insertTr +=  moment( Object.array[i].CA).format('HH:mm');
-					}
-					else {
-						insertTr += moment( Object.array[i].CA).format('YYYY-MM-DD');
-					}
-					insertTr += "</td><td class='with-btn' nowrap>"	
-					insertTr += "<a href='/car_edit/"+ Object.array[i].CN+"'   class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>{{__('modify')}}</a>";
-					insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this,'/car/ajax/car_deleteone',i18nconvert) class='btn btn-sm btn-white width-60' name =' "+  Object.array[i].CN +"'></td> ";
-					insertTr += "</tr>";
-					num -= indexcount;
-				}
-			}
-			else {
-				insertTr += "<tr>";
-				insertTr += "	<td colspan='10'>No Data</td>";
-				insertTr += "</tr>";
-			
-			break;
-			}
-		}
-		
-		$("#memDiv").append(insertTr);
-	}
+	
+	
 	
 	
 	

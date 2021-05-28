@@ -1,15 +1,124 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const imgbbUploader = require("imgbb-uploader");
+const multiparty = require('multiparty');
+const path = require('path');
+var fs = require('fs');
 
 const Order = require('../schemas/order');
 const OrderDetail = require('../schemas/order_detail');
-const Service = require('../schemas/service');
 const Goods = require('../schemas/goods');
 const Company = require('../schemas/company');
 const GoodsOption = require('../schemas/goods_option');
 
 const { isNotLoggedIn, DataSet } = require('./middleware');
+
+// 쇼핑몰 이미지등록
+router.post('/goodsImg', isNotLoggedIn, DataSet, async(req, res, next) => {
+    try {
+        const form = new multiparty.Form({
+            autoFiles: true,
+        });
+        form.on('file', async (name, file) => {
+            // console.log("패쓰"+file.path);
+            const extname = path.extname(file.path);
+            // console.log("확장자명"+extname);
+            const fileName = path.basename(file.path);
+            // console.log("파파파"+fileName);
+            
+            if (extname == "") {
+                return res.send({ status: 'sendNull' });
+            }
+            else {
+                const options = {
+                    apiKey: process.env.imgBB,
+                    imagePath: file.path,
+                    name: fileName,
+                }
+                
+                imgbbUploader(options)
+                    .then((response) => res.send({ status : "success", imgUrl: response.url}))
+                    .catch((error) => console.error(error));
+            }
+        });
+        form.on('close', () => {});
+ 
+        form.parse(req);
+        
+    } catch(err) {
+        console.error(err);
+        next(err);
+    }
+});
+
+// 쇼핑몰 상품등록
+router.post('/goodsJoin', isNotLoggedIn, DataSet, async(req, res, next) => {
+    const { GN, GP, GE, GI, OT, ON, OP } = req.body;
+    
+    
+    try {
+        
+        var jsonON = JSON.parse(ON);
+        var jsonOP = JSON.parse(OP);
+        
+        const exGoods = await Goods.findOne({ "GN" : GN });
+        if(exGoods) {
+            return res.send({ status: "exist" });
+        }
+        else {
+            if(OT) {
+                await Goods.create({
+                    GN : GN,
+                    GP : GP,
+                    GE : GE,
+                    GI : GI,
+                    GO : true
+                });
+                
+                
+                const newGoods = await Goods.findOne({ "GN" : GN });
+                if(typeof(OT) == "string") {
+                    for(var j = 0; j < jsonON[0].length; j++) {
+                        await GoodsOption.create({
+                            GID : newGoods._id,
+                            GNA : newGoods.GN,
+                            OT : OT,
+                            ON : jsonON[0][j],
+                            OP : jsonOP[0][j]
+                        });
+                    }
+                }
+                else {
+                    for(var i = 0; i < OT.length; i++) {
+                        for(var j = 0; j < jsonON[i].length; j++) {
+                            await GoodsOption.create({
+                                GID : newGoods._id,
+                                GNA : newGoods.GN,
+                                OT : OT[i],
+                                ON : jsonON[i][j],
+                                OP : jsonOP[i][j]
+                            });
+                        }
+                    }
+                }
+            }
+            else {
+                await Goods.create({
+                    GN : GN,
+                    GP : GP,
+                    GE : GE,
+                    GI : GI,
+                    GO : false
+                });
+            }
+            return res.send({ status: "success" });
+        }
+    } catch(err) {
+        console.error(err);
+        next(err);
+    }
+});
 
 // 쇼핑몰 모달창
 router.post('/modal', isNotLoggedIn, DataSet, async(req, res, next) => {

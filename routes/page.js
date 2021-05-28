@@ -244,7 +244,14 @@ router.get('/company_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 
     res.render('company_list', { company: req.decoded.company, companys, aclist, noticethree, totalNum, currentPage, totalPage, startPage, endPage });
   }
-})
+});
+
+router.post('/ajax/company_list', isNotLoggedIn, DataSet, async(req, res, nex) => {
+  const CID = req.body.CID;
+  const companylist = await Company.find({});
+  res.json({ result: true, pagelist : companylist, totalnum : companylist.length});
+  
+});
 
 //----------------------------------------------------------------------------//
 //                                  통계                                      //
@@ -783,8 +790,6 @@ router.post('/ajax/worker_list', isNotLoggedIn, DataSet, async function(req, res
     }
     
     CIDlist.push(CID);
-    
-    console.log(CIDlist)
     
     if ((search!="") && (searchtext!="")) {
         try{
@@ -2015,8 +2020,6 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
       if(err) throw err;
     });
     
-    console.log(pointaggregate)
-    
     //_id 키의 값들을 배열에 담음(mid들만)
     for (var i = 0; i < pointaggregate.length; i++) {
       messageIds[i] = await pointaggregate[i]._id;
@@ -2405,93 +2408,72 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
   const aclist = await Worker.find({ "CID": CID, "AC": false });
 
   res.render('ozone_spread', { company: req.decoded.company, aclist });
-  
-  const noticeid = req.body.noticeid;
-  
-  
-  try {
-    
-    const noticedetail = await Notice.find({_id : noticeid});
-    
-    res.json({result : true, noticedetail : noticedetail})
-  }catch(e) {
-    console.log(e)
-    res.json({result : false})
-  }
-});
-
-
-
-//----------------------------------------------------------------------------//
-//                                  About App                                 //
-//----------------------------------------------------------------------------//
-router.get('/aboutapp', async(req, res, next) => {
-  res.render('aboutapp');
-});
-
-//----------------------------------------------------------------------------//
-//                                  Manual                                    //
-//----------------------------------------------------------------------------//
-router.get('/manual', async(req, res, next) => {
-  res.render('manual');
-});
-
-//----------------------------------------------------------------------------//
-//                                  Ozone Spread                              //
-//----------------------------------------------------------------------------//
-
-//Ozone Spread
-router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
-
-  res.render('ozone_spread', { company: req.decoded.company, aclist });
 });
 
 router.get('/gstest', isNotLoggedIn, DataSet, async(req, res, next) => {
-    const jwt = require('jsonwebtoken');       
-    const JWT_SECRET = "OASIS";
-    
-    const id = "110927901214179954343"
-    const email ="hbc3869@gmail.com"
-    const type = "GOOGLE"
-    
-    console.log(id,email,type)
-    if (type == "GOOGLE") {
-        var worker = await Worker.findOne({ "GID": id, "EM": email });
-        const companycua = await Company.aggregate([
-                { $match : {"_id" : ObjectId(worker.CID)} },
-                { $project : {CUA : "$CUA"}}
-            ], function (err,result) {
-                    if(err) throw err;
-                    console.log(result)
-            })
-        const carUA = companycua[0].CUA;
-        if (worker != null) {
-            // 토큰 생성
-            const token = jwt.sign({
-                id: worker._id,
-            }, JWT_SECRET, {
-                expiresIn: "1d",
-            });
-
-            await Worker.where({ _id: worker._id }).update({ UA: Date.now() });
-            return res.json({
-                result: true,
-                data: JSON.stringify(worker),
-                token,
-                carUA
-            });
-        }
-        else {
-            return res.json({
-                result: false,
-            });
-        }
-    }
-    res.json({
-        result: false,
-    });
+            
+            const historyid = "60a3773e6a7cf707bb4d6880";
+            const number = "01021128228";
+            
+            let apiSecret = process.env.sol_secret;
+            let apiKey = process.env.sol_key;
+            
+            const { config, Group, msg } = require('solapi');
+           
+            
+            const historyone = await History.findOne({'_id' : historyid});
+            var companyone = await Company.findOne({'_id' : historyone.CID});
+            var companypoint = companyone.SPO;
+            
+            
+            
+                
+                config.init({ apiKey, apiSecret })
+                
+                var fn = async function send (params = {}) {
+                    try {
+                      const response = await Group.sendSimpleMessage(params);
+                      const pointone = await Point.insertMany({
+                        "CID": companyone._id,
+                        "PN": "알림톡 전송",
+                        "PO": 50,
+                        "MID" : response.messageId,
+                        "WNM" : historyone.WNM,
+                      });
+                      console.log(pointone);
+                    
+                      console.log(companypoint);
+                      companypoint = companypoint - 50;
+                      console.log(companypoint);
+                    
+                      await Company.where({ '_id': historyone.CID })
+                        .update({ "SPO": companypoint }).setOptions({ runValidators: true })
+                        .exec();
+                      
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                  
+                  const params = {
+                    autoTypeDetect: true,
+                    text: companyone.CNA + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
+                    to: number, // 수신번호 (받는이)
+                    from: '16443486', // 발신번호 (보내는이)
+                    type: 'ATA',
+                    kakaoOptions: {
+                      pfId: 'KA01PF210319072804501wAicQajTRe4',
+                      templateId: 'KA01TP210319074611283wL0AjgZVdog',
+                            buttons: [{
+                              buttonType: 'WL',
+                              buttonName: '확인하기',
+                              linkMo: process.env.IP + '/publish?cat=1&hid=' + historyid,
+                              linkPc: process.env.IP + '/publish?cat=1&hid=' + historyid
+                            }]
+                    }
+                  }
+                  
+                  fn(params)
   
   res.render('company_list', { company: req.decoded.company });
 });

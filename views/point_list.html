@@ -67,10 +67,10 @@
 						</div>
 						
 						<div>
-						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchtext(pagingObject, condition, i18nconvert)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
+						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchtext(pagingObject, i18nconvert)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
 						</div>
 						
-						<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,condition,searcherror,'{{__('search')}}') class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
+						<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,i18nconvert) class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
 					</div>
    			
    			
@@ -78,16 +78,10 @@
                <div class="overflow-auto">
                   <!--<form action="/device/device_select_delete" method="post">-->
                      <table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle text-center">
-                        <thead>
-                           <tr>
-                              <th width="2.5%"></th>
-                              <th width="25%" class = "sort" name = "PN">{{__('payment_name')}}<i id = "PN" class="d-none  float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="25%" class = "sort" name = "CA">{{__('payment_Dateofuse')}}<i id = "CA" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="25%" class = "sort" name = "PO">{{__('payment_point')}}<i id = "PO" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="1%"></th>
-                           </tr>
+                        <thead id = "memDiv1">
+                        	
                         </thead>
-                        <tbody id = "memDiv">
+                        <tbody id = "memDiv2">
                            
                         </tbody>
                      </table>
@@ -135,77 +129,25 @@
   	var pagingObject = new Object({name : "Point",url : "/ajax/point_list",CID : "{{company._id}}",  array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
 		// 검색 기능
 		$(document).ready(function() {
-	        pagereload(pagingObject, condition, searcherror);
+	        pagereload(pagingObject, i18nconvert);
 	        
 	        $('#selectpage').click(function() {
-				selectpage(pagingObject,condition,i18nconvert,{
+				selectpage(pagingObject,i18nconvert,{
 					option : $('#selectpage option:selected').val()
 				})
 			});
 	        
 	        $('#searchtext').keyup(function(key) {
 				if(key.keyCode == 13) {
-					searchtext(pagingObject,condition,i18nconvert)
+					searchtext(pagingObject,i18nconvert)
 				}
 				if(pagingObject.searchtext == "") {
-					pagereload(pagingObject, condition, i18nconvert);
+					pagereload(pagingObject,i18nconvert);
 				}
 			});
         	
         	
-        	$('.sort').click(function() {
-			$("#searchoption").empty();
-			$("#searchoption").append("{{__('search')}}");
-			
-			sortpage(pagingObject,condition,i18nconvert,{
-				name : $(this).attr('name')
-			},
-			{
-				PN : "PN",
-				CA : "CA",
-				PO : "PO"
-			});
-			
-			});
 	    })
-		
-
-		
-	var condition = function (Object) {
-    	var num =  Object.array.length; 	
-        var	insertTr = ""; // 채워넣을 HTML 초기화
-     	var indexcount = 1; // 인덱스번호 초기화
-    	
-		for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-							if(Object.array.length != 0) {
-					     	   if(Object.array[i]) {
-								  insertTr += "<tr>";
-								  insertTr += "<td class='font-weight-bold'>"+(num - (Object.page*10)) +" </td>";
-								  insertTr += "<td>"+ Object.array[i].PN +"</td><td>";
-								  if ( (moment(Object.array[i].CA).format('DD')) == moment().format('DD') )
-								  {
-								       insertTr +=  moment(Object.array[i].CA).format('HH:mm');
-								  }
-								  else {
-								      insertTr += moment(Object.array[i].CA).format('YYYY-MM-DD');
-								  }
-								  insertTr += "</td><td>-"+ Object.array[i].PO+"</td><td>";
-								  insertTr += "</tr>";
-								  num -= indexcount;
-								  
-					     	   }
-							}
-					     	  else {
-					     	  	insertTr += "<tr>";
-								insertTr += "	<td colspan='10'>No Data</td>";
-								insertTr += "</tr>";
-	
-	                            break;
-					     	  }
-				     	}
-							  
-							 $("#memDiv").append(insertTr);
-    }
     
    
 </script>

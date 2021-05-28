@@ -5,7 +5,8 @@ const GoodsSchema = new Schema({
     //Goods Name
     GN: {
         type: String,
-        unique: true
+        unique: true,
+        required: true
     }, //Price
     GP: {
         type: Number
