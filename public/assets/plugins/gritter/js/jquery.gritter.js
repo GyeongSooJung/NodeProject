@@ -32,7 +32,6 @@
 	* @see Gritter#add();
 	*/
 	$.gritter.add = function(params){
-
 		try {
 			return Gritter.add(params || {});
 		} catch(e) {
@@ -114,7 +113,6 @@
 				time_alive = params.time || '';
 
 			this._verifyWrapper();
-			
 			this._item_count++;
 			var number = this._item_count, 
 				tmp = this._tpl_item;
@@ -155,7 +153,6 @@
 			$('#gritter-notice-wrapper').addClass(position).append(tmp);
 			
 			var item = $('#gritter-item-' + this._item_count);
-			
 			item.fadeIn(this.fade_in_speed, function(){
 				Gritter['_after_open_' + number]($(this));
 			});
