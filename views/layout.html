@@ -21,7 +21,11 @@
 <body>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 	<!--오아시스 제이쿼리 자바스크립트-->
-	<script src="../assets/oasisjquery.js"></script>
+	<script src="../oasisjs/oasisjquery.js"></script>
+	<script src="../oasisjs/oasis_list_collection.js"></script>
+	<script src="../oasisjs/oasis_list_edit_delete.js"></script>
+	<script src="../oasisjs/oasis_list_search_sort.js"></script>
+	<script src="../oasisjs/oasis_list_pagenation.js"></script>
 	
 	<!-- begin #page-loader -->
 	<div id="page-loader" class="fade show">
@@ -411,6 +415,9 @@
     	else if(string == "GN" ) {
     		return "{{__('payment_name')}}";
     	}
+    	else if(string == "payNum" ) {
+    		return "{{__('payment_number')}}";
+    	}
     	else if(string == "AM" ) {
     		return "{{__('payment_amount')}}";
     	}
@@ -429,11 +436,6 @@
     	else if(string == "RE" ) {
     		return "{{__('payment_result')}}";
     	}
-    	else if(string == "" ) {
-    		return "";
-    	}else if(string == "" ) {
-    		return "";
-    	}
     	else if(string == "ET" ) {
     		return "{{__('history_date')}}";
     	}
@@ -451,9 +453,78 @@
     	} 
     	else if(string == "deletesuccess" ) {
     		return "{{__('delete_success')}}";
-    	} else if(string == "" ) {
-    		return "";
+    	} else if(string == "modify" ) {
+    		return "{{__('modify')}}";
     	} 
+    	else if(string == "delete" ) {
+    		return "{{__('delete')}}";
+    	} 
+    	else if(string == "reset" ) {
+    		return "{{__('reset')}}";
+    	} 
+    	else if(string == "car_length_error" ) {
+    		return "{{__('car_length_error')}}";
+    	}
+    	else if(string == "car_type_error" ) {
+    		return "{{__('car_type_error')}}";
+    	}
+    	else if(string == "car_exist_error" ) {
+    		return "{{__('car_exist_error')}}";
+    	}
+    	else if(string == "modify_failed" ) {
+    		return "{{__('modify_failed')}}";
+    	}
+    	else if(string == "car_modify_success" ) {
+    		return "{{__('car_modify_success')}}";
+    	}
+    	else if(string == "modify_failed" ) {
+    		return "{{__('modify_failed')}}";
+    	}
+    	else if(string == "device_modify_success" ) {
+    		return "{{__('device_modify_success')}}";
+    	}
+    	else if(string == "device_edit_version_enter" ) {
+    		return "{{__('device_edit_version_enter')}}";
+    	}
+    	else if(string == "device_edit_nick_enter" ) {
+    		return "{{__('device_edit_nick_enter')}}";
+    	}
+    	else if(string == "search" ) {
+    		return "{{__('search')}}";
+    	}
+    	else if(string == "approval" ) {
+    		return "{{__('approval')}}";
+    	}
+    	else if(string == "owner_auth" ) {
+    		return "{{__('owner_auth')}}";
+    	}
+    	else if(string == "main_indetail" ) {
+    		return "{{__('main_indetail')}}";
+    	}
+    	else if(string == "payment_receit" ) {
+    		return "{{__('payment_receit')}}";
+    	}
+    	else if(string == "purchase_failed" ) {
+    		return "{{__('purchase_failed')}}";
+    	}
+    	else if(string == "PD" ) {
+    		return "{{__('history_time')}}";
+    	}
+    	else if(string == "" ) {
+    		return "{{__('')}}";
+    	}else if(string == "" ) {
+    		return "{{__('')}}";
+    	}
+    	else if(string == "" ) {
+    		return "{{__('')}}";
+    	}
+    	else if(string == "" ) {
+    		return "{{__('')}}";
+    	}
+    	
+    	else {
+    		return string;
+    	}
     }
 </script>
 

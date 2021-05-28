@@ -1,4 +1,5 @@
 {
+	"" : "",
     "lang_kr": "Korean (Basic)",
 	"lang_en": "English",
 	"ceo" : "CEO",
@@ -205,6 +206,7 @@
     "registration" : "Register",
     "reset" : "Reset",
     "modify" : "Modify",
+    "modify_failed": "Modify failed.",
     "delete" : "Delete",
     "confirm" : "Confirm",
     "null" : "Not Selected",
