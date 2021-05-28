@@ -1296,30 +1296,8 @@ router.get('/history_chart/:_id', isNotLoggedIn, DataSet, async(req, res, next) 
 //                                  pay                                       //
 //----------------------------------------------------------------------------//
 
-// // 테스트
-// router.get('/pay_point', isNotLoggedIn, DataSet, async(req, res, next) => {
-//   const CID = req.decoded.CID;
-//   const CNU = req.decoded.CNU;
-//   const imp_code = process.env.imp_code;
-//   const HOME = process.env.IP;
-
-//   const aclist = await Worker.find({ "CID": CID, "AC": false });
-//   const service = await Service.find({});
-//   const noticethree = await Notice.find().limit(3).sort({CA : -1});
-
-
-//   try {
-//     res.render('pay_point', { company: req.decoded.company, aclist, noticethree, imp_code, HOME, service });
-//   }
-//   catch (err) {
-//     console.error(err);
-//     next(err);
-//   }
-// });
-
-
 //포인트 결제
-router.get('/pay_point', isNotLoggedIn, DataSet, async(req, res, next) => {
+router.get('/shop', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const imp_code = process.env.imp_code;
@@ -1330,27 +1308,13 @@ router.get('/pay_point', isNotLoggedIn, DataSet, async(req, res, next) => {
   const goods = await Goods.find({});
   
   try {
-    res.render('pay_point', { company: req.decoded.company, aclist, imp_code, HOME, service, goods });
+    res.render('shop', { company: req.decoded.company, aclist, imp_code, HOME, service, goods });
   }
   catch (err) {
     console.error(err);
     next(err);
   }
 });
-
-// //알림톡 라디오 버튼 클릭 ajax
-// router.post('/ajax/check', isNotLoggedIn, DataSet, async(req, res, next) => {
-//   var SN = req.body.SN;
-//   if (SN) {
-//     const serviceone = await Service.findOne({ "SN": SN });
-//     console.log(serviceone);
-
-//     res.json({ result: true, serviceone: serviceone });
-//   }
-//   else {
-//     res.json({ result: true });
-//   }
-// });
 
 //포인트 결제 ajax
 router.post('/ajax/payment', isNotLoggedIn, DataSet, async(req, res, next) => {
@@ -1442,7 +1406,6 @@ router.get('/pay_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res) {
-  console.log("@@@")
   const CID = req.body.CID;
   var sort = req.body.sort;
   var search = req.body.search;
@@ -1576,7 +1539,7 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res) {
 
 router.post('/ajax/pay_list_detail', isNotLoggedIn, DataSet, async(req, res, next) => {
   const { merchant_uid } = req.body;
-  
+
   const orderGoods = await OrderDetail.find({ "OID" : merchant_uid });
   
   res.send({ status : "success", orderGoods : orderGoods });
@@ -2404,47 +2367,6 @@ router.get('/noticepop', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.post('/ajax/notice_detail', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-  
-  const noticeid = req.body.noticeid;
-  
-  
-  try {
-    
-    const noticedetail = await Notice.find({_id : noticeid});
-    
-    res.json({result : true, noticedetail : noticedetail})
-  }catch(e) {
-    console.log(e)
-    res.json({result : false})
-  }
-});
-
-
-
-//----------------------------------------------------------------------------//
-//                                  About App                                 //
-//----------------------------------------------------------------------------//
-router.get('/aboutapp', async(req, res, next) => {
-  res.render('aboutapp');
-});
-
-//----------------------------------------------------------------------------//
-//                                  Manual                                    //
-//----------------------------------------------------------------------------//
-router.get('/manual', async(req, res, next) => {
-  res.render('manual');
-});
-
-//----------------------------------------------------------------------------//
-//                                  Ozone Spread                              //
-//----------------------------------------------------------------------------//
-
-//Ozone Spread
-router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
-
-  res.render('ozone_spread', { company: req.decoded.company, aclist });
   
   const noticeid = req.body.noticeid;
   
