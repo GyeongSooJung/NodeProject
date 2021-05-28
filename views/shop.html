@@ -42,7 +42,7 @@
 							<ul class="nav nav-tabs">
 								<li class="nav-item">
 									<a class="nav-link active" href="#" data-filter="all">
-										<i class="fab fa-2x fa-shopify my-2"></i> All Goods
+										<i class="fab fa-2x fa-shopify my-2"></i> {{__('all')}} {{__('payment_goods')}}
 									</a>
 								</li>
 								<li class="nav-item">
@@ -55,11 +55,14 @@
 										<i class="fa fa-fw fa-shopping-basket my-2"></i> {{__('payment_goods')}}
 									</a>
 								</li>
+								{% if(company.AH == true) or (company.CK == "MK 대리점") %}
 								<li class="nav-item">
 									<a class="nav-link banner" href="#" data-toggle="modal" data-target="#banner-modal" data-banner="join">
 									  <i class="fa fa-fw fa-plus my-2"></i> {{__('layout_goods_join')}}
 									</a>
 								</li>
+								{% else %}
+								{% endif %}
 								<li class="nav-item">
 									<a class="nav-link banner" href="#" data-toggle="modal" data-target="#banner-modal" data-banner="refund">
 									  <i class="fa fa-fw fa-exclamation-circle my-2"></i> {{__('payment_refund_policy')}}
@@ -132,7 +135,7 @@
 							</button>
 						</div>
 						<div class="icon"><i class="fas fa-lg fa-cart-arrow-down"></i></div>
-						<div class="title">장바구니</div>
+						<div class="title">{{__('payment_cart')}}</div>
 					</div>
 					<div class="pos-sidebar-body" data-scrollbar="true" data-height="100%">
 						<div class="pos-table">
@@ -142,8 +145,8 @@
 						<div class="total">
 						</div>
 						<div class="btn-row">
-							<button type="button" class="btn btn-default list-remove-btn" data-amount="all"><i class="fa fa-trash-alt fa-fw fa-lg"></i> 비우기</button>
-							<button type="button" class="btn btn-success" onclick="payments();"><i class="fa fa-check fa-fw fa-lg"></i> 결제하기</button>
+							<button type="button" class="btn btn-default list-remove-btn" data-amount="all"><i class="fa fa-trash-alt fa-fw fa-lg"></i> {{__('payment_cart_empty')}}</button>
+							<button type="button" class="btn btn-success" onclick="payments();"><i class="fa fa-check fa-fw fa-lg"></i> {{__('payment')}}</button>
 						</div>
 					</div>
 				</div>
@@ -186,7 +189,7 @@
 							<div class="option-box">
 							</div>
 							<div class="option-row">
-								<div class="option-title">수량</div>
+								<div class="option-title">{{__('payment_number')}}</div>
 								<div class="qty w-100 my-1">
 									<div class="input-group w-50">
 										<button type="button" class="btn btn-default count-btn" data-math="minus"><i class="fa fa-minus"></i></button>
