@@ -244,7 +244,14 @@ router.get('/company_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 
     res.render('company_list', { company: req.decoded.company, companys, aclist, noticethree, totalNum, currentPage, totalPage, startPage, endPage });
   }
-})
+});
+
+router.post('/ajax/company_list', isNotLoggedIn, DataSet, async(req, res, nex) => {
+  const CID = req.body.CID;
+  const companylist = await Company.find({});
+  res.json({ result: true, pagelist : companylist, totalnum : companylist.length});
+  
+});
 
 //----------------------------------------------------------------------------//
 //                                  통계                                      //
@@ -784,8 +791,6 @@ router.post('/ajax/worker_list', isNotLoggedIn, DataSet, async function(req, res
     
     CIDlist.push(CID);
     
-    console.log(CIDlist)
-    
     if ((search!="") && (searchtext!="")) {
         try{
           if (search =="WN") {
@@ -1291,8 +1296,30 @@ router.get('/history_chart/:_id', isNotLoggedIn, DataSet, async(req, res, next) 
 //                                  pay                                       //
 //----------------------------------------------------------------------------//
 
+// // 테스트
+// router.get('/pay_point', isNotLoggedIn, DataSet, async(req, res, next) => {
+//   const CID = req.decoded.CID;
+//   const CNU = req.decoded.CNU;
+//   const imp_code = process.env.imp_code;
+//   const HOME = process.env.IP;
+
+//   const aclist = await Worker.find({ "CID": CID, "AC": false });
+//   const service = await Service.find({});
+//   const noticethree = await Notice.find().limit(3).sort({CA : -1});
+
+
+//   try {
+//     res.render('pay_point', { company: req.decoded.company, aclist, noticethree, imp_code, HOME, service });
+//   }
+//   catch (err) {
+//     console.error(err);
+//     next(err);
+//   }
+// });
+
+
 //포인트 결제
-router.get('/shop', isNotLoggedIn, DataSet, async(req, res, next) => {
+router.get('/pay_point', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const imp_code = process.env.imp_code;
@@ -1303,13 +1330,27 @@ router.get('/shop', isNotLoggedIn, DataSet, async(req, res, next) => {
   const goods = await Goods.find({});
   
   try {
-    res.render('shop', { company: req.decoded.company, aclist, imp_code, HOME, service, goods });
+    res.render('pay_point', { company: req.decoded.company, aclist, imp_code, HOME, service, goods });
   }
   catch (err) {
     console.error(err);
     next(err);
   }
 });
+
+// //알림톡 라디오 버튼 클릭 ajax
+// router.post('/ajax/check', isNotLoggedIn, DataSet, async(req, res, next) => {
+//   var SN = req.body.SN;
+//   if (SN) {
+//     const serviceone = await Service.findOne({ "SN": SN });
+//     console.log(serviceone);
+
+//     res.json({ result: true, serviceone: serviceone });
+//   }
+//   else {
+//     res.json({ result: true });
+//   }
+// });
 
 //포인트 결제 ajax
 router.post('/ajax/payment', isNotLoggedIn, DataSet, async(req, res, next) => {
@@ -1401,6 +1442,7 @@ router.get('/pay_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res) {
+  console.log("@@@")
   const CID = req.body.CID;
   var sort = req.body.sort;
   var search = req.body.search;
@@ -1534,7 +1576,7 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res) {
 
 router.post('/ajax/pay_list_detail', isNotLoggedIn, DataSet, async(req, res, next) => {
   const { merchant_uid } = req.body;
-
+  
   const orderGoods = await OrderDetail.find({ "OID" : merchant_uid });
   
   res.send({ status : "success", orderGoods : orderGoods });
@@ -2015,8 +2057,6 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
       if(err) throw err;
     });
     
-    console.log(pointaggregate)
-    
     //_id 키의 값들을 배열에 담음(mid들만)
     for (var i = 0; i < pointaggregate.length; i++) {
       messageIds[i] = await pointaggregate[i]._id;
@@ -2449,49 +2489,69 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 router.get('/gstest', isNotLoggedIn, DataSet, async(req, res, next) => {
-    const jwt = require('jsonwebtoken');       
-    const JWT_SECRET = "OASIS";
-    
-    const id = "110927901214179954343"
-    const email ="hbc3869@gmail.com"
-    const type = "GOOGLE"
-    
-    console.log(id,email,type)
-    if (type == "GOOGLE") {
-        var worker = await Worker.findOne({ "GID": id, "EM": email });
-        const companycua = await Company.aggregate([
-                { $match : {"_id" : ObjectId(worker.CID)} },
-                { $project : {CUA : "$CUA"}}
-            ], function (err,result) {
-                    if(err) throw err;
-                    console.log(result)
-            })
-        const carUA = companycua[0].CUA;
-        if (worker != null) {
-            // 토큰 생성
-            const token = jwt.sign({
-                id: worker._id,
-            }, JWT_SECRET, {
-                expiresIn: "1d",
-            });
-
-            await Worker.where({ _id: worker._id }).update({ UA: Date.now() });
-            return res.json({
-                result: true,
-                data: JSON.stringify(worker),
-                token,
-                carUA
-            });
-        }
-        else {
-            return res.json({
-                result: false,
-            });
-        }
-    }
-    res.json({
-        result: false,
-    });
+            
+            const historyid = "60a3773e6a7cf707bb4d6880";
+            const number = "01021128228";
+            
+            let apiSecret = process.env.sol_secret;
+            let apiKey = process.env.sol_key;
+            
+            const { config, Group, msg } = require('solapi');
+           
+            
+            const historyone = await History.findOne({'_id' : historyid});
+            var companyone = await Company.findOne({'_id' : historyone.CID});
+            var companypoint = companyone.SPO;
+            
+            
+            
+                
+                config.init({ apiKey, apiSecret })
+                
+                var fn = async function send (params = {}) {
+                    try {
+                      const response = await Group.sendSimpleMessage(params);
+                      const pointone = await Point.insertMany({
+                        "CID": companyone._id,
+                        "PN": "알림톡 전송",
+                        "PO": 50,
+                        "MID" : response.messageId,
+                        "WNM" : historyone.WNM,
+                      });
+                      console.log(pointone);
+                    
+                      console.log(companypoint);
+                      companypoint = companypoint - 50;
+                      console.log(companypoint);
+                    
+                      await Company.where({ '_id': historyone.CID })
+                        .update({ "SPO": companypoint }).setOptions({ runValidators: true })
+                        .exec();
+                      
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                  
+                  const params = {
+                    autoTypeDetect: true,
+                    text: companyone.CNA + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
+                    to: number, // 수신번호 (받는이)
+                    from: '16443486', // 발신번호 (보내는이)
+                    type: 'ATA',
+                    kakaoOptions: {
+                      pfId: 'KA01PF210319072804501wAicQajTRe4',
+                      templateId: 'KA01TP210319074611283wL0AjgZVdog',
+                            buttons: [{
+                              buttonType: 'WL',
+                              buttonName: '확인하기',
+                              linkMo: process.env.IP + '/publish?cat=1&hid=' + historyid,
+                              linkPc: process.env.IP + '/publish?cat=1&hid=' + historyid
+                            }]
+                    }
+                  }
+                  
+                  fn(params)
   
   res.render('company_list', { company: req.decoded.company });
 });

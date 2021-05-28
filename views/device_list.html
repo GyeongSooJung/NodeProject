@@ -71,32 +71,19 @@
 						</div>
 						
 						<div>
-						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchtext(pagingObject, condition, i18nconvert)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
+						<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchtext(pagingObject,  i18nconvert)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
 						</div>
 						
-						<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,condition,i18nconvert,'{{__('search')}}') class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
+						<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,i18nconvert) class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
 					</div>
 	               	
 					
 					<div class="overflow-auto">
 						<form  method="post">
 							<table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle text-center">
-								<thead>
-									<tr>
-										<th id ="allcheck" width="1%">
-											<input type="checkbox" name="allck" class="neHeros" value="" onChange="allCheckedBox(this);"/>
-										</th>
-										<th width="2.5%"></th>
-										<th width="10.5%" class = "sort" name = "MD">{{__('device_model')}}<i id = "MD" class="d-none  float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="10%" class = "sort" name = "VER">{{__('device_version')}}<i id = "VER" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="18%" class = "sort" name = "MAC">{{__('device_mac')}}<i id = "MAC" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="18%" class = "sort" name = "NN">{{__('device_nick')}}<i id = "NN" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="18%" class = "sort" name = "UN">{{__('device_use_number')}}<i id = "UN" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="18%" class = "sort" name = "CA">{{__('create_date')}}<i id = "CA" class="float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-										<th width="1%"></th>
-									</tr>
+								<thead id = "memDiv1">
 								</thead>
-								<tbody id = "memDiv">
+								<tbody id = "memDiv2">
 									
 								</tbody>
 							</table>
@@ -127,203 +114,29 @@
 	// 검색기능
 	$(document).ready(function() {
 			
-			pagereload(pagingObject, condition, i18nconvert); // 첫 화면 페이지 로드
+			pagereload(pagingObject,  i18nconvert); // 첫 화면 페이지 로드
 			
 			$('#selectpage').click(function() {
-				selectpage(pagingObject,condition,i18nconvert,{
+				selectpage(pagingObject,i18nconvert,{
 					option : $('#selectpage option:selected').val()
 				})
 			});
 			
 			$('#searchtext').keyup(function(key) {
 				if(key.keyCode == 13) {
-					searchtext(pagingObject,condition,i18nconvert)
+					searchtext(pagingObject,i18nconvert)
 				}
 				if(pagingObject.searchtext == "") {
-					pagereload(pagingObject, condition, i18nconvert);
+					pagereload(pagingObject,  i18nconvert);
 				}
 			});
 			
-			$('.sort').click(function() {
-				$("#searchoption").empty();
-				$("#searchoption").append("{{__('search')}}");
-					
-				sortpage(pagingObject,condition,i18nconvert,{
-					name : $(this).attr('name')
-				},
-				{
-					MD : "MD",
-					VER : "VER",
-					MAC : "MAC",
-					NN : "NN",
-					UN : "UN",
-					CA : "CA"
-				});
-			
-			});
     });
     
     
 	
 	
-	var condition = function (Object) {
-		var num =  Object.array.length; 	
-		var	insertTr = ""; // 채워넣을 HTML 초기화
-		var indexcount = 1; // 인덱스번호 초기화
-		
-		
-		for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-			if(Object.array.length != 0) {	  
-				if(Object.array[i]) {
-					insertTr += "<tr>";
-					insertTr += " 	<td class='with-btn' nowrap>";
-					insertTr += "		<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+ Object.array[i].MAC +" onChange='eachCheckedBox(this);'/>";
-					insertTr += " 	</td>";
-					insertTr += "<td class='font-weight-bold'>"+(num - (Object.page*10)) +" </td>";
-					insertTr += "<td>"+ Object.array[i].MD +"</td>";
-					insertTr += "<td>"+ Object.array[i].VER+"</td>";
-					insertTr += "<td>"+ Object.array[i].MAC+"</td>";
-					insertTr += "<td>"+ Object.array[i].NN+"</td>";
-					insertTr += "<td>"+ Object.array[i].UN+"회</td><td>";
-					
-					if ( (moment(Object.array[i].CA).format('DD')) == moment().format('DD') )
-					{
-						insertTr +=  moment(Object.array[i].CA).format('HH:mm');
-					}
-					else {
-						insertTr += moment(Object.array[i].CA).format('YYYY-MM-DD');
-					}
-					insertTr += "</td><td class='with-btn' nowrap>"	
-					insertTr += "<a href='javascript:;' id = 'deviceid' onclick='editone(this);' data-type='show' name='"+ Object.array[i]._id +"' class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>{{__('modify')}}</a>";
-					insertTr += "<input type='button' value='{{__('delete')}}' onclick=delete_one(this,'/device/ajax/device_deleteone',i18nconvert) class='btn btn-sm btn-white width-60' name =' "+ Object.array[i].MAC +"'></td> ";
-					insertTr += "</tr>";
-					num -= indexcount;
-				}
-			} 
-			else {
-				insertTr += "<tr>";
-				insertTr += "	<td colspan='10'>No Data</td>";
-				insertTr += "</tr>";
-				
-				break;
-			}
-		}
-		
-		$("#memDiv").append(insertTr);
-	}
 	
-		function editone(obj) {
-		var type = $(obj).data().type;
-		$('.tr-edit').empty();
-		$(obj).parents('tr').siblings().find('.edit-btn').text("{{__('modify')}}");
-		$(obj).parents('tr').siblings().find('.edit-btn').removeData().type;
-		$(obj).parents('tr').siblings().find('.edit-btn').data('type', 'show');
-		if(type == "show") {
-			var device_id = $(obj).attr('name');
-			if (device_id) {
-				$.ajax({
-					type: 'POST',
-					url: '/device/ajax/device_list_edit1',
-					dataType: 'json',
-					data: {
-						device_id: device_id
-					},
-					success: function(result) {
-						if(result.status == 'success') {
-							var deviceone = result.deviceone[0];
-							var insertTr  = ""
-							$(obj).text("{{__('modify')}}");
-							$(obj).removeData().type;
-							$(obj).data('type', 'hide');
-							insertTr += "<tr class='tr-edit'>"
-							insertTr += "<td colspan='9'>"
-							
-							insertTr += "<div class='panel-body'>"
-						    insertTr += "   <form id='device-edit-form' action='' method='post' class='form-horizontal' data-parsley-validate='true' name='device-form' onsubmit='deviceEdit();'>"
-						    // insertTr += "      <div class='form-group row m-b-15'>"
-						    // insertTr += "         <label class='col-md-4 col-sm-4 col-form-label' for='MD'>{{__('device_model')}} <span class='text-danger'>*</span> :</label>"
-						    // insertTr += "         <div class='col-md-8 col-sm-8'>"
-						    // insertTr += "            <input class='form-control' id='MD' type='text' name = 'MD' value='{{deviceone.MD}}' data-parsley-required='true' data-parsley-error-message='{{__('required_detail')}}' readonly />"
-						    // insertTr += "         </div>"
-						    // insertTr += "      </div>"
-						    insertTr += "      <div class='form-group row m-b-15'>"
-						    insertTr += "         <label class='col-md-4 col-sm-4 col-form-label' for='VER'>{{__('device_version')}} <span class='text-danger'>*</span> :</label>"
-						    insertTr += "         <div class='col-md-8 col-sm-8'>"
-						    insertTr += "            <input class='form-control' id='VER' type='text' name = 'VER' value='{{deviceone.VER}}' placeholder='{{__('device_edit_version_enter')}}' data-parsley-required='true' data-parsley-error-message='{{__('required_detail')}}' />"
-						    insertTr += "         </div>"
-						    insertTr += "      </div>"
-						    // insertTr += "      <div class='form-group row m-b-15'>"
-						    // insertTr += "         <label class='col-md-4 col-sm-4 col-form-label' for='MAC'>{{__('device_mac')}} <span class='text-danger'>*</span> :</label>"
-						    // insertTr += "         <div class='col-md-8 col-sm-8'>"
-						    // insertTr += "            <input class='form-control' id='MAC' type='text' name = 'MAC' value='{{deviceone.MAC}}' onKeypress ='this.value = setComma(this.value)' minlength=17 maxlength=17 data-parsley-required='true' data-parsley-error-message='{{__('required_detail')}}' readonly />"
-						    // insertTr += "         </div>"
-						    // insertTr += "      </div>"
-						    insertTr += "      <div class='form-group row m-b-15'>"
-						    insertTr += "         <label class='col-md-4 col-sm-4 col-form-label' for='NN'>{{__('device_nick')}} :</label></label>"
-						    insertTr += "         <div class='col-md-8 col-sm-8'>"
-						    insertTr += "            <input class='form-control' id='NN' type='text' name = 'NN' value='{{deviceone.NN}}' placeholder='{{__('device_edit_nick_enter')}}'/>"
-						    insertTr += "            <input class='form-control' id='device_id' type='hidden' name = 'device_id' value='"+deviceone._id+"'/>"
-						    insertTr += "         </div>"
-						    insertTr += "      </div>"
-						    insertTr += "      <div class='form-group row m-b-0'>"
-						    insertTr += "         <label class='col-md-4 col-sm-4 col-form-label'>&nbsp;</label>"
-						    insertTr += "         <div class='col-md-8 col-sm-8'>"
-						    insertTr += "            	<a href='javascript:;' onclick='deviceEdit(pagingObject);' class='btn btn-primary width-80'>{{__('modify')}}</a>"
-						    insertTr += "            <button type='reset' class='btn btn-primary width-80'>{{__('reset')}}</button>"
-						    insertTr += "         </div>"
-						    insertTr += "      </div>"
-						    insertTr += "   </form>"
-						    insertTr += "</div>"
-							insertTr += "</td></tr>"
-							$(obj).parents('tr').after(insertTr);
-						}
-						else {
-							alert("{{__('modify_failed')}}");
-						}
-					 }
-				});
-			}
-			else {
-				alert("{{__('modify_failed')}}");
-			}
-		}
-		else {
-			$(obj).text("{{__('modify')}}");
-			$(obj).removeData().type;
-			$(obj).data('type', 'show');
-			// alert($('.tr-edit').html());
-			$('.tr-edit').remove();
-			
-		}
-	}
-	
-	function deviceEdit(Object) {
-		
-		console.log(Object)
-		$.ajax({
-					type: 'POST',
-					url: '/device/ajax/device_list_edit2',
-					dataType: 'json',
-					data: {
-						VER : $('#device-edit-form [name="VER"]').val(),
-						NN : $('#device-edit-form [name="NN"]').val(),
-						CID : Object.CID,
-						device_id : $('#device-edit-form [name="device_id"]').val()
-					},
-					success: function(result) {
-						if(result.status == 'success') {
-							$('.tr-edit').remove();
-							pagereload(pagingObject, condition, i18nconvert);
-							alert("{{__('device_modify_success')}}");
-							
-						}
-						else {
-							alert("{{__('modify_failed')}}");
-						}
-					 }
-				});
-		
-	}
 	
     
     // 에러 링크 기능
