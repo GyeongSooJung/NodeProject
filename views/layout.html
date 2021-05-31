@@ -213,6 +213,10 @@
 						</a>
 						<ul class="sub-menu">
 							<li><a href="/shop">{{__('layout_goods_purchase')}}</a></li>
+							{% if(company.AH == true) or (company.CK == "MK 대리점") %}
+							<li><a href="/shop">{{__('layout_goods_join')}}</a></li>
+							{% else %}
+							{% endif %}
 							<li><a href="/pay_list">{{__('layout_purchase_list')}}</a></li>
 							<li><a href="/point_list">{{__('layout_payment_point_usage')}}</a></li>
 							<li><a href="/alarmtalk_list">{{__('layout_payment_alarmtalk')}}</a></li>

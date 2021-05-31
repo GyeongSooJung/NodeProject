@@ -195,14 +195,14 @@
 <script>
 	$(document).ready(function(){
 		// 기준 포인트 이하 시 알람 발생(gritter 사용)
-		if(parseInt("{{companyone.SPO}}") <= parseInt("{{companyone.POA}}")) {
+		if(parseInt("{{company.SPO}}") <= parseInt("{{company.POA}}")) {
 	        $.gritter.add({
 	            // (string | mandatory) the heading of the notification
 	            title: "{{__('main_gritter_title')}}",
 	            // (string | mandatory) the text inside the notification
 	            text: "<p class='mt-3 mb-0'>{{__('main_gritter_body1')}}<br>\
 	            	{{__('main_gritter_body2')}}</p>\
-	            	<a href='/pay_point' class='btn btn-purple btn-block py-1 mt-2'><span class='small'>{{__('main_gritter_btn')}}</span></a>",
+	            	<a href='/shop' class='btn btn-purple btn-block py-1 mt-2'><span class='small'>{{__('main_gritter_btn')}}</span></a>",
 	        	image: "../assets/img/oasis_coin.png",
 	            sticky: true
 	        });
