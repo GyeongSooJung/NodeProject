@@ -28,11 +28,16 @@ const inflowRouter = require('./routes/inflow');
 const publishRouter = require('./routes/publish');
 const paymentsRouter = require('./routes/payments');
 const shopRouter = require('./routes/shop');
-
+//----------------------------------------
 
 const path = require('path');
 const ColorHash = require('color-hash');
 const webSocket = require('./socket');
+
+//----------------------------------------
+
+// var graphqlHTTP = require('express-graphql');
+// var Graphql = require('graphql');
 
 const app = express();
 
@@ -105,6 +110,13 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+//graphql
+
+// app.use('/graphql',graphqlHTTP({
+//   graphql : true,
+// }))
 
 const server = app.listen(app.get('port'), function() {
   console.log(app.get('port'), 'Port is Waiting~');

@@ -180,67 +180,6 @@ router.post('/car_json_excel', isNotLoggedIn, async (req, res, next) => {
   }
 });
 
-// router.post('/car_edit/upreg/:CN', isNotLoggedIn, async (req, res, next) => {
-//     const { CN, CPN } = req.body;
-//     const CID = req.decoded.CID;
-//     const CNU = req.decoded.CNU;
-//     const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
-    
-//     try {
-//       const exCar = await Car.findOne({ "CID" : CID, "CN" :  CN });
-//       const check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
-      
-//       if (CN.length >= 7 && CN.length <= 8) {
-//         check.lastIndex = 0;
-//         if (check.test(CN) == true) {
-//           if (!exCar) {
-//             await Car.where({"CN" : req.params.CN})
-//               .update({ "CID" : CID,
-//                         "CN" : CN,
-//                         "CPN" : CPN,
-//               }).setOptions({runValidators : true})
-//               .exec();
-              
-//             await Company.where({"CNU" : CNU})
-//               .update({ "CUA" : CUA }).setOptions({runValidators : true})
-//               .exec();
-              
-//             return res.send({ status: 'success' });
-//           }
-//           else {
-//             if (CN == req.params.CN) {
-//               await Car.where({"CN" : req.params.CN})
-//                 .update({ "CID" : CID,
-//                           "CN" : CN,
-//                           "CPN" : CPN,
-//                 }).setOptions({runValidators : true})
-//                 .exec();
-                
-//               await Company.where({"CNU" : CNU})
-//                 .update({ "CUA" : CUA }).setOptions({runValidators : true})
-//                 .exec();
-              
-//               return res.send({ status: 'success' });
-//             }
-//             else {
-//               return res.send({ status: 'exist' });
-//             }
-//           }
-//         }
-//         else {
-//           return res.send({ status: 'type' });
-//         }
-//       }
-//       else {
-//         return res.send({ status: 'length' });
-//       }
-      
-//     } catch (error) {
-//     console.error(error);
-//     return next(error);
-//   }
-// });
-
 router.post('/ajax/car_list_edit1', isNotLoggedIn, async(req, res, next) => {
   const { car_id } = req.body;
   
