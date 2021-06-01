@@ -30,7 +30,6 @@
     	for (var item in jsondata) {
     		if (opt === item) {
     			string = i18nconvert(item);
-    		console.log(opt)
     			if((opt == "CA") || (opt == "ET")|| (opt == "payCA")|| (opt == "UCA") || (opt == "pointCA")) {
     				document.getElementById('searchtext').classList.add('d-none');
 	    			$("#searchtext").val('');
