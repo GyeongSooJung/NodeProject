@@ -100,7 +100,7 @@
 							alert(i18nconvert("car_type_error"));
 						}
 						else if(result.status == 'exist') {
-						alert(i18nconvert("car_exist_error"));
+							alert(i18nconvert("car_exist_error"));
 						}
 						else {
 							alert(i18nconvert("modify_failed"));

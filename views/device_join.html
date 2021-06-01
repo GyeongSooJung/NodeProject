@@ -63,18 +63,6 @@
 
 <!-- Script -->
 <script>
-	// MAC주소 콜론 기능
-	function setComma(str){
-		//var MAC =document.getElementById('MAC')
-		if((Number(str.length) % 3) ==2) {
-			if(Number(str.length) == 17) {
-				return str;
-			}
-			return str+":";
-		}
-		return str;
-	}
-
 	// 폼 enter키 submit 막기
 	document.addEventListener('keydown', function(event) {
 		if (event.keyCode === 13) {
@@ -86,29 +74,7 @@
 	function deviceJoin() {
 		var formParsley  = $('#device-form').parsley();
 		if(formParsley.isValid() == true) {
-			$.ajax({
-				type: 'POST',
-				url: '/device/device_join',
-				dataType: 'json',
-				data: {
-					MD: document.getElementsByName("MD")[0].value,
-					VER: document.getElementsByName("VER")[0].value,
-					MAC: document.getElementsByName("MAC")[0].value,
-					NN: document.getElementsByName("NN")[0].value,
-				},
-				success: function(result) {
-					if(result.status == 'success') {
-						alert("{{__('device_register_success')}}");
-						location = '/device_list';
-					}
-					else if(result.status == 'exist') {
-						alert("{{__('device_duplicated')}}");
-					}
-					else if(result.status == 'type') {
-						alert("{{__('device_mac_wrong')}}");
-					}
-				}
-			});
+			ajaxJoin('/device/device_join', i18nconvert, { MD: document.getElementsByName('MD')[0].value, VER: document.getElementsByName('VER')[0].value, MAC: document.getElementsByName('MAC')[0].value, NN: document.getElementsByName('NN')[0].value } );
 		}
 		event.preventDefault();
 	}
@@ -120,6 +86,7 @@
 
 </script>
 {% block script %}
+<script src="../oasisjs/oasis_join.js"></script>
 <script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
 <script src="../assets/plugins/highlight.js/highlight.min.js"></script>
 <script src="../assets/js/demo/render.highlight.js"></script>

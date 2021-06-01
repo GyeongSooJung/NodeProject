@@ -12,16 +12,6 @@
 <link href="../assets/plugins/switchery/switchery.min.css" rel="stylesheet" />
 <link href="../assets/plugins/abpetkov-powerange/dist/powerange.min.css" rel="stylesheet" />
 <link href="../assets/plugins/gritter/css/jquery.gritter.css" rel="stylesheet" />
-
-
-<!-- Styles -->
-<style>
-  #chartdiv {
-    width: 100%;
-    height: 500px;
-  }
-  
-  </style>
 {% endblock %}
 
 {% block content %}
@@ -136,7 +126,7 @@
                         				</tbody>
                         			</table>
                         			
-                                	<div id="chartdiv"></div>
+                                	<div id="main-chart"></div>
                 			{% else %}
                 				<h3>{{__('main_recent_sterilization_no')}}</h3>
   			                {% endif %}
@@ -296,7 +286,7 @@ am4core.ready(function() {
 	// Themes end
 	
 	// Create chart instance
-	var chart = am4core.create("chartdiv", am4charts.XYChart);
+	var chart = am4core.create("main-chart", am4charts.XYChart);
 	//var BarchartFirst = am4core.create("first week", am4charts.XYChart);
 	//이것은 차트에 mongodb 연동하는 부분
 	    {% set ss = 1 %}

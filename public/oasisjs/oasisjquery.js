@@ -40,6 +40,18 @@
         return money.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
     }
     
+    // MAC주소 콜론 기능
+	function setComma(str){
+		//var MAC =document.getElementById('MAC')
+		if((Number(str.length) % 3) ==2) {
+			if(Number(str.length) == 17) {
+				return str;
+			}
+			return str+":";
+		}
+		return str;
+	}
+    
     // ------------------------------------------ 선택 기능 -------------------------
     
     // 전체 선택 기능

@@ -86,6 +86,9 @@
 	"index_ozone_point1": "살균력",
 	"index_ozone_point2": "탈취력",
 	"index_ozone_point3": "안전성",
+	"index_ozone_point1_text": "단백질 구성물(세균류)에 가장 빠르게 반응(살균)하며 99%의 살균 가능, 광범위한 살균에 효과적.",
+	"index_ozone_point2_text": "공기 중의 악취성분을 변화, 파괴시켜 단시간에 악취를 제거함.",
+	"index_ozone_point3_text": "오존은 산소와 닿으면 빠르게 산소로 환원되어 어떤 잔여물도 남기지 않음.",
 	
 	"login_error": "아이디 혹은 비밀번호를 확인해주세요.",
 	"login_again": "다시 로그인해주세요.",

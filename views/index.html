@@ -15,7 +15,7 @@
 	<!-- ================== END BASE CSS STYLE ================== -->
 	
 	<!--<link href="../assets/css/fullpage/fullpage.css" rel="stylesheet" />-->
-	<link href="../assets/css/index_custom.css" rel="stylesheet" />
+	<link href="../oasiscss/index_custom.css" rel="stylesheet" />
 	<link href="../assets/img/favicon.png" rel="icon">
 	
 	<!--GSAP-->
@@ -54,8 +54,8 @@
 						<li class="dropdown nav-item">
 							<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" id="select-lang"></a>
 							<div class="dropdown-menu dropdown-menu-right">
-								<a href="/ko_index" class="dropdown-item text-white" onclick="changeLang('kr')"><span class="flag-icon flag-icon-kr mr-2 px-1" title="kr" id="kr"></span>{{__('lang_kr')}}</a>
-								<a href="/en_index" class="dropdown-item text-white" onclick="changeLang('en')"><span class="flag-icon flag-icon-us mr-2 px-1" title="us" id="us"></span>{{__('lang_en')}}</a>
+								<a href="/ko_index" class="dropdown-item text-white"><span class="flag-icon flag-icon-kr mr-2 px-1" title="kr" id="kr"></span>{{__('lang_kr')}}</a>
+								<a href="/en_index" class="dropdown-item text-white"><span class="flag-icon flag-icon-us mr-2 px-1" title="us" id="us"></span>{{__('lang_en')}}</a>
 							</div>
 						</li>
 					</ul>
@@ -71,7 +71,7 @@
 			<!-- begin #home -->
 			<div id="home" class="content has-bg home">
 				<!-- begin content-bg -->
-				<div class="content-bg" style="background-image: url(../assets/img/main2.png);" 
+				<div class="content-bg"
 					data-paroller="true" 
 					data-paroller-factor="0.5"
 					data-paroller-factor-xs="0.25">
@@ -186,7 +186,7 @@
 							<h2 class="mb-5 index-h2">{{__('index_app_text')}}</h2>
 							<h5 class="mb-5 index-h3">{{__('index_app_text2')}}<br>{{__('index_app_text3')}}</h5>
 							<a href="https://play.google.com/store/apps/details?id=com.mk.oasis_app" target="_blank" class="link_store">
-					          <img src="../assets/appabout/google_play.png" alt="HTML tutorial" style="border:0;">
+					          <img src="../assets/appabout/google_play.png" alt="HTML tutorial">
 					        </a>
 						</div>
 						<!-- end col-5 -->
@@ -259,7 +259,7 @@
 								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-cog"></i></div>
 								<div class="info">
 									<h4 class="title">{{__('index_ozone_point1')}}</h4>
-									<p class="desc">단백질 구성물(세균류)에 가장 빠르게 반응(살균)하며 99%의 살균 가능, 광범위한 살균에 효과적.</p>
+									<p class="desc">{{__('index_ozone_point1_text')}}</p>
 								</div>
 							</div>
 						</div>
@@ -270,7 +270,7 @@
 								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-paint-brush"></i></div>
 								<div class="info">
 									<h4 class="title">{{__('index_ozone_point2')}}</h4>
-									<p class="desc">공기 중의 악취성분을 변화, 파괴시켜 단시간에 악취를 제거함.</p>
+									<p class="desc">{{__('index_ozone_point2_text')}}</p>
 								</div>
 							</div>
 						</div>
@@ -281,7 +281,7 @@
 								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-file"></i></div>
 								<div class="info">
 									<h4 class="title">{{__('index_ozone_point3')}}</h4>
-									<p class="desc">오존은 산소와 닿으면 빠르게 산소로 환원되어 어떤 잔여물도 남기지 않음.</p>
+									<p class="desc">{{__('index_ozone_point3_text')}}</p>
 								</div>
 							</div>
 						</div>
@@ -346,8 +346,6 @@
 				quote2.src = '../assets/img/quote2_en.png'
 				quote3.src = '../assets/img/quote3_en.png'
 				oasis_flow.src = '../assets/img/oasis_flow_en.png'
-				
-				// document.querySelectorAll('col-lg-5').style.setProperty('width', 5000, 'important');
 			}
 			else {
 				sl.innerHTML = "한국어";

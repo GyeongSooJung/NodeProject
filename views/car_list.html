@@ -46,7 +46,7 @@
 				            		<div class="btn-group m-10 w-20">
 											<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>
 											<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
-											<div class="dropdown-menu dropdown-menu-right" style="">
+											<div class="dropdown-menu dropdown-menu-right">
 												<a href="javascript:searchoption('CN',pagingObject,i18nconvert,{CN : 'CN',CPN : 'CPN',CA : 'CA'});" class="dropdown-item">{{__('car_number')}}</a>
 												<a href="javascript:searchoption('CPN',pagingObject,i18nconvert,{CN : 'CN',CPN : 'CPN',CA : 'CA'});" class="dropdown-item">{{__('car_customer_phone')}}</a>
 											
@@ -126,15 +126,6 @@
 			}
 		});
     });
-    
-		
-
-	
-	
-	
-	
-	
-	
 </script>
 {% endblock %}
 
@@ -156,6 +147,4 @@
 <script src="../assets/plugins/datatables.net-buttons/js/buttons.print.min.js"></script>
 <script src="../assets/plugins/pdfmake/build/pdfmake.min.js"></script>
 <script src="../assets/plugins/pdfmake/build/vfs_fonts.js"></script>
-
-<!--<script src="../assets/js/demo/table-manage-combine.demo.js"></script>-->
 {% endblock %}

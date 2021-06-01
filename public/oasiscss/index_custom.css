@@ -23,6 +23,10 @@ html, body {
 /*    height: 220px;*/
 /*}*/
 
+.content-bg {
+    background-image: url(../assets/img/main2.png);
+}
+
 .index-bg {
     background-color: #FBF7F2;
 }

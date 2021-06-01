@@ -38,6 +38,7 @@ const deviceSchema = new Schema({
     },//Number of Use
     UN: {
         type: Number,
+        default: 0
     }
 },
     {collection : 'device'}

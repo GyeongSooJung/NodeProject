@@ -14,31 +14,33 @@ const Mongoose = require('mongoose');
 
 //장비 등록
   //DB에 등록
-router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
-  const { MD, MAC, VER, NN, CA, UA, UT } = req.body;
-    const CID = req.decoded.CID;
-    const CNU = req.decoded.CNU;
+router.post('/device_join', isNotLoggedIn, async (req, res, next) => {
+  const { data } = req.body;
+  const jsonData = JSON.parse(data);
+  console.log(jsonData.MAC);
+  const CID = req.decoded.CID;
+  const CNU = req.decoded.CNU;
     
   try {
-    const exDevice = await Device.findOne({ "MAC" : MAC });
+    const exDevice = await Device.findOne({ "MAC" : jsonData.MAC });
     const check = /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/;
-    const UN = 0;
-    if (check.test(MAC) == true) {
+    if (check.test(jsonData.MAC) == true) {
       if(!exDevice) {
         await Device.create({
-            CID, MD, VER, MAC, NN, UN
+            "CID" : CID,
+            "MD" : jsonData.MD,
+            "VER" : jsonData.VER,
+            "MAC" : jsonData.MAC,
+            "NN" : jsonData.NN
         });
-        // return res.redirect('/device_list');
-        return res.send({ status: 'success' });
+        return res.send({ status: 'success', type: 'device' });
       }
       else {
-        // return res.redirect('/device_join?exist=true');
-        return res.send({ status: 'exist' });
+        return res.send({ status: 'exist', type: 'device' });
       }
     }
     else {
-      // return res.redirect('/device_join?type=true');
-      return res.send({ status: 'type' });
+      return res.send({ status: 'type', type: 'device' });
     }
   } catch (err) {
     console.error(err);

@@ -11,6 +11,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
 	<link href="../assets/css/default/app.min.css" rel="stylesheet" />
 	<link href="../assets/plugins/flag-icon-css/css/flag-icon.min.css" rel="stylesheet" />
+	<link href="../oasiscss/oasis.css" rel="stylesheet" />
 	<!-- ================== END BASE CSS STYLE ================== -->
 	
 	{% block css %}
@@ -47,9 +48,9 @@
 				<div class="d-flex justify-content-center align-items-center font-weight-bold">
 					<p class="width-80 mb-0 height-20">공지사항 &nbsp;:&nbsp;</p>
 					<div class="notice overflow-hidden height-20">
-						<ul class="rolling position-relative mb-0" style="list-style: none;">
+						<ul class="rolling position-relative mb-0">
 							{% for notice in noticethree %}
-							<li class="height-20 mb-0" style="line-height:1.5;">
+							<li class="height-20 mb-0">
 								<a href="#" onclick="noticepop(this)" name="{{notice._id}}">{{notice.TI}}</a>
 							</li>
 							{% endfor %}
@@ -268,7 +269,8 @@
 		
 		const flag = document.getElementById('flag');
 		var lang = cookie.substring(startIndexOf+'lang='.length, endIndexOf);
-		console.log(lang);
+		console.log("쿠키"+cookie);
+		console.log("언어"+lang);
 		if(lang == 'ko') {
 			flag.classList.add('flag-icon-kr');
 		}
@@ -372,7 +374,7 @@
     	} 
     	else if(string == "CPN" ) {
     		return "{{__('car_customer_phone')}}";
-    	} 
+    	}
     	else if(string == "MD" ) {
     		return "{{__('device_model')}}";
     	} 
@@ -510,10 +512,23 @@
     	else if(string == "PD" ) {
     		return "{{__('history_time')}}";
     	}
-    	else if(string == "" ) {
-    		return "{{__('')}}";
-    	}else if(string == "" ) {
-    		return "{{__('')}}";
+    	else if(string == "device_register_success" ) {
+    		return "{{__('device_register_success')}}";
+    	}
+    	else if(string == "device_duplicated" ) {
+    		return "{{__('device_duplicated')}}";
+    	}
+    	else if(string == "device_mac_wrong" ) {
+    		return "{{__('device_mac_wrong')}}";
+    	}
+    	else if(string == "car_register_success" ) {
+    		return "{{__('car_register_success')}}";
+    	}
+    	else if(string == "car_exceltype_error" ) {
+    		return "{{__('car_exceltype_error')}}";
+    	}
+    	else if(string == "car_excellength_error" ) {
+    		return "{{__('car_excellength_error')}}";
     	}
     	else if(string == "" ) {
     		return "{{__('')}}";
@@ -521,7 +536,12 @@
     	else if(string == "" ) {
     		return "{{__('')}}";
     	}
-    	
+    	else if(string == "" ) {
+    		return "{{__('')}}";
+    	}
+    	else if(string == "" ) {
+    		return "{{__('')}}";
+    	}
     	else {
     		return string;
     	}
