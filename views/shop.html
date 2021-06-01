@@ -42,7 +42,7 @@
 							<ul class="nav nav-tabs">
 								<li class="nav-item">
 									<a class="nav-link active" href="#" data-filter="all">
-										<i class="fab fa-2x fa-shopify my-2"></i> {{__('all')}} {{__('payment_goods')}}
+										<i class="fab fa-2x fa-shopify my-2"></i> All Goods
 									</a>
 								</li>
 								<li class="nav-item">
@@ -55,45 +55,43 @@
 										<i class="fa fa-fw fa-shopping-basket my-2"></i> {{__('payment_goods')}}
 									</a>
 								</li>
-								{% if(company.AH == true) or (company.CK == "MK 대리점") %}
 								<li class="nav-item">
-									<a class="nav-link banner" href="#" data-toggle="modal" data-target="#banner-modal" data-banner="join">
-									  <i class="fa fa-fw fa-plus my-2"></i> {{__('layout_goods_join')}}
-									</a>
-								</li>
-								{% else %}
-								{% endif %}
-								<li class="nav-item">
-									<a class="nav-link banner" href="#" data-toggle="modal" data-target="#banner-modal" data-banner="refund">
+									<a class="nav-link" href="#" data-toggle="modal" data-target="#refund">
 									  <i class="fa fa-fw fa-exclamation-circle my-2"></i> {{__('payment_refund_policy')}}
 									</a>
 								</li>
+								<!-- Modal -->
+								<div class="modal fade" id="refund" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								  <div class="modal-dialog modal-dialog-centered" role="document">
+								    <div class="modal-content">
+								      <div class="modal-header">
+								        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+								        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								          <span aria-hidden="true">&times;</span>
+								        </button>
+								      </div>
+								      <div class="modal-body">
+								      	<div style="display:flex;">
+											<div >
+												{{__('payment_regulation2')}}</br>
+												{{__('payment_regulation3')}}</br>
+												{{__('payment_regulation4')}}</br>
+												{{__('payment_regulation5')}}
+											</div>
+										</div>
+								      </div>
+								      <div class="modal-footer">
+								        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								        <button type="button" class="btn btn-primary">Save changes</button>
+								      </div>
+								    </div>
+								  </div>
+								</div>
 							</ul>
 						</div>
 					</div>
 				</div>
 				<!-- END pos-menu -->
-				
-				<!-- Banner Modal -->
-				<div class="modal fade" id="banner-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-				  <div class="modal-dialog modal-dialog-centered" role="document">
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
-				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				          <span aria-hidden="true">&times;</span>
-				        </button>
-				      </div>
-				      <div class="modal-body">
-				      </div>
-				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('close')}}</button>
-				        <button type="button" form="goods-form" class="btn btn-primary goods-join" onclick="goodsImg();">{{__('layout_goods_join')}}</button>
-				      </div>
-				    </div>
-				  </div>
-				</div>
-				<!--End Banner Modal-->
 				
 				<!-- BEGIN pos-content -->
 				<div class="pos-content">
@@ -213,6 +211,7 @@
 	<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 	<script>
 		var shopObject = new Object({ GN: "", GE: "", GI: "", GP: 0, GO: false, OT: [], ON: [], OP: [], TT: 0, NUM: 1 });
+		
 		showCart();
 		
 		function shopInit() {
@@ -227,6 +226,7 @@
 			shopObject.TT = 0;
 			shopObject.NUM = 1;
 		}
+		
 		
 		// 상품등록 or 환불규정 Modal 띄우기
 		$(".banner").click(function() {
@@ -655,7 +655,225 @@
 								cartON = "";
 							}
 							var cartImg = "";
+<<<<<<<<< saved version
+	    $(".product").click(function() {
+	    	shopInit();
+	    	
+	    	const GN = $(this).find(".title").text();
+	    	const GE = $(this).find(".desc").text();
+    		const GP = $(this).find(".price").text();
+	    	$.ajax({
+	    		type: 'POST',
+	    		url: '/shop/modal',
+	    		dataType: 'json',
+                data: {
+                	GN: GN
+                },
+                success: function(result) {
+					$("input[type=radio]").prop("checked", false);
+					document.getElementsByName("count")[0].value = 1;
+					$(".option-box").empty();
+					
+					shopObject.GN = result.goods.GN;
+					shopObject.GP = result.goods.GP;
+					shopObject.GI = result.goods.GI;
+					shopObject.GE = result.goods.GE;
+					shopObject.GO = result.goods.GO;
+					shopObject.TT = result.goods.GP;
+					
+					$(".modal-title").html(shopObject.GN);
+					$(".modal-desc").html(shopObject.GE);
+					if(shopObject.GP == 0) {
+						$(".modal-price").html("옵션별 상이");
+					}
+					else {
+						$(".modal-price").html(shopObject.GP);
+					}
+					if(!shopObject.GI) {
+						$(".pos-product-img").html("<div class='img' style='background-image: url(../assets/img/oasis_logo_shop.png)'></div>");
+					}
+					else {
+						$(".pos-product-img").html("<div class='img' style='background-image: url("+shopObject.GI+")'></div>");
+					}
+					
+                	if(result.status == 'option') {
+			    		$(".point-option").show();
+			    		for(var i = 0; i < result.optionType.length; i++) {
+			    			shopObject.OT[i] = result.optionType[i];
+			    			$(".option-box").append("\
+								<div class='option-row'>\
+									<div class='option-title'>"+result.optionType[i]+"</div>\
+									<div id='option"+i+"' class='option-list'>\
+									</div>\
+								</div>\
+		    				");
+				    		for(var j = 0; j < result.option.length; j++) {
+				    			var optionOP;
+				    			if(result.option[j].OP) {
+				    				optionOP = result.option[j].OP;
+				    			}
+				    			else {
+				    				optionOP = 0;
+				    			}
+				    			if(result.option[j].OT == result.optionType[i]) {
+				    				$("#option"+i).append("\
+				    					<div class='option'>\
+				    						<input type='radio' class='option-input' id='op"+i+j+"' name='op"+i+"' value='"+result.option[j].OP+"' data-num='"+i+"' data-name='"+result.option[j].ON+"' data-parsley-required-message='옵션을 선택해주세요.' required />\
+				    						<label class='option-label' for='op"+i+j+"'>\
+				    							<span class='option-text'>\
+				    								"+result.option[j].ON+"\
+				    							</span>\
+				    							<span class='option-price'>\
+				    								"+optionOP+"\
+				    							</span>\
+				    						</label>\
+				    					</div>\
+				    				");
+				    			}
+				    		}
+			    		}
+                	}
+                	else {
+                		$(".point-option").hide();
+                	}
+                }
+	    	});
+	    });
+	    
+	    // 옵션 설정
+	    $(document).on('click', '.option-input', async function() {
+    		var i = $(this).data().num;
+    		var ON = $(this).data().name;
+
+    		if($(this).val() == 'undefined') {
+    			$(this).val(0);
+    		}
+    		shopObject.OP[i] = await $(this).val();
+    		shopObject.ON[i] = await ON;
+    		
+    		modalReload();
+	    });
+	    
+	    // 모달 수량 설정
+	    $(document).on('click', '.count-btn', function() {
+	    	var math = $(this).data().math;
+	    	
+	    	if(math == 'minus') {
+	    		if(shopObject.NUM < 2) {
+	    			shopObject.NUM = 1;
+	    		}
+	    		else {
+		    		shopObject.NUM = shopObject.NUM - 1;
+	    		}
+	    	}
+	    	else {
+	    		shopObject.NUM = shopObject.NUM + 1;
+	    	}
+	    	modalReload();
+	    });
+	    
+	    // 장바구니 수량 설정
+	    $(document).on('click', '.list-count-btn', function() {
+	    	var math = $(this).data().math;
+	    	var clickNum = $(this).data().num;
+	    	
+	    	$.ajax({
+	    		type: 'POST',
+				url: '/shop/cartNum',
+				dataType: 'json',
+				data: {
+					MATH : math,
+					GN : document.getElementsByName('GN')[clickNum].value,
+					ON : document.getElementsByName('ON')[clickNum].value,
+				},
+				success: function(result) {
+					if(result.status == 'success') {
+						showCart();
+					}
+				}
+	    		
+	    	});
+	    });
+	    
+	    // 옵션 및 수량에 따라 화면 변경
+	    function modalReload() {
+	    	shopObject.TT = shopObject.GP;
+	    	var sum = 0;
+	    	
+	    	for(var i = 0; i < shopObject.OP.length; i ++) {
+	    		sum += parseInt(shopObject.OP[i]);
+	    	}
+	    	shopObject.TT = (shopObject.TT + sum) * shopObject.NUM;
+	    	
+	    	$(".modal-price").html(shopObject.TT);
+	    	$("input[name=count]").val(shopObject.NUM);
+	    }
+	    
+	    // 모달창 정보 쿠키에 담기
+	    function addCart() {
+			var formParsley = $('#modal-goods').parsley();
+			if(formParsley.isValid() == true) {
+				$.ajax({
+					type: 'POST',
+					url: '/shop/addCart',
+					traditional: true,
+					dataType: 'json',
+					data: {
+						GN : shopObject.GN,
+						GP : shopObject.GP,
+						GI : shopObject.GI,
+						TT : shopObject.TT,
+						OT : shopObject.OT,
+						ON : shopObject.ON,
+						OP : shopObject.OP,
+						NUM : shopObject.NUM,
+					},
+					success: function(result) {
+						if(result.status == 'success') {
+							showCart();
+							$(".modal").modal("hide");
+						}
+					}
+				});
+			}
+			else {
+				alert("옵션을 선택해주세요.");
+			}
+	    }
+	    
+	    // 쿠키를 장바구니 목록에 표시
+	    function showCart() {
+	    	$.ajax({
+				type: 'POST',
+				url: '/shop/showCart',
+				traditional: true,
+				dataType: 'json',
+				data: {},
+				success: function(result) {
+					$(".pos-table").empty();
+					$(".total").empty();
+					if(result.status == 'success') {
+						for(var i = 0; i < result.cart.length; i ++) {
+							var cartON = [];
+							if(result.cart[i].ON) {
+								if(typeof(result.cart[i].ON) == 'string') {
+									cartON = "- "+result.cart[i].OT+" : "+result.cart[i].ON+"<br><small class='ml-2'> (+ "+result.cart[i].OP+")</small>";
+								}
+								else {
+									for(var j = 0; j < result.cart[i].ON.length; j++) {
+										cartON[j] = "- "+result.cart[i].OT[j]+" : "+result.cart[i].ON[j]+"<br><small class='ml-2'> (+ "+result.cart[i].OP[j]+")</small><br>";
+									}
+									cartON = cartON.toString().replace(/,/g, "");
+								}
+							}
+							else {
+								cartON = "";
+							}
+							var cartImg = "";
 							if(!result.cart[i].GI) {
+=========
+							if(result.cart[i].GI == null) {
+>>>>>>>>> local version
 								cartImg = "<div class='img' style='background-image: url(../assets/img/oasis_logo_shop.png)'></div>"
 							}
 							else {
