@@ -66,7 +66,7 @@
 			    		
 					var insertTr = " ";
 					insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('left',pagingObject,i18nconvert) class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>";
-					insertTr +=	"<a href='javascript:;' onclick=pageBtn('left',pagingObject,"+con+",i18nconvert) class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>";
+					insertTr +=	"<a href='javascript:;' onclick=pageBtn('left',pagingObject,i18nconvert) class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>";
 					
 					for(var i = Object.startpage; i < Object.endpage; i ++) {
 						if(Object.page == i)
@@ -162,8 +162,9 @@
     }
     
     // 다음 페이지 기능
-    function pageBtn(dir,Object, i18nconvert) {
+    function pageBtn(dir,Object,i18nconvert) {
 		if(dir == 'left') {
+			console.log("@@@")
 			if((Object.page - 1) > -1)
 			{
 				Object.page -= 1;

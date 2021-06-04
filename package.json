@@ -39,6 +39,7 @@
     "multiparty": "^4.2.2",
     "nodemailer": "^6.4.16",
     "npm": "^7.11.0",
+    "npx": "^10.2.2",
     "nunjucks": "^3.2.2",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",

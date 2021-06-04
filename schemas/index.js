@@ -2,7 +2,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 
 const connect = () => {
-    const mongoCon = 'mongodb://'+process.env.MONGO_ID+':'+process.env.MONGO_PWD+'@'+process.env.MONGO_IP+':'+process.env.MONGO_PORT+'/admin';
+    const mongoCon = 'mongodb://test:test1234@18.140.74.102:9003/admin';
     
     if (process.env.NODE_ENV !== 'production') {
         mongoose.set('debug', true);
