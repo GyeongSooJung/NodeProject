@@ -28,11 +28,16 @@ const inflowRouter = require('./routes/inflow');
 const publishRouter = require('./routes/publish');
 const paymentsRouter = require('./routes/payments');
 const shopRouter = require('./routes/shop');
-
+//----------------------------------------
 
 const path = require('path');
 const ColorHash = require('color-hash');
 const webSocket = require('./socket');
+
+//----------------------------------------
+
+// var graphqlHTTP = require('express-graphql');
+// var Graphql = require('graphql');
 
 const app = express();
 
@@ -106,8 +111,30 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-const server = app.listen(app.get('port'), function() {
+//graphql 플레이 그라운드 작동을 위한 임의의 서버
+// const { ApolloServer } = require('apollo-server');
+// const typeDefs = require('./graphql/schema');
+// const resolvers = require('./graphql/resolvers');
+// // // const dotenv = require('dotenv');
+// // dotenv.config();
+// // const dbConnect = require('./shemas');
+// // dbConnect();
+
+
+// const server = new ApolloServer({
+//   typeDefs,
+//   resolvers,
+//   playground: true
+// });
+
+// server.listen().then(({ url }) => {
+//   console.log(`🚀 Server ready at ${url}`);
+// });
+
+
+const server2 = app.listen(app.get('port'), function() {
   console.log(app.get('port'), 'Port is Waiting~');
 });
 
-webSocket(server, app, sessionMiddleware);
+
+webSocket(server2, app, sessionMiddleware);
