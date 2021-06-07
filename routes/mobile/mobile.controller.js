@@ -72,7 +72,7 @@ exports.signIn = async(req, res) => {
                 expiresIn: "1d",
             });
 
-            await Worker.where({ _id: worker._id }).update({ UA: Date.now() });
+            await Worker.where({ _id: worker._id }).updateOne({ UA: Date.now() });
             return res.json({
                 result: true,
                 data: JSON.stringify(worker),

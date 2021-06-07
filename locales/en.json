@@ -86,6 +86,9 @@
 	"index_ozone_point1" : "Sterilizion",
 	"index_ozone_point2" : "Deodorization",
 	"index_ozone_point3" : "Safety",
+	"index_ozone_point1_text": "Fastest reaction (sterilization) to protein constituents (bacteria), capable of sterilization of 99%, broad-spectrum sterilization.",
+	"index_ozone_point2_text": "Removes odors in a short time by changing and destroying odor components in the air.",
+	"index_ozone_point3_text": "Ozone is rapidly reduced to oxygen when it comes in contact with oxygen, leaving no residue behind.",
 	
 	"login_error" : "Please check your ID or password.",
 	"login_again" : "Please log in again.",
