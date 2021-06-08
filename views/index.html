@@ -17,7 +17,9 @@
 	<link href="../oasiscss/index_custom.css" rel="stylesheet" />
 	<link href="../assets/img/favicon.png" rel="icon">
 	
-	<!--GSAP-->
+	<!--AOS-->
+	<!--<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">-->
+	<!--<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/ScrollTrigger.min.js"></script>
 </head>
@@ -260,7 +262,7 @@
 								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-cog"></i></div>
 								<div class="info">
 									<h4 class="title">{{__('index_ozone_point1')}}</h4>
-									<p class="desc">{{__('index_ozone_point1_text')}}</p>
+									<p class="desc">단백질 구성물(세균류)에 가장 빠르게 반응(살균)하며 99%의 살균 가능, 광범위한 살균에 효과적.</p>
 								</div>
 							</div>
 						</div>
@@ -271,7 +273,7 @@
 								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-paint-brush"></i></div>
 								<div class="info">
 									<h4 class="title">{{__('index_ozone_point2')}}</h4>
-									<p class="desc">{{__('index_ozone_point2_text')}}</p>
+									<p class="desc">공기 중의 악취성분을 변화, 파괴시켜 단시간에 악취를 제거함.</p>
 								</div>
 							</div>
 						</div>
@@ -282,7 +284,7 @@
 								<div class="icon" data-animation="true" data-animation-type="bounceIn"><i class="fa fa-file"></i></div>
 								<div class="info">
 									<h4 class="title">{{__('index_ozone_point3')}}</h4>
-									<p class="desc">{{__('index_ozone_point3_text')}}</p>
+									<p class="desc">오존은 산소와 닿으면 빠르게 산소로 환원되어 어떤 잔여물도 남기지 않음.</p>
 								</div>
 							</div>
 						</div>
@@ -363,7 +365,7 @@
 		//web
 		gsap.to("img[src*='oasis_web.png']", {
 			scrollTrigger: "#web",
-			delay: 0.6,
+			// delay: 0.5,
 			duration: 1.5,
 			y: 50,
 		});
@@ -371,11 +373,13 @@
 		//app
 		gsap.to("img[src*='oasis_app.png']", {
 			scrollTrigger: "#app",
-			delay: 0.6,
+			// delay: 0.5,
 			duration: 1.5,
 			y: -50,
 		});
 		
+<<<<<<< HEAD
+=======
 		//qr
 		gsap.to("img[src*='oasis_qr.png']", {
 			scrollTrigger: "#qr",
@@ -383,6 +387,7 @@
 			duration: 1.5,
 			y: 50,
 		});
+>>>>>>> 8b2ee07e261a6556a2d7ab83e983098fee921513
 	</script>
 	
 	<!-- ================== BEGIN BASE JS ================== -->

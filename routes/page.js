@@ -2518,12 +2518,15 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
 // });
 
 
-router.get('/gstest', isNotLoggedIn, DataSet, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
-  const Content = require('../schemas/content');
-  console.log(Content);
-  res.render('company_list')
+router.post('/gstest', isNotLoggedIn, DataSet, async(req, res, next) => {
+  console.log(req.body);
+  
+  var {graphqlHTTP} = require('express-graphql');
+  
+  
+  
+  
+  res.send({data: "@@@"});
 })
 
 

@@ -94,7 +94,7 @@
 		<!-- end panel-body -->
 	</div>
 	<!-- end panel -->
-	<a href ="/gstest"> 시험용 버튼입니다. 개발자 외에 클릭하지 마세요</a>
+	<a onclick="test()"> 시험용 버튼입니다. 개발자 외에 클릭하지 마세요</a>
 </div>
 <!-- end #content -->
 
@@ -141,6 +141,23 @@ var pagingObject = new Object({name : "Company" ,url : "/ajax/company_list",CID 
 			}
 		});
    });
+   
+   function test() {
+   	$.ajax({
+    		url: "/graphql",
+                    type: "GET",
+                    dataType: 'json',
+                    data: { query :  `{
+    hello: String
+  }`}
+	    	}).done(function (data) {  
+	    		console.log(data)
+	    		
+	    	});
+   }
+   
+	
+	
 </script>
 <!--End Script-->
 {% endblock %}
