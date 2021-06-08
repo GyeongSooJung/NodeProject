@@ -14,8 +14,7 @@
 	<link href="../assets/plugins/flag-icon-css/css/flag-icon.min.css" rel="stylesheet" />
 	<!-- ================== END BASE CSS STYLE ================== -->
 	
-	<!--<link href="../assets/css/fullpage/fullpage.css" rel="stylesheet" />-->
-	<link href="../assets/css/index_custom.css" rel="stylesheet" />
+	<link href="../oasiscss/index_custom.css" rel="stylesheet" />
 	<link href="../assets/img/favicon.png" rel="icon">
 	
 	<!--AOS-->
@@ -54,10 +53,12 @@
 						<li class="nav-item"><a class="nav-link" href="#how" data-click="scroll-to-target">{{__('index_how')}}</a></li>
 						<li class="nav-item"><a class="nav-link" href="#ozone" data-click="scroll-to-target">{{__('ozone')}}</a></li>
 						<li class="dropdown nav-item">
-							<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" id="select-lang"></a>
+							<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+								<h4 class="flag-icon width-full m-r-10 m-t-0 m-b-3 px-1" id="flag"></h4>
+							</a>
 							<div class="dropdown-menu dropdown-menu-right">
-								<a href="/ko_index" class="dropdown-item text-white" onclick="changeLang('kr')"><span class="flag-icon flag-icon-kr mr-2 px-1" title="kr" id="kr"></span>{{__('lang_kr')}}</a>
-								<a href="/en_index" class="dropdown-item text-white" onclick="changeLang('en')"><span class="flag-icon flag-icon-us mr-2 px-1" title="us" id="us"></span>{{__('lang_en')}}</a>
+								<a href="/ko_index" class="dropdown-item"><span class="flag-icon flag-icon-kr mr-2 px-1" title="kr" id="kr"></span>{{__('lang_kr')}}</a>
+								<a href="/en_index" class="dropdown-item"><span class="flag-icon flag-icon-us mr-2 px-1" title="us" id="us"></span>{{__('lang_en')}}</a>
 							</div>
 						</li>
 					</ul>
@@ -73,7 +74,7 @@
 			<!-- begin #home -->
 			<div id="home" class="content has-bg home">
 				<!-- begin content-bg -->
-				<div class="content-bg" style="background-image: url(../assets/img/main2.png);" 
+				<div class="content-bg"
 					data-paroller="true" 
 					data-paroller-factor="0.5"
 					data-paroller-factor-xs="0.25">
@@ -188,7 +189,7 @@
 							<h2 class="mb-5 index-h2">{{__('index_app_text')}}</h2>
 							<h5 class="mb-5 index-h3">{{__('index_app_text2')}}<br>{{__('index_app_text3')}}</h5>
 							<a href="https://play.google.com/store/apps/details?id=com.mk.oasis_app" target="_blank" class="link_store">
-					          <img src="../assets/appabout/google_play.png" alt="HTML tutorial" style="border:0;">
+					          <img src="../assets/appabout/google_play.png" alt="HTML tutorial">
 					        </a>
 						</div>
 						<!-- end col-5 -->
@@ -316,59 +317,13 @@
 	</div>
 	<!-- end #page-container -->
 	
-	<!--<script src="../assets/js/fullpage/fullpage.js"></script>-->
+	<!-- Begin Script -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
 	<script>
-		window.addEventListener('load', function() {
-			// 언어 변경시 국기 변환 기능
-			var cookie = document.cookie;
-			var startIndexOf = cookie.indexOf('lang=');
-			var endIndexOf = cookie.indexOf(';',startIndexOf);
-			if(endIndexOf == -1)endIndexOf = cookie.length; //맨끝일경우;가 없으므로 맨마지막자리를 가져온다.
-			
-			const sl = document.getElementById('select-lang');
-			var lang = cookie.substring(startIndexOf+'lang='.length, endIndexOf);
-			var quote1 = document.getElementById('quote1');
-			var quote2 = document.getElementById('quote2');
-			var quote3 = document.getElementById('quote3');
-			var oasis_flow = document.getElementById('oasis_flow');
-			console.log("쿠키"+cookie);
-			console.log("언어"+lang);
-			if(lang == 'ko') {
-				sl.innerHTML = "한국어";
-				quote1.src = '../assets/img/quote1.png'
-				quote2.src = '../assets/img/quote2.png'
-				quote3.src = '../assets/img/quote3.png'
-				oasis_flow.src = '../assets/img/oasis_flow.png'
-			}
-			else if(lang == 'en') {
-				sl.innerHTML = "ENGLISH";
-				quote1.src = '../assets/img/quote1_en.png'
-				quote2.src = '../assets/img/quote2_en.png'
-				quote3.src = '../assets/img/quote3_en.png'
-				oasis_flow.src = '../assets/img/oasis_flow_en.png'
-				
-				// document.querySelectorAll('col-lg-5').style.setProperty('width', 5000, 'important');
-			}
-			else {
-				sl.innerHTML = "한국어";
-				quote1.src = '../assets/img/quote1.png'
-				quote2.src = '../assets/img/quote2.png'
-				quote3.src = '../assets/img/quote3.png'
-				oasis_flow.src = '../assets/img/oasis_flow.png'
-			}
-		});
-		
-		// new fullpage('#fullpage', {
-		// 	//options here
-		// 	autoScrolling:true,
-		// 	scrollHorizontally: true
-		// });
 		
 		// 애니메이션 기능 gsap
 		gsap.registerPlugin(ScrollTrigger);
-
+		
 		// 기본 설정
 		ScrollTrigger.defaults({
 			toggleActions: "play reset play reset"
@@ -423,10 +378,22 @@
 			y: -50,
 		});
 		
+<<<<<<< HEAD
+=======
+		//qr
+		gsap.to("img[src*='oasis_qr.png']", {
+			scrollTrigger: "#qr",
+			delay: 0.6,
+			duration: 1.5,
+			y: 50,
+		});
+>>>>>>> 8b2ee07e261a6556a2d7ab83e983098fee921513
 	</script>
 	
 	<!-- ================== BEGIN BASE JS ================== -->
 	<script src="../assets/js/one-page-parallax/app.min.js"></script>
 	<!-- ================== END BASE JS ================== -->
+	<script src="../oasisjs/oasis_flag.js"></script>
+	<!-- End Script -->
 </body>
 </html>

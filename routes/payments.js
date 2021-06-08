@@ -141,7 +141,7 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
       
 //       const orderone = await Order.find({MID : merchant_uid}, async function(err, payment) {
 //           if (err) {
-//               return res.json(err);
+//               return res.send(err);
 //           }
           
 //           const paymentData = payment[0];

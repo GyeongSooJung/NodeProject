@@ -184,9 +184,9 @@ router.post('/worker_delete',isNotLoggedIn ,async (req, res, next) => {
     });
     
     await Worker.remove({ "EM" : req.body["select"] });
-    res.json({ result : true });
+    res.send({ result : true });
   } catch (err) {
-    res.json({ result : false });
+    res.send({ result : false });
     console.error(err);
     next(err);
   }

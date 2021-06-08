@@ -59,6 +59,8 @@ pw : root
     + publish_cat = QR코드 카테고리(버전)
   - 도로명주소api
     + juso = 도로명주소 API 승인키
+  - imgBB(이미지 무료 호스팅)
+    + imgBB = 무료 호스팅 API 키
 
 ### 공지 사항
 * Cloug9 소스의 README.md 파일을 자주 확인하세요.

@@ -14,454 +14,110 @@
 {% block content %}
 <!-- begin #content -->
 <div id="content" class="content">
-   <!-- begin page-header -->
-   <h1 class="page-header">{{__('notice_list')}}</h1>
-   <!-- end page-header -->
-   <!-- begin row -->
-   <div class="row">
-      <!-- begin col-12 -->
-      <div class="col-xl-12">
-         <div class="panel panel-inverse">
-            <!-- begin panel-heading -->
-            <div class="panel-heading">
-               <h4 class="panel-title">{{__('notice_list')}}</h4>
-            </div>
-            <!-- end panel-heading -->
-            <!-- begin panel-body -->
-            <div id ="panelbody" class="panel-body" >
-               
-            <div id ="optionbody" class="mt-2 mb-2 d-flex justify-content-end align-items-center">
-    			<div class="mr-auto">
-					<select id = "selectpage" name="data-table-default_length" aria-controls="data-table-default" class="custom-select custom-select-sm form-control form-control-sm">
-						<option class ="postnumber" value="10">10</option>
-						<option class ="postnumber" value="25">25</option>
-						<option class ="postnumber" value="50">50</option>
-						<option class ="postnumber" value="100">100</option>
-					</select>
+	<!-- begin page-header -->
+	<h1 class="page-header">{{__('notice_list')}}</h1>
+	<!-- end page-header -->
+	<!-- begin row -->
+	<div class="row">
+		<!-- begin col-12 -->
+		<div class="col-xl-12">
+			<div class="panel panel-inverse">
+				<!-- begin panel-heading -->
+				<div class="panel-heading">
+					<h4 class="panel-title">{{__('notice_list')}}</h4>
 				</div>
-              	<div class="mr-2">
-                  		<div class="btn-group m-r-5 m-b-5">
-      							<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>
-      							<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
-      							<div class="dropdown-menu dropdown-menu-right" style="">
-      								<a href="javascript:searchoption('TI');" class="dropdown-item">{{__('notice_contents')}}</a>
-      								<a href="javascript:searchoption('CA');" class="dropdown-item">{{__('notice_date')}}</a>
-      							
-      							</div>
-      					</div> 
-      			</div>
-      			<div>
-	  				<input id ="searchtext" type="text" class="form-control" placeholder ="" />
-	  			</div>
-	  			<div id ="searchdatetext" class="d-none">
-	  				<div class ="d-flex">
-	  				<input type="date" id = "searchdatetext1" class ="form-control" placeholder ="" />
-	  				&nbsp;&nbsp;~&nbsp;&nbsp;
-	  				<input type="date" id = "searchdatetext2" class ="form-control" placeholder ="" />
-	  				</div>
-	  			</div>
-  				<div>
-  				<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchbutton()"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button></div>
-  				<a href='javascript:;' id ="gotolist" onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
-   				</div>
-               
-               <div class="overflow-auto">
-                  <!--<form action="/device/device_select_delete" method="post">-->
-                     <table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle text-center">
-                        <thead>
-                           <tr>
-                                <th width="2.5%"></th>
-                                <th width="60.5%" class = "sort" name = "WNM">{{__('notice_contents')}}<i id = "WNM" class="d-none  float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-    							<th width="24%" class = "sort" name = "CA">{{__('notice_date')}}<i id = "CA" class="d-none float-right mx-1 fas fa-lg fa-fw m-t-3 fa-angle-down"></i></th>
-                           </tr>
-                        </thead>
-                        <tbody id = "memDiv">
-                           
-                        </tbody>
-                     </table>
-                     <div class="justify-content-between align-item-center">
-      						<center>
-      								<div id="pagebox" class=" justify-content-around align-item-center">
-      									
-      								</div>
-      						</center>
-      					</div>
-      					
-      					{% if(company.AH == true) %}
-      					    <center>
-      					        <a href="/notice_write" onclick="noticewrite()" class="mt-40 btn btn-sm btn-white width-100" >글 쓰기</a>
-      					    </center>
-      					{% endif %}
-                  <!--</form>-->
-               </div>
-            </div>
-            <div>
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <!-- Homepage Leaderboard -->
-            <ins class="adsbygoogle"
-            style="display:inline-block;width:728px;height:90px"
-            data-ad-client="ca-pub-1234567890123456"
-            data-ad-slot="1234567890"></ins>
-            <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-            </div>
-            <!-- end panel-body -->
-         </div>
-      </div>
-      <!-- end col-10 -->
-   </div>
-   <!-- end row -->
+				<!-- end panel-heading -->
+				<!-- begin panel-body -->
+				<div class="panel-body">
+					<div class="search-box mt-2 mb-3 py-3 px-3 d-flex justify-content-between align-items-center bg-light">
+						<div id ="searchdatetext" class="d-flex justify-content-between align-items-center">
+							<input type="date" id = "searchdatetext1" class ="form-control form-control-sm" placeholder ="" />
+							&nbsp;&nbsp;~&nbsp;&nbsp;
+							<input type="date" id = "searchdatetext2" class ="form-control form-control-sm" placeholder ="" />
+			  			</div>
+						<div class="d-flex justify-content-between align-items-center">
+							<div class="mr-2">
+								<div class="btn-group m-r-5">
+									<a id="searchoption" href="javascript:;" class="btn btn-sm btn-white">{{__('search_option')}}</a>
+									<a href="#" data-toggle="dropdown" class="btn btn-sm btn-white dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
+									<div class="dropdown-menu dropdown-menu-right">
+										<a href="javascript:searchoption('TI',pagingObject,i18nconvert,{TI : 'TI',CA : 'CA'});" class="dropdown-item">{{__('notice_contents')}}</a>
+										<a href="javascript:searchoption('CA',pagingObject,i18nconvert,{TI : 'TI',CA : 'CA'});" class="dropdown-item">{{__('notice_date')}}</a>
+									</div>
+								</div> 
+							</div>
+							<div class="mr-2">
+								<input id ="searchtext" type="text" class="w-100 form-control form-control-sm" placeholder="" />
+							</div>
+							<div>
+								<button id ="searchbutton" class="btn btn-sm btn-primary text-white" onclick="searchtext(pagingObject, i18nconvert)"><i class="fas fa-fw fa-search"></i>{{__('search')}}</button>
+							</div>
+							<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,i18nconvert) class='d-none ml-1 btn btn-sm btn-primary mr-1 px-2'>{{__('all')}}</a>
+						</div>
+					</div>
+	               
+					<div class="mr-auto">
+						<select id = "selectpage" name="data-table-default_length" aria-controls="data-table-default" class="custom-select custom-select-sm width-80 mb-2">
+							<option class ="postnumber" value="10">10</option>
+							<option class ="postnumber" value="25">25</option>
+							<option class ="postnumber" value="50">50</option>
+							<option class ="postnumber" value="100">100</option>
+						</select>
+					</div>
+					<div class="overflow-auto">
+						<table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle text-center">
+							<thead id = "memDiv1"></thead>
+							<tbody id = "memDiv2"></tbody>
+						</table>
+						
+						<div class="d-flex justify-content-between align-item-center">
+							{% if(company.AH == true) %}
+							<div>
+								<a href="/notice_write" class="btn btn-primary width-100" >{{__('notice_write')}}</a>
+							</div>
+	      					{% endif %}
+							<div id="pagebox" class=" justify-content-around align-item-center"></div>
+						</div>
+					</div>
+	            </div>
+	            <!-- end panel-body -->
+			</div>
+		</div>
+		<!-- end col-10 -->
+	</div>
+	<!-- end row -->
 </div>
 <!-- end #content -->
 
-<!-- Script -->
-<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-<script
-    src="https://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
-    
-    <script>
-   var pagingObject = new Object({array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : ""});
-		// 검색 기능
-		$(document).ready(function() {
-			
-	        pagereload();
-	        
-	        $('#selectpage').click(function () {
-        		if(pagingObject.postNum != $('#selectpage option:selected').val())
-        		{
-        			pagingObject.postNum = $('#selectpage option:selected').val()
-        			pagereload();
-        		}
-        			
-        	})
-	        
-	        $('#searchtext').keyup(function(key) {
-        		if(key.keyCode == 13) {
-        			if(pagingObject.search == "")
-        			alert("{{__('choice_error')}}");
-        			else {
-        				pagingObject.searchtext = $(this).val();
-        				pagereload()
-        				document.getElementById('gotolist').classList.remove('d-none');
-        			}
-        		}
-        		if($(this).val() == "") {
-        			pagereload()
-        		}
-        	})
-        	
-        	
-        	$('.sort').click(function() {
-        		
-        		$("#searchoption").empty();
-            	$("#searchoption").append("{{__('search')}}");
-        		
-        		pagingObject.search = "";
-        		pagingObject.searchtext = "";
-        		
-        		var paglist = pagingObject.array;
-        		
-        		var check_sort = $(this).attr('name');
-        		
-        		
-        		 if(document.getElementById(check_sort).classList.contains('d-none')) {
-        		 	
-        		 	document.getElementById(check_sort).classList.remove('fa-angle-up');
-	        		document.getElementById(check_sort).classList.add('fa-angle-down');
-        		 	var check2 = check_sort;
-        		 }
-        		 else {
-        		 	if (document.getElementById(check_sort).classList.contains('fa-angle-down')) {
-        		 		
-	        		 	document.getElementById(check_sort).classList.remove('fa-angle-down');
-	        		 	document.getElementById(check_sort).classList.add('fa-angle-up');
-        		 		var check2 = check_sort + "2";
-        		 	}
-        		 	else {
-        		 		
-        		 		document.getElementById(check_sort).classList.remove('fa-angle-up');
-	        		 	document.getElementById(check_sort).classList.add('fa-angle-down');
-        		 		var check2 = check_sort;
-        		 		
-        		 	}
-        		 }
-        		 
-        		document.getElementById('TI').classList.add('d-none');
-        		document.getElementById('CA').classList.add('d-none');
-        		
-        		
-        		document.getElementById(check_sort).classList.remove('d-none');
-        		
-        		
-        		pagingObject.array = paglist;
-        		pagingObject.sort = check2;
-        		pagingObject.page = 0;
-        		pagereload();
-        		
-        	})
-        	
-        	// 리스트 클릭 시 이벤트
-        	$('.noticeclass').click(function() {
-        	    console.log($(this).attr('name'));
-        	    var noticeid = $(this).attr('name')
-        	    $.ajax({
-	    		url: "/ajax/notice_detail",
-	                    type: "POST",
-	                    async: false,
-	                    dataType: 'json',
-	                    data: {
-	                        noticeid : noticeid 
-        	                    }
-    	        }).done(function (data) { 
-    	            if(data.result == true) {
-    	                console.log(data.noticedetail[0].TI);
-    	                $("#panelbody").empty();
-    	                var insertTr = "";
-    	                // insertTr += "<div><a href='javascript:;' id ='gotolist' onclick=gotolist() class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a></div>"
-		        	    insertTr += "<center><button id ='gotolist' onclick='gotolist()' class='m-15 btn btn-primary mr-1 px-2'>{{__('return_list')}}</button></center>"
-		        	    insertTr += "<div>" +data.noticedetail[0].CO + "</div>"
-		        	    insertTr += "<center><button id ='gotolist' onclick='gotolist()' class='m-15 btn btn-primary mr-1 px-2'>{{__('return_list')}}</button></center>"
-		        	    $("#panelbody").append(insertTr);
-		        	    console.log(insertTr)
-    	            }
-    	            
-    	        })
-    	    
-        	    
-        	})
-        	
-	    })
-	    
-	    //초기화
-	    function refresh() {
-	    	pagingObject.array = [];
-	    	pagingObject.sort = "CA";
-	    	pagingObject.page = 0;
-	    	pagingObject.postNum = 10;
-	    	pagingObject.pageNum = 5;
-	    	pagingObject.startpage = 0;
-	    	pagingObject.endpage = 0;
-	    	pagingObject.search = "";
-	    	pagingObject.searchtext = "";
-	    	
-	    	
-	    }
-	    
-		function searchoption(opt) {
-    	pagingObject.search = opt;
-    	$("#searchoption").empty();
-    	var string = opt;
-    	if (string == "TI") {
-    	   string = "{{__('notice_contents')}}";
-    	   document.getElementById('searchtext').classList.remove('d-none');
-    	   document.getElementById('searchdatetext').classList.add('d-none');
-    	}
-    	if (string == "CA"){
-    	    string = "{{__('notice_date')}}";
-    	   document.getElementById('searchtext').classList.add('d-none');
-    	   document.getElementById('searchdatetext').classList.remove('d-none');
-    	   $("#searchtext").val('');
-    	   
-    	}
-    	$("#searchoption").append(string);
-    	$("#searchoption").show();
-        }
+<!-- Begin Script -->
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script>
+var pagingObject = new Object({name : "Notice", url : "/ajax/notice_list", CID : "{{company._id}}", array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : ""});
+	// 검색 기능
+	$(document).ready(function() {
+		pagereload(pagingObject,i18nconvert);
 		
-		function searchbutton() {
-    	
-	    	if(pagingObject.search == "")
-	          alert("{{__('search_option_error')}}");
-	        else {
-	        	if(!document.getElementById('searchtext').classList.contains('d-none')) {
-					pagingObject.searchtext = $('#searchtext').val();
-					pagereload()
-					document.getElementById('gotolist').classList.remove('d-none');
-	        	}else {
-	        		pagingObject.searchtext += $('#searchdatetext1').val();
-	        		pagingObject.searchtext += "~";
-	        		pagingObject.searchtext += $('#searchdatetext2').val();
-					pagereload()
-					document.getElementById('gotolist').classList.remove('d-none');
-	        	}
-			    document.getElementById('searchtext').classList.remove('d-none');
-    			document.getElementById('searchdatetext').classList.add('d-none');
+		$('#selectpage').click(function() {
+			selectpage(pagingObject,i18nconvert,{
+				option : $('#selectpage option:selected').val()
+			});
+		});
+		
+		$('#searchtext').keyup(function(key) {
+			if(key.keyCode == 13) {
+				searchtext(pagingObject,i18nconvert)
 			}
-			$("#searchoption").empty();
-			$("#searchoption").append("{{__('search')}}");
-			$("#searchoption").show();
-		}
-		
-		
-		// 전체 목록으로
-		function gotolist() {
-			
-			refresh()
-			$("#panelbody").empty();
-			location.reload();
-			
-			
-			
-		}
-		
-		// 페이지 기능
-		function pagebutton(num) {
-			pagingObject.page = num;
-	    	pagereload()
-	    }
-	    
-		function pageBtn(dir,page) {
-			if(dir == 'left') {
-				if((pagingObject.page - 1) > -1)
-				{
-					pagingObject.page -= 1;
-					pagereload()
-				}
+			if(pagingObject.searchtext == "") {
+				pagereload(pagingObject,  i18nconvert);
 			}
-			if(dir == 'right') {
-				if((pagingObject.page + 1) < Math.ceil(pagingObject.array.length / pagingObject.postNum))
-				{
-					pagingObject.page += 1;
-					pagereload()
-					
-				}
-				
-			}
-		}
-		
-		function pageDoubleBtn(dir,page) {
-			if(dir == 'left') {
-				if((pagingObject.page - pagingObject.pageNum) < 0) {
-					pagingObject.page = 0;
-					pagereload()
-				}
-				else {
-					pagingObject.startpage -= 1;
-					pagingObject.page -= 5;
-					pagereload()
-				}
-			}
-			if(dir == 'right') {
-				if ((pagingObject.page + pagingObject.pageNum) >= Math.ceil(pagingObject.array.length / pagingObject.postNum))
-				{
-					pagingObject.page = Math.ceil(pagingObject.array.length / pagingObject.postNum)-1;
-					pagereload()
-				}
-				else {
-					pagingObject.startpage += 1;
-					pagingObject.page += 5;
-					pagereload()
-				}
-			}
-		}
-		
-		function pagereload() {
-    	    $.ajax({
-	    		url: "/ajax/notice_list",
-	                    type: "POST",
-	                    async: false,
-	                    dataType: 'json',
-	                    data: {
-	                        sort : pagingObject.sort,
-	                        search : pagingObject.search,
-	                        searchtext : pagingObject.searchtext
-	                    }
-	        }).done(function (data) { 
-	        	if(data.result == true) {
-		    		    pagingObject.array = data.noticelist;
-		    		    pagingObject.startpage = Math.floor((pagingObject.page) / pagingObject.pageNum) * pagingObject.pageNum;
-		    		    pagingObject.endpage = pagingObject.startpage + pagingObject.pageNum;
-		    		    
-		    		    var noticelist = pagingObject.array; // 전체 리스트
-		    		    var noticenum = noticelist.length; // 전체 리스트의 갯수
-		    		    var page = pagingObject.page; // 페이지 번호
-		    		    var startPage = pagingObject.startpage; // 시작 페이지
-		    		    var endPage = pagingObject.endpage; // 끝 페이지
-		    		    var postNum = pagingObject.postNum; // 게시될 페이지 숫자
-		    		    var pageNum = pagingObject.pageNum; // 페이지 번호의 갯수
-		    		    var totalPage = Math.ceil(noticenum/postNum); // 전체 페이지의 갯수
-		    		    
-		    		    if (endPage > totalPage) { // 끝 페이지가 총 페이지 수보다 많다면 같게끔 처리
-					        endPage = totalPage;
-					    }
-		    		    
-			        	//tr 초기화
-			        	$("#data-table-combine > tbody > tr").remove();
-			        	//페이지 넘버 박스 초기화
-				     	$("#pagebox *").remove(); 
-				    		
-				     	var insertTr = ""; // 채워넣을 HTML 초기화
-				     	
-				     	var indexcount = 1; // 인덱스번호 초기화
-				    		
-				    	
-				    	
-				     	for (var i = (postNum * page) ; i < (postNum * page) + postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-							if(noticelist.length != 0) {
-							    console.log(noticelist[i])
-					     	   if(noticelist[i]) {
-					     	      
-								  insertTr += "<tr class ='noticeclass' name='"+noticelist[i]._id+"'>";
-								  insertTr += "<td class='font-weight-bold'>"+(noticenum - (page*10)) +" </td>";
-								  insertTr += "<td>"+ noticelist[i].TI +"</td><td>";
-								  if ( (moment(noticelist[i].CA).format('DD')) == moment().format('DD') )
-								  {
-								       insertTr +=  moment(noticelist[i].CA).format('HH:mm');
-								  }
-								  else {
-								      insertTr += moment(noticelist[i].CA).format('YYYY-MM-DD');
-								  }
-								  insertTr += "</td></tr>";
-								  noticenum -= indexcount;
-					     	   }
-							}
-					     	else {
-					     	  	insertTr += "<tr>";
-								insertTr += "	<td colspan='10'>No Data</td>";
-								insertTr += "</tr>";
-								
-								break;
-					     	}   
-				     	}
-							  
-							  $("#memDiv").append(insertTr);
-							  insertTr = " ";
-					    	  insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>";
-							  insertTr +=	"<a href='javascript:;' onclick=pageBtn('left',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>";
-		
-								for(var i = startPage; i < endPage; i ++) {
-									if(page == i)
-										insertTr +=	"<input type='button' onclick='pagebutton("+ i +")' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' style=' background-color: #00acac; color: white !important;' >";
-									else
-										insertTr +=	"<input type='button' onclick='pagebutton("+ i +")' value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' >";
-								}
-								insertTr +=	"<a href='javascript:;' onclick=pageBtn('right',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-right'></i></a>";
-								insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('right',"+page+") class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-right'></i></a>";
-							  $("#pagebox").append(insertTr);
-							  $("#pagebox").show();
-	        	}
-	        	
-	        	else if (data.result == "nothing") {
-	        		alert("{{__('search_error')}}")
-	        	}
-	        	
-	        	else {
-	        		alert("{{__('search_error')}}")
-	        	}
-			})
-    	
-        }
-        
-        
-   
+		});
+	});
 </script>
+<!--End Script-->
 {% endblock %}
 
 
 {% block script %}
-
 <script src="../assets/plugins/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
 <script src="../assets/plugins/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
 <script src="../assets/plugins/datatables.net/js/jquery.dataTables.min.js"></script>
@@ -482,5 +138,4 @@
 <script src="../assets/plugins/pdfmake/build/pdfmake.min.js"></script>
 <script src="../assets/plugins/pdfmake/build/vfs_fonts.js"></script>
 <script src="../assets/plugins/jszip/dist/jszip.min.js"></script>
-<!--<script src="../assets/js/demo/table-manage-combine.demo.js"></script>-->
 {% endblock %}

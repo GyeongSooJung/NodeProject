@@ -1,18 +1,5 @@
 {% extends 'layout.html' %}
 
-{% block css %}
-<style>
-	.inputbox {
-		position: relative !important;
-	}
-	#pwNotice, #pwNotice2 {
-		position: absolute !important;
-		top: 8px;
-		left: 90%;
-	}
-</style>
-{% endblock %}
-
 {% block content %}
 	<div class="sidebar-bg"></div>
 	<div id="content" class="content content-full-width">
@@ -70,7 +57,7 @@
 				<div class="tab-content">
 					<!-- begin tab-pane -->
 					<div class="tab-pane fade active show" id="editInfoBox">
-						<form action="" method="post" id="editInfo" class="margin-bottom-0" data-parsley-validate="true" onsubmit="editInfo();">
+						<form action="" method="post" id="editInfo" class="margin-bottom-0" data-parsley-validate="true" onsubmit="editInfo('CNA','MN','PN','PW');">
 							<table class="table table-borderless table-th-valign-middle w-50 mx-auto my-2">
 								<tr>
 									<th>{{__('business_number')}}</th>
@@ -115,10 +102,10 @@
 								</tr>
 							</table>
 							<p class="text-center mt-3 m-b-0">
-								<input type="button" class="btn btn-primary width-150" value="{{__('confirm')}}" onclick="emailCheck();">
+								<input type="button" class="btn btn-primary width-150" value="{{__('confirm')}}" onclick="emailCheck('EA');">
 							</p>
 						</div>
-						<form action="" method="post" id="editPw" class="margin-bottom-0 d-none" data-parsley-validate="true" onsubmit="editPw();">
+						<form action="" method="post" id="editPw" class="margin-bottom-0 d-none" data-parsley-validate="true" onsubmit="editPw('PW2','CPW','RPW');">
 							<table class="table table-borderless table-th-valign-middle w-50 mx-auto my-2">
 								<tr>
 									<th>{{__('profile_password_now')}}</th>
@@ -161,89 +148,19 @@
 	
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
-	window.addEventListener('load', function() {
-		// 비밀번호 입력 시 notice
-		$(function(){
-		    $('#CPW').keyup(function() {
-		    	if($('#CPW').val() == "") {
-		    		$('#pwNotice').hide();
-		    	}
-				else if($('#CPW').val().length < 8 || $('#CPW').val().length > 16 || $('#CPW').val() == $('#PW2').val()) {
-					$('#pwNotice').show();
-					$('#pwNotice').html('<i class="fas fa-lg fa-unlock"></i>');
-					$('#pwNotice').attr('color', '#ff100b');
-				}
-				else {
-					$('#pwNotice').show();
-					$('#pwNotice').html('<i class="fas fa-lg fa-lock"></i>');
-					$('#pwNotice').attr('color', '#23cf23');
-				}
-		    });
-		
-		    $('#RPW').keyup(function() {
-		    	if($('#RPW').val() == "") {
-		    		$('#pwNotice2').hide();
-		    	}
-				else if($('#CPW').val() == $('#RPW').val()) {
-					$('#pwNotice2').show();
-					$('#pwNotice2').html('<i class="far fa-lg fa-check-circle"></i>');
-					$('#pwNotice2').attr('color', '#23cf23');
-				}
-				else {
-					$('#pwNotice2').show();
-					$('#pwNotice2').html('<i class="fas fa-lg fa-times-circle"></i>');
-					$('#pwNotice2').attr('color', '#ff100b');
-				}
-		    });
-		});
-	});
-
 	// 회원정보 수정 ajax 기능
-    function editInfo() {
-    	var validateCNA = $("#CNA").parsley();
-    	var validateMN = $("#MN").parsley();
-    	var validatePN = $("#PN").parsley();
-    	var validatePW = $("#PW").parsley();
+    function editInfo(companyName, mobileNumber, phoneNumber, password) {
+    	var validateCNA = $("#"+companyName).parsley();
+    	var validateMN = $("#"+mobileNumber).parsley();
+    	var validatePN = $("#"+phoneNumber).parsley();
+    	var validatePW = $("#"+password).parsley();
+    	var CNA = document.getElementsByName(companyName)[0].value;
+		var MN = document.getElementsByName(mobileNumber)[0].value;
+		var PN = document.getElementsByName(phoneNumber)[0].value;
+		var PW = document.getElementsByName(password)[0].value;
     	
 		if (validateCNA.isValid() == true && validateMN.isValid() == true && validatePN.isValid() == true && validatePW.isValid() == true) {
-	    	$.ajax({
-				type: 'POST',
-				url: '/profile/editInfo',
-				dataType: 'json',
-				data: {
-					CNA : document.getElementsByName("CNA")[0].value,
-					MN : document.getElementsByName("MN")[0].value,
-					PN : document.getElementsByName("PN")[0].value,
-					PW : document.getElementsByName("PW")[0].value,
-				},
-				success: function(result) {
-					if (result.status == 'success') {
-						alert("{{__('profile_success')}}");
-						location = '/profile';
-					}
-					else if (result.status == 'exMn') {
-	    				alert("{{__('profile_ex_mn')}}");
-	    				document.getElementsByName("CNA")[0].value = "{{company.CNA}}";
-	    				document.getElementsByName("MN")[0].value = "{{company.MN}}";
-	    				document.getElementsByName("PN")[0].value = "{{company.PN}}";
-	    				document.getElementsByName("PW")[0].value = null;
-	    			}
-	    			else if (result.status == 'exPn') {
-	    				alert("{{__('profile_ex_pn')}}");
-	    				document.getElementsByName("CNA")[0].value = "{{company.CNA}}";
-	    				document.getElementsByName("MN")[0].value = "{{company.MN}}";
-	    				document.getElementsByName("PN")[0].value = "{{company.PN}}";
-	    				document.getElementsByName("PW")[0].value = null;
-	    			}
-					else if (result.status == 'fail') {
-						alert("{{__('profile_pw_error')}}");
-						document.getElementsByName("CNA")[0].value = "{{company.CNA}}";
-	    				document.getElementsByName("MN")[0].value = "{{company.MN}}";
-	    				document.getElementsByName("PN")[0].value = "{{company.PN}}";
-	    				document.getElementsByName("PW")[0].value = null;
-					}
-				}
-	    	});
+	    	editInfoAjax(CNA,MN,PN,PW);
 		}
 		else {
 			alert("{{__('profile_form_error')}}");
@@ -252,81 +169,42 @@
     }
     
     // 이메일 체크 ajax 기능
-    function emailCheck() {
-    	var validateEA = $("#EA").parsley();
+    function emailCheck(email) {
+    	var validateEA = $("#"+email).parsley();
+    	var EA = document.getElementsByName(email)[0].value
     	
     	if (validateEA.isValid() == true) {
-    		$.ajax({
-    			type: 'POST',
-	    		url: '/profile/emailCK',
-	    		dataType: 'json',
-	    		data: {
-	    			EA : document.getElementsByName('EA')[0].value,
-	    		},
-	    		success: function(result) {
-	    			if (result.status == 'match') {
-	    				document.getElementById('emailBox').classList.add('d-none');
-	    				document.getElementById('editPw').classList.remove('d-none');
-	    			}
-	    			else if (result.status == 'mismatch') {
-	    				alert("{{__('find_email_error')}}");
-	    				document.getElementsByName('EA')[0].value = null;
-	    			}
-	    		}
-    		});
+    		emailCheckAjax(EA);
     	}
     	else {
-    		alert("{{__('register_email_valid_msg')}}")
+    		alert("{{__('register_email_valid_msg')}}");
     	}
     }
     
     // 비밀번호 변경 ajax 기능
-    function editPw() {
-    	var validatePW2 = $("#PW2").parsley();
-    	var validateCPW = $("#CPW").parsley();
-    	var validateRPW = $("#RPW").parsley();
+    function editPw(currentPassword, changePassword, rePassword) {
+    	var validatePW2 = $("#"+currentPassword).parsley();
+    	var validateCPW = $("#"+changePassword).parsley();
+    	var validateRPW = $("#"+rePassword).parsley();
+    	var PW = document.getElementsByName(currentPassword)[0].value;
+		var CPW = document.getElementsByName(changePassword)[0].value;
+		var RPW = document.getElementsByName(rePassword)[0].value;
     	
     	if (validatePW2.isValid() == true && validateCPW.isValid() == true && validateRPW.isValid() == true) {
-	    	$.ajax({
-	    		type: 'POST',
-	    		url: '/profile/editPw',
-	    		dataType: 'json',
-	    		data: {
-	    			PW : document.getElementsByName("PW2")[0].value,
-	    			CPW : document.getElementsByName("CPW")[0].value,
-	    			RPW : document.getElementsByName("RPW")[0].value,
-	    		},
-	    		success: function(result) {
-	    			if (result.status == 'success') {
-	    				alert("{{__('profile_pw_success')}}\n"+"{{__('login_again')}}");
-	    				location = '/login'
-	    			}
-	    			else if (result.status == 'fail') {
-	    				alert("{{__('profile_pw_error')}}");
-	    				document.getElementsByName("PW2")[0].value = null;
-	    				document.getElementsByName("CPW")[0].value = null;
-	    				document.getElementsByName("RPW")[0].value = null;
-	    			}
-	    		}
-	    	});
+	    	editPwAjax(PW,CPW,RPW);
     	}
     	else {
     		alert("{{__('profile_form_error')}}");
     	}
     	event.preventDefault();
     }
-    
-	// 폼 enter키 submit 막기
-	document.addEventListener('keydown', function(event) {
-		if (event.keyCode === 13) {
-			event.preventDefault();
-		}
-	}, true);
 </script>
 {% endblock %}
 
 {% block script %}
 <script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
+<script src="../oasisjs/oasis_keyup.js"></script>
+<script src="../oasisjs/oasis_auth.js"></script>
 <script>
     window.Parsley.addValidator("notequalto", {
 		validateString: function(value, id) {

@@ -77,36 +77,36 @@
 		
 		
 		$.ajax({
-					type: 'POST',
-					url: '/car/ajax/car_list_edit2',
-					dataType: 'json',
-					data: {
-						CN : $('#car-edit-form [name="CN"]').val(),
-						CPN : $('#car-edit-form [name="CPN"]').val(),
-						CID : Object.CID,
-						car_id : $('#car-edit-form [name="car_id"]').val()
-					},
-					success: function(result) {
-						if(result.status == 'success') {
-							$('.tr-edit').remove();
-							pagereload(Object,  i18nconvert);
-							alert(i18nconvert("car_modify_success"));
-							
-						}
-						else if(result.status == 'length') {
-							alert(i18nconvert("car_length_error"));
-						}
-						else if(result.status == 'type') {
-							alert(i18nconvert("car_type_error"));
-						}
-						else if(result.status == 'exist') {
-						alert(i18nconvert("car_exist_error"));
-						}
-						else {
-							alert(i18nconvert("modify_failed"));
-						}
-					 }
-				});
+			type: 'POST',
+			url: '/car/ajax/car_list_edit2',
+			dataType: 'json',
+			data: {
+				CN : $('#car-edit-form [name="CN"]').val(),
+				CPN : $('#car-edit-form [name="CPN"]').val(),
+				CID : Object.CID,
+				car_id : $('#car-edit-form [name="car_id"]').val()
+			},
+			success: function(result) {
+				if(result.status == 'success') {
+					$('.tr-edit').remove();
+					pagereload(Object,  i18nconvert);
+					alert(i18nconvert("car_modify_success"));
+					
+				}
+				else if(result.status == 'length') {
+					alert(i18nconvert("car_length_error"));
+				}
+				else if(result.status == 'type') {
+					alert(i18nconvert("car_type_error"));
+				}
+				else if(result.status == 'exist') {
+					alert(i18nconvert("car_exist_error"));
+				}
+				else {
+					alert(i18nconvert("modify_failed"));
+				}
+			 }
+		});
 		
 	}
 	
@@ -188,27 +188,27 @@
 	function deviceEdit(Object,i18nconvert) {
 		
 		$.ajax({
-					type: 'POST',
-					url: '/device/ajax/device_list_edit2',
-					dataType: 'json',
-					data: {
-						VER : $('#device-edit-form [name="VER"]').val(),
-						NN : $('#device-edit-form [name="NN"]').val(),
-						CID : Object.CID,
-						device_id : $('#device-edit-form [name="device_id"]').val()
-					},
-					success: function(result) {
-						if(result.status == 'success') {
-							$('.tr-edit').remove();
-							pagereload(Object, i18nconvert);
-							alert(i18nconvert("device_modify_success"));
-							
-						}
-						else {
-							alert(i18nconvert("modify_failed"));
-						}
-					 }
-				});
+			type: 'POST',
+			url: '/device/ajax/device_list_edit2',
+			dataType: 'json',
+			data: {
+				VER : $('#device-edit-form [name="VER"]').val(),
+				NN : $('#device-edit-form [name="NN"]').val(),
+				CID : Object.CID,
+				device_id : $('#device-edit-form [name="device_id"]').val()
+			},
+			success: function(result) {
+				if(result.status == 'success') {
+					$('.tr-edit').remove();
+					pagereload(Object, i18nconvert);
+					alert(i18nconvert("device_modify_success"));
+					
+				}
+				else {
+					alert(i18nconvert("modify_failed"));
+				}
+			 }
+		});
 		
 	}
 	

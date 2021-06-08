@@ -11,6 +11,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
 	<link href="../assets/css/default/app.min.css" rel="stylesheet" />
 	<link href="../assets/plugins/flag-icon-css/css/flag-icon.min.css" rel="stylesheet" />
+	<link href="../oasiscss/oasis.css" rel="stylesheet" />
 	<!-- ================== END BASE CSS STYLE ================== -->
 	
 	{% block css %}
@@ -47,9 +48,9 @@
 				<div class="d-flex justify-content-center align-items-center font-weight-bold">
 					<p class="width-80 mb-0 height-20">공지사항 &nbsp;:&nbsp;</p>
 					<div class="notice overflow-hidden height-20">
-						<ul class="rolling position-relative mb-0" style="list-style: none;">
+						<ul class="rolling position-relative mb-0">
 							{% for notice in noticethree %}
-							<li class="height-20 mb-0" style="line-height:1.5;">
+							<li class="height-20 mb-0">
 								<a href="#" onclick="noticepop(this)" name="{{notice._id}}">{{notice.TI}}</a>
 							</li>
 							{% endfor %}
@@ -73,8 +74,8 @@
 						<a href="/setting" class="dropdown-item">{{__('layout_setting')}}</a>
 						<div class="dropdown-divider"></div>
 						<a href="/shop" class="dropdown-item">{{__('layout_payment_point_purchase')}}</a>
-						<a href="javascript:logout()" class="dropdown-item">{{__('layout_signout')}}</a>
-						<a href="javascript:withdrawal()" class="dropdown-item">{{__('layout_withdrawal')}}</a>
+						<a href="javascript:logout(i18nconvert)" class="dropdown-item">{{__('layout_signout')}}</a>
+						<a href="javascript:withdrawal(i18nconvert)" class="dropdown-item">{{__('layout_withdrawal')}}</a>
 					</div>
 				</li>
 				<li class="dropdown navbar-user">
@@ -257,281 +258,255 @@
 	</div>
 	<!-- end page container -->
 
-<script src="/socket.io/socket.io.js"></script>
-<script>
-	window.addEventListener('load', function() {
-		// 언어 변경시 국기 변환 기능
-		var cookie = document.cookie;
-		var startIndexOf = cookie.indexOf('lang');
-		var endIndexOf = cookie.indexOf(';',startIndexOf);
-		if(endIndexOf == -1)endIndexOf = cookie.length; //맨끝일경우;가 없으므로 맨마지막자리를 가져온다.
-		
-		const flag = document.getElementById('flag');
-		var lang = cookie.substring(startIndexOf+'lang='.length, endIndexOf);
-		console.log(lang);
-		if(lang == 'ko') {
-			flag.classList.add('flag-icon-kr');
-		}
-		else if(lang == 'en') {
-			flag.classList.add('flag-icon-us');
-		}
-		else {
-			flag.classList.add('flag-icon-kr');
-		}
-		
-		// 메뉴 active 기능
-		var path = document.location.pathname.toString();
-		var cut =  path.split('/');
-		if (cut[1] == 'car_edit') {
-			cut[1] = 'car_list';
-		}
-		if (cut[1] == 'device_edit') {
-			cut[1] = 'device_list';
-		}
-		if (cut[1] == 'history_chart') {
-			cut[1] = 'history_list';
-		}
-		if (cut[1] == 'pay_confirm') {
-			cut[1] = 'shop';
-		}
-		$('#active-menu').find('a[href="' + '/' + cut[1] + '"]').parents('li').addClass('active');
-		
-		// 공지사항 rolling 기능
-		var height =  $(".notice").height();
-		var num = $(".rolling li").length;
-		var max = height * num;
-		var move = 0;
-		function noticeRolling(){
-			move += height;
-			$(".rolling").animate({"top":-move},600,function(){
-				if( move >= max ){
-					$(this).css("top",0);
-					move = 0;
-				};
-			});
-		};
-		noticeRollingOff = setInterval(noticeRolling,2000);
-		$(".rolling").append($(".rolling li").first().clone());
+	<!--Begin Script-->
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+	    var searcherror = function () {
+	    	return alert("{{__('search_error')}}");
+	    }
+	    var choiceerror = function () {
+	    	return alert("{{__('choice_error')}}");
+	    }
+	    var i18nconvert = function (string) {
+	    	if(string == "CN" ) {
+	    		return "{{__('car_number')}}";
+	    	} 
+	    	else if(string == "CPN" ) {
+	    		return "{{__('car_customer_phone')}}";
+	    	}
+	    	else if(string == "MD" ) {
+	    		return "{{__('device_model')}}";
+	    	} 
+	    	else if(string == "VER" ) {
+	    		return "{{__('device_version')}}";
+	    	} 
+	    	else if(string == "MAC" ) {
+	    		return "{{__('device_mac')}}";
+	    	} 
+	    	else if(string == "NN" ) {
+	    		return "{{__('device_nick')}}";
+	    	} 
+	    	else if(string == "UN" ) {
+	    		return "{{__('device_use_number')}}";
+	    	}
+	    	else if(string == "WN" ) {
+	    		return "{{__('name')}}";
+	    	}
+	    	else if(string == "PN" ) {
+	    		return "{{__('mobile_number')}}";
+	    	}
+	    	else if(string == "EM" ) {
+	    		return "{{__('email')}}";
+	    	}
+	    	else if(string == "WNM" ) {
+	    		return "{{__('worker')}}";
+	    	}
+	    	else if(string == "DNM" ) {
+	    		return "{{__('device_model')}}";
+	    	}
+	    	else if(string == "CNM" ) {
+	    		return "{{__('car_number')}}";
+	    	}
+	    	else if(string == "MID" ) {
+	    		return "{{__('payment_ordernumber')}}";
+	    	}
+	    	else if(string == "payCA" ) {
+	    		return "{{__('payment_date')}}";
+	    	}
+	    	else if(string == "GN" ) {
+	    		return "{{__('payment_name')}}";
+	    	}
+	    	else if(string == "payNum" ) {
+	    		return "{{__('payment_number')}}";
+	    	}
+	    	else if(string == "AM" ) {
+	    		return "{{__('payment_amount')}}";
+	    	}
+	    	else if(string == "pointN" ) {
+	    		return "{{__('payment_name')}}";
+	    	}
+	    	else if(string == "PO" ) {
+	    		return "{{__('payment_point')}}";
+	    	}
+	    	else if(string == "pointCA" ) {
+	    		return "{{__('payment_Dateofuse')}}";
+	    	}
+	    	else if(string == "payWNM" ) {
+	    		return "{{__('payment_sender')}}";
+	    	}
+	    	else if(string == "TI" ) {
+	    		return "{{__('notice_contents')}}";
+	    	}
+	    	else if(string == "RE" ) {
+	    		return "{{__('payment_result')}}";
+	    	}
+	    	else if(string == "ET" ) {
+	    		return "{{__('history_date')}}";
+	    	}
+	    	else if(string == "CA" ) {
+	    		return "{{__('create_date')}}";
+	    	}
+	    	else if(string == "choiceerror" ) {
+	    		return "{{__('choice_error')}}";
+	    	} 
+	    	else if(string == "searcherror" ) {
+	    		return "{{__('search_error')}}";
+	    	}
+	    	else if(string == "deleteconfirm" ) {
+	    		return "{{__('delete_confirm')}}";
+	    	} 
+	    	else if(string == "deletesuccess" ) {
+	    		return "{{__('delete_success')}}";
+	    	} else if(string == "modify" ) {
+	    		return "{{__('modify')}}";
+	    	} 
+	    	else if(string == "delete" ) {
+	    		return "{{__('delete')}}";
+	    	} 
+	    	else if(string == "reset" ) {
+	    		return "{{__('reset')}}";
+	    	} 
+	    	else if(string == "car_length_error" ) {
+	    		return "{{__('car_length_error')}}";
+	    	}
+	    	else if(string == "car_type_error" ) {
+	    		return "{{__('car_type_error')}}";
+	    	}
+	    	else if(string == "car_exist_error" ) {
+	    		return "{{__('car_exist_error')}}";
+	    	}
+	    	else if(string == "modify_failed" ) {
+	    		return "{{__('modify_failed')}}";
+	    	}
+	    	else if(string == "car_modify_success" ) {
+	    		return "{{__('car_modify_success')}}";
+	    	}
+	    	else if(string == "modify_failed" ) {
+	    		return "{{__('modify_failed')}}";
+	    	}
+	    	else if(string == "device_modify_success" ) {
+	    		return "{{__('device_modify_success')}}";
+	    	}
+	    	else if(string == "device_edit_version_enter" ) {
+	    		return "{{__('device_edit_version_enter')}}";
+	    	}
+	    	else if(string == "device_edit_nick_enter" ) {
+	    		return "{{__('device_edit_nick_enter')}}";
+	    	}
+	    	else if(string == "search" ) {
+	    		return "{{__('search')}}";
+	    	}
+	    	else if(string == "approval" ) {
+	    		return "{{__('approval')}}";
+	    	}
+	    	else if(string == "owner_auth" ) {
+	    		return "{{__('owner_auth')}}";
+	    	}
+	    	else if(string == "main_indetail" ) {
+	    		return "{{__('main_indetail')}}";
+	    	}
+	    	else if(string == "payment_receit" ) {
+	    		return "{{__('payment_receit')}}";
+	    	}
+	    	else if(string == "purchase_failed" ) {
+	    		return "{{__('purchase_failed')}}";
+	    	}
+	    	else if(string == "PD" ) {
+	    		return "{{__('history_time')}}";
+	    	}
+	    	else if(string == "device_register_success" ) {
+	    		return "{{__('device_register_success')}}";
+	    	}
+	    	else if(string == "device_duplicated" ) {
+	    		return "{{__('device_duplicated')}}";
+	    	}
+	    	else if(string == "device_mac_wrong" ) {
+	    		return "{{__('device_mac_wrong')}}";
+	    	}
+	    	else if(string == "car_register_success" ) {
+	    		return "{{__('car_register_success')}}";
+	    	}
+	    	else if(string == "car_exceltype_error" ) {
+	    		return "{{__('car_exceltype_error')}}";
+	    	}
+	    	else if(string == "car_excellength_error" ) {
+	    		return "{{__('car_excellength_error')}}";
+	    	}
+	    	else if(string == "registration") {
+	    		return "{{__('registration')}}"
+	    	}
+	    	else if(string == "layout_withdrawal_confirm") {
+	    		return "{{__('layout_withdrawal_confirm')}}"
+	    	}
+	    	else if(string == "layout_signout_confirm") {
+	    		return "{{__('layout_signout_confirm')}}"
+	    	}
+	    	else if(string == "notice_contents") {
+	    		return "{{__('notice_contents')}}"
+	    	}
+	    	else if(string == "notice_date") {
+	    		return "{{__('notice_date')}}"
+	    	}
+	    	else if(string == "notice_register") {
+	    		return "{{__('notice_register')}}"
+	    	}
+	    	else if(string == "setting_point_success") {
+	    		return "{{__('setting_point_success')}}"
+	    	}
+	    	else if(string == "setting_point_fail") {
+	    		return "{{__('setting_point_fail')}}"
+	    	}
+	    	else if(string == "login_error") {
+	    		return "{{__('login_error')}}"
+	    	}
+	    	else if(string == "profile_success") {
+	    		return "{{__('profile_success')}}"
+	    	}
+	    	else if(string == "profile_ex_mn") {
+	    		return "{{__('profile_ex_mn')}}"
+	    	}
+	    	else if(string == "profile_ex_pn") {
+	    		return "{{__('profile_ex_pn')}}"
+	    	}
+	    	else if(string == "profile_pw_error") {
+	    		return "{{__('profile_pw_error')}}"
+	    	}
+	    	else if(string == "find_email_error") {
+	    		return "{{__('find_email_error')}}"
+	    	}
+	    	else if(string == "profile_pw_success") {
+	    		return "{{__('profile_pw_success')}}"
+	    	}
+	    	else if(string == "login_again") {
+	    		return "{{__('login_again')}}"
+	    	}
+	    	else if(string == "" ) {
+	    		return "{{__('')}}";
+	    	}
+	    	else if(string == "" ) {
+	    		return "{{__('')}}";
+	    	}
+	    	else if(string == "" ) {
+	    		return "{{__('')}}";
+	    	}
+	    	else if(string == "" ) {
+	    		return "{{__('')}}";
+	    	}
+	    	else {
+	    		return string;
+	    	}
+	    }
+	</script>
 	
-		$(".rolling_stop").click(function(){
-			clearInterval(noticeRollingOff);
-		});
-		$(".rolling_start").click(function(){
-			noticeRollingOff = setInterval(noticeRolling,1000);
-		});
-	});
-	
-	// 회원탈퇴 기능
-	function withdrawal() {
-		var answer;
-		//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
-		//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
-		answer = confirm("{{__('layout_withdrawal_confirm')}}");
-		//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
-		if(answer == true){
-			location = '/auth/withdrawal';
-		}
-		else {
-			location = '/main';
-		}
-	}
-	
-	// 로그아웃 기능
-	function logout() {
-		var answer;
-		//페이지를 이동하기 전에 confirm()을 사용해 다시 한번 확인한다.
-		//확인을 선택하면 answer에  true, 취소를 선택하면 false 값이 들어간다.
-		answer = confirm("{{__('layout_signout_confirm')}}");
-		//확인을 선택한 경우 자바스크립트를 호출할 때 같이 넘어온 url이라는 변수에 들어있는 주소로 페이지 이동
-		if(answer == true){
-			location = '/auth/logout';
-		}
-		else {
-			location = '/main';
-		}
-	}
-	// 공지사항
-	function noticepop(obj) {
-       var noticeid = $(obj).attr('name');
-        if (noticeid)
-        window.open("/noticepop?noticeid="+noticeid,"pop","width=620, height=700, scrollbars=yes, resizable=yes"); 
-        else{
-            alert("{{__('purchase_failed')}}");
-        }   
-    }
-    
-    var searcherror = function () {
-    	return alert("{{__('search_error')}}");
-    }
-    var choiceerror = function () {
-    	return alert("{{__('choice_error')}}");
-    }
-    var i18nconvert = function (string) {
-    	if(string == "CN" ) {
-    		return "{{__('car_number')}}";
-    	} 
-    	else if(string == "CPN" ) {
-    		return "{{__('car_customer_phone')}}";
-    	} 
-    	else if(string == "MD" ) {
-    		return "{{__('device_model')}}";
-    	} 
-    	else if(string == "VER" ) {
-    		return "{{__('device_version')}}";
-    	} 
-    	else if(string == "MAC" ) {
-    		return "{{__('device_mac')}}";
-    	} 
-    	else if(string == "NN" ) {
-    		return "{{__('device_nick')}}";
-    	} 
-    	else if(string == "UN" ) {
-    		return "{{__('device_use_number')}}";
-    	}
-    	else if(string == "WN" ) {
-    		return "{{__('name')}}";
-    	}
-    	else if(string == "PN" ) {
-    		return "{{__('mobile_number')}}";
-    	}
-    	else if(string == "EM" ) {
-    		return "{{__('email')}}";
-    	}
-    	else if(string == "WNM" ) {
-    		return "{{__('worker')}}";
-    	}
-    	else if(string == "DNM" ) {
-    		return "{{__('device_model')}}";
-    	}
-    	else if(string == "CNM" ) {
-    		return "{{__('car_number')}}";
-    	}
-    	else if(string == "MID" ) {
-    		return "{{__('payment_ordernumber')}}";
-    	}
-    	else if(string == "payCA" ) {
-    		return "{{__('payment_date')}}";
-    	}
-    	else if(string == "GN" ) {
-    		return "{{__('payment_name')}}";
-    	}
-    	else if(string == "payNum" ) {
-    		return "{{__('payment_number')}}";
-    	}
-    	else if(string == "AM" ) {
-    		return "{{__('payment_amount')}}";
-    	}
-    	else if(string == "pointN" ) {
-    		return "{{__('payment_name')}}";
-    	}
-    	else if(string == "PO" ) {
-    		return "{{__('payment_point')}}";
-    	}
-    	else if(string == "pointCA" ) {
-    		return "{{__('payment_Dateofuse')}}";
-    	}
-    	else if(string == "payWNM" ) {
-    		return "{{__('payment_sender')}}";
-    	}
-    	else if(string == "RE" ) {
-    		return "{{__('payment_result')}}";
-    	}
-    	else if(string == "ET" ) {
-    		return "{{__('history_date')}}";
-    	}
-    	else if(string == "CA" ) {
-    		return "{{__('create_date')}}";
-    	}
-    	else if(string == "choiceerror" ) {
-    		return "{{__('choice_error')}}";
-    	} 
-    	else if(string == "searcherror" ) {
-    		return "{{__('search_error')}}";
-    	}
-    	else if(string == "deleteconfirm" ) {
-    		return "{{__('delete_confirm')}}";
-    	} 
-    	else if(string == "deletesuccess" ) {
-    		return "{{__('delete_success')}}";
-    	} else if(string == "modify" ) {
-    		return "{{__('modify')}}";
-    	} 
-    	else if(string == "delete" ) {
-    		return "{{__('delete')}}";
-    	} 
-    	else if(string == "reset" ) {
-    		return "{{__('reset')}}";
-    	} 
-    	else if(string == "car_length_error" ) {
-    		return "{{__('car_length_error')}}";
-    	}
-    	else if(string == "car_type_error" ) {
-    		return "{{__('car_type_error')}}";
-    	}
-    	else if(string == "car_exist_error" ) {
-    		return "{{__('car_exist_error')}}";
-    	}
-    	else if(string == "modify_failed" ) {
-    		return "{{__('modify_failed')}}";
-    	}
-    	else if(string == "car_modify_success" ) {
-    		return "{{__('car_modify_success')}}";
-    	}
-    	else if(string == "modify_failed" ) {
-    		return "{{__('modify_failed')}}";
-    	}
-    	else if(string == "device_modify_success" ) {
-    		return "{{__('device_modify_success')}}";
-    	}
-    	else if(string == "device_edit_version_enter" ) {
-    		return "{{__('device_edit_version_enter')}}";
-    	}
-    	else if(string == "device_edit_nick_enter" ) {
-    		return "{{__('device_edit_nick_enter')}}";
-    	}
-    	else if(string == "search" ) {
-    		return "{{__('search')}}";
-    	}
-    	else if(string == "approval" ) {
-    		return "{{__('approval')}}";
-    	}
-    	else if(string == "owner_auth" ) {
-    		return "{{__('owner_auth')}}";
-    	}
-    	else if(string == "main_indetail" ) {
-    		return "{{__('main_indetail')}}";
-    	}
-    	else if(string == "payment_receit" ) {
-    		return "{{__('payment_receit')}}";
-    	}
-    	else if(string == "purchase_failed" ) {
-    		return "{{__('purchase_failed')}}";
-    	}
-    	else if(string == "PD" ) {
-    		return "{{__('history_time')}}";
-    	}
-    	else if(string == "" ) {
-    		return "{{__('')}}";
-    	}else if(string == "" ) {
-    		return "{{__('')}}";
-    	}
-    	else if(string == "" ) {
-    		return "{{__('')}}";
-    	}
-    	else if(string == "" ) {
-    		return "{{__('')}}";
-    	}
-    	
-    	else {
-    		return string;
-    	}
-    }
-</script>
-
-<!-- ================== BEGIN BASE JS ================== -->
-<script src="../assets/js/app.min.js"></script>
-<script src="../assets/js/theme/default.min.js"></script>
-<!-- ================== END BASE JS ================== -->
+	<!-- ================== BEGIN BASE JS ================== -->
+	<script src="../assets/js/app.min.js"></script>
+	<script src="../assets/js/theme/default.min.js"></script>
+	<!-- ================== END BASE JS ================== -->
+	<script src="../oasisjs/oasis_notice.js"></script>
+	<script src="../oasisjs/oasis_active_menu.js"></script>
+	<script src="../oasisjs/oasis_flag.js"></script>
+	<script src="../oasisjs/oasis_auth.js"></script>
+	<!--End Script-->
 {% block script %}
 {% endblock %}
 	

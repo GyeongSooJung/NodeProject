@@ -75,6 +75,8 @@
 	</div>
 	<!-- end row -->
 </div>
+
+<!--Begin Script-->
 <script>
 	// 폼 enter키 submit 막기
 	document.addEventListener('keydown', function(event) {
@@ -84,37 +86,38 @@
 	}, true);
 	
 	// 차량 수정 ajax
-	function carEdit() {
-		var formParsley  = $('#car-edit-form').parsley();
-		if(formParsley.isValid() == true) {
-			$.ajax({
-				type: 'POST',
-				url: '/car/car_edit/upreg/{{carone.CN}}',
-				dataType: 'json',
-				data: {
-					CN: document.getElementsByName('CN')[0].value,
-					CPN: document.getElementsByName('CPN')[0].value
-				},
-				success: function(result) {
-					if(result.status == 'success') {
-						alert("{{__('car_modify_success')}}");
-						location = '/car_list';
-					}
-					else if(result.status == 'exist') {
-						alert("{{__('car_exist_error')}}");
-					}
-					else if(result.status == 'type') {
-						alert("{{__('car_type_error')}}");
-					}
-					else if(result.status == 'length') {
-						alert("{{__('car_length_error')}}");
-					}
-				}
-			});
-		}
-		event.preventDefault();
-	}
+	// function carEdit() {
+	// 	var formParsley  = $('#car-edit-form').parsley();
+	// 	if(formParsley.isValid() == true) {
+	// 		$.ajax({
+	// 			type: 'POST',
+	// 			url: '/car/car_edit/upreg/{{carone.CN}}',
+	// 			dataType: 'json',
+	// 			data: {
+	// 				CN: document.getElementsByName('CN')[0].value,
+	// 				CPN: document.getElementsByName('CPN')[0].value
+	// 			},
+	// 			success: function(result) {
+	// 				if(result.status == 'success') {
+	// 					alert("{{__('car_modify_success')}}");
+	// 					location = '/car_list';
+	// 				}
+	// 				else if(result.status == 'exist') {
+	// 					alert("{{__('car_exist_error')}}");
+	// 				}
+	// 				else if(result.status == 'type') {
+	// 					alert("{{__('car_type_error')}}");
+	// 				}
+	// 				else if(result.status == 'length') {
+	// 					alert("{{__('car_length_error')}}");
+	// 				}
+	// 			}
+	// 		});
+	// 	}
+	// 	event.preventDefault();
+	// }
 </script>
+<!--End Script-->
 {% endblock %}
 
 {% block script %}

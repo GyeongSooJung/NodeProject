@@ -16,120 +16,83 @@
 {% block content %}
 <!-- begin #content -->
 <div id="content" class="content">
-   <!-- begin page-header -->
-   <h1 class="page-header">{{__('notice_list')}}</h1>
-   <!-- end page-header -->
-   <!-- begin row -->
-   <div class="row">
+    <!-- begin page-header -->
+    <h1 class="page-header">{{__('notice_list')}}</h1>
+    <!-- end page-header -->
+    <!-- begin row -->
+    <div class="row">
         <div class="col-xl-10 ui-sortable">
-					 <!--begin panel -->
-					<div class="panel panel-inverse m-b-0">
-						<div class="panel-heading ui-sortable-handle">
-							<h4 class="panel-title">Summernote</h4>
-							<div class="panel-heading-btn">
-								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-redo"></i></a>
-								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-							</div>
-						</div>
-						<div class="panel-body p-0">
-							<div class="d-flex m-20" >
-            	  			<p style="width:70px;">제목 </p><input id ="titletext" type="text" class="form-control" placeholder ="" />
-            	  			</div>
-						</div>
-						<div class="panel-body p-0">
-							<form method="post">
-                              <textarea id="summernote" name="editordata"></textarea>
-                            </form>
-						</div>
-					</div>
-					
-					<center>
-  							<a href="javascript:;" onclick="noticewrite()" class="mt-40 btn btn-sm btn-white width-100" >글 쓰기</a>
-  					</center>
-					<!-- end panel -->
+			 <!--begin panel -->
+			<div class="panel panel-inverse m-b-0">
+				<div class="panel-heading ui-sortable-handle">
+					<h4 class="panel-title">{{__('notice_list_write')}}</h4>
+				</div>
+				<div class="panel-body p-0">
+					<div class="d-flex justify-content-around align-items-center m-20" >
+    	  			<p class="p-title">{{__('notice_title')}} </p><input id ="titletext" type="text" class="form-control" placeholder ="" />
+    	  			</div>
+				</div>
+				<div class="panel-body p-0">
+					<form method="post">
+                      <textarea id="summernote" name="editordata"></textarea>
+                    </form>
+				</div>
+			</div>
+			
+			<div class="d-flex justify-content-center align-items-center">
+  					<a href="javascript:;" onclick="noticewrite('titletext','note-editable')" class="mt-40 btn btn-sm btn-white width-100" >{{__('registration')}}</a>
+  			</div>
+			<!-- end panel -->
 		</div>
-   </div>
-   <!-- end row -->
+    </div>
+    <!-- end row -->
 </div>
 <!-- end #content -->
 
 <!-- Script -->
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-<script
-    src="https://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function() {
+    	//여기 아래 부분
+    	$('.summernote').summernote({
+		    toolbar: [
+			    // [groupName, [list of button]]
+			    ['fontname', ['fontname']],
+			    ['fontsize', ['fontsize']],
+			    ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
+			    ['color', ['forecolor','color']],
+			    ['table', ['table']],
+			    ['para', ['ul', 'ol', 'paragraph']],
+			    ['height', ['height']],
+			    ['insert',['picture','link','video']],
+			    ['view', ['fullscreen', 'help']]
+			  ],
+			fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
+			fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
+    	  });
     
-    <script>
-        $(document).ready(function() {
-        	//여기 아래 부분
-        	$('.summernote').summernote({
-        		  toolbar: [
-        			    // [groupName, [list of button]]
-        			    ['fontname', ['fontname']],
-        			    ['fontsize', ['fontsize']],
-        			    ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
-        			    ['color', ['forecolor','color']],
-        			    ['table', ['table']],
-        			    ['para', ['ul', 'ol', 'paragraph']],
-        			    ['height', ['height']],
-        			    ['insert',['picture','link','video']],
-        			    ['view', ['fullscreen', 'help']]
-        			  ],
-        			fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
-        			fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
-        	  });
-        
-            // 서머노트에 text 쓰기
-            $('#summernote').summernote('insertText', "text");
-            
-            
-            // 서머노트 쓰기 비활성화
-            $('#summernote').summernote('disable');
-            
-            // 서머노트 쓰기 활성화
-            $('#summernote').summernote('enable');
-            
-            
-            // 서머노트 리셋
-            $('#summernote').summernote('reset');
-            
-            
-            // 마지막으로 한 행동 취소 ( 뒤로가기 )
-            $('#summernote').summernote('undo');
-            // 앞으로가기
-            $('#summernote').summernote('redo');
-        
-        });
-        
-        function noticewrite() {
-            
-            var title = $('#titletext').val();
-            var text = $('.note-editable').html();
-            
-             $.ajax({
-	    		url: "/ajax/notice_write",
-	                    type: "POST",
-	                    async: false,
-	                    dataType: 'json',
-	                    data: {
-	                       title : title,
-	                       text : text
-	                    }
-	        }).done(function (data) { 
-	            console.log(data)
-	            if(data.result == true) {
-	                alert("공지사항 등록 성공했습니다.");
-					location = '/notice_list';
-	            }
-	            
-	        })
-        }
+        // 서머노트에 text 쓰기
+        $('#summernote').summernote('insertText', "text");
         
         
-    </script>
+        // 서머노트 쓰기 비활성화
+        $('#summernote').summernote('disable');
+        
+        // 서머노트 쓰기 활성화
+        $('#summernote').summernote('enable');
+        
+        
+        // 서머노트 리셋
+        $('#summernote').summernote('reset');
+        
+        
+        // 마지막으로 한 행동 취소 ( 뒤로가기 )
+        $('#summernote').summernote('undo');
+        // 앞으로가기
+        $('#summernote').summernote('redo');
+    
+    });
+</script>
     
     
     
@@ -140,6 +103,7 @@
 
 <script src="../assets/js/summernote/summernote-lite.js"></script>
 <script src="../assets/js/summernote/lang/summernote-ko-KR.js"></script>
+<script src="../oasisjs/oasis_notice.js"></script>
 
 <script src="../assets/plugins/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
 <script src="../assets/plugins/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
