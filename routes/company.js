@@ -30,20 +30,25 @@ router.post('/register', async (req, res, next) => {
             PW : hashPW,
             EA
           });
-          return res.redirect('/');
+          // return res.redirect('/');
+          return res.send({ status: 'success' });
       }
       else {
-        return res.redirect('/register?diffCEA=true');
+        // return res.redirect('/register?diffCEA=true');
+        return res.send({ status: 'cerFail' });
       }
     }
     else if(companyEA) {
-      return res.redirect('/register?existEA=true');
+      // return res.redirect('/register?existEA=true');
+      return res.send({ status: 'existEA' });
     }
     else if(companyCNU) {
-      return res.redirect('/register?existCNU=true');
+      // return res.redirect('/register?existCNU=true');
+      return res.send({ status: 'existCNU' });
     }
     else {
-      return res.redirect('/register?fail=true');
+      // return res.redirect('/register?fail=true');
+      return res.send({ status: 'fail' });
     }
   } catch(err) {
     console.error(err);

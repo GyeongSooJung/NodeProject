@@ -142,14 +142,6 @@
 				option : $('#selectpage option:selected').val()
 			})
 		});
-		$('#searchtext').keyup(function(key) {
-				if(key.keyCode == 13) {
-					searchtext(pagingObject,i18nconvert)
-				}
-				if(pagingObject.searchtext == "") {
-					pagereload(pagingObject,i18nconvert);
-				}
-		});
 		
 	})
 

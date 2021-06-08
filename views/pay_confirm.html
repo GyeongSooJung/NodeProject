@@ -2,11 +2,11 @@
 
 {% block content %}
 <div id="content" class="content">
-   <!-- begin page-header -->
-   <h1 class="page-header">{{__('payment_complete')}}</h1>
-   <!-- end page-header -->
-   <!-- begin row -->
-   <div class="row">
+    <!-- begin page-header -->
+    <h1 class="page-header">{{__('payment_complete')}}</h1>
+    <!-- end page-header -->
+    <!-- begin row -->
+    <div class="row">
       <!-- begin col-6 -->
       <div class="col-xl-12">
          <!-- begin panel -->
@@ -94,22 +94,11 @@
    <!-- end row -->
 </div>
 
-<script>
-    //영수증 출력 화면
-    function receiptPay(obj) {
-        var imp_code = $(obj).attr('name');
-        if (imp_code)
-            window.open("/receipt?imp_uid="+imp_code,"pop","width=620, height=700, scrollbars=yes, resizable=yes"); 
-        else{
-            alert("{{__('purchase_failed')}}");
-        }   
-    }
-</script>
-
 {% endblock %}
 
 {% block script %}
 <script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
 <script src="../assets/plugins/highlight.js/highlight.min.js"></script>
 <script src="../assets/js/demo/render.highlight.js"></script>
+<script src="../oasisjs/oasis_popup.js"></script>
 {% endblock %}

@@ -27,7 +27,7 @@ router.post('/ajax/delete_one', isNotLoggedIn, async (req, res, next) => {
                 "MAC" : deviceone.MAC
             });
             await Device.remove({ "CID" : CID, "MAC" : select });
-            return res.json({ result: true });
+            return res.send({ result: true });
         }
         else if(division == "car") {
             const carone = await Car.findOne({ "CID" : CID, "CN" : select });
@@ -37,7 +37,7 @@ router.post('/ajax/delete_one', isNotLoggedIn, async (req, res, next) => {
                 "CPN" : carone.CPN,
             });
             await Car.remove({ "CID" : CID, "CN" : select });
-            return res.json({ result: true });
+            return res.send({ result: true });
         }
         else if(division == "worker") {
             const workerone = await Worker.findOne({ "CID" : CID, "EM" : select });
@@ -52,14 +52,14 @@ router.post('/ajax/delete_one', isNotLoggedIn, async (req, res, next) => {
                 "AC" :workerone.AC
             });
             await Worker.remove({ "CID" : CID, "EM" : select });
-            return res.json({ result: true });
+            return res.send({ result: true });
         }
         else if(division == "history") {
             await History.remove({ "CID" : CID, "_id" : select });
-            return res.json({ result: true });
+            return res.send({ result: true });
         }
     } catch (err) {
-        res.json({ result : false });
+        res.send({ result : false });
         console.error(err);
         next(err);
     }
@@ -74,7 +74,7 @@ router.post('/ajax/delete_check', isNotLoggedIn, async (req, res, next) => {
     const listCNU = listCompany.CNU;
     
     if(!select) {
-        res.json({ result : false });
+        res.send({ result : false });
     }
     else {
         if(division == 'device') {
@@ -102,7 +102,7 @@ router.post('/ajax/delete_check', isNotLoggedIn, async (req, res, next) => {
                     await Device.remove({ "CID" : CID, "MAC" : select[i] });
                 }
             }
-            return res.json({ result : true });
+            return res.send({ result : true });
         }
         else if(division == 'car') {
             if (typeof(select) == 'string') {
@@ -128,7 +128,7 @@ router.post('/ajax/delete_check', isNotLoggedIn, async (req, res, next) => {
             await Company.where({"CNU" : listCNU})
                 .update({ "CUA" : CUA }).setOptions({runValidators : true})
                 .exec();
-            return res.json({ result : true });
+            return res.send({ result : true });
         }
         else if(division == 'worker') {
             if(typeof(select) == 'string') {
@@ -161,7 +161,7 @@ router.post('/ajax/delete_check', isNotLoggedIn, async (req, res, next) => {
                     await Worker.remove({ "CID" : CID,  "EM" : select[i] });                
                 }
             }
-            return res.json({ result : true });
+            return res.send({ result : true });
         }
         else if(division == 'history') {
             if(typeof(select) == 'string') {
@@ -172,7 +172,7 @@ router.post('/ajax/delete_check', isNotLoggedIn, async (req, res, next) => {
                     await History.remove({ "CID" : CID,  "_id" : select[i] });
                 }
             }
-            return res.json({ result : true });
+            return res.send({ result : true });
         }
     }
 });

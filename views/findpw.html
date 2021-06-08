@@ -43,13 +43,13 @@
 				<div class="login-body">
 					<!-- begin login-content -->
 					<div class="login-content">
-					    <form action="/find/findpw" method="post" class="margin-bottom-0" data-parsley-validate="true">
+					    <form action="" method="post" class="margin-bottom-0" data-parsley-validate="true" onsubmit="tempPw('CNU','EA')">
     					    <!--사업자등록번호-->
     						<label class="control-label">{{__('business_number')}}</label>
     						<div class="form-group m-b-20" >
     							<div class="d-flex justify-content-between align-items-center mb-2">
     								<input id="CNU" name="CNU" type="text" class="form-control form-control-lg inverse-mode w-70 mr-2" placeholder="{{__('business_number')}}" data-parsley-error-message="{{__('required_detail')}}" data-parsley-errors-container="#err-msg1" required/>
-    							    <input type="button" class="btn btn-primary btn-block btn-lg w-25" value="{{__('confirm')}}" onclick="checkCNU();">
+    							    <input type="button" class="btn btn-primary btn-block btn-lg w-25" value="{{__('confirm')}}" onclick="checkCNU('CNU');">
     						    </div>
     						    <div id="err-msg1"></div>
     						</div>
@@ -62,8 +62,8 @@
         					        <input id="CEA" name="CEA" type="text" class="form-control form-control-lg inverse-model mt-3 d-none" placeholder="{{__('authnum')}}" data-parsley-error-message="{{__('required_detail')}}" data-parsley-errors-container="#err-msg2" required >
         						    <div class="d-flex justify-content-between align-items-center mt-2">
         					    		<div id="err-msg2" class="text-realred"></div>
-        						    	<input type="button" id="sendBtn" class="btn btn-primary btn-block btn-lg ml-auto custombtn" value="{{__('send')}}" onclick="emailSend()">
-        						    	<input type="button" id="cerBtn" class="btn btn-primary btn-block btn-lg mt-0 ml-auto custombtn d-none" value="{{__('confirm')}}" onclick="emailCer()">
+        						    	<input type="button" id="sendBtn" class="btn btn-primary btn-block btn-lg ml-auto custombtn" value="{{__('send')}}" onclick="emailSend('CNU','EA')">
+        						    	<input type="button" id="cerBtn" class="btn btn-primary btn-block btn-lg mt-0 ml-auto custombtn d-none" value="{{__('confirm')}}" onclick="emailCer('CNU','EA','CEA')">
         						    	<input type="hidden" id="hideCK" name="hideCK" value="">
         						    </div>
         						</div>
@@ -93,147 +93,103 @@
 	</div>
 	<!-- end page container -->
 	
+	<!--Begin Script-->
 	<script>
-	// 사업자 번호 확인 기능
-	function checkCNU() {
-	    var CNU = document.getElementsByName('CNU')[0].value;
-	    var validateCNU = $('#CNU').parsley();
-	    
-	    if(validateCNU.isValid() == true) {
-            $.ajax({
-                type: 'POST',
-                url: '/find/checkCNU',
-                dataType: 'json',
-                data: {
-                    CNU: CNU
-                },
-                success: function(result) {
-                    // if (result.status == 'null') {
-                    //     alert('사업자번호를 입력해주세요.');
-                    // }
-                    if (result.status == 'fail') {
-                        alert("{{__('find_no_register')}}");
-                    }
-                    else if (result.status == 'success') {
-                        document.getElementById('emailbox').classList.remove('d-none');
-                        document.getElementsByName('CNU')[0].readOnly = true;
-                        document.getElementById('exEmail').innerHTML = "Your Email : " + "<span class='h5'>" + result.mask + "</span>";
-                    }
-                }
-            });
-	    }
-        else {
-            return alert("{{__('find_enter')}}");
-        }
-	}
-	
-	// 타이머 기능
-	var timer;
-	var sec = '';
-	
-	function stopWatch(TimeSet) {
-		timer = setInterval(function(){
-			sec = (TimeSet)%60;
-			document.getElementById('err-msg2').innerHTML ="{{__('register_auth_time')}}"+ parseInt(TimeSet/60) + "{{__('register_auth_minute')}}" + sec + "{{__('register_auth_second')}}" + "<br><a href='javascript:emailSend();' id='resend' class='text-white'><u>{{__('register_auth_resend')}}</u></a>";
-			TimeSet--;
+		// 사업자 번호 확인 기능
+		function checkCNU(companyNumber) {
+		    var CNU = document.getElementsByName(companyNumber)[0].value;
+		    var validateCNU = $('#'+companyNumber).parsley();
+		    
+		    if(validateCNU.isValid() == true) {
+		    	checkAjax(CNU);
+		    }
+		    else {
+		        return alert("{{__('find_enter')}}");
+		    }
+		}
+		
+		// 이메일 전송 기능
+		function emailSend(companyNumber, email) {
+		    var CNU = document.getElementsByName(companyNumber)[0].value;
+			var EA = document.getElementsByName(email)[0].value;
+			var validateEA = $('#'+email).parsley();
 			
-			if(TimeSet < 0){
-				clearTimeout(timer);
-				alert("{{__('register_auth_timeout')}}");
-				document.getElementsByName('EA')[0].value = null;
-				document.getElementsByName('CEA')[0].value = null;
-				document.getElementsByName('EA')[0].readOnly = false;
-				document.getElementsByName('CEA')[0].readOnly = false;
-				document.getElementsByName('hideCK')[0].value = null;
-				document.getElementById('CEA').classList.add('d-none');
-				document.getElementById('cerBtn').classList.add('d-none');
-				document.getElementById('sendBtn').classList.remove('d-none');
-				document.getElementById('err-msg2').innerHTML = "{{__('register_reauth_msg')}}";
+			if(validateEA.isValid() == true) {
+				emailSendAjax(CNU,EA);
 			}
-	    }, 1000);
-	}
-	
-	// 이메일 전송 기능
-	function emailSend() {
-	    var CNU = document.getElementsByName('CNU')[0].value;
-		var EA = document.getElementsByName('EA')[0].value;
-		var validateEA = $('#EA').parsley();
+			else {
+			    return alert("{{__('register_email_valid_msg')}}");
+			}
+		}
 		
-		if(validateEA.isValid() == true) {
-    		$.ajax({
-    			type: 'POST',
-    			url: '/find/send',
-    			dataType: 'json',
-    			data: {
-    			    CNU: CNU,
-    				EA: EA
-    			},
-    			success: function(result) {
-    				if (result.status == 'wrong') {
-    					alert("{{__('find_email_error')}}");
-    				}
-    				else if (result.status == 'send') {
-    					alert("{{__('register_auth_com_msg')}}");
-    					document.getElementsByName('EA')[0].readOnly = true;
-    					document.getElementById('CEA').classList.remove('d-none');
-    					document.getElementById('cerBtn').classList.remove('d-none');
-    					document.getElementById('sendBtn').classList.add('d-none');
-    					
-    				clearTimeout(timer);
-    				stopWatch(300);
-    				}
-    			}
-    		});
+		// 이메일 인증 기능
+		function emailCer(companyNumber, email, cerNum) {
+		    var CNU = document.getElementsByName(companyNumber)[0].value;
+		    var EA = document.getElementsByName(email)[0].value;
+			var CEA = document.getElementsByName(cerNum)[0].value;
+			var validateCEA = $('#'+cerNum).parsley();
+			
+			if(validateCEA.isValid() == true) {
+				emailCerAjax(CNU,EA,CEA);
+			}
+			else {
+				alert("{{__('register_auth_enter')}}");
+			}
 		}
-		else {
-		    return alert("{{__('register_email_valid_msg')}}");
-		}
-	}
-	
-	// 이메일 인증 기능
-	function emailCer() {
-	    var CNU = document.getElementsByName('CNU')[0].value;
-	    var EA = document.getElementsByName('EA')[0].value;
-		var CEA = document.getElementsByName('CEA')[0].value;
-		var validateCEA = $('#CEA').parsley();
 		
-		if(validateCEA.isValid() == true) {
-			$.ajax({
-				type: 'POST',
-				url: '/find/cert',
-				dataType: 'json',
-				data: {
-				    CNU: CNU,
-				    EA: EA,
-					CEA: CEA
-				},
-				success: function(result) {
-					if (result.status == 'success') {
-						alert("{{__('register_auth_success')}}");
-						clearTimeout(timer);
-						document.getElementsByName('CEA')[0].readOnly = true;
-						document.getElementById('err-msg2').innerHTML = "{{__('register_auth_success')}}";
-						document.getElementsByName('hideCK')[0].value = 'true';
-						document.getElementById('findBtn').classList.remove('d-none');
-					}
-					else if (result.status == 'fail') {
-						alert("{{__('register_auth_fail')}}");
-						document.getElementsByName('CEA')[0].value = null;
-						document.getElementsByName('hideCK')[0].value = null;
-					}
-				}
-			});
+		// i18n 외부 js 사용 정리
+		var i18nconvert = function (string) {
+	    	if(string == "find_no_register" ) {
+	    		return "{{__('find_no_register')}}";
+	    	}
+	    	else if(string == "register_auth_time" ) {
+	    		return "{{__('register_auth_time')}}";
+	    	}
+	    	else if(string == "register_auth_minute" ) {
+	    		return "{{__('register_auth_minute')}}";
+	    	}
+	    	else if(string == "register_auth_second" ) {
+	    		return "{{__('register_auth_second')}}";
+	    	}
+	    	else if(string == "register_auth_resend" ) {
+	    		return "{{__('register_auth_resend')}}";
+	    	}
+	    	else if(string == "register_auth_timeout" ) {
+	    		return "{{__('register_auth_timeout')}}";
+	    	}
+	    	else if(string == "register_reauth_msg" ) {
+	    		return "{{__('register_reauth_msg')}}";
+	    	}
+	    	else if(string == "find_email_error" ) {
+	    		return "{{__('find_email_error')}}";
+	    	}
+	    	else if(string == "register_auth_com_msg" ) {
+	    		return "{{__('register_auth_com_msg')}}";
+	    	}
+	    	else if(string == "register_auth_success" ) {
+	    		return "{{__('register_auth_success')}}";
+	    	}
+	    	else if(string == "register_auth_fail" ) {
+	    		return "{{__('register_auth_fail')}}";
+	    	}
+	    	else if(string == "login_findpw" ) {
+	    		return "{{__('login_findpw')}}";
+	    	}
+	    	else if(string == "login_again" ) {
+	    		return "{{__('login_again')}}";
+	    	}
+	    	else if(string == "login_findpw2" ) {
+	    		return "{{__('login_findpw2')}}";
+	    	}
 		}
-		else {
-			alert("{{__('register_auth_enter')}}");
-		}
-	}
 	</script>
+	<!--End Script-->
 	
 	<!-- ================== BEGIN BASE JS ================== -->
 	<script src="../assets/js/app.min.js"></script>
 	<script src="../assets/js/theme/default.min.js"></script>
 	<script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
 	<!-- ================== END BASE JS ================== -->
+	<script src="../oasisjs/oasis_find.js"></script>
 </body>
 </html>

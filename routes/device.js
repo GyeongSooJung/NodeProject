@@ -111,9 +111,9 @@ router.post('/ajax/device_deleteone', async (req, res, next) => {
                     "MAC" : deviceone.MAC
     });
     await Device.remove({ "MAC" : select.split(' ') });
-    res.json({ result : true });
+    res.send({ result : true });
   } catch (err) {
-    res.json({ result : false });
+    res.send({ result : false });
     console.error(err);
     next(err);
     
@@ -130,7 +130,7 @@ router.post('/ajax/device_delete', isNotLoggedIn, async (req, res, next) => {
   
     
         if(!select) {
-          res.json({ result : false });
+          res.send({ result : false });
         }
         else {
           
@@ -159,7 +159,7 @@ router.post('/ajax/device_delete', isNotLoggedIn, async (req, res, next) => {
               await Device.remove({ "MAC" : select[i] });
             }
           }
-        res.json({ result : true });
+        res.send({ result : true });
         }
   
   try {

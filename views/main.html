@@ -16,173 +16,172 @@
 
 {% block content %}
 <!-- begin #content -->
-		<!-- begin #content -->
-		<div id="content" class="content">
-			<!-- begin page-header -->
-			<h1 class="page-header">{{__('main_dashboard')}}</h1>
-			<!-- end page-header -->
-			
-			<!-- begin row -->
-			<div class="row">
-				<!-- begin col-3 -->
-				<div class="col-xl-3 col-md-6">
-					<div class="widget widget-stats bg-blue">
-						<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-microchip"></i></div>
-						<div class="stats-info">
-							<h4>{{__('device')}}</h4>
-							<p id="p1">{{devices.length}}</p>	
-						</div>
-						<div class="stats-link">
-							<a href="/device_list">{{__('main_indetail')}} <i class="fa fa-arrow-alt-circle-right"></i></a>
-						</div>
-					</div>
+<div id="content" class="content">
+	<!-- begin page-header -->
+	<h1 class="page-header">{{__('main_dashboard')}}</h1>
+	<!-- end page-header -->
+	
+	<!-- begin row -->
+	<div class="row">
+		<!-- begin col-3 -->
+		<div class="col-xl-3 col-md-6">
+			<div class="widget widget-stats bg-blue">
+				<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-microchip"></i></div>
+				<div class="stats-info">
+					<h4>{{__('device')}}</h4>
+					<p id="p1">{{devices.length}}</p>	
 				</div>
-				<!-- end col-3 -->
-				<!-- begin col-3 -->
-				<div class="col-xl-3 col-md-6">
-					<div class="widget widget-stats bg-info">
-						<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-car"></i></div>
-						<div class="stats-info">
-							<h4>{{__('car')}}</h4>
-							<p id="p2">{{cars.length}}</p>	
-						</div>
-						<div class="stats-link">
-							<a href="/car_list">{{__('main_indetail')}} <i class="fa fa-arrow-alt-circle-right"></i></a>
-						</div>
-					</div>
+				<div class="stats-link">
+					<a href="/device_list">{{__('main_indetail')}} <i class="fa fa-arrow-alt-circle-right"></i></a>
 				</div>
-				<!-- end col-3 -->
-				<!-- begin col-3 -->
-				<div class="col-xl-3 col-md-6">
-					<div class="widget widget-stats bg-orange">
-						<div class="stats-icon"><i class="fa fa-users"></i></div>
-						<div class="stats-info">
-							<h4>{{__('worker')}}</h4>
-							<p id="p3">{{workers.length}}</p>	
-						</div>
-						<div class="stats-link">
-							<a href="/worker_list">{{__('main_indetail')}} <i class="fa fa-arrow-alt-circle-right"></i></a>
-						</div>
-					</div>
-				</div>
-				<!-- end col-3 -->
-				<!-- begin col-3 -->
-				<div class="col-xl-3 col-md-6">
-					<div class="widget widget-stats bg-red">
-						<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-history"></i></div>
-						<div class="stats-info">
-							<h4>{{__('history')}}</h4>
-							<p id="p4">{{historys.length}}</p>	
-						</div>
-						<div class="stats-link">
-							<a href="/history_list">{{__('main_indetail')}} <i class="fa fa-arrow-alt-circle-right"></i></a>
-						</div>
-					</div>
-				</div>
-				<!-- end col-3 -->
 			</div>
-			<!-- end row -->
-			<!-- begin row -->
-			<div class="row">
-				<!-- begin col-8 -->
-				<div class="col-xl-8">
-				    
-				    <!-- begin panel -->
-                	<div class="panel panel-inverse">
-                		<!-- begin panel-heading -->
-                		<div class="panel-heading">
-                			<h4 class="panel-title">{{__('main_recent_sterilization')}}</h4>
-                		</div>
-                		<!-- end panel-heading -->
-                		<!-- begin panel-body -->
-                		<div class="panel-body">
-                		    {% if recent_history %}
-                        		    <table class="table table-striped table-bordered table-td-valign-middle">
-                        				<thead>
-                        					<tr>
-                        						<th class="text-nowrap">{{__('car_number')}}</th>
-                        					    <th class="text-nowrap">{{__('history_date')}}</th>
-                        						<th class="text-nowrap">{{__('register_date')}}</th>
-                        						<th class="text-nowrap">{{__('history_result')}}</th>
-                        					</tr>
-                        				</thead>
-                        				<tbody>
-                        					<tr>
-                        						<td>
-                        							{% for car in cars %}
-                        								{% if (car._id == history_array.VID) %}
-                        									{{car.CN}}
-                        								{% endif %}
-                        							{% endfor %}
-                        						</td>
-                        						<td id="ET"></td>
-                        						<td id="CA"></td>
-                        						{% if recent_history.RC == 1 %}
-													<td>{{__('success')}}</td>
-												{% else %}
-													<td>{{__('failed')}}</td>
-												{% endif %}
-                        					</tr>
-                        				</tbody>
-                        			</table>
-                        			
-                                	<div id="main-chart"></div>
-                			{% else %}
-                				<h3>{{__('main_recent_sterilization_no')}}</h3>
-  			                {% endif %}
-                		</div>
-                		<!-- end panel-body -->
-                	</div>
-                	<!-- end panel -->
-					
-
-					<!-- end panel -->
-				</div>
-				<!-- end col-8 -->
-				<!-- begin col-4 -->
-				<div class="col-xl-4 align-self-start">
-					<!-- begin panel -->
-					<!-- 막대그래프 만들곳 시작점 -->
-					<div class="panel panel-inverse" data-sortable-id="index-6">
-						<div class="panel-heading">
-							<h4 class="panel-title">{{__('main_recent_sterilization_count')}}</h4>
-						</div>
-						<div class="panel-body">
-							<div id="first week" class="height-sm"></div>
-						</div>
-					</div>
-					<!-- 막대그래프 끝 -->
-					<!-- QR코드 방문자 수 -->
-					{% if(company.AH == true) %}
-					<div class="panel panel-inverse" data-sortable-id="index-6">
-						<div class="panel-heading">
-							<h4 class="panel-title">{{__('main_qr_count')}}<h4>
-						</div>
-						<div class="panel-body">
-							<h3 id="socket_qr" class="ms-0 mb-3">{{psum}}</h3</h3>
-						</div>
-					</div>
-					{% endif %}
-					<!-- end panel -->
-				</div>
-				<!-- end col-4 -->
-			</div>
-			<!-- end row -->
 		</div>
-		<!-- end #content -->
-		
-	<!-- end #content -->
-	
-	
-		
-	{% endblock %}
+		<!-- end col-3 -->
+		<!-- begin col-3 -->
+		<div class="col-xl-3 col-md-6">
+			<div class="widget widget-stats bg-info">
+				<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-car"></i></div>
+				<div class="stats-info">
+					<h4>{{__('car')}}</h4>
+					<p id="p2">{{cars.length}}</p>	
+				</div>
+				<div class="stats-link">
+					<a href="/car_list">{{__('main_indetail')}} <i class="fa fa-arrow-alt-circle-right"></i></a>
+				</div>
+			</div>
+		</div>
+		<!-- end col-3 -->
+		<!-- begin col-3 -->
+		<div class="col-xl-3 col-md-6">
+			<div class="widget widget-stats bg-orange">
+				<div class="stats-icon"><i class="fa fa-users"></i></div>
+				<div class="stats-info">
+					<h4>{{__('worker')}}</h4>
+					<p id="p3">{{workers.length}}</p>	
+				</div>
+				<div class="stats-link">
+					<a href="/worker_list">{{__('main_indetail')}} <i class="fa fa-arrow-alt-circle-right"></i></a>
+				</div>
+			</div>
+		</div>
+		<!-- end col-3 -->
+		<!-- begin col-3 -->
+		<div class="col-xl-3 col-md-6">
+			<div class="widget widget-stats bg-red">
+				<div class="stats-icon"><i class="fas fa-lg fa-fw m-r-10 fa-history"></i></div>
+				<div class="stats-info">
+					<h4>{{__('history')}}</h4>
+					<p id="p4">{{historys.length}}</p>	
+				</div>
+				<div class="stats-link">
+					<a href="/history_list">{{__('main_indetail')}} <i class="fa fa-arrow-alt-circle-right"></i></a>
+				</div>
+			</div>
+		</div>
+		<!-- end col-3 -->
+	</div>
+	<!-- end row -->
+	<!-- begin row -->
+	<div class="row">
+		<!-- begin col-8 -->
+		<div class="col-xl-8">
+		    
+		    <!-- begin panel -->
+        	<div class="panel panel-inverse">
+        		<!-- begin panel-heading -->
+        		<div class="panel-heading">
+        			<h4 class="panel-title">{{__('main_recent_sterilization')}}</h4>
+        		</div>
+        		<!-- end panel-heading -->
+        		<!-- begin panel-body -->
+        		<div class="panel-body">
+        		    {% if recent_history %}
+                		    <table class="table table-striped table-bordered table-td-valign-middle">
+                				<thead>
+                					<tr>
+                						<th class="text-nowrap">{{__('car_number')}}</th>
+                					    <th class="text-nowrap">{{__('history_date')}}</th>
+                						<th class="text-nowrap">{{__('register_date')}}</th>
+                						<th class="text-nowrap">{{__('history_result')}}</th>
+                					</tr>
+                				</thead>
+                				<tbody>
+                					<tr>
+                						<td>
+                							{% for car in cars %}
+                								{% if (car._id == history_array.VID) %}
+                									{{car.CN}}
+                								{% endif %}
+                							{% endfor %}
+                						</td>
+                						<td>
+                							<script>
+                								Timefunction('{{history_array.ET}}');
+                							</script>
+                						</td>
+                						<td>
+                							<script>
+                								Timefunction('{{history_array.CA}}')
+                							</script>
+                						</td>
+                						{% if recent_history.RC == 1 %}
+											<td>{{__('success')}}</td>
+										{% else %}
+											<td>{{__('failed')}}</td>
+										{% endif %}
+                					</tr>
+                				</tbody>
+                			</table>
+                			
+                        	<div id="main-chart"></div>
+        			{% else %}
+        				<h3>{{__('main_recent_sterilization_no')}}</h3>
+  	                {% endif %}
+        		</div>
+        		<!-- end panel-body -->
+        	</div>
+        	<!-- end panel -->
+			
 
+			<!-- end panel -->
+		</div>
+		<!-- end col-8 -->
+		<!-- begin col-4 -->
+		<div class="col-xl-4 align-self-start">
+			<!-- begin panel -->
+			<!-- 막대그래프 만들곳 시작점 -->
+			<div class="panel panel-inverse" data-sortable-id="index-6">
+				<div class="panel-heading">
+					<h4 class="panel-title">{{__('main_recent_sterilization_count')}}</h4>
+				</div>
+				<div class="panel-body">
+					<div id="first week" class="height-sm"></div>
+				</div>
+			</div>
+			<!-- 막대그래프 끝 -->
+			<!-- QR코드 방문자 수 -->
+			{% if(company.AH == true) %}
+			<div class="panel panel-inverse" data-sortable-id="index-6">
+				<div class="panel-heading">
+					<h4 class="panel-title">{{__('main_qr_count')}}<h4>
+				</div>
+				<div class="panel-body">
+					<h3 id="socket_qr" class="ms-0 mb-3">{{psum}}</h3</h3>
+				</div>
+			</div>
+			{% endif %}
+			<!-- end panel -->
+		</div>
+		<!-- end col-4 -->
+	</div>
+	<!-- end row -->
+</div>
+<!-- end #content -->
 
-{% block script %}
-
-<!--Script-->
+<!-- Begin Script -->
 <script src="/socket.io/socket.io.js"></script>
 <script>
+	// 그리터(말풍선 알람) 기능
 	$(document).ready(function(){
 		// 기준 포인트 이하 시 알람 발생(gritter 사용)
 		if(parseInt("{{company.SPO}}") <= parseInt("{{company.POA}}")) {
@@ -200,12 +199,6 @@
 	        return false;
 		}
 	});
-	
-	var et = document.getElementById('ET');
-	var ca = document.getElementById('CA');
-	
-	et.innerHTML = moment('{{history_array.ET}}').format('YYYY-MM-DD HH:MM');
-	ca.innerHTML = moment('{{history_array.CA}}').format('YYYY-MM-DD HH:MM');
 
 	// 웹소캣 기능
 	const socket = io.connect('{{HOME}}', {
@@ -220,7 +213,6 @@
 				socket_new_device.push(data[i]);
 			}
 		}
-		console.log(socket_new_device.length);
 		document.getElementById('socket_device').innerHTML = socket_new_device.length;
 		socket.emit('reply', '소독기 갱신');
 	});
@@ -232,7 +224,6 @@
 				socket_new_car.push(data[i]);
 			}
 		}
-		console.log(socket_new_car.length);
 		document.getElementById('socket_car').innerHTML = socket_new_car.length;
 		socket.emit('reply', '자동차 갱신');
 	});
@@ -244,7 +235,6 @@
 				socket_new_worker.push(data[i]);
 			}
 		}
-		console.log(socket_new_worker.length);
 		document.getElementById('socket_worker').innerHTML = socket_new_worker.length;
 		socket.emit('reply', '작업자 갱신');
 	});
@@ -256,7 +246,6 @@
 				socket_new_history.push(data[i]);
 			}
 		}
-		console.log(socket_new_history.length);
 		document.getElementById('socket_history').innerHTML = socket_new_history.length;
 		socket.emit('reply', '소독이력 갱신');
 	});
@@ -267,12 +256,15 @@
 			var pcount = data[i].PUN;
 			psum += pcount;
 		}
-		console.log(psum);
 		document.getElementById('socket_publish').innerHTML = psum;
 		socket.emit('reply', 'Publish 누적 조회 갱신');
 	});
 </script>
+<!--End Script-->
+{% endblock %}
 
+
+{% block script %}
 <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
@@ -449,5 +441,4 @@ am4core.ready(function() {
 <script src="../assets/plugins/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
 <script src="../assets/js/demo/dashboard.js"></script>
 <script src="../assets/js/demo/table-manage-default.demo.js"></script>
-
 {% endblock %}

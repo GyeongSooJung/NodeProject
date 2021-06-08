@@ -98,58 +98,51 @@
 </div>
 <!-- end #content -->
 
-<!-- Script -->
-<script src="http://code.jquery.com/jquery-1.10.2.js"></script>	
-
+<!-- Begin Script -->
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script>
 var pagingObject = new Object({name : "Company" ,url : "/ajax/company_list",CID : "{{company._id}}",  array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
 
 	// 검색 기능
 	$(document).ready(function() {
-		
 		pagereload(pagingObject, i18nconvert); // 첫 화면 페이지 로드
-        
-        	$('#selectpage').click(function() {
-				selectpage(pagingObject,i18nconvert,{
-					option : $('#selectpage option:selected').val()
-				})
-			});
-			                                   
-			$('#searchtext').keyup(function(key) {
-				if(key.keyCode == 13) {
-					searchtext(pagingObject,i18nconvert)
-				}
-				if(pagingObject.searchtext == "") {
-					pagereload(pagingObject,i18nconvert);
-				}
-			});
-			
-			$('.sort').click(function() {
-				$("#searchoption").empty();
-				$("#searchoption").append("{{__('search')}}");
-				
-				if(pagingObject.name == "Device") {
-					sortpage(pagingObject,i18nconvert,{
-						name : $(this).attr('name')
-					},
-					{
-						MD : "MD",
-						VER : "VER",
-						MAC : "MAC",
-						NN : "NN",
-						UN : "UN",
-						CA : "CA"
-					});
-				}
-			
-			});
 		
+    	$('#selectpage').click(function() {
+			selectpage(pagingObject,i18nconvert,{
+				option : $('#selectpage option:selected').val()
+			})
+		});
+		                                   
+		$('#searchtext').keyup(function(key) {
+			if(key.keyCode == 13) {
+				searchtext(pagingObject,i18nconvert)
+			}
+			if(pagingObject.searchtext == "") {
+				pagereload(pagingObject,i18nconvert);
+			}
+		});
+		
+		$('.sort').click(function() {
+			$("#searchoption").empty();
+			$("#searchoption").append("{{__('search')}}");
+			
+			if(pagingObject.name == "Device") {
+				sortpage(pagingObject,i18nconvert,{
+					name : $(this).attr('name')
+				},
+				{
+					MD : "MD",
+					VER : "VER",
+					MAC : "MAC",
+					NN : "NN",
+					UN : "UN",
+					CA : "CA"
+				});
+			}
+		});
    });
-   
-	
-	
 </script>
-
+<!--End Script-->
 {% endblock %}
 
 {% block script %}

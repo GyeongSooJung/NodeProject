@@ -51,7 +51,7 @@
 				<div class="tab-content">
 					<!-- begin tab-pane -->
 					<div class="tab-pane fade active show" id="editInfoBox">
-						<form action="" method="post" id="setPoint" class="margin-bottom-0" data-parsley-validate="true" onsubmit="setPoint();">
+						<form action="" method="post" id="setPoint" class="margin-bottom-0" data-parsley-validate="true" onsubmit="setPoint('setPoint');">
 							<table class="table table-borderless table-th-valign-middle w-50 mx-auto my-2">
 							    <tr>
 							        <th>{{__('payment_current')}}</th>
@@ -89,27 +89,10 @@
 	
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
-    function setPoint() {
-        var formParsley  = $('#setPoint').parsley();
+    function setPoint(form) {
+        var formParsley  = $('#'+form).parsley();
 		if(formParsley.isValid() == true) {
-		    $.ajax({
-		       type: 'POST',
-		       url: 'setting/point',
-		       dataType: 'json',
-		       data: {
-		           POA: document.getElementsByName("POA")[0].value
-		       },
-		       success: function(result) {
-		           if(result.status == 'success') {
-		               alert("{{__('setting_point_success')}}");
-		               location.reload();
-		           }
-		           else if(result.status == 'fail') {
-		               alert("{{__('setting_point_fail')}}");
-		               location.reload();
-		           }
-		       }
-		    });
+			setPointAjax();
 		}
 		event.preventDefault();
     }
@@ -127,4 +110,5 @@
 <script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
 <script src="../assets/plugins/highlight.js/highlight.min.js"></script>
 <script src="../assets/js/demo/render.highlight.js"></script>
+<script src="../oasisjs/oasis_setting.js"></script>
 {% endblock %}

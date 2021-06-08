@@ -195,6 +195,7 @@
 		$("#memDiv2").append(insertTr);
 	}
 	
+	// 차량 엑셀 확인 리스트
 	
 	// 장비 리스트
 	
@@ -943,4 +944,68 @@
 			  
 		$("#memDiv2").append(insertTr);
 		
-	}
+	};
+	
+	// 공지사항 리스트
+	
+	var noticeList_condition = function (Object,i18nconvert) {
+		
+		var num =  Object.array.length; 	
+        var	insertTr = ""; // 채워넣을 HTML 초기화
+     	var indexcount = 1; // 인덱스번호 초기화
+     	
+     	$("#memDiv1").empty();
+     	
+     	
+     	insertTr += "<tr>"
+		insertTr += "<th width='2.5%'></th>"
+		insertTr += "<th width='60.5%' name='TI'>"+i18nconvert("notice_contents")+"<a href='javascript:sortpage(pagingObject,i18nconvert,TI,[TI,CA]);' name = 'TI'><i id = 'TI' class=' float-right mx-1 fas fa-lg fa-fw m-t-3"
+		if(Object.sort == "TI2")
+			insertTr += " fa-sort-up'></a></i></th>"
+		else if(Object.sort == "TI")
+			insertTr += " fa-sort-down'></a></i></th>"
+		else 
+			insertTr += " fa-sort'></a></i></th>"
+			
+		insertTr += "	<th width='24%' name='CA'>"+i18nconvert("notice_date")+"<a href='javascript:sortpage(pagingObject,i18nconvert,CA,[TI,CA]);' name = 'CA'><i id = 'CA' class='float-right mx-1 fas fa-lg fa-fw m-t-3"
+		if(Object.sort == "CA2")
+			insertTr += " fa-sort-up'></a></i></th>"
+		else if(Object.sort == "CA")
+			insertTr += " fa-sort-down'></a></i></th>"
+		else 
+			insertTr += " fa-sort'></a></i></th>"
+		insertTr += "</tr>"
+     	
+     	$("#memDiv1").append(insertTr);
+     	
+		insertTr = "";
+		for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+			if(Object.array.length != 0) {	
+	     	   if(Object.array[i]) {
+	     	      
+				  insertTr += "<tr>";
+				  insertTr += "<td class='font-weight-bold'>"+(num - (Object.page*10)) +" </td>";
+				  insertTr += "<td>"+ Object.array[i].TI +"</td><td>";
+				  if ( (moment(Object.array[i].CA).format('DD')) == moment().format('DD') )
+				  {
+				       insertTr +=  moment(Object.array[i].CA).format('HH:mm');
+				  }
+				  else {
+				      insertTr += moment(Object.array[i].CA).format('YYYY-MM-DD');
+				  }
+				  insertTr += "</tr>";
+				  num -= indexcount;
+	     	   }
+			}
+	     	else {
+	     	  	insertTr += "<tr>";
+				insertTr += "	<td colspan='10'>No Data</td>";
+				insertTr += "</tr>";
+				
+				break;
+	     	}   
+     	}
+			  
+		$("#memDiv2").append(insertTr);
+		
+	};

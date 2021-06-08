@@ -252,9 +252,9 @@ router.post('/ajax/car_deleteone', isNotLoggedIn, async (req, res, next) => {
     await Company.where({"CNU" : CNU})
       .update({ "CUA" : CUA }).setOptions({runValidators : true})
       .exec();
-    res.json({ result : true });
+    res.send({ result : true });
   } catch (err) {
-    res.json({ result : false });
+    res.send({ result : false });
     console.error(err);
     next(err);
   }
@@ -270,7 +270,7 @@ router.post('/ajax/car_delete', isNotLoggedIn ,async (req, res, next) => {
     const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
     try {
         if(!select) {
-          res.json({ result : false });
+          res.send({ result : false });
         }
         else {
           
@@ -298,10 +298,10 @@ router.post('/ajax/car_delete', isNotLoggedIn ,async (req, res, next) => {
           await Company.where({"CNU" : CNU})
             .update({ "CUA" : CUA }).setOptions({runValidators : true})
             .exec();
-        res.json({ result : true });
+        res.send({ result : true });
         }
     } catch (err) {
-    res.json({ result : true });
+    res.send({ result : true });
     console.error(err);
     next(err);
   }
