@@ -16,8 +16,7 @@ const historySchema = new Schema({
         required: [true, 'CID is required!'],
     },
     VID: {
-        type: String,
-        required: [true, 'VID is required!'],
+        type: String
     },
     WNM: { // 작업자명
         type: String,

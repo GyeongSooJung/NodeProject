@@ -251,6 +251,7 @@
     function pageBtn(dir, Object, i18nconvert, kind) {
     	console.log(kind);
 		if(dir == 'left') {
+			console.log("@@@")
 			if((Object.page - 1) > -1)
 			{
 				Object.page -= 1;
