@@ -61,50 +61,6 @@
 					<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,i18nconvert) class='d-none ml-1 btn btn-sm btn-primary mr-1 px-2'>{{__('all')}}</a>
 				</div>
 			</div>
-			<!--<div class="mt-2 mb-2 d-flex justify-content-end align-items-center">-->
-			<!--	<div class="mr-auto">-->
-			<!--		<select id = "selectpage" name="data-table-default_length" aria-controls="data-table-default" class="custom-select custom-select-sm form-control form-control-sm">-->
-			<!--			<option class ="postnumber" value="10">10</option>-->
-			<!--			<option class ="postnumber" value="25">25</option>-->
-			<!--			<option class ="postnumber" value="50">50</option>-->
-			<!--			<option class ="postnumber" value="100">100</option>-->
-			<!--		</select>-->
-			<!--	</div>-->
-				
-			<!--	<div >-->
-			<!--		<div class ="d-flex w-100">-->
-		 <!--           	<div>-->
-		 <!--           		<div class="btn-group m-10 w-20">-->
-			<!--						<a id="searchoption" href="javascript:;" class="btn btn-default">{{__('search')}}</a>-->
-			<!--						<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>-->
-			<!--						<div class="dropdown-menu dropdown-menu-right">-->
-			<!--							<a href="javascript:searchoption('MD',pagingObject,i18nconvert,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('device_model')}}</a>-->
-			<!--							<a href="javascript:searchoption('VER',pagingObject,i18nconvert,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('device_version')}}</a>-->
-			<!--							<a href="javascript:searchoption('MAC',pagingObject,i18nconvert,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('device_mac')}}</a>-->
-			<!--							<a href="javascript:searchoption('NN',pagingObject,i18nconvert,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('device_nick')}}</a>-->
-			<!--							<a href="javascript:searchoption('UN',pagingObject,i18nconvert,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('device_use_number')}}</a>-->
-			<!--							<a href="javascript:searchoption('CA',pagingObject,i18nconvert,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('create_date')}}</a>-->
-			<!--						</div>-->
-			<!--				</div> -->
-			<!--			</div>-->
-						
-			<!--			<div class="m-10 w-800">-->
-			<!--	  				<input  id ="searchtext" type="text" class="w-100 form-control" placeholder ="" />-->
-			<!--	  		</div>-->
-			<!--  		</div>-->
-			  		
-			<!--		<div id ="searchdatetext" class ="d-flex m-10">-->
-			<!--				<input type="date" id = "searchdatetext1" class ="form-control" placeholder ="" />-->
-			<!--				&nbsp;&nbsp;~&nbsp;&nbsp;-->
-			<!--				<input type="date" id = "searchdatetext2" class ="form-control" placeholder ="" />-->
-			<!--		</div>-->
-			<!--	</div>-->
-				
-			<!--	<div>-->
-			<!--	<button id ="searchbutton" class="ml-1 btn btn-primary text-white px-1" onclick="searchtext(pagingObject,  i18nconvert)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>-->
-			<!--	</div>-->
-			<!--	<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,i18nconvert) class='d-none ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>-->
-			<!--</div>-->
 			
 			<div class="overflow-auto">
 				<table id="data-table-combine" class="table table-striped table-bordered table-td-valign-middle text-center">	
@@ -175,16 +131,15 @@ var pagingObject = new Object({name : "Company" ,url : "/ajax/company_list",CID 
    
    function test() {
    	$.ajax({
-    		url: "/graphql",
-                    type: "GET",
-                    dataType: 'json',
-                    data: { query :  `{
-    hello: String
-  }`}
-	    	}).done(function (data) {  
-	    		console.log(data)
-	    		
-	    	});
+		url: "/graphql",
+        type: "GET",
+        dataType: 'json',
+        data: {
+        	query :  `{hello: String}`
+        }
+    	}).done(function (data) {  
+    		console.log(data);
+    	});
    }
    
 	
