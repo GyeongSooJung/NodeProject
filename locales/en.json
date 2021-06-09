@@ -62,7 +62,6 @@
 	
 	"business_number" : "Business License Number",
 	
-	"index_title" : "OASIS | Sterilization Service",
 	"index_text" : "It provides complete internal space sterilization with automated system and sterilization using ozone.",
 	"index_about" : "ABOUT",
 	"index_about_text" : "A New Paradigm of Sterilization",
@@ -90,16 +89,19 @@
 	"index_ozone_point2_text": "Removes odors in a short time by changing and destroying odor components in the air.",
 	"index_ozone_point3_text": "Ozone is rapidly reduced to oxygen when it comes in contact with oxygen, leaving no residue behind.",
 	
+	"login_title": "OASIS | Log In",
 	"login_error" : "Please check your ID or password.",
 	"login_again" : "Please log in again.",
 	"login_pw_change" : "Password change is complete.",
 	"login_findpw" : "Your temporary password has been emailed to you.",
 	"login_findpw2" : "Please change your password later for security purposes.",
 	
+	"find_title": "OASIS | Find Password",
 	"find_no_register" : "This business number is not registered.",
 	"find_enter" : "Please enter your business number.",
 	"find_email_error" : "Email is not the same as the subscription information.",
 	
+	"register_title": "OASIS | Register",
 	"register_text1" : "Create an OASIS account. It can be managed efficiently.",
 	"register_check_guide" : "Please Check",
 	"register_personal" : "Personal Information Collection and Utilization plan",
@@ -133,7 +135,7 @@
 	"register_digits_error" : "Please enter the numbers",
 	"register_success": "Sign up is complete.",
 	
-    "main_title": "OASIS | Admin Page",
+	"main_title": "OASIS | Admin",
     "main_point": "point",
     "main_company" : "Company",
     "main_indetail" : "In detail",
@@ -307,6 +309,7 @@
 	"history_end" : "End PPM",
 	
 	"payment": "Payment",
+	"payment_title": "OASIS | Shop",
 	"payment_tax_guide": "VAT included",
 	"payment_tax": "VAT",
 	"payment_won" : "Won",
@@ -386,5 +389,7 @@
 	"qrcode": "QR code",
 	"qrcode_create":  "QR create",
 	"qrcode_generated": "Created QR code",
-	"qrcode_sticker": "Sticker"
+	"qrcode_sticker": "Sticker",
+	
+	"manual_title": "OASIS | Manual"
 }

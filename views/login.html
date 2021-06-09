@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 	<meta charset="utf-8" />
-	<title>{{title}}</title>
+	<title>{{__('login_title')}}</title>
 	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 	<meta content="" name="description" />
 	<meta content="" name="author" />
@@ -91,16 +91,6 @@
 		    }
 		    event.preventDefault();
 		}
-		
-		// 에러 링크 기능
-		window.onload = () => {
-			if (new URL(location.href).searchParams.get('again')) {
-				alert("{{__('login_again')}}");
-			}
-			if (new URL(location.href).searchParams.get('pwc')) {
-				alert("{{__('login_pw_change')}}");
-			}
-		};
 	</script>
 	
 	<!-- ================== BEGIN BASE JS ================== -->

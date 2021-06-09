@@ -1,3 +1,4 @@
+// 공통 등록(차량, 장비)
 function ajaxJoin(url, i18nconvert, data) {
     $.ajax({
         type: 'POST',
@@ -42,4 +43,10 @@ function ajaxJoin(url, i18nconvert, data) {
 			}
         }
     });
+}
+
+// 차량 엑셀등록(새로운 파일 시 초기화를 위해서)
+async function excelNew() {
+    await refresh(pagingObject);
+    excelPage(pagingObject, i18nconvert);
 }

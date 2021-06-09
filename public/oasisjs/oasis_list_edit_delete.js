@@ -37,7 +37,7 @@
 							insertTr +=	"		<div class='form-group row m-b-15'>"
 							insertTr +=	"			<label class='col-md-4 col-sm-4 col-form-label' for='CN'>"+i18nconvert("CPN")+" :</label>"
 							insertTr +=	"			<div class='col-md-8 col-sm-8'>"
-							insertTr +=	"				<input class='form-control' id='CPN' type='text' name = 'CPN'  placeholder='"+i18nconvert("CPN")+"' data-parsley-type='digits' data-parsley-type-message='{{__('register_digits_error')}}'  />"
+							insertTr +=	"				<input class='form-control' id='CPN' type='text' name = 'CPN'  placeholder='"+i18nconvert("CPN")+"' />"
 							insertTr +=	"				<input class='form-control' id='car_id' type='hidden' name = 'car_id' value='"+carone._id+"'/>"
 							insertTr +=	"			</div>"
 							insertTr +=	"		</div>"
@@ -73,7 +73,7 @@
 		}
 	}
 	
-		function carEdit(Object,i18nconvert) {
+	function carEdit(Object,i18nconvert) {
 		
 		
 		$.ajax({
@@ -101,6 +101,9 @@
 				}
 				else if(result.status == 'exist') {
 					alert(i18nconvert("car_exist_error"));
+				}
+				else if(result.status == 'numErr') {
+					alert(i18nconvert("register_digits_error"));
 				}
 				else {
 					alert(i18nconvert("modify_failed"));

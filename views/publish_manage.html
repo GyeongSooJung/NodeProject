@@ -14,7 +14,7 @@
 {% block content %}
 <div id="content" class="content">
    <!-- begin page-header -->
-   <h1 class="page-header">{{__('qrcode')}}</h1>
+   <h1 class="page-header mt-3">{{__('qrcode')}}</h1>
    <!-- end page-header -->
    <!-- begin row -->
    <div class="row">
@@ -84,6 +84,7 @@
    <!-- end row -->
 </div>
 
+<!--Begin Script-->
 <script>
     function qrPOP(type, width, height) {
        var main = '{{HOME}}';
@@ -108,6 +109,7 @@
        window.open("/create?main="+main+"&cid="+cid+"&cat="+cat+"&type="+type+"&width="+width+"&height="+height,"pop","width="+pw+", height="+ph+", scrollbars=yes, resizable=yes");
     }
 </script>
+<!--End Script-->
 {% endblock %}
 
 {% block script %}

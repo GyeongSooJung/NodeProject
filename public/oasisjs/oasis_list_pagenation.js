@@ -203,6 +203,17 @@
 	    	Object.search = "";
 	    	Object.searchtext = "";
     	}
+    	else if(Object.name == "CarExcel") {
+    		Object.array = [];
+	    	Object.sort = "CA";
+	    	Object.page = 0;
+	    	Object.postNum = 50;
+	    	Object.pageNum = 5;
+	    	Object.startpage = 0;
+	    	Object.endpage = 0;
+	    	Object.search = "";
+	    	Object.searchtext = "";
+    	}
     	else {
     		Object.array = [];
 	    	Object.sort = "CA";
@@ -236,7 +247,6 @@
     
     // 페이지 기능
 	function pagebutton(Object, num, i18nconvert, kind) {
-		console.log(kind);
 		Object.page = num;
 		
 		if(kind == 'basic') {
@@ -249,7 +259,6 @@
     
     // 다음 페이지 기능
     function pageBtn(dir, Object, i18nconvert, kind) {
-    	console.log(kind);
 		if(dir == 'left') {
 			console.log("@@@")
 			if((Object.page - 1) > -1)
@@ -281,7 +290,6 @@
 	}
 	
 	function pageDoubleBtn(dir, Object, i18nconvert, kind) {
-		console.log(kind);
 		if(dir == 'left') {
 			if((Object.page - Object.pageNum) < 0) {
 				Object.page = 0;
@@ -333,7 +341,6 @@
 	}
 	
 	// 페이지 개수 지정
-	
 	function selectpage(Object,  i18nconvert,jsondata) {
         if(Object.postNum != jsondata.option)
 		{

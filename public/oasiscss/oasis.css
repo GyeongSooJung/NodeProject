@@ -1,3 +1,9 @@
+/*flag*/
+.flag {
+    width: 18px !important;
+    height: 18px !important;
+}
+
 /*layout*/
 .rolling {
     list-style : none;
@@ -81,4 +87,17 @@
 /*pay confirm*/
 .pay-confirm-table caption {
     caption-side : top;
+}
+
+@media (max-width:767.98px) {
+    .navbar-nav {
+        justify-content: center !important;
+        padding: 0;
+    }
+    .notice {
+        margin: 2px 0;
+    }
+    .rolling {
+        margin-left: -38px;
+    }
 }

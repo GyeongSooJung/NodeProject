@@ -31,11 +31,9 @@ router.post("/login", async(req, res, next) => {
       return res.send({ status : 'success' });
     }
     else{
-      // res.redirect('/login?fail=true');
       return res.send({ status: "fail" });
     }
   }catch(err){
-    // res.redirect('/login?fail=true');
     return res.send({ status: "fail" });
   }
 });

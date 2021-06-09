@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-	<title>{{__('index_title')}}</title>
+	<title>{{title}}</title>
 	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 	<meta content="" name="description" />
 	<meta content="" name="author" />
@@ -54,11 +54,11 @@
 						<li class="nav-item"><a class="nav-link" href="#ozone" data-click="scroll-to-target">{{__('ozone')}}</a></li>
 						<li class="dropdown nav-item">
 							<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-								<h4 class="flag-icon width-full m-r-10 m-t-0 m-b-3 px-1" id="flag"></h4>
+								<img class="flag select-flag" src="https://lipis.github.io/flag-icon-css/flags/4x3/kr.svg" alt="Select Language Flag">
 							</a>
 							<div class="dropdown-menu dropdown-menu-right">
-								<a href="/ko_index" class="dropdown-item"><span class="flag-icon flag-icon-kr mr-2 px-1" title="kr" id="kr"></span>{{__('lang_kr')}}</a>
-								<a href="/en_index" class="dropdown-item"><span class="flag-icon flag-icon-us mr-2 px-1" title="us" id="us"></span>{{__('lang_en')}}</a>
+								<a href="/ko_index" class="dropdown-item d-flex justify-content-start align-items-center"><img class="flag mr-2" src="https://lipis.github.io/flag-icon-css/flags/4x3/kr.svg" alt="South Korea Flag">{{__('lang_kr')}}</a>
+								<a href="/en_index" class="dropdown-item d-flex justify-content-start align-items-center"><img class="flag mr-2" src="https://lipis.github.io/flag-icon-css/flags/4x3/us.svg" alt="United States of America Flag">{{__('lang_en')}}</a>
 							</div>
 						</li>
 					</ul>
@@ -378,8 +378,6 @@
 			y: -50,
 		});
 		
-<<<<<<< HEAD
-=======
 		//qr
 		gsap.to("img[src*='oasis_qr.png']", {
 			scrollTrigger: "#qr",
@@ -387,7 +385,6 @@
 			duration: 1.5,
 			y: 50,
 		});
->>>>>>> 8b2ee07e261a6556a2d7ab83e983098fee921513
 	</script>
 	
 	<!-- ================== BEGIN BASE JS ================== -->

@@ -30,13 +30,13 @@
     	for (var item in jsondata) {
     		if (opt === item) {
     			string = i18nconvert(item);
-    			if((opt == "CA") || (opt == "ET")|| (opt == "payCA")|| (opt == "UCA") || (opt == "pointCA")) {
-    				document.getElementById('searchtext').classList.add('d-none');
-	    			$("#searchtext").val('');
-    			}
-    			else {
-	    			document.getElementById('searchtext').classList.remove('d-none');
-    			}
+    			// if((opt == "CA") || (opt == "ET")|| (opt == "payCA")|| (opt == "UCA") || (opt == "pointCA")) {
+    			// 	// document.getElementById('searchtext').classList.add('d-none');
+	    		// 	$("#searchtext").val('');
+    			// }
+    			// else {
+	    		// 	document.getElementById('searchtext').classList.remove('d-none');
+    			// }
     		}
     	}
     	$("#searchtext").val('');

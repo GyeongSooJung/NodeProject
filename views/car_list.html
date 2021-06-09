@@ -15,7 +15,7 @@
 <!-- begin #content -->
 <div id="content" class="content">
 	<!-- begin page-header -->
-	<h1 class="page-header">{{__('car_list')}}</h1>
+	<h1 class="page-header mt-3">{{__('car_list')}}</h1>
 	<!-- end page-header -->
 	<!-- begin row -->
 	<div class="row">
@@ -112,9 +112,6 @@
 		$('#searchtext').keyup(function(key) {
 			if(key.keyCode == 13) {
 				searchtext(pagingObject,i18nconvert)
-			}
-			if(pagingObject.searchtext == "") {
-				pagereload(pagingObject,  i18nconvert);
 			}
 		});
     });

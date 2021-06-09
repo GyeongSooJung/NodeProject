@@ -15,7 +15,7 @@
 <!-- begin #content -->
 <div id="content" class="content">
 	<!-- begin page-header -->
-	<h1 class="page-header">{{__('notice_list')}}</h1>
+	<h1 class="page-header mt-3">{{__('notice_list')}}</h1>
 	<!-- end page-header -->
 	<!-- begin row -->
 	<div class="row">
@@ -106,9 +106,6 @@ var pagingObject = new Object({name : "Notice", url : "/ajax/notice_list", CID :
 		$('#searchtext').keyup(function(key) {
 			if(key.keyCode == 13) {
 				searchtext(pagingObject,i18nconvert)
-			}
-			if(pagingObject.searchtext == "") {
-				pagereload(pagingObject,  i18nconvert);
 			}
 		});
 	});

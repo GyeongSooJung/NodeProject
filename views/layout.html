@@ -41,7 +41,11 @@
 			<!-- begin navbar-header -->
 			<div class="navbar-header">
 				<a href="/main" class="navbar-brand ml-3"><img src="../assets/img/oasis.png"></a>
-				
+				<button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
 			</div>
 			<div class="navbar-nav navbar-right">
 				{% if noticethree %}
@@ -65,7 +69,7 @@
 			<ul class="navbar-nav navbar-right">
 				<li class="dropdown navbar-user">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<span class="d-none d-md-inline font-weight-bold">{{company.CNA}}</span>
+						<span class="d-md-inline font-weight-bold">{{company.CNA}}</span>
 						<span class="font-weight-bold">({{__('main_point')}} : <span id="pointbox" class="text-primary">{{company.SPO}} p</span>)</span>
 						<b class="caret"></b>
 					</a>
@@ -78,13 +82,13 @@
 						<a href="javascript:withdrawal(i18nconvert)" class="dropdown-item">{{__('layout_withdrawal')}}</a>
 					</div>
 				</li>
-				<li class="dropdown navbar-user">
-					<a href="#" class="dropdown-toggle mr-3" data-toggle="dropdown">
-						<h2 class="flag-icon width-full m-r-10 m-t-0 m-b-3 px-1" id="flag"></h2>
+				<li class="dropdown navbar-user d-flex justify-content-around align-items-center">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						<img class="flag select-flag" src="https://lipis.github.io/flag-icon-css/flags/4x3/kr.svg" alt="Select Language Flag">
 					</a>
 					<div class="dropdown-menu dropdown-menu-right">
-						<a href="/ko" class="dropdown-item"><span class="flag-icon flag-icon-kr mr-2 px-1" title="kr" id="kr"></span>{{__('lang_kr')}}</a>
-						<a href="/en" class="dropdown-item"><span class="flag-icon flag-icon-us mr-2 px-1" title="us" id="us"></span>{{__('lang_en')}}</a>
+						<a href="/ko" class="dropdown-item d-flex justify-content-start align-items-center"><img class="flag" src="https://lipis.github.io/flag-icon-css/flags/4x3/kr.svg" alt="South Korea Flag">{{__('lang_kr')}}</a>
+						<a href="/en" class="dropdown-item d-flex justify-content-start align-items-center"><img class="flag" src="https://lipis.github.io/flag-icon-css/flags/4x3/us.svg" alt="United States of America Flag">{{__('lang_en')}}</a>
 					</div>
 				</li>
 			</ul>
@@ -259,6 +263,7 @@
 	<!-- end page container -->
 
 	<!--Begin Script-->
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
 	    var searcherror = function () {
@@ -478,7 +483,10 @@
 	    		return "{{__('profile_pw_success')}}"
 	    	}
 	    	else if(string == "login_again") {
-	    		return "{{__('login_again')}}"
+	    		return "{{__('login_again')}}";
+	    	}
+	    	else if(string == "register_digits_error") {
+	    		return "{{__('register_digits_error')}}";
 	    	}
 	    	else if(string == "" ) {
 	    		return "{{__('')}}";
@@ -495,7 +503,7 @@
 	    	else {
 	    		return string;
 	    	}
-	    }
+	    };
 	</script>
 	
 	<!-- ================== BEGIN BASE JS ================== -->

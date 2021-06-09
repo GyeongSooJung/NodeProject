@@ -48,4 +48,49 @@ const router = express.Router();
 //   }
 // });
 
+//소독이력 선택 삭제
+router.post('/ajax/history_delete', isNotLoggedIn, async (req, res, next) => {
+  var select = req.body["select[]"];
+  console.log(JSON.stringify(req.body));
+  console.log(select);
+  
+  try {
+    if(!select) {
+      res.send({ result : false });
+    }
+    else {
+      
+      if(typeof(select) == 'string') {
+        const historyone = await History.findOne({"_id" : select});
+        // await History.create({
+        //       "CID" : deviceone.CID,
+        //       "MD" : deviceone.MD,
+        //       "VER" : deviceone.VER,
+        //       "NN" : deviceone.NN,
+        //       "MAC" : deviceone.MAC
+        // });
+        await History.remove({ "_id" : select });
+        
+      }
+      else {
+        for(var i = 0; i < select.length; i ++) {
+          var historyone = await History.findOne({"_id" : select[i]});   
+        //   await Devicedelete.create({
+        //         "CID" : deviceone.CID,
+        //           "MD" : deviceone.MD,
+        //           "VER" : deviceone.VER,
+        //           "NN" : deviceone.NN,
+        //           "MAC" : deviceone.MAC
+        //   });
+          await History.remove({ "_id" : select[i] });
+        }
+      }
+      return res.send({ result : true });
+    }
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
 module.exports = router;

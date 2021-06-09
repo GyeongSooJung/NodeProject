@@ -280,7 +280,12 @@
 					insertTr += "<td>"+ Object.array[i].MD +"</td>";
 					insertTr += "<td>"+ Object.array[i].VER+"</td>";
 					insertTr += "<td>"+ Object.array[i].MAC+"</td>";
-					insertTr += "<td>"+ Object.array[i].NN+"</td>";
+					if(!Object.array[i].NN) {
+						insertTr += "<td>x</td>";
+					}
+					else {
+						insertTr += "<td>"+ Object.array[i].NN+"</td>";
+					}
 					insertTr += "<td>"+ Object.array[i].UN+"회</td><td>";
 					
 					if ( (moment(Object.array[i].CA).format('DD')) == moment().format('DD') )
@@ -542,6 +547,9 @@
 				insertTr += " fa-sort'></a></i></th>"
 		
 		insertTr += "<tr>"
+		insertTr += "<th id ='allcheck' width='1%'>"
+		insertTr += "	<input type='checkbox' name='allck' class='neHeros' value='' onChange='allCheckedBox(this);'/>"
+		insertTr += "</th>"
 		insertTr += "	<th width='2.5%'></th>"
 		
 		insertTr += "	<th width='15%' name = 'CNM'>"+i18nconvert("CNM")+"<a href='javascript:sortpage(pagingObject,i18nconvert,CNM,[CNM,DNM,ET,PD,WNM]);' name = 'CNM'><i id = 'CNM' class='float-right mx-1 fas fa-lg fa-fw m-t-3"
@@ -596,6 +604,9 @@
 			if(Object.array.length != 0) {
 				if(Object.array[i]) {
 					insertTr += "<tr>";
+					insertTr += "<td class='with-btn' nowrap>";
+					insertTr += "<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+ Object.array[i]._id +" onChange='eachCheckedBox(this);'/>";
+					insertTr += "</td>";
 					insertTr += "<td class='font-weight-bold'>"+(num - (Object.page*10)) +" </td>";
 					insertTr += "<td>"+ Object.array[i].CNM +"</td>";
 					insertTr += "<td>"+ Object.array[i].DNM+"</td><td>";

@@ -177,7 +177,6 @@ router.post('/car_json_excel', isNotLoggedIn, async (req, res, next) => {
  
     form.parse(req);
     
-    console.log("포오오옴"+form);
   } catch(err) {
     console.error(err);
     next(err);
@@ -197,25 +196,30 @@ router.post('/ajax/car_list_edit2', isNotLoggedIn, async(req, res, next) => {
   
   const exCar = await Car.findOne({ "CID" : CID, "CN" :  CN });
   const check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
+  const numCheck = /^[0-9]*$/;
   try{
-    
     if (CN.length >= 7 && CN.length <= 8) {
       check.lastIndex = 0;
       if (check.test(CN) == true) {
         
         if(!exCar) {
-          const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
-          
-          const car = await Car.where({"_id" : car_id})
-                      .updateOne({ "CID" : CID,
-                                "CN" : CN,
-                                "CPN" : CPN,
-                      }).setOptions({runValidators : true})
-                      .exec();
-          const company = await Company.where({"_id" : CID})
-                      .updateOne({ "CUA" : CUA }).setOptions({runValidators : true})
-                      .exec();
-          res.send({ status : "success" });
+          if(numCheck.test(CPN) == true) {
+            const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
+            
+            const car = await Car.where({"_id" : car_id})
+                        .updateOne({ "CID" : CID,
+                                  "CN" : CN,
+                                  "CPN" : CPN,
+                        }).setOptions({runValidators : true})
+                        .exec();
+            const company = await Company.where({"_id" : CID})
+                        .updateOne({ "CUA" : CUA }).setOptions({runValidators : true})
+                        .exec();
+            return res.send({ status : "success" });
+          }
+          else {
+            return res.send({ status : "numErr" });
+          }
         }
         else {
           return res.send({ status: 'exist' });

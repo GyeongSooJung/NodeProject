@@ -15,7 +15,7 @@
 <!-- begin #content -->
 <div id="content" class="content">
 	<!-- begin page-header -->
-	<h1 class="page-header">{{__('history')}}</h1>
+	<h1 class="page-header mt-3">{{__('history')}}</h1>
 	<!-- end page-header -->
 	<!-- begin panel -->
 	<div class="panel panel-inverse">
@@ -75,13 +75,16 @@
 							
 						</tbody>
 					</table>
-					<div class="justify-content-between align-item-center">
-						<center>
-								<div id="pagebox" class=" justify-content-around align-item-center">
-									
-								</div>
-						</center>
+					{% if(company.AH == true) %}
+					<div class="d-flex justify-content-between align-item-center">
+						<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="delete_check('/history/ajax/history_delete',i18nconvert);">
+						<div id="pagebox" class=" justify-content-around align-item-center"></div>
 					</div>
+					{% else %}
+					<div class="d-flex justify-content-center align-item-center">
+						<div id="pagebox" class=" justify-content-around align-item-center"></div>
+					</div>
+					{% endif %}
 				</form>
 			</div>
 		</div>
@@ -108,9 +111,6 @@
 		$('#searchtext').keyup(function(key) {
 			if(key.keyCode == 13) {
 				searchtext(pagingObject,i18nconvert)
-			}
-			if(pagingObject.searchtext == "") {
-				pagereload(pagingObject, i18nconvert);
 			}
 		});
 	});

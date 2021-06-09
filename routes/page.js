@@ -69,7 +69,7 @@ router.get('/ko_index', function(req, res) {
 
 // 로그인
 router.get('/login', isLoggedIn, (req, res) => {
-  res.render('login', { title: 'OASIS Admin | Login' });
+  res.render('login');
 });
 
 router.get('/address', (req, res) => {
@@ -87,7 +87,7 @@ router.post('/address', (req, res) => {
 
 // 회원가입
 router.get('/register', isLoggedIn, async(req, res, next) => {
-  res.render('register', { title: 'OASIS Admin | Sign Up'});
+  res.render('register');
 });
 
 //회원정보 수정
@@ -308,23 +308,6 @@ router.get('/device_join', isNotLoggedIn, DataSet, async(req, res, next) => {
   const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
   res.render('device_join', { company: req.decoded.company, aclist, noticethree, });
-});
-
-//장비 수정
-router.get('/device_edit/:MAC', isNotLoggedIn, DataSet, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
-  const noticethree = await Notice.find().limit(3).sort({CA : -1});
-
-
-  try {
-    const deviceone = await Device.findOne({ MAC: req.params.MAC });
-    res.render('device_edit', { company: req.decoded.company, aclist, deviceone, noticethree});
-  }
-  catch (err) {
-    console.error(err);
-    next(err);
-  }
 });
 
 //장비 목록
@@ -564,22 +547,6 @@ router.get('/car_join', isNotLoggedIn, DataSet, async(req, res, next) => {
   const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
   res.render('car_join', { company: req.decoded.company, aclist, noticethree });
-});
-
-//차량 수정
-router.get('/car_edit/:CN', isNotLoggedIn, DataSet, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
-  const noticethree = await Notice.find().limit(3).sort({CA : -1});
-
-  try {
-    const carone = await Car.findOne({ CN: req.params.CN });
-    res.render('car_edit', { company: req.decoded.company, aclist, carone, noticethree});
-  }
-  catch (err) {
-    console.error(err);
-    next(err);
-  }
 });
 
 //차량 목록

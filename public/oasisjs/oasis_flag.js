@@ -93,14 +93,14 @@ window.addEventListener('load', function() {
 									"<p></p>";
 		}
 		else if(cut[1] == '' || cut[1] == 'index') {
-			flag.classList.add('flag-icon-kr');
+			$('.select-flag').attr('src', 'https://lipis.github.io/flag-icon-css/flags/4x3/kr.svg');
 			quote1.src = '../assets/img/quote1.png';
 			quote2.src = '../assets/img/quote2.png';
 			quote3.src = '../assets/img/quote3.png';
 			oasis_flow.src = '../assets/img/oasis_flow.png';
 		}
 		else {
-			flag.classList.add('flag-icon-kr');
+			$('.select-flag').attr('src', 'https://lipis.github.io/flag-icon-css/flags/4x3/kr.svg');
 		}
 	}
 	else if(lang == 'en') {
@@ -182,14 +182,14 @@ window.addEventListener('load', function() {
 								    "<p></p>";
 		}
 		else if(cut[1] == '' || cut[1] == 'index') {
-			flag.classList.add('flag-icon-us');
+			$('.select-flag').attr('src', 'https://lipis.github.io/flag-icon-css/flags/4x3/us.svg');
 			quote1.src = '../assets/img/quote1_en.png';
 			quote2.src = '../assets/img/quote2_en.png';
 			quote3.src = '../assets/img/quote3_en.png';
 			oasis_flow.src = '../assets/img/oasis_flow_en.png';
 		}
 		else {
-			flag.classList.add('flag-icon-us');
+			$('.select-flag').attr('src', 'https://lipis.github.io/flag-icon-css/flags/4x3/us.svg');
 		}
 	}
 	else {
@@ -264,14 +264,14 @@ window.addEventListener('load', function() {
 									"<p></p>";
 		}
 		else if(cut[1] == '' || cut[1] == 'index') {
-			flag.classList.add('flag-icon-kr');
+			$('.select-flag').attr('src', 'https://lipis.github.io/flag-icon-css/flags/4x3/kr.svg');
 			quote1.src = '../assets/img/quote1.png';
 			quote2.src = '../assets/img/quote2.png';
 			quote3.src = '../assets/img/quote3.png';
 			oasis_flow.src = '../assets/img/oasis_flow.png';
 		}
 		else {
-			flag.classList.add('flag-icon-kr');
+			$('.select-flag').attr('src', 'https://lipis.github.io/flag-icon-css/flags/4x3/kr.svg');
 		}
 	}
 });

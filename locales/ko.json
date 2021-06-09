@@ -62,7 +62,6 @@
 	
 	"business_number": "사업자 등록번호",
 	
-	"index_title": "OASIS | 소독 서비스",
 	"index_text": "자동화된 시스템과 오존을 활용한 소독 방식으로 완벽한 내부 공간 살균을 제공합니다.",
 	"index_about": "소개",
 	"index_about_text": "소독의 새로운 패러다임",
@@ -90,16 +89,19 @@
 	"index_ozone_point2_text": "공기 중의 악취성분을 변화, 파괴시켜 단시간에 악취를 제거함.",
 	"index_ozone_point3_text": "오존은 산소와 닿으면 빠르게 산소로 환원되어 어떤 잔여물도 남기지 않음.",
 	
+	"login_title": "OASIS | 로그인",
 	"login_error": "아이디 혹은 비밀번호를 확인해주세요.",
 	"login_again": "다시 로그인해주세요.",
 	"login_pw_change": "비밀번호 변경이 완료되었습니다.",
 	"login_findpw": "임시 비밀번호가 이메일로 전송되었습니다.",
 	"login_findpw2": "보안을 위해 비밀번호는 추후에 변경해주세요.",
 	
+	"find_title": "OASIS | 비밀번호 찾기",
 	"find_no_register": "가입되지 않은 사업자번호입니다.",
 	"find_enter": "사업자 번호를 입력해주세요.",
 	"find_email_error": "이메일이 가입된 정보와 다릅니다.",
 	
+	"register_title": "OASIS | 회원가입",
 	"register_text1": "OASIS 계정을 만드세요. 효율적인 관리가 가능합니다.",
 	"register_check_guide": "체크해주세요.",
 	"register_personal": "개인정보 수집 및 활용 방안",
@@ -133,7 +135,7 @@
 	"register_digits_error": "숫자만 입력해주세요.",
 	"register_success": "회원가입이 완료되었습니다.",
 	
-	"main_title": "OASIS | 관리자 페이지",
+	"main_title": "OASIS | 관리자",
 	"main_point": "보유 포인트",
 	"main_company": "사업자",
 	"main_indetail": "자세히",
@@ -307,6 +309,7 @@
 	"history_end": "최종농도",
 	
 	"payment": "결제",
+	"payment_title": "OASIS | 쇼핑",
 	"payment_tax_guide": "부가세 포함",
 	"payment_tax": "부가세",
 	"payment_won": "원",
@@ -386,5 +389,7 @@
 	"qrcode": "QR 코드",
 	"qrcode_create": "QR 생성",
 	"qrcode_generated": "생성된 QR코드",
-	"qrcode_sticker": "스티커"
+	"qrcode_sticker": "스티커",
+	
+	"manual_title": "OASIS | 메뉴얼"
 }
