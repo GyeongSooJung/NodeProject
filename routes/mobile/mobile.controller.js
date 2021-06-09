@@ -732,3 +732,22 @@ exports.registerKAKAO = async(req, res) => {
             });
         }
 };
+
+exports.DIDreturn = async(req, res) => {
+    
+    try {
+        
+            const {mac} = req.body;
+            
+            const deviceone = await Device.find({MAC : mac});
+            
+            res.send({ DID : deviceone[0]._id});
+            
+    }
+    catch (exception) {
+            res.send({
+                result: false,
+                error: UNKOWN,
+            });
+    }
+}

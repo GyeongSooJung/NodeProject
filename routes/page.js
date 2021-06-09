@@ -922,29 +922,20 @@ router.post('/ajax/worker_list', isNotLoggedIn, DataSet, async function(req, res
 //작업자 인증 ajax
 router.post('/ajax/post', isNotLoggedIn, DataSet, async function(req, res) {
 
-  var au_true = req.body.au_true;
-  var au_false = req.body.au_false;
+  var au = req.body.au;
   var ac_true = req.body.ac_true;
   var ac_false = req.body.ac_false;
-  
-  var com_audata = req.body.com_audata;
-
-
 
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
 
   let workerone;
   
-  if (com_audata) {
-    var comaudata = com_audata.split(",")
-    workerone = await Worker.where({ "EM": comaudata[0] }).update({ "AU": comaudata[1] }).setOptions({ runValidators: true }).exec();
-  }
-  else if (au_true) {
-    workerone = await Worker.where({ "EM": au_true }).update({ "AU": 2 }).setOptions({ runValidators: true }).exec();
-  }
-  else if (au_false) {
-    workerone = await Worker.where({ "EM": au_false }).update({ "AU": 1 }).setOptions({ runValidators: true }).exec();
+  console.log(au);
+  
+  if (au) {
+    var audata = au.split(",")
+    workerone = await Worker.where({ "EM": audata[0] }).update({ "AU": audata[1] }).setOptions({ runValidators: true }).exec();
   }
   else if (ac_true) {
     workerone = await Worker.where({ "EM": ac_true }).update({ "AC": true }).setOptions({ runValidators: true }).exec();
@@ -2555,15 +2546,19 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
 // });
 
 
-router.post('/gstest', isNotLoggedIn, DataSet, async(req, res, next) => {
-  console.log(req.body);
+router.get('/gstest', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+
+  const mac = "84:CC:A8:12:FF:2E"
   
-  var {graphqlHTTP} = require('express-graphql');
+  const deviceone = await Device.find({MAC : mac});
+  
+  console.log(deviceone[0]._id);
+  
+  res.render('company_list', { company: req.decoded.company, aclist });
   
   
-  
-  
-  res.send({data: "@@@"});
 })
 
 
