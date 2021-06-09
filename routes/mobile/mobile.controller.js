@@ -57,13 +57,9 @@ exports.signIn = async(req, res) => {
     const { type, id, email } = req.body;
     if (type == "GOOGLE") {
         var worker = await Worker.findOne({ "GID": id, "EM": email });
-        const companycua = await Company.aggregate([
-                { $match : {"_id" : ObjectId(worker.CID)} },
-                { $project : {CUA : "$CUA"}}
-            ], function (err,result) {
-                    if(err) throw err;
-            })
-        const carUA = companycua[0].CUA;
+        console.log(type, id, email)
+        console.log(worker)
+        
         if (worker != null) {
             // 토큰 생성
             const token = jwt.sign({
@@ -72,27 +68,39 @@ exports.signIn = async(req, res) => {
                 expiresIn: "1d",
             });
 
-            await Worker.where({ _id: worker._id }).update({ UA: Date.now() });
-            return res.send({
+            await Worker.where({ _id: worker._id }).updateOne({ UA: Date.now() });
+            
+            const companycua = await Company.aggregate([
+                { $match : {"_id" : ObjectId(worker.CID)} },
+                { $project : {CUA : "$CUA"}}
+            ], function (err,result) {
+                    if(err) throw err;
+            });
+            const carUA = companycua[0].CUA;
+            
+            return res.json({
                 result: true,
                 data: JSON.stringify(worker),
                 token,
                 carUA
             });
+            
+            
         }
         else {
-            return res.send({
+            return res.json({
                 result: false,
                 error: NO_SUCH_DATA,
             });
         }
     }
-    res.send({
+    res.json({
         result: false,
         error: UNKOWN,
     });
 
 };
+
 
 // 회원 가입
 exports.signUp = async(req, res) => {

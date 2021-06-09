@@ -11,6 +11,7 @@
                 data: {
                 	CID : Object.CID,
                     sort : Object.sort,
+                    sortNum : Object.sortNum,
                     search : Object.search,
                     searchtext : Object.searchtext,
                     searchdate : Object.searchdate

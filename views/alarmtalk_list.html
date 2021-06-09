@@ -68,21 +68,13 @@
 					</div>
                
                <div class="overflow-auto">
-                     <table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle text-center">
-                        <thead id = "memDiv1">
-                        </thead>
-                        <tbody id = "memDiv2">
-                           
-                        </tbody>
-                     </table>
-                     <div class="justify-content-between align-item-center">
-      						<center>
-      								<div id="pagebox" class=" justify-content-around align-item-center">
-      									
-      								</div>
-      						</center>
-      					</div>
-                  <!--</form>-->
+                  <table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle text-center">
+                     <thead id = "memDiv1"></thead>
+                     <tbody id = "memDiv2"></tbody>
+                  </table>
+						<div class="d-flex justify-content-center align-items-center">
+								<div id="pagebox" class=" justify-content-around align-item-center"></div>
+						</div>
                </div>
             </div>
             <!-- end panel-body -->
@@ -97,7 +89,7 @@
 <!-- Begin Script -->
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script>
-var pagingObject = new Object({name : "Alarmtalk" ,url : "/ajax/alarmtalk_list",CID : "{{company._id}}",  array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
+var pagingObject = new Object({name : "Alarmtalk", url : "/ajax/alarmtalk_list", CID : "{{company._id}}",  array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
 	// 검색 기능
 	$(document).ready(function() {
 		
