@@ -503,7 +503,7 @@
 							insertTr += "unchecked/>";
 						insertTr += "</td>";
 						insertTr += "<td class='with-btn' nowrap>";
-						insertTr += "<input onclick ='checkac(this) name ='"+i+"'' class ='ck_ac' type='checkbox'  value ='"+Object.array[i].EM+"'";
+						insertTr += "<input onclick =checkac(this) name ='"+i+"'' class ='ck_ac' type='checkbox'  value ='"+Object.array[i].EM+"'";
 						if(Object.array[i].AC ==1)
 							insertTr += "checked/>";
 						else

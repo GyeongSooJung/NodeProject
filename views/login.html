@@ -91,6 +91,12 @@
 		    }
 		    event.preventDefault();
 		}
+		
+		var i18nconvert = function (string) {
+			if(string == "login_error") {
+				return "{{__('login_error')}}";
+			}
+		}
 	</script>
 	
 	<!-- ================== BEGIN BASE JS ================== -->

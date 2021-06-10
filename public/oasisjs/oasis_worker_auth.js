@@ -1,4 +1,5 @@
 function checkac(a) {
+	console.log("@@@")
 		if(a.checked){
 			//Ajax POST Method TEST
 			$.ajax({

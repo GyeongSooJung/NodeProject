@@ -84,14 +84,12 @@
 	        	
 	        	else if (data.result == "nothing") {
 	        		
-	        		alert(i18nconvert('searcherror'));
 	        		$("#searchtext").val('');
 			    	$("#searchdatetext1").val('');
 			    	$("#searchdatetext2").val('');
 	        	}
 	        	
 	        	else {
-	        		alert(i18nconvert('searcherror'));
 			    	$("#searchdatetext1").val('');
 			    	$("#searchdatetext2").val('');
 	        	}
