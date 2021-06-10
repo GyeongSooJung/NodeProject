@@ -22,8 +22,13 @@ const { config, Group } = require('solapi');
 const Mongoose = require('mongoose');
 const ObjectId = Mongoose.Types.ObjectId;
 
-
-
+const ERROR_CODE = {
+    FAIL: "FAIL",
+    NO_SUCH_DATA: "NO_SUCH_DATA",
+    TOKEN_ERROR: "TOKEN_ERROR",
+    NO_POINT: "NO_POINT",
+    UNKOWN: "UNKOWN",
+};
 
 exports.test = async(req, res, next) => {
     const token = req.body.token;
@@ -57,9 +62,9 @@ exports.signIn = async(req, res) => {
     const { type, id, email } = req.body;
     if (type == "GOOGLE") {
         var worker = await Worker.findOne({ "GID": id, "EM": email });
-        console.log(type, id, email)
-        console.log(worker)
-        
+        console.log(type, id, email);
+        console.log(worker);
+
         if (worker != null) {
             // 토큰 생성
             const token = jwt.sign({
@@ -69,23 +74,23 @@ exports.signIn = async(req, res) => {
             });
 
             await Worker.where({ _id: worker._id }).updateOne({ UA: Date.now() });
-            
+
             const companycua = await Company.aggregate([
-                { $match : {"_id" : ObjectId(worker.CID)} },
-                { $project : {CUA : "$CUA"}}
-            ], function (err,result) {
-                    if(err) throw err;
+                { $match: { "_id": ObjectId(worker.CID) } },
+                { $project: { CUA: "$CUA" } }
+            ], function(err, result) {
+                if (err) throw err;
             });
             const carUA = companycua[0].CUA;
-            
+
             return res.json({
                 result: true,
                 data: JSON.stringify(worker),
                 token,
                 carUA
             });
-            
-            
+
+
         }
         else {
             return res.json({
@@ -285,9 +290,9 @@ exports.registerCar = async(req, res) => {
         console.log(result);
         var ObjectId = Mongoose.Types.ObjectId;
         console.log(ObjectId(CID))
-        await Company.where({"_id" : ObjectId(CID)})
-        .updateOne({ "CUA" : Date.now() }).setOptions({runValidators : true})
-        .exec();
+        await Company.where({ "_id": ObjectId(CID) })
+            .updateOne({ "CUA": Date.now() }).setOptions({ runValidators: true })
+            .exec();
 
         res.send({
             result: true,
@@ -335,12 +340,12 @@ exports.updateCar = async(req, res) => {
     try {
         const { _id, CC, CN, SN } = req.body;
         var result = await Car.where({ _id }).updateOne({ CC, CN, SN, UA: Date.now() });
-        console.log("result : " +result);
+        console.log("result : " + result);
         var ObjectId = Mongoose.Types.ObjectId;
-        var car = await Car.findOne({"_id" : ObjectId(_id)});
-        await Company.where({"_id" : ObjectId(car.CID)})
-        .updateOne({ "CUA" : Date.now() }).setOptions({runValidators : true})
-        .exec();
+        var car = await Car.findOne({ "_id": ObjectId(_id) });
+        await Company.where({ "_id": ObjectId(car.CID) })
+            .updateOne({ "CUA": Date.now() }).setOptions({ runValidators: true })
+            .exec();
 
         res.send({
             result: true,
@@ -359,16 +364,16 @@ exports.updateCar = async(req, res) => {
 exports.deleteCar = async(req, res) => {
     try {
         const { _id, CN } = req.body;
-        
-        
+
+
         var ObjectId = Mongoose.Types.ObjectId;
-        var car = await Car.findOne({"_id" : ObjectId(_id)});
-        await Company.where({"_id" : car.CID})
-        .updateOne({ "CUA" : Date.now() }).setOptions({runValidators : true})
-        .exec();
-        
+        var car = await Car.findOne({ "_id": ObjectId(_id) });
+        await Company.where({ "_id": car.CID })
+            .updateOne({ "CUA": Date.now() }).setOptions({ runValidators: true })
+            .exec();
+
         var result = await Car.remove({ _id, CN });
-        console.log("result : " +result);
+        console.log("result : " + result);
 
         res.send({
             result: true,
@@ -389,8 +394,8 @@ exports.createHistory = async(req, res) => {
         const { WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD } = req.body;
 
         var result = await History.create({ WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD });
-        await Device.where({_id : DID}).update({$inc: {UN : 1}});
-        
+        await Device.where({ _id: DID }).update({ $inc: { UN: 1 } });
+
         console.log(result);
 
         res.send({
@@ -553,22 +558,54 @@ exports.deleteDevice = async(req, res) => {
 
 // 소독기 검색
 exports.findDeviceByID = async(req, res) => {
-    
+
     try {
-            const {MAC} = req.body;
-            const device = await Device.findOne({MAC : MAC});
+        const { MAC } = req.body;
+        const device = await Device.findOne({ MAC: MAC });
+        res.send({
+            result: true,
+            data: JSON.stringify(device),
+        });
+    }
+    catch (exception) {
+        res.send({
+            result: false,
+            error: UNKOWN,
+        });
+    }
+};
+
+exports.findOneDevice = async(req, res) => {
+    try {
+        const { MAC, _id } = req.body;
+        var query = new Object();
+        if (MAC != null) query.MAC = MAC;
+        if (_id != null) query._id = _id;
+        console.log(query);
+
+        const device = await Device.findOne(query);
+        if (device) {
             res.send({
                 result: true,
                 data: JSON.stringify(device),
             });
-    }
-    catch (exception) {
+        }
+        else {
             res.send({
                 result: false,
-                error: UNKOWN,
+                error: ERROR_CODE.NO_SUCH_DATA,
             });
+        }
+
     }
-}
+    catch (exception) {
+        console.log(exception);
+        res.send({
+            result: false,
+            error: ERROR_CODE.UNKOWN,
+        });
+    }
+};
 
 /// 히스토리 관련
 
@@ -576,6 +613,7 @@ exports.root = (req, res) => {
     var tz = moment.tz.guess();
     console.log(tz);
     res.send({
+
         result: "hello",
     });
 };
@@ -584,189 +622,180 @@ exports.root = (req, res) => {
 
 exports.registerSMS = async(req, res) => {
     try {
-        
-            const { _id, num } = req.body;
-            
-            const historyid = _id;
-            const number = num;
-            
-            let apiSecret = process.env.sol_secret;
-            let apiKey = process.env.sol_key;
-      
-            const moment = require('moment')
-            const nanoidGenerate = require('nanoid/generate')
-            const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32)
-            const HmacSHA256 = require('crypto-js/hmac-sha256')
-            const fs = require('fs')
-            const path = require('path')
-      
-            const date = moment.utc().format()
-            const salt = generate()
-            const hmacData = date + salt
-            const signature = HmacSHA256(hmacData, apiSecret).toString()
-            const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
-        
-            var request = require('request');
-           
-            
-            const historyone = await History.findOne({'_id' : historyid});
-            const companyone = await Company.findOne({'_id' : historyone.CID})
-            var companypoint = companyone.SPO;
-            
-            if(companypoint > 0) {
-            
+
+        const { _id, num } = req.body;
+
+        const historyid = _id;
+        const number = num;
+
+        let apiSecret = process.env.sol_secret;
+        let apiKey = process.env.sol_key;
+
+        const moment = require('moment')
+        const nanoidGenerate = require('nanoid/generate')
+        const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32)
+        const HmacSHA256 = require('crypto-js/hmac-sha256')
+        const fs = require('fs')
+        const path = require('path')
+
+        const date = moment.utc().format()
+        const salt = generate()
+        const hmacData = date + salt
+        const signature = HmacSHA256(hmacData, apiSecret).toString()
+        const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
+
+        var request = require('request');
+
+
+        const historyone = await History.findOne({ '_id': historyid });
+        const companyone = await Company.findOne({ '_id': historyone.CID })
+        var companypoint = companyone.SPO;
+
+        if (companypoint > 0) {
+
             var options = {
-              headers: {
-                Authorization:
-                  autori,'Content-Type': 'application/json'
-              },
-              body: {
-                message: {
-                  to: num,
-                  from: '16443486',
-                  text: '안녕하세요. ' + companyone.CNA + '입니다. 소독이 완료되었습니다. 아래 링크로 확인해주세요 www.cleanoasis.net/publish?HID=' + historyid,
-                  type: "SMS"
+                headers: {
+                    Authorization: autori,
+                    'Content-Type': 'application/json'
                 },
-              },
-              method: 'POST',
-              json: true,
-              url: 'http://api.solapi.com/messages/v4/send'
+                body: {
+                    message: {
+                        to: num,
+                        from: '16443486',
+                        text: '안녕하세요. ' + companyone.CNA + '입니다. 소독이 완료되었습니다. 아래 링크로 확인해주세요 www.cleanoasis.net/publish?HID=' + historyid,
+                        type: "SMS"
+                    },
+                },
+                method: 'POST',
+                json: true,
+                url: 'http://api.solapi.com/messages/v4/send'
             };
-            
-            
-             request(options, function(error, response, body) {
-              if (error) throw error;
-              console.log('result :', body);
-            });     
-                  
-              console.log(companypoint);
+
+
+            request(options, function(error, response, body) {
+                if (error) throw error;
+                console.log('result :', body);
+            });
+
+            console.log(companypoint);
             //  companypoint = companypoint - 20;
-              console.log(companypoint);
-                  
-                const companyone =  await Company.where({'_id' : historyone.CID})
-                .updateMany({ "SPO" : companypoint }).setOptions({runValidators : true})
+            console.log(companypoint);
+
+            const companyone = await Company.where({ '_id': historyone.CID })
+                .updateMany({ "SPO": companypoint }).setOptions({ runValidators: true })
                 .exec();
-            }
-            
-            else {
-                res.send({
-                result: false,
-                error: UNKOWN,
-                });
-            }
-        
-        
         }
-        catch (exception) {
+
+        else {
             res.send({
                 result: false,
                 error: UNKOWN,
             });
         }
+
+
+    }
+    catch (exception) {
+        res.send({
+            result: false,
+            error: UNKOWN,
+        });
+    }
 };
 
 exports.registerKAKAO = async(req, res) => {
     var request = require('request');
     try {
-        
-            const { _id, num } = req.body;
-            
-            const historyid = _id;
-            const number = num;
-            
-            let apiSecret = process.env.sol_secret;
-            let apiKey = process.env.sol_key;
-            
-            const { config, Group, msg } = require('solapi');
-           
-            
-            const historyone = await History.findOne({'_id' : historyid});
-            var companyone = await Company.findOne({'_id' : historyone.CID});
-            var companypoint = companyone.SPO;
-            
-            
-            
-            if(companypoint > 0) {
-                
-                config.init({ apiKey, apiSecret })
-                
-                var fn = async function send (params = {}) {
-                    try {
-                      const response = await Group.sendSimpleMessage(params);
-                      const pointone = await Point.insertMany({
+
+        const { _id, num } = req.body;
+
+        const historyid = _id;
+        const number = num;
+
+        let apiSecret = process.env.sol_secret;
+        let apiKey = process.env.sol_key;
+
+        const { config, Group, msg } = require('solapi');
+
+
+        const historyone = await History.findOne({ '_id': historyid });
+        var companyone = await Company.findOne({ '_id': historyone.CID });
+        var companypoint = companyone.SPO;
+
+        if (companypoint > 0) {
+
+            config.init({ apiKey, apiSecret })
+
+            var fn = async function send(params = {}) {
+                try {
+                    const response = await Group.sendSimpleMessage(params);
+                    const pointone = await Point.insertMany({
                         "CID": companyone._id,
                         "PN": "알림톡 전송",
                         "PO": 50,
-                        "MID" : response.messageId,
-                        "WNM" : historyone.WNM,
-                      });
-                      console.log(pointone);
-                    
-                      console.log(companypoint);
-                      companypoint = companypoint - 50;
-                      console.log(companypoint);
-                    
-                      await Company.where({ '_id': historyone.CID })
+                        "MID": response.messageId,
+                        "WNM": historyone.WNM,
+                    });
+                    console.log(pointone);
+
+                    console.log(companypoint);
+                    companypoint = companypoint - 50;
+                    console.log(companypoint);
+
+                    await Company.where({ '_id': historyone.CID })
                         .update({ "SPO": companypoint }).setOptions({ runValidators: true })
                         .exec();
-                      
-                    } catch (e) {
-                      console.log(e);
-                    }
-                  }
-                  
-                  const params = {
-                    autoTypeDetect: true,
-                    text: companyone.CNA + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
-                    to: number, // 수신번호 (받는이)
-                    from: '16443486', // 발신번호 (보내는이)
-                    type: 'ATA',
-                    kakaoOptions: {
-                      pfId: 'KA01PF210319072804501wAicQajTRe4',
-                      templateId: 'KA01TP210319074611283wL0AjgZVdog',
-                            buttons: [{
-                              buttonType: 'WL',
-                              buttonName: '확인하기',
-                              linkMo: process.env.IP + '/publish?cat=1&hid=' + historyid,
-                              linkPc: process.env.IP + '/publish?cat=1&hid=' + historyid
-                            }]
-                    }
-                  }
-                  
-                  fn(params)
+
+                }
+                catch (e) {
+                    console.log(e);
+                }
             }
-            else {
-                res.send({
-                result: false,
-                error: NO_POINT,
-                });
+
+            const params = {
+                autoTypeDetect: true,
+                text: companyone.CNA + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
+                to: number, // 수신번호 (받는이)
+                from: '16443486', // 발신번호 (보내는이)
+                type: 'ATA',
+                kakaoOptions: {
+                    pfId: 'KA01PF210319072804501wAicQajTRe4',
+                    templateId: 'KA01TP210319074611283wL0AjgZVdog',
+                    buttons: [{
+                        buttonType: 'WL',
+                        buttonName: '확인하기',
+                        linkMo: process.env.IP + '/publish?cat=1&hid=' + historyid,
+                        linkPc: process.env.IP + '/publish?cat=1&hid=' + historyid
+                    }]
+                }
             }
-        
-        
+            fn(params)
         }
-        catch (exception) {
+        else {
             res.send({
                 result: false,
-                error: UNKOWN,
+                error: NO_POINT,
             });
         }
+    }
+    catch (exception) {
+        res.send({
+            result: false,
+            error: UNKOWN,
+        });
+    }
 };
 
 exports.DIDreturn = async(req, res) => {
-    
     try {
-        
-            const {mac} = req.body;
-            
-            const deviceone = await Device.find({MAC : mac});
-            
-            res.send({ DID : deviceone[0]._id});
-            
+        const { mac } = req.body;
+        const deviceone = await Device.find({ MAC: mac });
+        res.send({ DID: deviceone[0]._id });
     }
     catch (exception) {
-            res.send({
-                result: false,
-                error: UNKOWN,
-            });
+        res.send({
+            result: false,
+            error: UNKOWN,
+        });
     }
 }
