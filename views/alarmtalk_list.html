@@ -58,14 +58,12 @@
 					</div>
 					
 					<div class="d-flex justify-content-between align-items-center mb-2">
-					<!--<div class="mr-auto">-->
 						<select id = "selectpage" name="data-table-default_length" aria-controls="data-table-default" class="custom-select custom-select-sm width-80 mb-0">
 							<option class ="postnumber" value="10">10</option>
 							<option class ="postnumber" value="25">25</option>
 							<option class ="postnumber" value="50">50</option>
 							<option class ="postnumber" value="100">100</option>
 						</select>
-					<!--</div>-->
 						<p class="mb-0 text-gray">
 							<span>{{__('today')}} </span><span class="text-red font-weight-bold"><u>{{alarmTodayCount}}</u></span>
 							<span> / </span>
@@ -119,26 +117,4 @@ var pagingObject = new Object({name : "Alarmtalk", url : "/ajax/alarmtalk_list",
 
 
 {% block script %}
-
-<script src="../assets/plugins/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-<script src="../assets/plugins/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
-<script src="../assets/plugins/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="../assets/plugins/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script src="../assets/plugins/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-<script src="../assets/plugins/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
-<script src="../assets/plugins/datatables.net-colreorder/js/dataTables.colReorder.min.js"></script>
-<script src="../assets/plugins/datatables.net-colreorder-bs4/js/colReorder.bootstrap4.min.js"></script>
-<script src="../assets/plugins/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
-<script src="../assets/plugins/datatables.net-keytable-bs4/js/keyTable.bootstrap4.min.js"></script>
-<script src="../assets/plugins/datatables.net-rowreorder-bs4/js/rowReorder.bootstrap4.min.js"></script>
-<script src="../assets/plugins/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-<script src="../assets/plugins/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
-<script src="../assets/plugins/datatables.net-buttons/js/buttons.colVis.min.js"></script>
-<script src="../assets/plugins/datatables.net-buttons/js/buttons.flash.min.js"></script>
-<script src="../assets/plugins/datatables.net-buttons/js/buttons.html5.min.js"></script>
-<script src="../assets/plugins/datatables.net-buttons/js/buttons.print.min.js"></script>
-<script src="../assets/plugins/pdfmake/build/pdfmake.min.js"></script>
-<script src="../assets/plugins/pdfmake/build/vfs_fonts.js"></script>
-<script src="../assets/plugins/jszip/dist/jszip.min.js"></script>
-<!--<script src="../assets/js/demo/table-manage-combine.demo.js"></script>-->
 {% endblock %}
