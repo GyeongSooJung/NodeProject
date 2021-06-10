@@ -555,8 +555,11 @@ exports.findDeviceByID = async(req, res) => {
     
     try {
             const {MAC} = req.body;
-            const deviceone = await Device.find({MAC : MAC});
-            res.send({ DID : deviceone[0]._id});
+            const device = await Device.findOne({MAC : MAC});
+            res.send({
+                result: true,
+                data: JSON.stringify(device),
+            });
     }
     catch (exception) {
             res.send({
