@@ -57,13 +57,9 @@ exports.signIn = async(req, res) => {
     const { type, id, email } = req.body;
     if (type == "GOOGLE") {
         var worker = await Worker.findOne({ "GID": id, "EM": email });
-        const companycua = await Company.aggregate([
-                { $match : {"_id" : ObjectId(worker.CID)} },
-                { $project : {CUA : "$CUA"}}
-            ], function (err,result) {
-                    if(err) throw err;
-            })
-        const carUA = companycua[0].CUA;
+        console.log(type, id, email)
+        console.log(worker)
+        
         if (worker != null) {
             // 토큰 생성
             const token = jwt.sign({
@@ -73,12 +69,23 @@ exports.signIn = async(req, res) => {
             });
 
             await Worker.where({ _id: worker._id }).updateOne({ UA: Date.now() });
+            
+            const companycua = await Company.aggregate([
+                { $match : {"_id" : ObjectId(worker.CID)} },
+                { $project : {CUA : "$CUA"}}
+            ], function (err,result) {
+                    if(err) throw err;
+            });
+            const carUA = companycua[0].CUA;
+            
             return res.json({
                 result: true,
                 data: JSON.stringify(worker),
                 token,
                 carUA
             });
+            
+            
         }
         else {
             return res.json({
@@ -542,6 +549,22 @@ exports.deleteDevice = async(req, res) => {
         });
     }
 };
+
+// 소독기 검색
+exports.findDeviceByID = async(req, res) => {
+    
+    try {
+            const {MAC} = req.body;
+            const deviceone = await Device.find({MAC : MAC});
+            res.send({ DID : deviceone[0]._id});
+    }
+    catch (exception) {
+            res.send({
+                result: false,
+                error: UNKOWN,
+            });
+    }
+}
 
 /// 히스토리 관련
 
