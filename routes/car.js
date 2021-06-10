@@ -15,7 +15,8 @@ const Mongoose = require('mongoose');
 //자동차 등록
   // 수기 입력(하나씩) 차량 등록
 router.post('/car_join', isNotLoggedIn, async (req, res, next) => {
-  const { CN, CPN } = req.body;
+  const { data } = req.body;
+  const jsonData = JSON.parse(data);
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   // const CA = moment().format('YYYY-MM-DD hh:mm:ss');
@@ -24,31 +25,33 @@ router.post('/car_join', isNotLoggedIn, async (req, res, next) => {
     // 차량번호 정규식
     var check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
     // 업체에 등록된 차량
-    const exCar = await Car.findOne({ "CID" : CID, "CN" :  CN });
+    const exCar = await Car.findOne({ "CID" : CID, "CN" :  jsonData.CN });
       
-    if(CN.length >= 7 && CN.length <= 8) {
-      if(check.test(CN) == true) {
+    if(jsonData.CN.length >= 7 && jsonData.CN.length <= 8) {
+      if(check.test(jsonData.CN) == true) {
         if(!exCar) {
           await Car.create({
-            CID, CN, CPN,
+            "CID" : CID,
+            "CN" : jsonData.CN,
+            "CPN" : jsonData.CPN
           });
           
           const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
           await Company.where({ "CNU" : CNU })
             .update({ "CUA" : CUA }).setOptions({runValidators : true})
             .exec();
-          return res.send({ status: 'success' });
+          return res.send({ status: 'success', type: 'car' });
         }
         else {
-          return res.send({ status: 'exist' });
+          return res.send({ status: 'exist', type: 'car' });
         }
       }
       else {
-        return res.send({ status: 'type' });
+        return res.send({ status: 'type', type: 'car' });
       }
     }
     else {
-      return res.send({ status: 'length' });
+      return res.send({ status: 'length', type: 'car' });
     }
   } catch (err) {
     console.error(err);
@@ -58,7 +61,8 @@ router.post('/car_join', isNotLoggedIn, async (req, res, next) => {
 
   // 브라우저에 나타난 excel 데이터 등록
 router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
-  const { excelData } = req.body;
+  const { data } = req.body;
+  const jsonData = JSON.parse(data);
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
@@ -74,7 +78,7 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
       return array;
     };
     // 엑셀 데이터를 배열로 변환
-    excelArr = changeArr(excelData);
+    excelArr = changeArr(jsonData.excelData);
     
     const excelCN = [];
     const excelCPN = [];
@@ -91,11 +95,11 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
           a += 1;
         }
         else {
-          return res.send({ status: 'excelType' });
+          return res.send({ status: 'excelType', type: 'car' });
         }
       }
       else {
-        return res.send({ status: 'excelLength' });
+        return res.send({ status: 'excelLength', type: 'car' });
       }
     }
     // 엑셀 데이터(차주전화번호) 배열에 담기
@@ -115,7 +119,7 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
       .update({ "CUA" : CUA }).setOptions({runValidators : true})
       .exec();
     
-    return res.send({ status: 'success' });
+    return res.send({ status: 'success', type: 'car' });
     
   } catch(err) {
     console.error(err);
@@ -173,7 +177,6 @@ router.post('/car_json_excel', isNotLoggedIn, async (req, res, next) => {
  
     form.parse(req);
     
-    console.log("포오오옴"+form);
   } catch(err) {
     console.error(err);
     next(err);
@@ -193,25 +196,30 @@ router.post('/ajax/car_list_edit2', isNotLoggedIn, async(req, res, next) => {
   
   const exCar = await Car.findOne({ "CID" : CID, "CN" :  CN });
   const check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
+  const numCheck = /^[0-9]*$/;
   try{
-    
     if (CN.length >= 7 && CN.length <= 8) {
       check.lastIndex = 0;
       if (check.test(CN) == true) {
         
         if(!exCar) {
-          const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
-          
-          const car = await Car.where({"_id" : car_id})
-                      .updateOne({ "CID" : CID,
-                                "CN" : CN,
-                                "CPN" : CPN,
-                      }).setOptions({runValidators : true})
-                      .exec();
-          const company = await Company.where({"_id" : CID})
-                      .updateOne({ "CUA" : CUA }).setOptions({runValidators : true})
-                      .exec();
-          res.send({ status : "success" });
+          if(numCheck.test(CPN) == true) {
+            const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
+            
+            const car = await Car.where({"_id" : car_id})
+                        .updateOne({ "CID" : CID,
+                                  "CN" : CN,
+                                  "CPN" : CPN,
+                        }).setOptions({runValidators : true})
+                        .exec();
+            const company = await Company.where({"_id" : CID})
+                        .updateOne({ "CUA" : CUA }).setOptions({runValidators : true})
+                        .exec();
+            return res.send({ status : "success" });
+          }
+          else {
+            return res.send({ status : "numErr" });
+          }
         }
         else {
           return res.send({ status: 'exist' });
@@ -248,9 +256,9 @@ router.post('/ajax/car_deleteone', isNotLoggedIn, async (req, res, next) => {
     await Company.where({"CNU" : CNU})
       .update({ "CUA" : CUA }).setOptions({runValidators : true})
       .exec();
-    res.json({ result : true });
+    res.send({ result : true });
   } catch (err) {
-    res.json({ result : false });
+    res.send({ result : false });
     console.error(err);
     next(err);
   }
@@ -266,7 +274,7 @@ router.post('/ajax/car_delete', isNotLoggedIn ,async (req, res, next) => {
     const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
     try {
         if(!select) {
-          res.json({ result : false });
+          res.send({ result : false });
         }
         else {
           
@@ -294,10 +302,10 @@ router.post('/ajax/car_delete', isNotLoggedIn ,async (req, res, next) => {
           await Company.where({"CNU" : CNU})
             .update({ "CUA" : CUA }).setOptions({runValidators : true})
             .exec();
-        res.json({ result : true });
+        res.send({ result : true });
         }
     } catch (err) {
-    res.json({ result : true });
+    res.send({ result : true });
     console.error(err);
     next(err);
   }

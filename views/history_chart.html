@@ -9,22 +9,13 @@
 <link href="../assets/plugins/datatables.net-keytable-bs4/css/keyTable.bootstrap4.min.css" rel="stylesheet" />
 <link href="../assets/plugins/datatables.net-rowreorder-bs4/css/rowReorder.bootstrap4.min.css" rel="stylesheet" />
 <link href="../assets/plugins/datatables.net-select-bs4/css/select.bootstrap4.min.css" rel="stylesheet" />
-
-<!-- Styles -->
-<style>
-  #chartdiv {
-    width: 100%;
-    height: 500px;
-  }
-  
-  </style>
 {% endblock %}
 
 {% block content %}
 <!-- begin #content -->
 <div id="content" class="content">
 	<!-- begin page-header -->
-	<h1 class="page-header">{{__('history_info')}}</h1>
+	<h1 class="page-header mt-3">{{__('history_info')}}</h1>
 	<!-- end page-header -->
 	<!-- begin panel -->
 	<div class="panel panel-inverse">
@@ -36,7 +27,7 @@
 		<!-- begin panel-body -->
   		<div class="panel-body">
   		  {% if history_array %}
-  			<div id="chartdiv" class="height-sm"></div>
+  			<div id="history-chart-div" class="height-sm"></div>
   			{% else %}
   			
   			{% endif %}
@@ -117,12 +108,12 @@
 			<!-- end table-responsive -->
 		</div>
 		<!-- end panel-body -->
-		<center>
+		<div class="mx-auto">
             <div class="d-flex justify-content-center align-item-center py-3">
     			<a href="/publish?cat=1&hid={{historyone._id}}" class="btn btn-primary text-white px-3 mx-2">{{__('qrcode')}} {{__('link')}}</a>
 				<a href="/history_list" class="btn btn-primary text-white px-4 mx-2">{{__('return_list')}}</a>
             </div>
-        </center>
+        </div>
 	</div>
 	<!-- end panel -->
 </div>
@@ -135,7 +126,7 @@
 <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
   
-  <!-- Chart code -->
+<!-- Chart code -->
 <script>
 am4core.ready(function() {
 	
@@ -144,7 +135,7 @@ am4core.ready(function() {
 	// Themes end
 	
 	// Create chart instance
-	var chart = am4core.create("chartdiv", am4charts.XYChart);
+	var chart = am4core.create("history-chart-div", am4charts.XYChart);
 	
 	//이것은 차트에 mongodb 연동하는 부분
 	{% set ss = 1 %}

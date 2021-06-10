@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 	<meta charset="utf-8" />
-	<title>{{title}}</title>
+	<title>{{__('login_title')}}</title>
 	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 	<meta content="" name="description" />
 	<meta content="" name="author" />
@@ -48,7 +48,7 @@
 				<div class="login-body">
 					<!-- begin login-content -->
 					<div class="login-content">
-						<form action="auth/login" method="post" class="margin-bottom-0">
+						<form action="" method="post" id="login-form" class="margin-bottom-0" onsubmit="login('login-form','CNU','PW');">
 							<div class="form-group m-b-20">
 								<input id="CNU" name = "CNU" type="text" class="form-control form-control-lg inverse-mode" placeholder="{{__('business_number')}}" required />
 							</div>
@@ -79,34 +79,26 @@
 	</div>
 	<!-- end page container -->
 	
-<script>
-	// 에러 링크 기능
-	window.onload = () => {
-		if (new URL(location.href).searchParams.get('fail')) {
-			alert("{{__('login_error')}}");
+	<!--Begin Script-->
+	<script>
+		function login(form, companyNumber, password) {
+			var CNU = document.getElementsByName(companyNumber)[0].value;
+			var PW = document.getElementsByName(password)[0].value;
+		    var validateCNU = $('#'+form).parsley();
+		    
+		    if(validateCNU.isValid() == true) {
+		    	loginAjax(CNU,PW);
+		    }
+		    event.preventDefault();
 		}
-		if (new URL(location.href).searchParams.get('again')) {
-			alert("{{__('login_again')}}");
-		}
-		if (new URL(location.href).searchParams.get('pwc')) {
-			alert("{{__('login_pw_change')}}");
-		}
-		if (new URL(location.href).searchParams.get('findPW')) {
-			alert("{{__('login_findpw')}}\n"+"{{__('login_again')}}\n"+"{{__('login_findpw2')}}");
-		}
-	};
+	</script>
 	
-	// // 폼 enter키 submit 막기
-	// document.addEventListener('keydown', function(event) {
-	// 	if (event.keyCode === 13) {
-	// 		event.preventDefault();
-	// 	}
-	// }, true);
-</script>
-
-<!-- ================== BEGIN BASE JS ================== -->
-<script src="../assets/js/app.min.js"></script>
-<script src="../assets/js/theme/default.min.js"></script>
-<!-- ================== END BASE JS ================== -->
+	<!-- ================== BEGIN BASE JS ================== -->
+	<script src="../assets/js/app.min.js"></script>
+	<script src="../assets/js/theme/default.min.js"></script>
+	<!-- ================== END BASE JS ================== -->
+	<script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
+	<script src="../oasisjs/oasis_auth.js"></script>
+	<!--End Script-->
 </body>
 </html>

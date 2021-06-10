@@ -27,36 +27,32 @@ const smtpTransport = nodemailer.createTransport({
 // 사업자 번호 검증
 router.post('/checkCNU', async(req, res, next) => {
     const CNU = req.body.CNU;
+    console.log(CNU);
     
     try {
         const exCNU = await Company.findOne({ "CNU" : CNU });
-        const exEmail = exCNU.EA;
-        console.log("이엑스이메일"+exEmail);
-        
-        var masking = function maskingName(email) {
-            var maskingEmail = "";
-            var idx = email.indexOf('@');
-            var email1 = email.substring(0, idx);
-            var email2 = email.substring(idx+1);
-            // console.log("이메일1"+email1);
-            // console.log("이메일2"+email2);
-            
-            var mask1 = email1.replace(/(?<=.{2})./gi, "*");
-            var mask2 = email2.replace(/(?<=.{2})./gi, "*");
-            // console.log("마스킹1"+mask1);
-            // console.log("마스킹2"+mask2);
-            
-            maskingEmail = mask1+"@"+mask2;
-            
-            return maskingEmail;
-        }
-        
-        const mask = masking(exEmail);
 
         if(!exCNU) {
             return res.send({ status: 'fail' });
         }
         else {
+            const exEmail = exCNU.EA;
+            
+            var masking = function maskingName(email) {
+                var maskingEmail = "";
+                var idx = email.indexOf('@');
+                var email1 = email.substring(0, idx);
+                var email2 = email.substring(idx+1);
+                
+                var mask1 = email1.replace(/(?<=.{2})./gi, "*");
+                var mask2 = email2.replace(/(?<=.{2})./gi, "*");
+                
+                maskingEmail = mask1+"@"+mask2;
+                
+                return maskingEmail;
+            }
+            const mask = masking(exEmail);
+            
             return res.send({ status: 'success', mask: mask });
         }
     } catch(err) {
@@ -69,7 +65,6 @@ router.post('/checkCNU', async(req, res, next) => {
 router.post('/send', async(req, res, next) => {
     const { EA, CNU } = req.body;
     var cookie = res.cookie();
-  console.log(cookie);
     
     try {
         const exEA = await Company.where({ "CNU" : CNU }).findOne({ "EA" : EA });
@@ -146,6 +141,7 @@ router.post('/cert', async (req, res, next) => {
 
 router.post('/findPW', async(req, res, next) => {
     const { CNU, EA } = req.body;
+    console.log(CNU+"?"+EA);
 
     try {
         var createCode = function createCode(arr, length) {
@@ -199,7 +195,8 @@ router.post('/findPW', async(req, res, next) => {
         
         const hashPW = await bcrypt.hash(randomPW, 12);
         await Company.update({ "CNU" : CNU, "EA" : EA }, { $set: { "PW" : hashPW }});
-        return res.redirect('/login?findPW=true');
+        
+        return res.send({ status : "success" });
         
     } catch(err) {
         console.error(err);

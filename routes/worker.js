@@ -184,97 +184,12 @@ router.post('/worker_delete',isNotLoggedIn ,async (req, res, next) => {
     });
     
     await Worker.remove({ "EM" : req.body["select"] });
-    res.json({ result : true });
+    res.send({ result : true });
   } catch (err) {
-    res.json({ result : false });
+    res.send({ result : false });
     console.error(err);
     next(err);
   }
 });
-
-//작업자 선택삭제
-router.post('/worker_select_delete',isNotLoggedIn ,async (req, res, next) => {
-  try {
-        const {ck} = req.body;
-
-        if(!ck) {
-          return res.redirect('/worker_list?null=true');
-        }
-        else {
-          
-          if(typeof(ck) == 'string') {
-            const workerone = await Worker.findOne({"EM" : ck});
-            await Workerdelete.create({
-                           "CID" : workerone.CID,
-                            "WN" : workerone.WN,
-                            "PN" : workerone.PN,
-                            "GID" : workerone.GID,
-                            "EM" : workerone.EM,
-                            "PU" : workerone.PU,
-                            "AU" : workerone.AU,
-                            "AC" :workerone.AC
-            });
-            await Worker.remove({ "EM" : ck });
-          }
-          else {
-            for(var i=0; i < ck.length; i++){
-             const workerone = await Worker.findOne({"EM" : ck[i]});
-                await Workerdelete.create({
-                 "CID" : workerone.CID,
-                  "WN" : workerone.WN,
-                  "PN" : workerone.PN,
-                  "GID" : workerone.GID,
-                  "EM" : workerone.EM,
-                  "PU" : workerone.PU,
-                  "AU" : workerone.AU,
-                  "AC" :workerone.AC
-                });
-                await Worker.remove({ "EM" : ck[i] });                
-            }
-          }
-          res.redirect('/worker_list');
-        }
-    }   catch (err) {
-        console.error(err);
-        next(err);
-    // try {
-    //     const {EM, ck} = req.body;
-    //     var i,j;
-    //     let  workerone;
-    //     console.log("CK: " + ck);
-    //     console.log("EM: " + EM);
-    //     /* EM 이랑 AC 비교 */
-        
-    //     if (!ck) {
-    //         return res.redirect('/worker_list');
-    //     }
-        
-    //     else if(!(ck instanceof Object)) {
-    //       for (i =0; i < EM.length; i ++) {
-    //         console.log(EM[i]);
-    //         if (EM[i] == ck) { 
-    //           await Worker.remove({ "EM" : ck });
-    //         }
-    //       }
-    //     }
-    //     else{
-    //       for (i =0; i < EM.length; i ++) {
-    //         for(j =0; j < ck.length; j ++) {
-    //           if(EM[i] == ck[j]){
-    //             await Worker.remove({ "EM" : EM[i] });
-    //             break;
-    //           }
-    //         }
-    //       }
-    //     }
-    //     res.redirect('/worker_list');
-    // }   catch (err) {
-    //     console.error(err);
-    //     next(err);
-  }
-});
-
-
-
 
 module.exports = router;

@@ -13,6 +13,13 @@ html, body {
 /*    height: 100%;*/
 /*}*/
 
+/*flag*/
+.flag {
+    width: 18px;
+    height: 18px;
+}
+
+
 .content {
     /*min-height: 100%;*/
     /*height: 100%;*/
@@ -22,6 +29,10 @@ html, body {
 /*#footer {*/
 /*    height: 220px;*/
 /*}*/
+
+.content-bg {
+    background-image: url(../assets/img/main2.png);
+}
 
 .index-bg {
     background-color: #FBF7F2;

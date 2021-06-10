@@ -35,27 +35,22 @@
    </div>
    <!-- end page container -->
    
-   <!-- ================== BEGIN BASE JS ================== -->
-   <script src="../assets/js/app.min.js"></script>
-   <script src="../assets/js/theme/default.min.js"></script>
-   <!-- ================== END BASE JS ================== -->
-   
+   <!--Begin Script-->
    <script>
-   $(document).ready(function() {
-       console.log("@@@");
+    $(document).ready(function() {
        var insertTr = ""
        {% for notice in noticeone %}
        
 	    var noticeid = '{{notice._id}}'
 	    console.log(noticeid);
 	    $.ajax({
-		url: "/ajax/notice_detail",
-                type: "POST",
-                async: false,
-                dataType: 'json',
-                data: {
-                    noticeid : noticeid 
-	                    }
+    		url: "/ajax/notice_detail",
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            data: {
+                noticeid : noticeid 
+            }
         }).done(function (data) { 
             if(data.result == true) {
                 console.log(data.noticedetail[0])
@@ -68,9 +63,12 @@
             
         })
         {% endfor %}
-    	    
-        	    
-   });
+    });
    </script>
+   <!--End Script-->
+   <!-- ================== BEGIN BASE JS ================== -->
+   <script src="../assets/js/app.min.js"></script>
+   <script src="../assets/js/theme/default.min.js"></script>
+   <!-- ================== END BASE JS ================== -->
 </body>
 </html>

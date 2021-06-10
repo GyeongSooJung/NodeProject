@@ -18,7 +18,24 @@
 			Object.page = 0;
 			pagereload(Object, i18nconvert);
 		
-	}        
+	}   
+	
+	// 테스트 기능
+	function sorttest(Object, i18nconvert, sort) {
+		var pagelist = Object.array;
+		var sortPlus = sort.id;
+		
+		if(document.getElementById(sort.id).classList.contains('fa-sort-down')) {
+	 		var sortPlus2 = sortPlus + "-2";
+		}
+		else {
+	 		var sortPlus2 = sortPlus;
+		}
+		
+		Object.array = pagelist;
+		Object.sort = sortPlus2;
+		pagereload(Object, i18nconvert);
+	}
 	
 	//검색 옵션 지정
 	function searchoption(opt,Object,i18nconvert,jsondata) {
@@ -30,13 +47,13 @@
     	for (var item in jsondata) {
     		if (opt === item) {
     			string = i18nconvert(item);
-    			if((opt == "CA") || (opt == "ET")|| (opt == "payCA")|| (opt == "UCA") || (opt == "pointCA")) {
-    				document.getElementById('searchtext').classList.add('d-none');
-	    			$("#searchtext").val('');
-    			}
-    			else {
-	    			document.getElementById('searchtext').classList.remove('d-none');
-    			}
+    			// if((opt == "CA") || (opt == "ET")|| (opt == "payCA")|| (opt == "UCA") || (opt == "pointCA")) {
+    			// 	// document.getElementById('searchtext').classList.add('d-none');
+	    		// 	$("#searchtext").val('');
+    			// }
+    			// else {
+	    		// 	document.getElementById('searchtext').classList.remove('d-none');
+    			// }
     		}
     	}
     	$("#searchtext").val('');

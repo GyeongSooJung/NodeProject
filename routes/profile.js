@@ -13,17 +13,17 @@ router.post('/editInfo', isNotLoggedIn, DataSet, async(req, res, next) => {
          const exMnCompany = await Company.findOne({ "MN" : MN });
          const exPnCompany = await Company.findOne({ "PN" : PN });
          if (exMnCompany) {
-            return res.send({ status: 'exMn' });
+            return res.send({ status: 'exMn', company: company });
          }
          else if (exPnCompany) {
-            return res.send({ status: 'exPn' });
+            return res.send({ status: 'exPn', company: company });
          }
          else {
             await Company.where({ "_id" : company._id }).update({$set : { "CNA" : CNA, "MN" : MN, "PN" : PN, "UA" : Date.now() }});
-            return res.send({ status: 'success' });
+            return res.send({ status: 'success', company: company });
          }
       } else {
-         return res.send({ status: 'fail' });
+         return res.send({ status: 'fail', company: company });
       }
   } catch(err) {
       console.error(err);
@@ -49,14 +49,13 @@ router.post('/emailCK', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 router.post('/editPw', isNotLoggedIn, DataSet, async(req, res, next) => {
-   const { PW, CPW, RPW } = req.body;
+   const { PW, chPW, ckPW } = req.body;
    const company = req.decoded.company;
    
   try {
-     console.log("확인"+PW+CPW+RPW);
       if (bcrypt.compareSync(PW, company.PW)) {
-         const hashCPW = await bcrypt.hash(CPW, 12);
-         await Company.where({ "_id" : company._id }).update({$set : { "PW" : hashCPW, "UA" : Date.now() }});
+         const hashchPW = await bcrypt.hash(chPW, 12);
+         await Company.where({ "_id" : company._id }).update({$set : { "PW" : hashchPW, "UA" : Date.now() }});
          await res.cookie("token", req.cookies,{expiresIn:0});
          return res.send({ status: 'success' });
       } else {

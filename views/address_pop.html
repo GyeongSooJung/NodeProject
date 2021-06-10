@@ -3,14 +3,14 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Insert title here</title>
+	<title>Juso Search</title>
 </head>
 
 <script language="javascript">
 //opener관련 오류가 발생하는 경우 아래 주석을 해지하고, 사용자의 도메인정보를 입력합니다. ("주소입력화면 소스"도 동일하게 적용시켜야 합니다.)
 //document.domain = "abc.go.kr";
 
-function init(){
+function init() {
 	var url = location.href;
 	var confmKey = "{{juso}}";//승인키
 	// resultType항목 추가(2016.10.06)
@@ -18,15 +18,15 @@ function init(){
 	
 	var inputYn = '{{locals.inputYn}}';
 
-	if(inputYn != "Y"){
+	if(inputYn != "Y") {
 		document.form.confmKey.value = confmKey;
 		document.form.returnUrl.value = url;
 		document.form.resultType.value = resultType; // resultType항목 추가(2016.10.06)
 		document.form.action="https://www.juso.go.kr/addrlink/addrLinkUrl.do"; // 인터넷망
 		//document.form.action="https://www.juso.go.kr/addrlink/addrMobileLinkUrl.do"; //모바일 웹인 경우, 인터넷망
 		document.form.submit();
-		
-	}else{
+	}
+	else {
 		var roadFullAddr = '{{locals.roadFullAddr}}';
 		var roadAddrPart1 = '{{locals.roadAddrPart1}}';
 		var addrDetail = '{{locals.addrDetail}}';
@@ -52,8 +52,6 @@ function init(){
 		);
 		window.close();
 	}
-	
-	
 }
 
 

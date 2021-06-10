@@ -195,6 +195,7 @@
 		$("#memDiv2").append(insertTr);
 	}
 	
+	// 차량 엑셀 확인 리스트
 	
 	// 장비 리스트
 	
@@ -279,7 +280,12 @@
 					insertTr += "<td>"+ Object.array[i].MD +"</td>";
 					insertTr += "<td>"+ Object.array[i].VER+"</td>";
 					insertTr += "<td>"+ Object.array[i].MAC+"</td>";
-					insertTr += "<td>"+ Object.array[i].NN+"</td>";
+					if(!Object.array[i].NN) {
+						insertTr += "<td>x</td>";
+					}
+					else {
+						insertTr += "<td>"+ Object.array[i].NN+"</td>";
+					}
 					insertTr += "<td>"+ Object.array[i].UN+"회</td><td>";
 					
 					if ( (moment(Object.array[i].CA).format('DD')) == moment().format('DD') )
@@ -384,22 +390,22 @@
 						insertTr += "<td>본사</td>";
 						else
 						insertTr += "<td>대리점</td>";
-						insertTr += "<td><input  name = 'radioau "+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",0'";
+						insertTr += "<td><input onclick ='checkau(this)' name = '"+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",0'";
 						if(Object.array[i].AU ==0)
 							insertTr += "checked/></td>";
 						else 
 							insertTr += "unchecked/></td>";
-						insertTr += "<td><input  name = 'radioau "+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",3'";
+						insertTr += "<td><input onclick ='checkau(this)' name = '"+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",3'";
 						if(Object.array[i].AU ==3)
 							insertTr += "checked/></td>";
 						else 
 							insertTr += "unchecked/></td>";
-						insertTr += "<td><input  name = 'radioau "+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",2'";
+						insertTr += "<td><input onclick ='checkau(this)' name = '"+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",2'";
 						if(Object.array[i].AU ==2)
 							insertTr += "checked/></td>";
 						else 
 							insertTr += "unchecked/></td>";
-						insertTr += "<td><input  name = 'radioau "+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",1'";
+						insertTr += "<td><input onclick ='checkau(this)'  name = '"+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",1'";
 						if(Object.array[i].AU ==1)
 							insertTr += "checked/></td>";
 						else 
@@ -491,14 +497,14 @@
 						insertTr += "<td>"+ Object.array[i].PN+"</td>";
 						insertTr += "<td>"+ Object.array[i].EM+"</td>";
 						insertTr += "<td class='with-btn' nowrap>";
-						insertTr += "<input onclick ='checkau(this)' class ='ck_au' type='checkbox'  value ='"+Object.array[i].EM+"'";
-						if(Object.array[i].AU ==1)
+						insertTr += "<input onclick ='checkau2(this)' name ='"+i+"' class ='ck_au' type='checkbox'  value ='"+Object.array[i].EM+",2'";
+						if(Object.array[i].AU ==2)
 							insertTr += "checked/>";
 						else
 							insertTr += "unchecked/>";
 						insertTr += "</td>";
 						insertTr += "<td class='with-btn' nowrap>";
-						insertTr += "<input onclick ='checkac(this)' class ='ck_ac' type='checkbox'  value ='"+Object.array[i].EM+"'";
+						insertTr += "<input onclick ='checkac(this) name ='"+i+"'' class ='ck_ac' type='checkbox'  value ='"+Object.array[i].EM+"'";
 						if(Object.array[i].AC ==1)
 							insertTr += "checked/>";
 						else
@@ -541,6 +547,9 @@
 				insertTr += " fa-sort'></a></i></th>"
 		
 		insertTr += "<tr>"
+		insertTr += "<th id ='allcheck' width='1%'>"
+		insertTr += "	<input type='checkbox' name='allck' class='neHeros' value='' onChange='allCheckedBox(this);'/>"
+		insertTr += "</th>"
 		insertTr += "	<th width='2.5%'></th>"
 		
 		insertTr += "	<th width='15%' name = 'CNM'>"+i18nconvert("CNM")+"<a href='javascript:sortpage(pagingObject,i18nconvert,CNM,[CNM,DNM,ET,PD,WNM]);' name = 'CNM'><i id = 'CNM' class='float-right mx-1 fas fa-lg fa-fw m-t-3"
@@ -595,6 +604,9 @@
 			if(Object.array.length != 0) {
 				if(Object.array[i]) {
 					insertTr += "<tr>";
+					insertTr += "<td class='with-btn' nowrap>";
+					insertTr += "<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+ Object.array[i]._id +" onChange='eachCheckedBox(this);'/>";
+					insertTr += "</td>";
 					insertTr += "<td class='font-weight-bold'>"+(num - (Object.page*10)) +" </td>";
 					insertTr += "<td>"+ Object.array[i].CNM +"</td>";
 					insertTr += "<td>"+ Object.array[i].DNM+"</td><td>";
@@ -881,26 +893,54 @@
      	$("#memDiv1").empty();
      	
      	
+  //   	insertTr += "<tr>"
+		// insertTr += "	<th width='2.5%'></th>"
+		// insertTr += "	<th width='30.5%' name = 'WNM'>"+i18nconvert("payWNM")+"<a href='javascript:sortpage(pagingObject,i18nconvert,WNM,[WNM,CA,RE]);' name = 'WNM'><i id = 'WNM' class=' float-right mx-1 fas fa-lg fa-fw m-t-3"
+		// if(Object.sort == "WNM2")
+		// 	insertTr += " fa-sort-up'></a></i></th>"
+		// else if(Object.sort == "WNM")
+		// 	insertTr += " fa-sort-down'></a></i></th>"
+		// else 
+		// 	insertTr += " fa-sort'></a></i></th>"
+			
+		// insertTr += "	<th width='24%' name = 'CA'>"+i18nconvert("pointCA")+"<a href='javascript:sortpage(pagingObject,i18nconvert,CA,[WNM,CA,RE]);' name = 'CA'><i id = 'CA' class='float-right mx-1 fas fa-lg fa-fw m-t-3"
+		// if(Object.sort == "CA2")
+		// 	insertTr += " fa-sort-up'></a></i></th>"
+		// else if(Object.sort == "CA")
+		// 	insertTr += " fa-sort-down'></a></i></th>"
+		// else 
+		// 	insertTr += " fa-sort'></a></i></th>"
+			
+		// insertTr += "	<th width='21%' name = 'RE'>"+i18nconvert("RE")+"<a href='javascript:sortpage(pagingObject,i18nconvert,RE,[WNM,CA,RE]);' name = 'RE'><i id = 'RE' class='float-right mx-1 fas fa-lg fa-fw m-t-3"
+		// if(Object.sort == "RE2")
+		// 	insertTr += " fa-sort-up'></a></i></th>"
+		// else if(Object.sort == "RE")
+		// 	insertTr += " fa-sort-down'></a></i></th>"
+		// else 
+		// 	insertTr += " fa-sort'></a></i></th>"
+			
+		// insertTr += "	<th width='1%'></th>"
+		// insertTr += "</tr>"
      	insertTr += "<tr>"
 		insertTr += "	<th width='2.5%'></th>"
-		insertTr += "	<th width='30.5%' name = 'WNM'>"+i18nconvert("payWNM")+"<a href='javascript:sortpage(pagingObject,i18nconvert,WNM,[WNM,CA,RE]);' name = 'WNM'><i id = 'WNM' class=' float-right mx-1 fas fa-lg fa-fw m-t-3"
-		if(Object.sort == "WNM2")
+		insertTr += "	<th width='30.5%' name = 'WNM'>"+i18nconvert("payWNM")+"<a href='javascript:sorttest(pagingObject,i18nconvert,WNM);' name = 'WNM'><i id = 'WNM' class=' float-right mx-1 fas fa-lg fa-fw m-t-3"
+		if(Object.sort == "WNM-2")
 			insertTr += " fa-sort-up'></a></i></th>"
 		else if(Object.sort == "WNM")
 			insertTr += " fa-sort-down'></a></i></th>"
 		else 
 			insertTr += " fa-sort'></a></i></th>"
 			
-		insertTr += "	<th width='24%' name = 'CA'>"+i18nconvert("pointCA")+"<a href='javascript:sortpage(pagingObject,i18nconvert,CA,[WNM,CA,RE]);' name = 'CA'><i id = 'CA' class='float-right mx-1 fas fa-lg fa-fw m-t-3"
-		if(Object.sort == "CA2")
+		insertTr += "	<th width='24%' name = 'CA'>"+i18nconvert("pointCA")+"<a href='javascript:sorttest(pagingObject,i18nconvert,CA);' name = 'CA'><i id = 'CA' class='float-right mx-1 fas fa-lg fa-fw m-t-3"
+		if(Object.sort == "CA-2")
 			insertTr += " fa-sort-up'></a></i></th>"
 		else if(Object.sort == "CA")
 			insertTr += " fa-sort-down'></a></i></th>"
 		else 
 			insertTr += " fa-sort'></a></i></th>"
 			
-		insertTr += "	<th width='21%' name = 'RE'>"+i18nconvert("RE")+"<a href='javascript:sortpage(pagingObject,i18nconvert,RE,[WNM,CA,RE]);' name = 'RE'><i id = 'RE' class='float-right mx-1 fas fa-lg fa-fw m-t-3"
-		if(Object.sort == "RE2")
+		insertTr += "	<th width='21%' name = 'RE'>"+i18nconvert("RE")+"<a href='javascript:sorttest(pagingObject,i18nconvert,RE);' name = 'RE'><i id = 'RE' class='float-right mx-1 fas fa-lg fa-fw m-t-3"
+		if(Object.sort == "RE-2")
 			insertTr += " fa-sort-up'></a></i></th>"
 		else if(Object.sort == "RE")
 			insertTr += " fa-sort-down'></a></i></th>"
@@ -943,4 +983,68 @@
 			  
 		$("#memDiv2").append(insertTr);
 		
-	}
+	};
+	
+	// 공지사항 리스트
+	
+	var noticeList_condition = function (Object,i18nconvert) {
+		
+		var num =  Object.array.length; 	
+        var	insertTr = ""; // 채워넣을 HTML 초기화
+     	var indexcount = 1; // 인덱스번호 초기화
+     	
+     	$("#memDiv1").empty();
+     	
+     	
+     	insertTr += "<tr>"
+		insertTr += "<th width='2.5%'></th>"
+		insertTr += "<th width='60.5%' name='TI'>"+i18nconvert("notice_contents")+"<a href='javascript:sortpage(pagingObject,i18nconvert,TI,[TI,CA]);' name = 'TI'><i id = 'TI' class=' float-right mx-1 fas fa-lg fa-fw m-t-3"
+		if(Object.sort == "TI2")
+			insertTr += " fa-sort-up'></a></i></th>"
+		else if(Object.sort == "TI")
+			insertTr += " fa-sort-down'></a></i></th>"
+		else 
+			insertTr += " fa-sort'></a></i></th>"
+			
+		insertTr += "	<th width='24%' name='CA'>"+i18nconvert("notice_date")+"<a href='javascript:sortpage(pagingObject,i18nconvert,CA,[TI,CA]);' name = 'CA'><i id = 'CA' class='float-right mx-1 fas fa-lg fa-fw m-t-3"
+		if(Object.sort == "CA2")
+			insertTr += " fa-sort-up'></a></i></th>"
+		else if(Object.sort == "CA")
+			insertTr += " fa-sort-down'></a></i></th>"
+		else 
+			insertTr += " fa-sort'></a></i></th>"
+		insertTr += "</tr>"
+     	
+     	$("#memDiv1").append(insertTr);
+     	
+		insertTr = "";
+		for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+			if(Object.array.length != 0) {	
+	     	   if(Object.array[i]) {
+	     	      
+				  insertTr += "<tr>";
+				  insertTr += "<td class='font-weight-bold'>"+(num - (Object.page*10)) +" </td>";
+				  insertTr += "<td>"+ Object.array[i].TI +"</td><td>";
+				  if ( (moment(Object.array[i].CA).format('DD')) == moment().format('DD') )
+				  {
+				       insertTr +=  moment(Object.array[i].CA).format('HH:mm');
+				  }
+				  else {
+				      insertTr += moment(Object.array[i].CA).format('YYYY-MM-DD');
+				  }
+				  insertTr += "</tr>";
+				  num -= indexcount;
+	     	   }
+			}
+	     	else {
+	     	  	insertTr += "<tr>";
+				insertTr += "	<td colspan='10'>No Data</td>";
+				insertTr += "</tr>";
+				
+				break;
+	     	}   
+     	}
+			  
+		$("#memDiv2").append(insertTr);
+		
+	};

@@ -62,7 +62,6 @@
 	
 	"business_number" : "Business License Number",
 	
-	"index_title" : "OASIS | Sterilization Service",
 	"index_text" : "It provides complete internal space sterilization with automated system and sterilization using ozone.",
 	"index_about" : "ABOUT",
 	"index_about_text" : "A New Paradigm of Sterilization",
@@ -90,16 +89,19 @@
 	"index_ozone_point2_text": "Removes odors in a short time by changing and destroying odor components in the air.",
 	"index_ozone_point3_text": "Ozone is rapidly reduced to oxygen when it comes in contact with oxygen, leaving no residue behind.",
 	
+	"login_title": "OASIS | Log In",
 	"login_error" : "Please check your ID or password.",
 	"login_again" : "Please log in again.",
 	"login_pw_change" : "Password change is complete.",
 	"login_findpw" : "Your temporary password has been emailed to you.",
 	"login_findpw2" : "Please change your password later for security purposes.",
 	
+	"find_title": "OASIS | Find Password",
 	"find_no_register" : "This business number is not registered.",
 	"find_enter" : "Please enter your business number.",
 	"find_email_error" : "Email is not the same as the subscription information.",
 	
+	"register_title": "OASIS | Register",
 	"register_text1" : "Create an OASIS account. It can be managed efficiently.",
 	"register_check_guide" : "Please Check",
 	"register_personal" : "Personal Information Collection and Utilization plan",
@@ -113,7 +115,8 @@
 	"register_pn_error" : "The business phone number is already subscribed.",
 	"register_mn_error" : "The mobile phone number is already subscribed.",
 	"register_auth_error" : "Email authentication is invalid.",
-	"register_business_right" : "This is a valid business number. Would you like to retrieve the information?",
+	"register_business_right" : "This is a valid business number.",
+	"register_business_info": "Would you like to retrieve the information?",
 	"register_business_null" : "There is no information to recall. Please enter it yourself.",
 	"register_business_noexist" : "This business number does not exist.",
 	"register_auth_time" : "The validity time ",
@@ -130,8 +133,9 @@
 	"register_auth_enter" : "Please enter the authentication number.",
 	"register_auth_need" : "Email authentication is required.",
 	"register_digits_error" : "Please enter the numbers",
+	"register_success": "Sign up is complete.",
 	
-    "main_title": "OASIS | Admin Page",
+	"main_title": "OASIS | Admin",
     "main_point": "point",
     "main_company" : "Company",
     "main_indetail" : "In detail",
@@ -221,6 +225,7 @@
     "return_list" : "Back",
 	"choice_error" : "Please select an item.",
 	"search_option_error": "Please select a search option.",
+	"search_option": "Search Option",
 	"search_error" : "Please check the search term again.",
 	"create_date" : "Create Date",
 	"update_date" : "Update Date",
@@ -304,6 +309,7 @@
 	"history_end" : "End PPM",
 	
 	"payment": "Payment",
+	"payment_title": "OASIS | Shop",
 	"payment_tax_guide": "VAT included",
 	"payment_tax": "VAT",
 	"payment_won" : "Won",
@@ -328,6 +334,21 @@
 	"payment_cancelled" : "Your payment has been canceled.",
 	"payment_failed" : "Payment failed.",
 	"payment_forgery" : "This is a forged payment attempt.",
+	"payment_goods_img": "Goods Image",
+	"payment_goods_price": "Goods Price",
+	"payment_goods_explanation": "Goods Explanation",
+	"payment_price_diff_option": "Varies by option",
+	"payment_selection_option": "Selection Option",
+	"payment_add_option": "Add Option",
+	"payment_option_type": "Option Type",
+	"payment_option_name": "Option Name",
+	"payment_option_price": "Option Price",
+	"payment_option_type_ex": "Color",
+	"payment_option_name_ex": "Red, Blue",
+	"payment_registration_required": "Goods name and Goods amount are required.",
+	"payment_img_fail": "Goods image registration failed.",
+	"payment_goods_exist": "Existing goods name. Please set it differently.",
+	"payment_check_option": "Please choose an option.",
 	"payment_name" : "Goods Name",
 	"payment_number": "Quantity",
 	"payment_Dateofuse" : "Date of use",
@@ -358,11 +379,17 @@
 	"purchase_failed" : "Your purchase is incorrect",
 	
 	"notice_list" : "Notice",
+	"notice_list_write" : "Write a notice",
+	"notice_title" : "Title",
 	"notice_contents" : "Contents",
 	"notice_date" : "Registration date",
+	"notice_register" : "Notice has been registered.",
+	"notice_write" : "Writing",
 	
 	"qrcode": "QR code",
 	"qrcode_create":  "QR create",
 	"qrcode_generated": "Created QR code",
-	"qrcode_sticker": "Sticker"
+	"qrcode_sticker": "Sticker",
+	
+	"manual_title": "OASIS | Manual"
 }

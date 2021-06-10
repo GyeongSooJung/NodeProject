@@ -1,13 +1,5 @@
 {% extends 'layout.html' %}
 
-{% block css %}
-<style>
-	.inputbox {
-		position: relative !important;
-	}
-</style>
-{% endblock %}
-
 {% block content %}
 	<div class="sidebar-bg"></div>
 	<div id="content" class="content content-full-width">
@@ -33,11 +25,6 @@
 					<!-- END profile-header-info -->
 				</div>
 				<!-- END profile-header-content -->
-				<!-- BEGIN profile-header-tab -->
-				<!--<ul class="profile-header-tab nav nav-tabs">-->
-				<!--	<li class="nav-item"><p class="nav-link active mb-0">EDIT</p></li>-->
-				<!--</ul>-->
-				<!-- END profile-header-tab -->
 			</div>
 		</div>
 		<!-- end profile -->
@@ -59,7 +46,7 @@
 				<div class="tab-content">
 					<!-- begin tab-pane -->
 					<div class="tab-pane fade active show" id="editInfoBox">
-						<form action="" method="post" id="setPoint" class="margin-bottom-0" data-parsley-validate="true" onsubmit="setPoint();">
+						<form action="" method="post" id="setPoint" class="margin-bottom-0" data-parsley-validate="true" onsubmit="setPoint('setPoint');">
 							<table class="table table-borderless table-th-valign-middle w-50 mx-auto my-2">
 							    <tr>
 							        <th>{{__('payment_current')}}</th>
@@ -94,30 +81,14 @@
 		<!-- end profile -->
 	</div>
 	<!-- end #content -->
-	
+
+<!--Begin Script-->
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
-    function setPoint() {
-        var formParsley  = $('#setPoint').parsley();
+    function setPoint(form) {
+        var formParsley  = $('#'+form).parsley();
 		if(formParsley.isValid() == true) {
-		    $.ajax({
-		       type: 'POST',
-		       url: 'setting/point',
-		       dataType: 'json',
-		       data: {
-		           POA: document.getElementsByName("POA")[0].value
-		       },
-		       success: function(result) {
-		           if(result.status == 'success') {
-		               alert("{{__('setting_point_success')}}");
-		               location.reload();
-		           }
-		           else if(result.status == 'fail') {
-		               alert("{{__('setting_point_fail')}}");
-		               location.reload();
-		           }
-		       }
-		    });
+			setPointAjax();
 		}
 		event.preventDefault();
     }
@@ -129,10 +100,12 @@
 		}
 	}, true);
 </script>
+<!--End Script-->
 {% endblock %}
 
 {% block script %}
 <script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
 <script src="../assets/plugins/highlight.js/highlight.min.js"></script>
 <script src="../assets/js/demo/render.highlight.js"></script>
+<script src="../oasisjs/oasis_setting.js"></script>
 {% endblock %}

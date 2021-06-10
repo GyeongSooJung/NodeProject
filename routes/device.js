@@ -14,31 +14,33 @@ const Mongoose = require('mongoose');
 
 //장비 등록
   //DB에 등록
-router.post('/device_join', isNotLoggedIn,async (req, res, next) => {
-  const { MD, MAC, VER, NN, CA, UA, UT } = req.body;
-    const CID = req.decoded.CID;
-    const CNU = req.decoded.CNU;
+router.post('/device_join', isNotLoggedIn, async (req, res, next) => {
+  const { data } = req.body;
+  const jsonData = JSON.parse(data);
+  console.log(jsonData.MAC);
+  const CID = req.decoded.CID;
+  const CNU = req.decoded.CNU;
     
   try {
-    const exDevice = await Device.findOne({ "MAC" : MAC });
+    const exDevice = await Device.findOne({ "MAC" : jsonData.MAC });
     const check = /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/;
-    const UN = 0;
-    if (check.test(MAC) == true) {
+    if (check.test(jsonData.MAC) == true) {
       if(!exDevice) {
         await Device.create({
-            CID, MD, VER, MAC, NN, UN
+            "CID" : CID,
+            "MD" : jsonData.MD,
+            "VER" : jsonData.VER,
+            "MAC" : jsonData.MAC,
+            "NN" : jsonData.NN
         });
-        // return res.redirect('/device_list');
-        return res.send({ status: 'success' });
+        return res.send({ status: 'success', type: 'device' });
       }
       else {
-        // return res.redirect('/device_join?exist=true');
-        return res.send({ status: 'exist' });
+        return res.send({ status: 'exist', type: 'device' });
       }
     }
     else {
-      // return res.redirect('/device_join?type=true');
-      return res.send({ status: 'type' });
+      return res.send({ status: 'type', type: 'device' });
     }
   } catch (err) {
     console.error(err);
@@ -109,9 +111,9 @@ router.post('/ajax/device_deleteone', async (req, res, next) => {
                     "MAC" : deviceone.MAC
     });
     await Device.remove({ "MAC" : select.split(' ') });
-    res.json({ result : true });
+    res.send({ result : true });
   } catch (err) {
-    res.json({ result : false });
+    res.send({ result : false });
     console.error(err);
     next(err);
     
@@ -122,45 +124,41 @@ router.post('/ajax/device_deleteone', async (req, res, next) => {
 router.post('/ajax/device_delete', isNotLoggedIn, async (req, res, next) => {
   var select = req.body["select[]"];
   console.log(JSON.stringify(req.body));
-  console.log(select)
+  console.log(select);
   
- 
-  
-    
-        if(!select) {
-          res.json({ result : false });
-        }
-        else {
-          
-          if(typeof(select) == 'string') {
-            const deviceone = await Device.findOne({"MAC" : select});
-            await Devicedelete.create({
-                  "CID" : deviceone.CID,
+  try {
+    if(!select) {
+      res.send({ result : false });
+    }
+    else {
+      
+      if(typeof(select) == 'string') {
+        const deviceone = await Device.findOne({"MAC" : select});
+        await Devicedelete.create({
+              "CID" : deviceone.CID,
+              "MD" : deviceone.MD,
+              "VER" : deviceone.VER,
+              "NN" : deviceone.NN,
+              "MAC" : deviceone.MAC
+        });
+        await Device.remove({ "MAC" : select });
+        
+      }
+      else {
+        for(var i = 0; i < select.length; i ++) {
+          var deviceone = await Device.findOne({"MAC" : select[i]});   
+          await Devicedelete.create({
+                "CID" : deviceone.CID,
                   "MD" : deviceone.MD,
                   "VER" : deviceone.VER,
                   "NN" : deviceone.NN,
                   "MAC" : deviceone.MAC
-            });
-            await Device.remove({ "MAC" : select });
-            
-          }
-          else {
-            for(var i = 0; i < select.length; i ++) {
-              var deviceone = await Device.findOne({"MAC" : select[i]});   
-              await Devicedelete.create({
-                    "CID" : deviceone.CID,
-                      "MD" : deviceone.MD,
-                      "VER" : deviceone.VER,
-                      "NN" : deviceone.NN,
-                      "MAC" : deviceone.MAC
-              });
-              await Device.remove({ "MAC" : select[i] });
-            }
-          }
-        res.json({ result : true });
+          });
+          await Device.remove({ "MAC" : select[i] });
         }
-  
-  try {
+      }
+      return res.send({ result : true });
+    }
   } catch (err) {
     console.error(err);
     next(err);

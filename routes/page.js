@@ -69,7 +69,7 @@ router.get('/ko_index', function(req, res) {
 
 // 로그인
 router.get('/login', isLoggedIn, (req, res) => {
-  res.render('login', { title: 'OASIS Admin | Login' });
+  res.render('login');
 });
 
 router.get('/address', (req, res) => {
@@ -87,7 +87,7 @@ router.post('/address', (req, res) => {
 
 // 회원가입
 router.get('/register', isLoggedIn, async(req, res, next) => {
-  res.render('register', { title: 'OASIS Admin | Sign Up'});
+  res.render('register');
 });
 
 //회원정보 수정
@@ -251,7 +251,7 @@ router.get('/company_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.post('/ajax/company_list', isNotLoggedIn, DataSet, async(req, res, nex) => {
   const CID = req.body.CID;
   const companylist = await Company.find({});
-  res.json({ result: true, pagelist : companylist, totalnum : companylist.length});
+  res.send({ result: true, pagelist : companylist, totalnum : companylist.length});
   
 });
 
@@ -310,23 +310,6 @@ router.get('/device_join', isNotLoggedIn, DataSet, async(req, res, next) => {
   res.render('device_join', { company: req.decoded.company, aclist, noticethree, });
 });
 
-//장비 수정
-router.get('/device_edit/:MAC', isNotLoggedIn, DataSet, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
-  const noticethree = await Notice.find().limit(3).sort({CA : -1});
-
-
-  try {
-    const deviceone = await Device.findOne({ MAC: req.params.MAC });
-    res.render('device_edit', { company: req.decoded.company, aclist, deviceone, noticethree});
-  }
-  catch (err) {
-    console.error(err);
-    next(err);
-  }
-});
-
 //장비 목록
 router.get('/device_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
@@ -368,7 +351,7 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, async function(req, res
       var searchtext2 = searchdate.split("~")
       var devices = await Device.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
       if(devices.length == 0) 
-      res.json({result : "nothing"});
+      res.send({result : "nothing"});
       
       
     }
@@ -378,7 +361,7 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, async function(req, res
             if (search =="MD") {
                 var devices = await Device.find({ "CID": CID, "MD" : {$regex:searchtext} });
                 if(devices.length == 0) 
-                res.json({result : "nothing"});
+                res.send({result : "nothing"});
               }
               else if (search =="VER") {
                 searchtext = parseInt(searchtext)
@@ -387,21 +370,21 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, async function(req, res
               else if (search =="MAC") {
                 var devices = await Device.find({ "CID": CID, "MAC" : {$regex:searchtext} });
                 if(devices.length == 0) 
-                res.json({result : "nothing"});
+                res.send({result : "nothing"});
               }
               else if (search =="NN") {
                 var devices = await Device.find({ "CID": CID, "NN" : {$regex:searchtext} });
                 if(devices.length == 0) 
-                res.json({result : "nothing"});
+                res.send({result : "nothing"});
               }
               else if (search =="UN") {
                 searchtext = parseInt(searchtext);
                 var devices = await Device.find({ "CID": CID, "UN" : searchtext });
                 if(devices.length == 0) 
-                res.json({result : "nothing"});
+                res.send({result : "nothing"});
               }
           }catch(e) {
-              res.json({ result: false});
+              res.send({ result: false});
             }
           }
       else {
@@ -410,7 +393,7 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, async function(req, res
               var searchtext2 = searchdate.split("~")
                 var devices = await Device.find({ "CID": CID, "MD" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
                 if(devices.length == 0) 
-                res.json({result : "nothing"});
+                res.send({result : "nothing"});
               }
               else if (search =="VER") {
                 var searchtext2 = searchdate.split("~")
@@ -421,23 +404,23 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, async function(req, res
                 var searchtext2 = searchdate.split("~")
                 var devices = await Device.find({ "CID": CID, "MAC" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
                 if(devices.length == 0) 
-                res.json({result : "nothing"});
+                res.send({result : "nothing"});
               }
               else if (search =="NN") {
                 var searchtext2 = searchdate.split("~")
                 var devices = await Device.find({ "CID": CID, "NN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
                 if(devices.length == 0) 
-                res.json({result : "nothing"});
+                res.send({result : "nothing"});
               }
               else if (search =="UN") {
                 var searchtext2 = searchdate.split("~")
                 searchtext = parseInt(searchtext);
                 var devices = await Device.find({ "CID": CID, "UN" : searchtext, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
                 if(devices.length == 0) 
-                res.json({result : "nothing"});
+                res.send({result : "nothing"});
               }
           }catch(e) {
-              res.json({ result: false});
+              res.send({ result: false});
             }
           }
       }
@@ -549,7 +532,7 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, async function(req, res
       devicelist[i] = devices[i];
     }
   }
-  res.json({ result: true, pagelist : devicelist, totalnum : devices.length});
+  res.send({ result: true, pagelist : devicelist, totalnum : devices.length});
  
 });
 
@@ -566,42 +549,12 @@ router.get('/car_join', isNotLoggedIn, DataSet, async(req, res, next) => {
   res.render('car_join', { company: req.decoded.company, aclist, noticethree });
 });
 
-//차량 수정
-router.get('/car_edit/:CN', isNotLoggedIn, DataSet, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
-  const noticethree = await Notice.find().limit(3).sort({CA : -1});
-
-  try {
-    const carone = await Car.findOne({ CN: req.params.CN });
-    res.render('car_edit', { company: req.decoded.company, aclist, carone, noticethree});
-  }
-  catch (err) {
-    console.error(err);
-    next(err);
-  }
-});
-
 //차량 목록
 router.get('/car_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-  const CN = req.query.CN;
-  let page = req.query.page;
   const noticethree = await Notice.find().limit(3).sort({CA : -1});
-
-  console.log(req.decoded.company)
-  try {
-    const totalNum = await Car.countDocuments({ "CID": CID });
-    let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-    const cars = await Car.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-
-    res.render('car_list', { company: req.decoded.company, aclist, noticethree, cars, totalNum, currentPage, totalPage, startPage, endPage });
-  }
-  catch (err) {
-    console.error(err);
-    next(err);
-  }
+    res.render('car_list', { company: req.decoded.company, aclist, noticethree});
 });
 
 router.post('/ajax/car_list', isNotLoggedIn, DataSet, async function(req, res) {
@@ -618,10 +571,10 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, async function(req, res) {
           var searchtext2 = searchdate.split("~");
           var cars = await Car.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
           if(cars.length == 0) 
-          res.json({result : "nothing"}); 
+          res.send({result : "nothing"}); 
           
         }catch(e) {
-          res.json({ result: false });
+          res.send({ result: false });
         }
     }
     else {
@@ -630,16 +583,16 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, async function(req, res) {
             if (search =="CN") {
               var cars = await Car.find({ "CID": CID, "CN" : {$regex:searchtext} });
               if(cars.length == 0) 
-              res.json({result : "nothing"});
+              res.send({result : "nothing"});
             }
             else if (search =="CPN") {
               var cars = await Car.find({ "CID": CID, "CPN" : {$regex:searchtext} });
               if(cars.length == 0) 
-              res.json({result : "nothing"});
+              res.send({result : "nothing"});
             }
           
         }catch(e) {
-          res.json({ result: false });
+          res.send({ result: false });
         }
       }
       else {
@@ -648,16 +601,16 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, async function(req, res) {
             var searchtext2 = searchdate.split("~");
             var cars = await Car.find({ "CID": CID, "CN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
             if(cars.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           else if (search =="CPN") {
             var searchtext2 = searchdate.split("~");
             var cars = await Car.find({ "CID": CID, "CPN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
             if(cars.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
       }catch(e) {
-        res.json({ result: false });
+        res.send({ result: false });
       }
         
       }
@@ -744,7 +697,7 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, async function(req, res) {
       carlist[i] = cars[i];
     }
   }
-  res.json({ result: true, pagelist : carlist, totalnum : cars.length});
+  res.send({ result: true, pagelist : carlist, totalnum : cars.length});
  
 });
 
@@ -798,23 +751,23 @@ router.post('/ajax/worker_list', isNotLoggedIn, DataSet, async function(req, res
           if (search =="WN") {
             var workers = await Worker.find({ "CID": {$in : CIDlist}, "WN" : {$regex:searchtext} });
             if(workers.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           else if (search =="PN") {
             var workers = await Worker.find({ "CID": {$in : CIDlist}, "PN" : {$regex:searchtext} });
             if(workers.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           else if (search =="EM") {
             var workers = await Worker.find({ "CID": {$in : CIDlist}, "EM" : {$regex:searchtext} });
             if(workers.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           else {
             var workers = await Worker.find({ "CID": {$in : CIDlist} }).sort({ ET: -1 });
           }
         }catch(e) {
-          res.json({ result: false});
+          res.send({ result: false});
         }
         
       }
@@ -880,23 +833,23 @@ router.post('/ajax/worker_list', isNotLoggedIn, DataSet, async function(req, res
           if (search =="WN") {
             var workers = await Worker.find({ "CID": CID, "WN" : {$regex:searchtext} });
             if(workers.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           else if (search =="PN") {
             var workers = await Worker.find({ "CID": CID, "PN" : {$regex:searchtext} });
             if(workers.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           else if (search =="EM") {
             var workers = await Worker.find({ "CID": CID, "EM" : {$regex:searchtext} });
             if(workers.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           else {
             var workers = await Worker.find({ "CID": CID }).sort({ ET: -1 });
           }
         }catch(e) {
-          res.json({ result: false});
+          res.send({ result: false});
         }
         
       }
@@ -962,36 +915,27 @@ router.post('/ajax/worker_list', isNotLoggedIn, DataSet, async function(req, res
       workerlist[i] = workers[i];
     }
   }
-  res.json({ result: true, pagelist : workerlist, totalnum : workers.length});
+  res.send({ result: true, pagelist : workerlist, totalnum : workers.length});
  
 });
 
 //작업자 인증 ajax
 router.post('/ajax/post', isNotLoggedIn, DataSet, async function(req, res) {
 
-  var au_true = req.body.au_true;
-  var au_false = req.body.au_false;
+  var au = req.body.au;
   var ac_true = req.body.ac_true;
   var ac_false = req.body.ac_false;
-  
-  var com_audata = req.body.com_audata;
-
-
 
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
 
   let workerone;
   
-  if (com_audata) {
-    var comaudata = com_audata.split(",")
-    workerone = await Worker.where({ "EM": comaudata[0] }).update({ "AU": comaudata[1] }).setOptions({ runValidators: true }).exec();
-  }
-  else if (au_true) {
-    workerone = await Worker.where({ "EM": au_true }).update({ "AU": 2 }).setOptions({ runValidators: true }).exec();
-  }
-  else if (au_false) {
-    workerone = await Worker.where({ "EM": au_false }).update({ "AU": 1 }).setOptions({ runValidators: true }).exec();
+  console.log(au);
+  
+  if (au) {
+    var audata = au.split(",")
+    workerone = await Worker.where({ "EM": audata[0] }).update({ "AU": audata[1] }).setOptions({ runValidators: true }).exec();
   }
   else if (ac_true) {
     workerone = await Worker.where({ "EM": ac_true }).update({ "AC": true }).setOptions({ runValidators: true }).exec();
@@ -1061,7 +1005,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
         }
         
         if(historys.length == 0) 
-        res.json({result : "nothing"});
+        res.send({result : "nothing"});
       }
     else {
       if(!searchdate) {
@@ -1076,7 +1020,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
                 if(err) throw err;
               });
             if(historys.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           else if (search =="DNM") {
             var historys =await History.aggregate([
@@ -1088,7 +1032,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
                 if(err) throw err;
               });
             if(historys.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           else if (search =="WNM") {
             var historys =await History.aggregate([
@@ -1100,7 +1044,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
                 if(err) throw err;
               });
             if(historys.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
       
       }
@@ -1115,7 +1059,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
               historys[i].PD = historys[i].PD.length
             }
               if(historys.length == 0) 
-              res.json({result : "nothing"});
+              res.send({result : "nothing"});
             }
             else if (search =="DNM") {
               var searchtext2 = searchdate.split("~");
@@ -1125,7 +1069,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
                 historys[i].PD = historys[i].PD.length
               }
               if(historys.length == 0) 
-              res.json({result : "nothing"});
+              res.send({result : "nothing"});
             }
             else if (search =="WNM") {
               var searchtext2 = searchdate.split("~");
@@ -1135,10 +1079,10 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
                 historys[i].PD = historys[i].PD.length
               }
               if(historys.length == 0) 
-              res.json({result : "nothing"});
+              res.send({result : "nothing"});
             }
         }catch(e) {
-          res.json({ result: false });
+          res.send({ result: false });
         }
         
         
@@ -1272,7 +1216,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
       historylist[i] = historys[i];
     }
   }
-  res.json({ result: true, pagelist : historylist, totalnum : historys.length});
+  res.send({ result: true, pagelist : historylist, totalnum : historys.length});
  
 });
 
@@ -1324,10 +1268,10 @@ router.post('/ajax/payment', isNotLoggedIn, DataSet, async(req, res, next) => {
   if (SN) {
     const serviceone = await Service.findOne({ "SN": SN });
 
-    res.json({ result: true, serviceone: serviceone, check: true });
+    res.send({ result: true, serviceone: serviceone, check: true });
   }
   else {
-    res.json({ result: true, check: false });
+    res.send({ result: true, check: false });
   }
 });
 
@@ -1418,7 +1362,7 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res) {
           var searchtext2 = searchdate.split("~");
           var orders = await Order.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
           if(orders.length == 0) 
-          res.json({result : "nothing"});
+          res.send({result : "nothing"});
     }
     else {
       if(!searchdate) {
@@ -1426,22 +1370,22 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res) {
           if (search =="MID") {
             var orders = await Order.find({ "CID": CID, "MID" : {$regex:searchtext} });
             if(orders.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           else if (search =="GN") {
             var orders = await Order.find({ "CID": CID, "GN" : {$regex:searchtext} });
             if(orders.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           else if (search =="AM") {
             searchtext = parseInt(searchtext)
             var orders = await Order.find({ "CID": CID, "AM" : searchtext });
             if(orders.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           
         }catch(e) {
-          res.json({ result: false });
+          res.send({ result: false });
         }
       }
       else {
@@ -1449,20 +1393,20 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res) {
           var searchtext2 = searchdate.split("~");
             var orders = await Order.find({ "CID": CID, "MID" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
             if(orders.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           else if (search =="GN") {
             var searchtext2 = searchdate.split("~");
             var orders = await Order.find({ "CID": CID, "GN" : {$regex:searchtext} , "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"}});
             if(orders.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           else if (search =="AM") {
             var searchtext2 = searchdate.split("~");
             searchtext = parseInt(searchtext)
             var orders = await Order.find({ "CID": CID, "AM" : searchtext, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
             if(orders.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
       }
       
@@ -1535,7 +1479,7 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res) {
       orderlist[i] = orders[i];
     }
   }
-  res.json({ result: true, pagelist : orderlist, totalnum : orders.length});
+  res.send({ result: true, pagelist : orderlist, totalnum : orders.length});
  
 });
 
@@ -1632,9 +1576,9 @@ router.post('/ajax/point_list', isNotLoggedIn, DataSet, async function(req, res)
           var searchtext2 = searchdate.split("~");
           var points = await Point.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
           if(points.length == 0) 
-          res.json({result : "nothing"});
+          res.send({result : "nothing"});
         }catch(e) {
-          res.json({ result: false });
+          res.send({ result: false });
         }
     }
     else {
@@ -1643,17 +1587,17 @@ router.post('/ajax/point_list', isNotLoggedIn, DataSet, async function(req, res)
           if (search =="PN") {
             var points = await Point.find({ "CID": CID, "PN" : {$regex:searchtext} });
             if(points.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           else if (search =="PO") {
             searchtext = parseInt(searchtext)
             var points = await Point.find({ "CID": CID, "PO" : searchtext });
             if(points.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           
         }catch(e) {
-          res.json({ result: false });
+          res.send({ result: false });
         }
       }
       else {
@@ -1661,13 +1605,13 @@ router.post('/ajax/point_list', isNotLoggedIn, DataSet, async function(req, res)
           var searchtext2 = searchdate.split("~");
             var points = await Point.find({ "CID": CID, "PN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
             if(points.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
           else if (search =="PO") {
             searchtext = parseInt(searchtext)
             var points = await Point.find({ "CID": CID, "PO" : searchtext , "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"}});
             if(points.length == 0) 
-            res.json({result : "nothing"});
+            res.send({result : "nothing"});
           }
       }
       
@@ -1720,7 +1664,7 @@ router.post('/ajax/point_list', isNotLoggedIn, DataSet, async function(req, res)
       pointlist[i] = points[i];
     }
   }
-  res.json({ result: true, pagelist : pointlist, totalnum : points.length});
+  res.send({ result: true, pagelist : pointlist, totalnum : points.length});
  
 });
 
@@ -2125,115 +2069,185 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   }
 });
 
-router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, res) {
+router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, res, next) {
   const CID = req.body.CID;
   
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
   var searchdate = req.body.searchdate;
+  var sortText = "";
+  var sortNum = 0;
   
-  if (search!="") {
-      if(search == "CA") {
-          try{
-            var searchtext2 = searchdate.split("~");
-            var alarms = await Alarm.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-            if(alarms.length == 0) 
-            res.json({result : "nothing"});
-          }catch(e) {
-            res.json({ result: false });
-          }
-      }
-      else {
-        if(!searchdate) {
-          try{
-            if (search =="WNM") {
-              var alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext} });
-              if(alarms.length == 0) 
-              res.json({result : "nothing"});
-            }
-            else if (search =="RE") {
-              var alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext} });
-              if(alarms.length == 0) 
-              res.json({result : "nothing"});
-            }
-            
-          }catch(e) {
-            res.json({ result: false });
-          }
-        }
-        else {
-          if (search =="WNM") {
-            var searchtext2 = searchdate.split("~");
-              var alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-              if(alarms.length == 0) 
-              res.json({result : "nothing"});
-            }
-            else if (search =="RE") {
-              var alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext} , "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"}});
-              if(alarms.length == 0) 
-              res.json({result : "nothing"});
-            }
-        }
-        
-      }
+  console.log("확인"+sort.includes('-'));
+  if(sort.includes('-') == true) {
+    sortText = sort.split('-')[0];
+    sortNum = -1;
   }
   else {
-      var alarms = await Alarm.find({ "CID": CID });
-    
-      if(sort == "WNM") {
-          alarms.sort(function (a,b) {
-            
-            if(typeof(a.WNM) == "object")
-            a.WNM = JSON.stringify(a.WNM);
-            return (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      
-      else if(sort == "WNM2") {
-          alarms.sort(function (a,b) {
-            if(typeof(a.WNM) == "object")
-            a.WNM = JSON.stringify(a.WNM);
-            return (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      
-      else if(sort == "CA") { 
-          var alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
-      }
-      
-      else if(sort == "CA2"){
-          var alarms = await Alarm.find({ "CID": CID }).sort({ CA: 1 });
-       }
-      else if(sort == "RE") {
-          alarms.sort(function (a,b) {
-            
-            if(typeof(a.RE) == "object")
-            a.RE = JSON.stringify(a.RE);
-            return (a.RE[0]).charCodeAt(0) < (b.RE[0]).charCodeAt(0) ? -1 : (a.RE[0]).charCodeAt(0) > (b.RE[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      else if(sort == "RE2") {
-          alarms.sort(function (a,b) {
-            
-            if(typeof(a.RE) == "object")
-            a.RE = JSON.stringify(a.RE);
-            return (a.RE[0]).charCodeAt(0) > (b.RE[0]).charCodeAt(0) ? -1 : (a.RE[0]).charCodeAt(0) < (b.RE[0]).charCodeAt(0) ? 1 : 0;
-          })
+    sortText = sort;
+    sortNum = 1;
+  }
+  console.log(sortText+"/"+sortNum);
+  
+  
+  try {
+    if (searchdate) {
+      var searchtext2 = searchdate.split("~");
+      var alarms = await Alarm.find({ "CID" : CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ sortText: sortNum });
+      if(alarms.length == 0) {
+        return res.send({ result : "nothing" });
       }
       else {
-        var alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
-        
+        if(search == "WNM") {
+          var alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ sortText: sortNum });
+          if(alarms.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if(search == "RE") {
+          var alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ sortText: sortNum });
+          if(alarms.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
       }
-  }
-  
-  var alarmlist = [];
-  if(alarms.length) {
-    for(var i = 0; i < alarms.length; i ++) {
-      alarmlist[i] = alarms[i];
     }
+    else {
+      var alarms = await Alarm.find({ "CID" : CID }).sort({ sortText: sortNum });
+      if(alarms.length == 0) {
+        return res.send({ result : "nothing" });
+      }
+      else {
+        if (search =="WNM") {
+          var alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext} }).sort({ sortText: sortNum });
+          if(alarms.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if (search =="RE") {
+          var alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext} }).sort({ sortText: sortNum });
+          if(alarms.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+      }
+    }
+    
+    var alarmlist = [];
+    if(alarms.length) {
+      for(var i = 0; i < alarms.length; i ++) {
+        alarmlist[i] = alarms[i];
+      }
+    }
+    
+    return res.send({ result: true, pagelist : alarmlist, totalnum : alarms.length});
+    
+  } catch(err) {
+    console.error(err);
+    next(err);
   }
-  res.json({ result: true, pagelist : alarmlist, totalnum : alarms.length});
+  // if (search!="") {
+  //     if(search == "CA") {
+  //         try{
+  //           var searchtext2 = searchdate.split("~");
+  //           var alarms = await Alarm.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
+  //           if(alarms.length == 0) 
+  //           res.send({result : "nothing"});
+  //         }catch(e) {
+  //           res.send({ result: false });
+  //         }
+  //     }
+  //     else {
+  //       if(!searchdate) {
+  //         try{
+  //           if (search =="WNM") {
+  //             var alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext} });
+  //             if(alarms.length == 0) 
+  //             res.send({result : "nothing"});
+  //           }
+  //           else if (search =="RE") {
+  //             var alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext} });
+  //             if(alarms.length == 0) 
+  //             res.send({result : "nothing"});
+  //           }
+            
+  //         }catch(e) {
+  //           res.send({ result: false });
+  //         }
+  //       }
+  //       else {
+  //         if (search =="WNM") {
+  //           var searchtext2 = searchdate.split("~");
+  //             var alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
+  //             if(alarms.length == 0) 
+  //             res.send({result : "nothing"});
+  //           }
+  //           else if (search =="RE") {
+  //             var alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext} , "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"}});
+  //             if(alarms.length == 0) 
+  //             res.send({result : "nothing"});
+  //           }
+  //       }
+        
+  //     }
+  // }
+  // else {
+  //     var alarms = await Alarm.find({ "CID": CID });
+    
+  //     if(sort == "WNM") {
+  //         alarms.sort(function (a,b) {
+            
+  //           if(typeof(a.WNM) == "object")
+  //           a.WNM = JSON.stringify(a.WNM);
+  //           return (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? 1 : 0;
+  //         })
+  //     }
+      
+  //     else if(sort == "WNM2") {
+  //         alarms.sort(function (a,b) {
+  //           if(typeof(a.WNM) == "object")
+  //           a.WNM = JSON.stringify(a.WNM);
+  //           return (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? 1 : 0;
+  //         })
+  //     }
+      
+  //     else if(sort == "CA") { 
+  //         var alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
+  //     }
+      
+  //     else if(sort == "CA2"){
+  //         var alarms = await Alarm.find({ "CID": CID }).sort({ CA: 1 });
+  //     }
+  //     else if(sort == "RE") {
+  //         alarms.sort(function (a,b) {
+            
+  //           if(typeof(a.RE) == "object")
+  //           a.RE = JSON.stringify(a.RE);
+  //           return (a.RE[0]).charCodeAt(0) < (b.RE[0]).charCodeAt(0) ? -1 : (a.RE[0]).charCodeAt(0) > (b.RE[0]).charCodeAt(0) ? 1 : 0;
+  //         })
+  //     }
+  //     else if(sort == "RE2") {
+  //         alarms.sort(function (a,b) {
+            
+  //           if(typeof(a.RE) == "object")
+  //           a.RE = JSON.stringify(a.RE);
+  //           return (a.RE[0]).charCodeAt(0) > (b.RE[0]).charCodeAt(0) ? -1 : (a.RE[0]).charCodeAt(0) < (b.RE[0]).charCodeAt(0) ? 1 : 0;
+  //         })
+  //     }
+  //     else {
+  //       var alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
+        
+  //     }
+  // }
+  
+  // var alarmlist = [];
+  // if(alarms.length) {
+  //   for(var i = 0; i < alarms.length; i ++) {
+  //     alarmlist[i] = alarms[i];
+  //   }
+  // }
+  // res.send({ result: true, pagelist : alarmlist, totalnum : alarms.length});
  
 });
 
@@ -2245,8 +2259,8 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
 router.get('/notice_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-  const noticethree = await Notice.find().limit(3)
-  res.render('notice_list',{company: req.decoded.company, aclist, noticethree})
+  const noticethree = await Notice.find().limit(3);
+  res.render('notice_list',{company: req.decoded.company, aclist, noticethree});
   
 });
 
@@ -2256,63 +2270,171 @@ router.post('/ajax/notice_list', isNotLoggedIn, DataSet, async function(req, res
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
+  var searchdate = req.body.searchdate;
   
-  
-  
-  if ((search!="") && (searchtext!="")) {
-    try{
-      if (search =="TI") {
-        var notices = await Notice.find({ "CID": CID, "TI" : {$regex:searchtext} });
-        if(notices.length == 0) 
-        res.json({result : "nothing"});
-      }
-      else if (search =="CA") {
-        var searchtext2 = searchtext.split("~")
-        var notices = await Notice.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-        if(notices.length == 0) 
-        res.json({result : "nothing"});
+  if(search != "") {
+    if(search == "CA") {
+      var searchtext2 = searchdate.split("~");
+      var notices = await Notice.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
+      if(notices.length == 0) 
+      res.send({ result : "nothing" });
+    }
+    else {
+      if(!searchdate) {
+        try {
+          if(search == "TI") {
+            var notices = await Notice.find({ "CID": CID, "TI" : {$regex:searchtext} });
+            if(notices.length == 0) 
+            res.send({result : "nothing"});
+          }
+        } catch(e) {
+          res.send({ result: false });
+        }
       }
       else {
-        var notices = await Notice.find({ "CID": CID }).sort({ CA: -1 });
+        try {
+          if(search == "TI") {
+            var notices = await Notice.find({ "CID": CID, "TI" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
+            if(notices.length == 0) 
+            res.send({result : "nothing"});
+          }
+        } catch(e) {
+          res.send({ result: false });
+        }
       }
-    }catch(e) {
-      res.json({ result: false});
+    }
+  }
+  else {
+    var notices = await Notice.find({ "CID": CID });
+    
+    if(sort == "TI") {
+        notices.sort(function (a,b) {
+          var ax = [], bx = [];
+          a = JSON.stringify(a.TI);
+          b = JSON.stringify(b.TI);
+        
+          a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
+          b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
+          
+          while(ax.length && bx.length) {
+              var an = ax.shift();
+              var bn = bx.shift();
+              var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
+              if(nn) return nn;
+          }
+      
+          return ax.length - bx.length;
+        });
     }
     
+    else if(sort == "TI2") {
+                  notices.sort(function (a,b) {
+          var ax = [], bx = [];
+          a = JSON.stringify(a.TI);
+          b = JSON.stringify(b.TI);
+        
+          a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
+          b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
+          
+          while(ax.length && bx.length) {
+              var an = bx.shift();
+              var bn = ax.shift();
+              var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
+              if(nn) return nn;
+          }
+      
+          return ax.length - bx.length;
+        });
+    }
+    
+    else if(sort == "CA") { 
+        var notices = await Notice.find({ "CID": CID }).sort({ CA: -1 });
+    }
+    
+    else if(sort == "CA2"){
+        var notices = await Notice.find({ "CID": CID }).sort({ CA: 1 });
+    }
+    else {
+      var notices = await Notice.find({ "CID": CID }).sort({ CA: -1 });
+    }
   }
   
-  else {
-      var notices = await Notice.find({ "CID": CID });
+  // if ((search!="") && (searchtext!="")) {
+  //   try{
+  //     if (search =="TI") {
+  //       var notices = await Notice.find({ "CID": CID, "TI" : {$regex:searchtext} });
+  //       if(notices.length == 0) 
+  //       res.send({result : "nothing"});
+  //     }
+  //     else if (search =="CA") {
+  //       var searchtext2 = searchtext.split("~")
+  //       var notices = await Notice.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
+  //       if(notices.length == 0) 
+  //       res.send({result : "nothing"});
+  //     }
+  //     else {
+  //       var notices = await Notice.find({ "CID": CID }).sort({ CA: -1 });
+  //     }
+  //   }catch(e) {
+  //     res.send({ result: false});
+  //   }
     
-      if(sort == "WNM") {
-          notices.sort(function (a,b) {
+  // }
+  
+  // else {
+  //     var notices = await Notice.find({ "CID": CID });
+    
+  //     if(sort == "TI") {
+  //         notices.sort(function (a,b) {
+  //           var ax = [], bx = [];
+  //           a = JSON.stringify(a.TI);
+  //           b = JSON.stringify(b.TI);
+          
+  //           a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
+  //           b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
             
-            if(typeof(a.WNM) == "object")
-            a.WNM = JSON.stringify(a.WNM);
-            return (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      
-      else if(sort == "WNM2") {
-          notices.sort(function (a,b) {
-            if(typeof(a.WNM) == "object")
-            a.WNM = JSON.stringify(a.WNM);
-            return (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      
-      else if(sort == "CA") { 
-          var notices = await Notice.find({ "CID": CID }).sort({ CA: -1 });
-      }
-      
-      else if(sort == "CA2"){
-          var notices = await Notice.find({ "CID": CID }).sort({ CA: 1 });
-       }
-      else {
-        var notices = await Notice.find({ "CID": CID }).sort({ CA: -1 });
+  //           while(ax.length && bx.length) {
+  //               var an = ax.shift();
+  //               var bn = bx.shift();
+  //               var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
+  //               if(nn) return nn;
+  //           }
         
-      }
-  }
+  //           return ax.length - bx.length;
+  //         });
+  //     }
+      
+  //     else if(sort == "TI2") {
+  //                   notices.sort(function (a,b) {
+  //           var ax = [], bx = [];
+  //           a = JSON.stringify(a.TI);
+  //           b = JSON.stringify(b.TI);
+          
+  //           a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
+  //           b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
+            
+  //           while(ax.length && bx.length) {
+  //               var an = bx.shift();
+  //               var bn = ax.shift();
+  //               var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
+  //               if(nn) return nn;
+  //           }
+        
+  //           return ax.length - bx.length;
+  //         });
+  //     }
+      
+  //     else if(sort == "CA") { 
+  //         var notices = await Notice.find({ "CID": CID }).sort({ CA: -1 });
+  //     }
+      
+  //     else if(sort == "CA2"){
+  //         var notices = await Notice.find({ "CID": CID }).sort({ CA: 1 });
+  //     }
+  //     else {
+  //       var notices = await Notice.find({ "CID": CID }).sort({ CA: -1 });
+  //     }
+  // }
   
   var noticelist = [];
   if(notices.length) {
@@ -2320,7 +2442,7 @@ router.post('/ajax/notice_list', isNotLoggedIn, DataSet, async function(req, res
       noticelist[i] = notices[i];
     }
   }
-  res.json({ result: true, noticelist : noticelist, noticenum : notices.length});
+  res.send({ result: true, pagelist : noticelist, totalnum : notices.length});
  
 });
 
@@ -2346,22 +2468,22 @@ router.post('/ajax/notice_write', isNotLoggedIn, DataSet, async(req, res, next) 
     const notice = await Notice.create({ CID : CID, TI : title , CO : text});
     
     
-    res.json({result : true})
+    res.send({result : true})
   }catch(e) {
     console.log(e)
-    res.json({result : false})
+    res.send({result : false})
   }
 });
 
 // 공지사항 팝업
-router.get('/noticepop', isNotLoggedIn, DataSet, async(req, res, next) => {
+router.get('/notice_pop', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   
   const noticeid = req.query.noticeid
   const noticeone = await Notice.find({_id : noticeid})
   
-  res.render('noticepop',{company: req.decoded.company, aclist, noticeone, moment});
+  res.render('notice_pop',{company: req.decoded.company, aclist, noticeone, moment});
   
   
 });
@@ -2377,10 +2499,10 @@ router.post('/ajax/notice_detail', isNotLoggedIn, DataSet, async(req, res, next)
     
     const noticedetail = await Notice.find({_id : noticeid});
     
-    res.json({result : true, noticedetail : noticedetail})
+    res.send({result : true, noticedetail : noticedetail})
   }catch(e) {
     console.log(e)
-    res.json({result : false})
+    res.send({result : false})
   }
 });
 
@@ -2427,9 +2549,16 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.get('/gstest', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-  const Content = require('../schemas/content');
-  console.log(Content);
-  res.render('company_list')
+
+  const mac = "84:CC:A8:12:FF:2E"
+  
+  const deviceone = await Device.find({MAC : mac});
+  
+  console.log(deviceone[0]._id);
+  
+  res.render('company_list', { company: req.decoded.company, aclist });
+  
+  
 })
 
 
