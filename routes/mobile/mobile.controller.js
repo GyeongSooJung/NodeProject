@@ -22,13 +22,8 @@ const { config, Group } = require('solapi');
 const Mongoose = require('mongoose');
 const ObjectId = Mongoose.Types.ObjectId;
 
-const ERROR_CODE = {
-    FAIL: "FAIL",
-    NO_SUCH_DATA: "NO_SUCH_DATA",
-    TOKEN_ERROR: "TOKEN_ERROR",
-    NO_POINT: "NO_POINT",
-    UNKOWN: "UNKOWN",
-};
+
+
 
 exports.test = async(req, res, next) => {
     const token = req.body.token;
@@ -39,7 +34,7 @@ exports.test = async(req, res, next) => {
         next();
     }
     catch (error) {
-        res.send({
+        res.json({
             result: false,
             error: TOKEN_ERROR,
         });
@@ -52,7 +47,7 @@ exports.findWorker = async(req, res) => {
     const EM = req.body.email;
     const worker = await Worker.findOne({ EM });
     console.log(worker);
-    res.send({
+    res.json({
         result: (worker != null) ? true : false,
     });
 };
@@ -62,8 +57,8 @@ exports.signIn = async(req, res) => {
     const { type, id, email } = req.body;
     if (type == "GOOGLE") {
         var worker = await Worker.findOne({ "GID": id, "EM": email });
-        console.log(type, id, email);
-        console.log(worker);
+        console.log(type, id, email)
+        console.log(worker)
 
         if (worker != null) {
             // 토큰 생성
@@ -404,11 +399,7 @@ exports.createHistory = async(req, res) => {
     }
     catch (exception) {
         console.log(exception);
-<<<<<<<<< saved version
-
-=========
-        res.send({
->>>>>>>>> local version
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -532,11 +523,7 @@ exports.updateDevice = async(req, res) => {
 
     }
     catch (exception) {
-<<<<<<<<< saved version
-
-=========
-        res.send({
->>>>>>>>> local version
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -564,24 +551,6 @@ exports.deleteDevice = async(req, res) => {
 };
 
 // 소독기 검색
-exports.findDeviceByID = async(req, res) => {
-
-    try {
-        const { MAC } = req.body;
-        const device = await Device.findOne({ MAC: MAC });
-        res.send({
-            result: true,
-            data: JSON.stringify(device),
-        });
-    }
-    catch (exception) {
-        res.send({
-            result: false,
-            error: UNKOWN,
-        });
-    }
-};
-
 exports.findOneDevice = async(req, res) => {
     try {
         const { MAC, _id } = req.body;
@@ -600,7 +569,7 @@ exports.findOneDevice = async(req, res) => {
         else {
             res.send({
                 result: false,
-                error: ERROR_CODE.NO_SUCH_DATA,
+                error: NO_SUCH_DATA,
             });
         }
 
@@ -609,7 +578,7 @@ exports.findOneDevice = async(req, res) => {
         console.log(exception);
         res.send({
             result: false,
-            error: ERROR_CODE.UNKOWN,
+            error: UNKOWN,
         });
     }
 };
@@ -619,12 +588,7 @@ exports.findOneDevice = async(req, res) => {
 exports.root = (req, res) => {
     var tz = moment.tz.guess();
     console.log(tz);
-<<<<<<< HEAD
-    res.send({
-
-=======
     res.json({
->>>>>>> bc5bbc4bfd20eae6470ea25dbcc7e3df63d44aa3
         result: "hello",
     });
 };
@@ -695,26 +659,10 @@ exports.registerSMS = async(req, res) => {
             const companyone = await Company.where({ '_id': historyone.CID })
                 .updateMany({ "SPO": companypoint }).setOptions({ runValidators: true })
                 .exec();
-<<<<<<< HEAD
         }
 
         else {
-            res.send({
-=======
-            }
-            
-            else {
-                res.json({
-                result: false,
-                error: UNKOWN,
-                });
-            }
-        
-        
-        }
-        catch (exception) {
             res.json({
->>>>>>> bc5bbc4bfd20eae6470ea25dbcc7e3df63d44aa3
                 result: false,
                 error: UNKOWN,
             });
@@ -723,7 +671,7 @@ exports.registerSMS = async(req, res) => {
 
     }
     catch (exception) {
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -748,6 +696,8 @@ exports.registerKAKAO = async(req, res) => {
         const historyone = await History.findOne({ '_id': historyid });
         var companyone = await Company.findOne({ '_id': historyone.CID });
         var companypoint = companyone.SPO;
+
+
 
         if (companypoint > 0) {
 
@@ -778,7 +728,6 @@ exports.registerKAKAO = async(req, res) => {
                     console.log(e);
                 }
             }
-<<<<<<< HEAD
 
             const params = {
                 autoTypeDetect: true,
@@ -796,50 +745,23 @@ exports.registerKAKAO = async(req, res) => {
                         linkPc: process.env.IP + '/publish?cat=1&hid=' + historyid
                     }]
                 }
-=======
-            else {
-                res.json({
-                result: false,
-                error: NO_POINT,
-                });
->>>>>>> bc5bbc4bfd20eae6470ea25dbcc7e3df63d44aa3
             }
+
             fn(params)
         }
-<<<<<<< HEAD
         else {
-            res.send({
-=======
-        catch (exception) {
             res.json({
->>>>>>> bc5bbc4bfd20eae6470ea25dbcc7e3df63d44aa3
                 result: false,
                 error: NO_POINT,
             });
         }
-<<<<<<< HEAD
-    }
-    catch (exception) {
-        res.send({
-            result: false,
-            error: UNKOWN,
-        });
-    }
-};
 
-exports.DIDreturn = async(req, res) => {
-    try {
-        const { mac } = req.body;
-        const deviceone = await Device.find({ MAC: mac });
-        res.send({ DID: deviceone[0]._id });
+
     }
     catch (exception) {
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
     }
-}
-=======
 };
->>>>>>> bc5bbc4bfd20eae6470ea25dbcc7e3df63d44aa3
