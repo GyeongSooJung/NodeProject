@@ -39,7 +39,7 @@ exports.test = async(req, res, next) => {
         next();
     }
     catch (error) {
-        res.json({
+        res.send({
             result: false,
             error: TOKEN_ERROR,
         });
@@ -52,7 +52,7 @@ exports.findWorker = async(req, res) => {
     const EM = req.body.email;
     const worker = await Worker.findOne({ EM });
     console.log(worker);
-    res.json({
+    res.send({
         result: (worker != null) ? true : false,
     });
 };
@@ -404,7 +404,11 @@ exports.createHistory = async(req, res) => {
     }
     catch (exception) {
         console.log(exception);
-        res.json({
+<<<<<<<<< saved version
+
+=========
+        res.send({
+>>>>>>>>> local version
             result: false,
             error: UNKOWN,
         });
@@ -528,7 +532,11 @@ exports.updateDevice = async(req, res) => {
 
     }
     catch (exception) {
-        res.json({
+<<<<<<<<< saved version
+
+=========
+        res.send({
+>>>>>>>>> local version
             result: false,
             error: UNKOWN,
         });
