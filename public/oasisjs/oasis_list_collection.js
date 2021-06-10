@@ -212,7 +212,6 @@
 		insertTr += "</th>"
 		insertTr += "<th width='2.5%'></th>"
 		
-		console.log(Object.sort)
 		insertTr += "<th width='10.5%' name = 'MD'>"+i18nconvert("MD")+"<a href='javascript:sortpage(pagingObject,i18nconvert,MD,[MD,VER,MAC,NN,UN,CA]);' name = 'MD'><i id = 'MD' class='float-right mx-1 fas fa-lg fa-fw m-t-3"
 		if(Object.sort == "MD2")
 			insertTr += " fa-sort-up'></a></i></th>"
@@ -297,7 +296,7 @@
 					}
 					insertTr += "</td><td class='with-btn' nowrap>"	
 					insertTr += "<a href='javascript:;' id = 'deviceid' onclick='device_editone(this,i18nconvert);' data-type='show' name='"+ Object.array[i]._id +"' class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>"+i18nconvert("modify")+"</a>";
-					insertTr += "<input type='button' value='"+i18nconvert("delete")+"' onclick=delete_one(this,'/device/ajax/device_deleteone',i18nconvert ) class='btn btn-sm btn-white width-60' name =' "+ Object.array[i].MAC +"'></td> ";
+					insertTr += "<input type='button' value='"+i18nconvert("delete")+"' onclick=delete_one(this,'/device/ajax/device_deleteone',i18nconvert) class='btn btn-sm btn-white width-60' name =' "+ Object.array[i].MAC +"'></td> ";
 					insertTr += "</tr>";
 					num -= indexcount;
 				}
@@ -390,22 +389,22 @@
 						insertTr += "<td>본사</td>";
 						else
 						insertTr += "<td>대리점</td>";
-						insertTr += "<td><input onclick ='checkau(this)' name = '"+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",0'";
+						insertTr += "<td><input  name = 'radioau "+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",0'";
 						if(Object.array[i].AU ==0)
 							insertTr += "checked/></td>";
 						else 
 							insertTr += "unchecked/></td>";
-						insertTr += "<td><input onclick ='checkau(this)' name = '"+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",3'";
+						insertTr += "<td><input  name = 'radioau "+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",3'";
 						if(Object.array[i].AU ==3)
 							insertTr += "checked/></td>";
 						else 
 							insertTr += "unchecked/></td>";
-						insertTr += "<td><input onclick ='checkau(this)' name = '"+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",2'";
+						insertTr += "<td><input  name = 'radioau "+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",2'";
 						if(Object.array[i].AU ==2)
 							insertTr += "checked/></td>";
 						else 
 							insertTr += "unchecked/></td>";
-						insertTr += "<td><input onclick ='checkau(this)'  name = '"+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",1'";
+						insertTr += "<td><input  name = 'radioau "+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",1'";
 						if(Object.array[i].AU ==1)
 							insertTr += "checked/></td>";
 						else 
@@ -497,14 +496,14 @@
 						insertTr += "<td>"+ Object.array[i].PN+"</td>";
 						insertTr += "<td>"+ Object.array[i].EM+"</td>";
 						insertTr += "<td class='with-btn' nowrap>";
-						insertTr += "<input onclick ='checkau2(this)' name ='"+i+"' class ='ck_au' type='checkbox'  value ='"+Object.array[i].EM+",2'";
-						if(Object.array[i].AU ==2)
+						insertTr += "<input onclick ='checkau(this)' class ='ck_au' type='checkbox'  value ='"+Object.array[i].EM+"'";
+						if(Object.array[i].AU ==1)
 							insertTr += "checked/>";
 						else
 							insertTr += "unchecked/>";
 						insertTr += "</td>";
 						insertTr += "<td class='with-btn' nowrap>";
-						insertTr += "<input onclick ='checkac(this) name ='"+i+"'' class ='ck_ac' type='checkbox'  value ='"+Object.array[i].EM+"'";
+						insertTr += "<input onclick ='checkac(this)' class ='ck_ac' type='checkbox'  value ='"+Object.array[i].EM+"'";
 						if(Object.array[i].AC ==1)
 							insertTr += "checked/>";
 						else

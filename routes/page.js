@@ -1938,7 +1938,7 @@ router.get('/sendkko2', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-  let page = req.query.page;
+  // let page = req.query.page;
   const WNM = req.query.WNM;
   const noticethree = await Notice.find().limit(3).sort({CA : -1});
   
@@ -1990,14 +1990,11 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
           'http://api.solapi.com/messages/v4/list?criteria=messageId&value='+ messageIds[i]+'&cond=eq'
       };
       
-      
-      
       request(options, async function(error, response, body) {
         try {
           for(var key in body.messageList) {
             const pointone = await Point.findOne({"MID" : body.messageList[key]._id});
             const alarmone = await Alarm.findOne({"MID" : body.messageList[key]._id});
-            
             
             if(body.messageList[key].status == "COMPLETE")
             {
@@ -2057,11 +2054,14 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
     }
 
   try {
-        const totalNum = await Alarm.countDocuments({ "CID": CID });
-        let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-        const alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-        res.render('alarmtalk_list', { company: req.decoded.company, aclist, noticethree, totalNum, currentPage, totalPage, startPage, endPage, alarms });
-
+    // const totalNum = await Alarm.countDocuments({ "CID": CID });
+    // let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
+    const alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
+    const todayStart = moment().format('YYYY-MM-DD');
+    const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
+    const alarmTodayCount = await Alarm.countDocuments({ "CID" : CID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
+    const alarmCount = alarms.length;
+    res.render('alarmtalk_list', { company: req.decoded.company, aclist, noticethree, alarms, alarmCount, alarmTodayCount });
   }
   catch (err) {
     console.error(err);
@@ -2110,7 +2110,7 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
           }
         }
         else {
-          var alarms = await Alarm.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          alarms = await Alarm.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
