@@ -1938,7 +1938,7 @@ router.get('/sendkko2', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-  let page = req.query.page;
+  // let page = req.query.page;
   const WNM = req.query.WNM;
   const noticethree = await Notice.find().limit(3).sort({CA : -1});
   
@@ -1990,14 +1990,11 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
           'http://api.solapi.com/messages/v4/list?criteria=messageId&value='+ messageIds[i]+'&cond=eq'
       };
       
-      
-      
       request(options, async function(error, response, body) {
         try {
           for(var key in body.messageList) {
             const pointone = await Point.findOne({"MID" : body.messageList[key]._id});
             const alarmone = await Alarm.findOne({"MID" : body.messageList[key]._id});
-            
             
             if(body.messageList[key].status == "COMPLETE")
             {
@@ -2057,11 +2054,14 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
     }
 
   try {
-        const totalNum = await Alarm.countDocuments({ "CID": CID });
-        let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-        const alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-        res.render('alarmtalk_list', { company: req.decoded.company, aclist, noticethree, totalNum, currentPage, totalPage, startPage, endPage, alarms });
-
+    // const totalNum = await Alarm.countDocuments({ "CID": CID });
+    // let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
+    const alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
+    const todayStart = moment().format('YYYY-MM-DD');
+    const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
+    const alarmTodayCount = await Alarm.countDocuments({ "CID" : CID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
+    const alarmCount = alarms.length;
+    res.render('alarmtalk_list', { company: req.decoded.company, aclist, noticethree, alarms, alarmCount, alarmTodayCount });
   }
   catch (err) {
     console.error(err);
@@ -2078,8 +2078,8 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
   var searchdate = req.body.searchdate;
   var sortText = "";
   var sortNum = 0;
+  var alarms = new Object;
   
-  console.log("확인"+sort.includes('-'));
   if(sort.includes('-') == true) {
     sortText = sort.split('-')[0];
     sortNum = -1;
@@ -2088,25 +2088,29 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
     sortText = sort;
     sortNum = 1;
   }
-  console.log(sortText+"/"+sortNum);
-  
   
   try {
     if (searchdate) {
       var searchtext2 = searchdate.split("~");
-      var alarms = await Alarm.find({ "CID" : CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ sortText: sortNum });
+      alarms = await Alarm.find({ "CID" : CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
       if(alarms.length == 0) {
         return res.send({ result : "nothing" });
       }
       else {
         if(search == "WNM") {
-          var alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ sortText: sortNum });
+          alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "RE") {
-          var alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ sortText: sortNum });
+          alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          if(alarms.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else {
+          alarms = await Alarm.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -2114,19 +2118,25 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
       }
     }
     else {
-      var alarms = await Alarm.find({ "CID" : CID }).sort({ sortText: sortNum });
+      alarms = await Alarm.find({ "CID" : CID }).sort({ [sortText]: sortNum });
       if(alarms.length == 0) {
         return res.send({ result : "nothing" });
       }
       else {
-        if (search =="WNM") {
-          var alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext} }).sort({ sortText: sortNum });
+        if (search == "WNM") {
+          alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
-        else if (search =="RE") {
-          var alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext} }).sort({ sortText: sortNum });
+        else if (search == "RE") {
+          alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          if(alarms.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else {
+          alarms = await Alarm.find({ "CID": CID }).sort({ [sortText]: sortNum });
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -2147,108 +2157,6 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
     console.error(err);
     next(err);
   }
-  // if (search!="") {
-  //     if(search == "CA") {
-  //         try{
-  //           var searchtext2 = searchdate.split("~");
-  //           var alarms = await Alarm.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-  //           if(alarms.length == 0) 
-  //           res.send({result : "nothing"});
-  //         }catch(e) {
-  //           res.send({ result: false });
-  //         }
-  //     }
-  //     else {
-  //       if(!searchdate) {
-  //         try{
-  //           if (search =="WNM") {
-  //             var alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext} });
-  //             if(alarms.length == 0) 
-  //             res.send({result : "nothing"});
-  //           }
-  //           else if (search =="RE") {
-  //             var alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext} });
-  //             if(alarms.length == 0) 
-  //             res.send({result : "nothing"});
-  //           }
-            
-  //         }catch(e) {
-  //           res.send({ result: false });
-  //         }
-  //       }
-  //       else {
-  //         if (search =="WNM") {
-  //           var searchtext2 = searchdate.split("~");
-  //             var alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-  //             if(alarms.length == 0) 
-  //             res.send({result : "nothing"});
-  //           }
-  //           else if (search =="RE") {
-  //             var alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext} , "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"}});
-  //             if(alarms.length == 0) 
-  //             res.send({result : "nothing"});
-  //           }
-  //       }
-        
-  //     }
-  // }
-  // else {
-  //     var alarms = await Alarm.find({ "CID": CID });
-    
-  //     if(sort == "WNM") {
-  //         alarms.sort(function (a,b) {
-            
-  //           if(typeof(a.WNM) == "object")
-  //           a.WNM = JSON.stringify(a.WNM);
-  //           return (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? 1 : 0;
-  //         })
-  //     }
-      
-  //     else if(sort == "WNM2") {
-  //         alarms.sort(function (a,b) {
-  //           if(typeof(a.WNM) == "object")
-  //           a.WNM = JSON.stringify(a.WNM);
-  //           return (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? 1 : 0;
-  //         })
-  //     }
-      
-  //     else if(sort == "CA") { 
-  //         var alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
-  //     }
-      
-  //     else if(sort == "CA2"){
-  //         var alarms = await Alarm.find({ "CID": CID }).sort({ CA: 1 });
-  //     }
-  //     else if(sort == "RE") {
-  //         alarms.sort(function (a,b) {
-            
-  //           if(typeof(a.RE) == "object")
-  //           a.RE = JSON.stringify(a.RE);
-  //           return (a.RE[0]).charCodeAt(0) < (b.RE[0]).charCodeAt(0) ? -1 : (a.RE[0]).charCodeAt(0) > (b.RE[0]).charCodeAt(0) ? 1 : 0;
-  //         })
-  //     }
-  //     else if(sort == "RE2") {
-  //         alarms.sort(function (a,b) {
-            
-  //           if(typeof(a.RE) == "object")
-  //           a.RE = JSON.stringify(a.RE);
-  //           return (a.RE[0]).charCodeAt(0) > (b.RE[0]).charCodeAt(0) ? -1 : (a.RE[0]).charCodeAt(0) < (b.RE[0]).charCodeAt(0) ? 1 : 0;
-  //         })
-  //     }
-  //     else {
-  //       var alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
-        
-  //     }
-  // }
-  
-  // var alarmlist = [];
-  // if(alarms.length) {
-  //   for(var i = 0; i < alarms.length; i ++) {
-  //     alarmlist[i] = alarms[i];
-  //   }
-  // }
-  // res.send({ result: true, pagelist : alarmlist, totalnum : alarms.length});
- 
 });
 
 //----------------------------------------------------------------------------//

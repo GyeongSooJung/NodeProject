@@ -41,9 +41,8 @@
 									<a id="searchoption" href="javascript:;" class="btn btn-sm btn-white">{{__('search')}}</a>
 									<a href="#" data-toggle="dropdown" class="btn btn-sm btn-white dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
 									<div class="dropdown-menu dropdown-menu-right">
-										<a href="javascript:searchoption('payWNM',pagingObject,i18nconvert,{payWNM : 'payWNM',pointCA : 'pointCA',RE : 'RE'});" class="dropdown-item">{{__('payment_sender')}}</a>
-										<a href="javascript:searchoption('pointCA',pagingObject,i18nconvert,{payWNM : 'payWNM',pointCA : 'pointCA',RE : 'RE'});" class="dropdown-item">{{__('payment_Dateofuse')}}</a>
-										<a href="javascript:searchoption('RE',pagingObject,i18nconvert,{payWNM : 'payWNM',pointCA : 'pointCA',RE : 'RE'});" class="dropdown-item">{{__('payment_result')}}</a>
+										<a href="javascript:searchoption('WNM',pagingObject,i18nconvert,{WNM : 'WNM',RE : 'RE'});" class="dropdown-item">{{__('payment_sender')}}</a>
+										<a href="javascript:searchoption('RE',pagingObject,i18nconvert,{WNM : 'WNM',RE : 'RE'});" class="dropdown-item">{{__('payment_result')}}</a>
 									</div>
 								</div>
 							</div>
@@ -58,13 +57,20 @@
 						</div>
 					</div>
 					
-					<div class="mr-auto">
-						<select id = "selectpage" name="data-table-default_length" aria-controls="data-table-default" class="custom-select custom-select-sm width-80 mb-2">
+					<div class="d-flex justify-content-between align-items-center mb-2">
+					<!--<div class="mr-auto">-->
+						<select id = "selectpage" name="data-table-default_length" aria-controls="data-table-default" class="custom-select custom-select-sm width-80 mb-0">
 							<option class ="postnumber" value="10">10</option>
 							<option class ="postnumber" value="25">25</option>
 							<option class ="postnumber" value="50">50</option>
 							<option class ="postnumber" value="100">100</option>
 						</select>
+					<!--</div>-->
+						<p class="mb-0 text-gray">
+							<span>{{__('today')}} </span><span class="text-red font-weight-bold"><u>{{alarmTodayCount}}</u></span>
+							<span> / </span>
+							<span>{{__('all')}} </span><span class="text-dark font-weight-bold"><u>{{alarmCount}}</u></span>
+						</p>
 					</div>
                
                <div class="overflow-auto">
