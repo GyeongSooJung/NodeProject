@@ -38,10 +38,9 @@
 							<a id="searchoption" href="javascript:;" class="btn btn-sm btn-white">{{__('search')}}</a>
 							<a href="#" data-toggle="dropdown" class="btn btn-sm btn-white dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
 							<div class="dropdown-menu dropdown-menu-right">
-								<a href="javascript:searchoption('CNM',pagingObject,i18nconvert,{CNM : 'CNM',DNM : 'DNM',ET : 'ET',WNM : 'WNM'});" class="dropdown-item">{{__('car_number')}}</a>
-								<a href="javascript:searchoption('DNM',pagingObject,i18nconvert,{CNM : 'CNM',DNM : 'DNM',ET : 'ET',WNM : 'WNM'});" class="dropdown-item">{{__('device_model')}}</a>
-								<a href="javascript:searchoption('ET',pagingObject,i18nconvert,{CNM : 'CNM',DNM : 'DNM',ET : 'ET',WNM : 'WNM'});" class="dropdown-item">{{__('history_date')}}</a>
-								<a href="javascript:searchoption('WNM',pagingObject,i18nconvert,{CNM : 'CNM',DNM : 'DNM',ET : 'ET',WNM : 'WNM'});" class="dropdown-item">{{__('worker')}}</a>
+								<a href="javascript:searchoption('CNM',pagingObject,{CNM : 'CNM',DNM : 'DNM',WNM : 'WNM'});" class="dropdown-item">{{__('car_number')}}</a>
+								<a href="javascript:searchoption('DNM',pagingObject,{CNM : 'CNM',DNM : 'DNM',WNM : 'WNM'});" class="dropdown-item">{{__('device_model')}}</a>
+								<a href="javascript:searchoption('WNM',pagingObject,{CNM : 'CNM',DNM : 'DNM',WNM : 'WNM'});" class="dropdown-item">{{__('worker')}}</a>
 							</div>
 						</div>
 					</div>
@@ -50,19 +49,24 @@
 						<input  id ="searchtext" type="text" class="w-100 form-control form-control-sm" placeholder ="" />
 			  		</div>
 			  		<div>
-						<button id ="searchbutton" class="btn btn-sm btn-primary text-white" onclick="searchtext(pagingObject,i18nconvert)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
+						<button id ="searchbutton" class="btn btn-sm btn-primary text-white" onclick="searchtext(pagingObject)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
 					</div>
-					<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,i18nconvert) class='d-none ml-1 btn btn-sm btn-primary mr-1 px-2'>{{__('all')}}</a>
+					<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject) class='d-none ml-1 btn btn-sm btn-primary mr-1 px-2'>{{__('all')}}</a>
 				</div>
 			</div>
 			
-			<div class="mr-auto">
+			<div class="d-flex justify-content-between align-items-center mb-2">
 				<select id = "selectpage" name="data-table-default_length" aria-controls="data-table-default" class="custom-select custom-select-sm width-80 mb-2">
 					<option class ="postnumber" value="10">10</option>
 					<option class ="postnumber" value="25">25</option>
 					<option class ="postnumber" value="50">50</option>
 					<option class ="postnumber" value="100">100</option>
 				</select>
+				<p class="mb-0 text-gray">
+					<span>{{__('new')}} </span><span class="text-red font-weight-bold"><u>{{historyTodayCount}}</u></span>
+					<span> / </span>
+					<span>{{__('all')}} </span><span class="text-dark font-weight-bold"><u>{{historyCount}}</u></span>
+				</p>
 			</div>
 
 			<div class="overflow-auto">
@@ -77,7 +81,7 @@
 					</table>
 					{% if(company.AH == true) %}
 					<div class="d-flex justify-content-between align-item-center">
-						<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="delete_check('/history/ajax/history_delete',i18nconvert);">
+						<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="delete_check('/history/ajax/history_delete');">
 						<div id="pagebox" class=" justify-content-around align-item-center"></div>
 					</div>
 					{% else %}
@@ -97,20 +101,20 @@
 <!--Script-->
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <script>
-	var pagingObject = new Object({name : "History",url : "/ajax/history_list",CID : "{{company._id}}", array : [], sort : "ET", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
+	var pagingObject = new Object({name : "History", url : "/ajax/history_list", CID : "{{company._id}}", array : [], sort : "ET", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
 		// 검색 기능
 	$(document).ready(function() {
-		pagereload(pagingObject, i18nconvert); // 첫 화면 페이지 로드
+		pagereload(pagingObject); // 첫 화면 페이지 로드
 		
 		$('#selectpage').click(function() {
-			selectpage(pagingObject,i18nconvert,{
+			selectpage(pagingObject, {
 				option : $('#selectpage option:selected').val()
 			});
 		});
 		
 		$('#searchtext').keyup(function(key) {
 			if(key.keyCode == 13) {
-				searchtext(pagingObject,i18nconvert)
+				searchtext(pagingObject)
 			}
 		});
 	});

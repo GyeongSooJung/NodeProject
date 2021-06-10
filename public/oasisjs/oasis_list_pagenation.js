@@ -1,6 +1,6 @@
         // ------------------------------- 페이지네이션 ------------------------------------
     
-    function pagereload(Object,i18nconvert) {
+    function pagereload(Object) {
 			$("input:checkbox[name='allck']").prop("checked", false);
 			$("input:checkbox[name='ck']").prop("checked", false);
     	    $.ajax({
@@ -35,48 +35,48 @@
 			     	$("#pagebox *").remove();
 			    	
 		    		if(Object.name == "Company") {
-						companylist_condition(Object,i18nconvert);
+						companylist_condition(Object);
 					
 					}
 					else if (Object.name == "Device") {
-						devicelist_condition(Object,i18nconvert);
+						devicelist_condition(Object);
 					}
 					
 					else if (Object.name == "Car") {
-						carlist_condition(Object,i18nconvert);
+						carlist_condition(Object);
 					}
 					
 					else if (Object.name == "Worker") {
-						workerlist_condition(Object,i18nconvert);
+						workerlist_condition(Object);
 					}
 					else if (Object.name == "History") {
-						historylist_condition(Object,i18nconvert);
+						historylist_condition(Object);
 					}
 					else if (Object.name == "Pay") {
-						paylist_condition(Object,i18nconvert);
+						paylist_condition(Object);
 					}
 					else if (Object.name == "Point") {
-						pointlist_condition(Object,i18nconvert);
+						pointlist_condition(Object);
 					}
 					else if (Object.name == "Alarmtalk") {
-						alarmtalklist_condition(Object,i18nconvert);
+						alarmtalklist_condition(Object);
 					}
 					else if (Object.name == "Notice") {
-						noticeList_condition(Object,i18nconvert);
+						noticeList_condition(Object);
 					}
 			    		
 					var insertTr = " ";
-					insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('left',pagingObject,i18nconvert,'basic') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>";
-					insertTr +=	"<a href='javascript:;' onclick=pageBtn('left',pagingObject,i18nconvert,'basic') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>";
+					insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('left',pagingObject,'basic') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>";
+					insertTr +=	"<a href='javascript:;' onclick=pageBtn('left',pagingObject,'basic') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>";
 					
 					for(var i = Object.startpage; i < Object.endpage; i ++) {
 						if(Object.page == i)
-							insertTr +=	"<input type='button' onclick=pagebutton(pagingObject,"+ i +",i18nconvert,'basic') value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' style='background-color: #00acac; color: white !important;' >";
+							insertTr +=	"<input type='button' onclick=pagebutton(pagingObject,"+ i +",'basic') value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' style='background-color: #00acac; color: white !important;' >";
 						else
-							insertTr +=	"<input type='button' onclick=pagebutton(pagingObject,"+ i +",i18nconvert,'basic') value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' >";
+							insertTr +=	"<input type='button' onclick=pagebutton(pagingObject,"+ i +",'basic') value ='"+ (i+1) +"' class='btn btn-white mr-1 px-2 text-primary' >";
 					}
-					insertTr +=	"<a href='javascript:;' onclick=pageBtn('right',pagingObject,i18nconvert,'basic') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-right'></i></a>";
-					insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('right',pagingObject,i18nconvert,'basic') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-right'></i></a>";
+					insertTr +=	"<a href='javascript:;' onclick=pageBtn('right',pagingObject,'basic') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-right'></i></a>";
+					insertTr +=	"<a href='javascript:;' onclick=pageDoubleBtn('right',pagingObject,'basic') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-right'></i></a>";
 					$("#pagebox").append(insertTr);
 					
 					$("#pagebox").show();
@@ -84,21 +84,19 @@
 	        	
 	        	else if (data.result == "nothing") {
 	        		
-	        		alert(i18nconvert('searcherror'));
 	        		$("#searchtext").val('');
 			    	$("#searchdatetext1").val('');
 			    	$("#searchdatetext2").val('');
 	        	}
 	        	
 	        	else {
-	        		alert(i18nconvert('searcherror'));
 			    	$("#searchdatetext1").val('');
 			    	$("#searchdatetext2").val('');
 	        	}
 			});
     }
     
-    function excelPage(Object, i18nconvert) {
+    function excelPage(Object) {
     	var form = $('#car-xlsx-form')[0];
 		var data = new FormData(form);
 		
@@ -144,19 +142,19 @@
         			var insertTr = "";
 					insertTr += "<input class='btn btn-primary width-80 excelJoinBtn' type='button' value='"+i18nconvert('registration')+"'>"
 					insertTr += "<div class='d-flex justify-content-around align-item-center'>"
-					insertTr += "<a href='javascript:;' onclick=pageDoubleBtn('left',pagingObject,i18nconvert,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>"
-					insertTr += "<a href='javascript:;' onclick=pageBtn('left',pagingObject,i18nconvert,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>"
+					insertTr += "<a href='javascript:;' onclick=pageDoubleBtn('left',pagingObject,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>"
+					insertTr += "<a href='javascript:;' onclick=pageBtn('left',pagingObject,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>"
 					
 					for(var j = Object.startpage; j < Object.endpage; j ++) {
 						if(Object.page == j) {
-							insertTr += "<input type='button' onclick=pagebutton(pagingObject,"+ j +",i18nconvert,'excel') value ='"+ (j+1) +"' class='btn btn-white mr-1 px-2 text-primary' style='background-color: #00acac; color: white !important;' >";
+							insertTr += "<input type='button' onclick=pagebutton(pagingObject,"+ j +",'excel') value ='"+ (j+1) +"' class='btn btn-white mr-1 px-2 text-primary' style='background-color: #00acac; color: white !important;' >";
 						} else {
-							insertTr += "<input type='button' onclick=pagebutton(pagingObject,"+ j +",i18nconvert,'excel') value ='"+ (j+1) +"' class='btn btn-white mr-1 px-2 text-primary' >";
+							insertTr += "<input type='button' onclick=pagebutton(pagingObject,"+ j +",'excel') value ='"+ (j+1) +"' class='btn btn-white mr-1 px-2 text-primary' >";
 						}
 					}
 
-					insertTr += "<a href='javascript:;' onclick=pageBtn('right',pagingObject,i18nconvert,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-right'></i></a>"
-					insertTr += "<a href='javascript:;' onclick=pageDoubleBtn('right',pagingObject,i18nconvert,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-right'></i></a>"
+					insertTr += "<a href='javascript:;' onclick=pageBtn('right',pagingObject,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-right'></i></a>"
+					insertTr += "<a href='javascript:;' onclick=pageDoubleBtn('right',pagingObject,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-right'></i></a>"
 					insertTr += "</div>"
 					
 					$("#pagebox").append(insertTr);
@@ -232,9 +230,9 @@
     }
     
 	// 전체 목록으로
-	function gotolist(Object, i18nconvert) {
+	function gotolist(Object) {
 		refresh(Object);
-		pagereload(Object, i18nconvert);
+		pagereload(Object);
 		
 		
 		$("#searchtext").val('');
@@ -248,30 +246,29 @@
 	}
     
     // 페이지 기능
-	function pagebutton(Object, num, i18nconvert, kind) {
+	function pagebutton(Object, num, kind) {
 		Object.page = num;
 		
 		if(kind == 'basic') {
-	    	pagereload(Object, i18nconvert);
+	    	pagereload(Object);
 		}
 		else {
-			excelPage(Object, i18nconvert);
+			excelPage(Object);
 		}
     }
     
     // 다음 페이지 기능
-    function pageBtn(dir, Object, i18nconvert, kind) {
+    function pageBtn(dir, Object, kind) {
 		if(dir == 'left') {
-			console.log("@@@")
 			if((Object.page - 1) > -1)
 			{
 				Object.page -= 1;
 				
 				if(kind == 'basic') {
-			    	pagereload(Object, i18nconvert);
+			    	pagereload(Object);
 				}
 				else {
-					excelPage(Object, i18nconvert);
+					excelPage(Object);
 				}
 			}
 		}
@@ -281,26 +278,26 @@
 				Object.page += 1;
 				
 				if(kind == 'basic') {
-			    	pagereload(Object, i18nconvert);
+			    	pagereload(Object);
 				}
 				else {
-					excelPage(Object, i18nconvert);
+					excelPage(Object);
 				}
 			}
 			
 		}
 	}
 	
-	function pageDoubleBtn(dir, Object, i18nconvert, kind) {
+	function pageDoubleBtn(dir, Object, kind) {
 		if(dir == 'left') {
 			if((Object.page - Object.pageNum) < 0) {
 				Object.page = 0;
 				
 				if(kind == 'basic') {
-			    	pagereload(Object, i18nconvert);
+			    	pagereload(Object);
 				}
 				else {
-					excelPage(Object, i18nconvert);
+					excelPage(Object);
 				}
 			}
 			else {
@@ -308,10 +305,10 @@
 				Object.page -= 5;
 				
 				if(kind == 'basic') {
-			    	pagereload(Object, i18nconvert);
+			    	pagereload(Object);
 				}
 				else {
-					excelPage(Object, i18nconvert);
+					excelPage(Object);
 				}
 			}
 		}
@@ -322,10 +319,10 @@
 				Object.page = Math.ceil(Object.array.length / Object.postNum)-1;
 				
 				if(kind == 'basic') {
-			    	pagereload(Object, i18nconvert);
+			    	pagereload(Object);
 				}
 				else {
-					excelPage(Object, i18nconvert);
+					excelPage(Object);
 				}
 			}
 			else {
@@ -333,20 +330,20 @@
 				Object.page += 5;
 				
 				if(kind == 'basic') {
-			    	pagereload(Object, i18nconvert);
+			    	pagereload(Object);
 				}
 				else {
-					excelPage(Object, i18nconvert);
+					excelPage(Object);
 				}
 			}
 		}
 	}
 	
 	// 페이지 개수 지정
-	function selectpage(Object,  i18nconvert,jsondata) {
+	function selectpage(Object, jsondata) {
         if(Object.postNum != jsondata.option)
 		{
 			Object.postNum = jsondata.option
-			pagereload(Object,  i18nconvert);
+			pagereload(Object);
 		}
     }     

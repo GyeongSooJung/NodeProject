@@ -1,6 +1,6 @@
 	        
 	// 정렬 기능        
-	function sortpage (Object,  i18nconvert, string, json) {
+	function sortpage (Object, string, json) {
 		
 		var paglist = Object.array;
 		
@@ -20,8 +20,8 @@
 		
 	}   
 	
-	// 테스트 정렬 기능
-	function sortList(Object, i18nconvert, sort) {
+	// 정렬 기능
+	function sortList(Object, sort) {
 		var pagelist = Object.array;
 		var sortPlus = sort.id;
 		
@@ -34,11 +34,11 @@
 		
 		Object.array = pagelist;
 		Object.sort = sortPlus2;
-		pagereload(Object, i18nconvert);
+		pagereload(Object);
 	}
 	
 	//검색 옵션 지정
-	function searchoption(opt,Object,i18nconvert,jsondata) {
+	function searchoption(opt,Object,jsondata) {
     	Object.search = opt;
     	$("#searchoption").empty();
     	
@@ -47,24 +47,15 @@
     	for (var item in jsondata) {
     		if (opt === item) {
     			string = i18nconvert(item);
-    			// if((opt == "CA") || (opt == "ET")|| (opt == "payCA")|| (opt == "UCA") || (opt == "pointCA")) {
-    			// 	// document.getElementById('searchtext').classList.add('d-none');
-	    		// 	$("#searchtext").val('');
-    			// }
-    			// else {
-	    		// 	document.getElementById('searchtext').classList.remove('d-none');
-    			// }
     		}
     	}
     	$("#searchtext").val('');
-    	// $("#searchdatetext1").val('');
-    	// $("#searchdatetext2").val('');
     	$("#searchoption").append(string);
     	$("#searchoption").show();
     }
     
     //검색기능
-    function searchtext (Object, i18nconvert) {
+    function searchtext (Object) {
 		if(Object.search == "" && $('#searchtext').val() != "") {
 			alert(i18nconvert('search_option_error'));
 		}
@@ -75,12 +66,12 @@
 	    		Object.searchdate += $('#searchdatetext1').val();
 	    		Object.searchdate += "~";
 	    		Object.searchdate += $('#searchdatetext2').val();
-				pagereload(Object,  i18nconvert);
+				pagereload(Object);
 				document.getElementById('gotolist').classList.remove('d-none');
 			}
 			else {
 				Object.searchtext = $('#searchtext').val();
-				pagereload(Object,  i18nconvert);
+				pagereload(Object);
 				document.getElementById('gotolist').classList.remove('d-none');
 			}
 		}
