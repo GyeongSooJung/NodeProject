@@ -39,7 +39,7 @@ exports.test = async(req, res, next) => {
         next();
     }
     catch (error) {
-        res.send({
+        res.json({
             result: false,
             error: TOKEN_ERROR,
         });
@@ -52,7 +52,7 @@ exports.findWorker = async(req, res) => {
     const EM = req.body.email;
     const worker = await Worker.findOne({ EM });
     console.log(worker);
-    res.send({
+    res.json({
         result: (worker != null) ? true : false,
     });
 };
@@ -106,7 +106,6 @@ exports.signIn = async(req, res) => {
 
 };
 
-
 // 회원 가입
 exports.signUp = async(req, res) => {
     try {
@@ -115,13 +114,13 @@ exports.signUp = async(req, res) => {
         var result = await Worker.create({ CID, WN, PN, GID, EM, PU });
         console.log(result);
 
-        res.send({
+        res.json({
             result: true,
         });
     }
     catch (exception) {
         console.log(exception);
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -136,13 +135,13 @@ exports.updateWorkerInfo = async(req, res) => {
         var result = await Worker.where({ _id }).updateOne({ WN, PN, AU, UA: Date.now() });
         console.log(result);
 
-        res.send({
+        res.json({
             result: true,
         });
 
     }
     catch (exception) {
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -157,12 +156,12 @@ exports.withdrawal = async(req, res) => {
         var result = await Worker.remove({ _id, EM });
         console.log(result);
 
-        res.send({
+        res.json({
             result: true,
         });
     }
     catch (exception) {
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -178,21 +177,21 @@ exports.findCompanyByID = async(req, res) => {
 
         var company = await Company.findOne({ _id });
         if (company != null) {
-            return res.send({
+            return res.json({
                 result: true,
                 data: JSON.stringify(company),
             });
         }
         else {
 
-            res.send({
+            res.json({
                 result: false,
                 error: NO_SUCH_DATA,
             });
         }
     }
     catch (exception) {
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -227,21 +226,21 @@ exports.fineCompanies = async(req, res) => {
 
         console.log(companies.length);
         if (companies.length >= 1) {
-            return res.send({
+            return res.json({
                 result: true,
                 dataList: companies,
             });
         }
         else {
 
-            res.send({
+            res.json({
                 result: false,
                 error: NO_SUCH_DATA,
             });
         }
     }
     catch (exception) {
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -257,14 +256,14 @@ exports.confirmConpanyPW = async(req, res) => {
 
         if (company != null) {
             if (bcrypt.compareSync(PW, company.PW)) {
-                return res.send({
+                return res.json({
                     result: true,
                 });
             }
 
         }
 
-        return res.send({
+        return res.json({
             result: false,
             error: FAIL,
         });
@@ -272,7 +271,7 @@ exports.confirmConpanyPW = async(req, res) => {
 
     }
     catch (exception) {
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -294,13 +293,13 @@ exports.registerCar = async(req, res) => {
             .updateOne({ "CUA": Date.now() }).setOptions({ runValidators: true })
             .exec();
 
-        res.send({
+        res.json({
             result: true,
         });
     }
     catch (exception) {
         console.log(exception);
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -314,21 +313,21 @@ exports.findCarByComID = async(req, res) => {
 
         var cars = await Car.find({ CID });
         if (cars != null) {
-            return res.send({
+            return res.json({
                 result: true,
                 dataList: cars,
             });
         }
         else {
 
-            res.send({
+            res.json({
                 result: false,
                 error: NO_SUCH_DATA,
             });
         }
     }
     catch (exception) {
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -347,13 +346,13 @@ exports.updateCar = async(req, res) => {
             .updateOne({ "CUA": Date.now() }).setOptions({ runValidators: true })
             .exec();
 
-        res.send({
+        res.json({
             result: true,
         });
 
     }
     catch (exception) {
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -375,12 +374,12 @@ exports.deleteCar = async(req, res) => {
         var result = await Car.remove({ _id, CN });
         console.log("result : " + result);
 
-        res.send({
+        res.json({
             result: true,
         });
     }
     catch (exception) {
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -398,14 +397,14 @@ exports.createHistory = async(req, res) => {
 
         console.log(result);
 
-        res.send({
+        res.json({
             result: true,
             data: result._id,
         });
     }
     catch (exception) {
         console.log(exception);
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -419,21 +418,21 @@ exports.findHistories = async(req, res) => {
 
         var histories = await History.find({ CID }, { PD: false }).skip(SP * NOP).limit(NOP).sort({ CA: -1 });
         if (histories != null) {
-            return res.send({
+            return res.json({
                 result: true,
                 dataList: histories,
             });
         }
         else {
 
-            res.send({
+            res.json({
                 result: false,
                 error: NO_SUCH_DATA,
             });
         }
     }
     catch (exception) {
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -447,21 +446,21 @@ exports.findHistory = async(req, res) => {
 
         var history = await History.findOne({ _id });
         if (history != null) {
-            return res.send({
+            return res.json({
                 result: true,
                 data: JSON.stringify(history),
             });
         }
         else {
 
-            res.send({
+            res.json({
                 result: false,
                 error: NO_SUCH_DATA,
             });
         }
     }
     catch (exception) {
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -478,12 +477,12 @@ exports.registerDevice = async(req, res) => {
         var result = await Device.create({ CID, MD, MAC, NN, VER, UN });
         console.log(result);
 
-        res.send({
+        res.json({
             result: true,
         });
     }
     catch (exception) {
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -495,20 +494,20 @@ exports.findDevices = async(req, res) => {
 
         var devices = await Device.find({ CID });
         if (devices != null) {
-            return res.send({
+            return res.json({
                 result: true,
                 dataList: devices,
             });
         }
         else {
-            res.send({
+            res.json({
                 result: false,
                 error: NO_SUCH_DATA,
             });
         }
     }
     catch (exception) {
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -523,13 +522,13 @@ exports.updateDevice = async(req, res) => {
         var result = await Device.where({ _id }).updateOne({ NN, UA: Date.now() });
         console.log(result);
 
-        res.send({
+        res.json({
             result: true,
         });
 
     }
     catch (exception) {
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -544,12 +543,12 @@ exports.deleteDevice = async(req, res) => {
         var result = await Device.remove({ _id, MAC });
         console.log(result);
 
-        res.send({
+        res.json({
             result: true,
         });
     }
     catch (exception) {
-        res.send({
+        res.json({
             result: false,
             error: UNKOWN,
         });
@@ -612,8 +611,12 @@ exports.findOneDevice = async(req, res) => {
 exports.root = (req, res) => {
     var tz = moment.tz.guess();
     console.log(tz);
+<<<<<<< HEAD
     res.send({
 
+=======
+    res.json({
+>>>>>>> bc5bbc4bfd20eae6470ea25dbcc7e3df63d44aa3
         result: "hello",
     });
 };
@@ -684,10 +687,26 @@ exports.registerSMS = async(req, res) => {
             const companyone = await Company.where({ '_id': historyone.CID })
                 .updateMany({ "SPO": companypoint }).setOptions({ runValidators: true })
                 .exec();
+<<<<<<< HEAD
         }
 
         else {
             res.send({
+=======
+            }
+            
+            else {
+                res.json({
+                result: false,
+                error: UNKOWN,
+                });
+            }
+        
+        
+        }
+        catch (exception) {
+            res.json({
+>>>>>>> bc5bbc4bfd20eae6470ea25dbcc7e3df63d44aa3
                 result: false,
                 error: UNKOWN,
             });
@@ -751,6 +770,7 @@ exports.registerKAKAO = async(req, res) => {
                     console.log(e);
                 }
             }
+<<<<<<< HEAD
 
             const params = {
                 autoTypeDetect: true,
@@ -768,15 +788,28 @@ exports.registerKAKAO = async(req, res) => {
                         linkPc: process.env.IP + '/publish?cat=1&hid=' + historyid
                     }]
                 }
+=======
+            else {
+                res.json({
+                result: false,
+                error: NO_POINT,
+                });
+>>>>>>> bc5bbc4bfd20eae6470ea25dbcc7e3df63d44aa3
             }
             fn(params)
         }
+<<<<<<< HEAD
         else {
             res.send({
+=======
+        catch (exception) {
+            res.json({
+>>>>>>> bc5bbc4bfd20eae6470ea25dbcc7e3df63d44aa3
                 result: false,
                 error: NO_POINT,
             });
         }
+<<<<<<< HEAD
     }
     catch (exception) {
         res.send({
@@ -799,3 +832,6 @@ exports.DIDreturn = async(req, res) => {
         });
     }
 }
+=======
+};
+>>>>>>> bc5bbc4bfd20eae6470ea25dbcc7e3df63d44aa3

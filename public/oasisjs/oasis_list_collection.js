@@ -212,7 +212,6 @@
 		insertTr += "</th>"
 		insertTr += "<th width='2.5%'></th>"
 		
-		console.log(Object.sort)
 		insertTr += "<th width='10.5%' name = 'MD'>"+i18nconvert("MD")+"<a href='javascript:sortpage(pagingObject,i18nconvert,MD,[MD,VER,MAC,NN,UN,CA]);' name = 'MD'><i id = 'MD' class='float-right mx-1 fas fa-lg fa-fw m-t-3"
 		if(Object.sort == "MD2")
 			insertTr += " fa-sort-up'></a></i></th>"
@@ -297,7 +296,7 @@
 					}
 					insertTr += "</td><td class='with-btn' nowrap>"	
 					insertTr += "<a href='javascript:;' id = 'deviceid' onclick='device_editone(this,i18nconvert);' data-type='show' name='"+ Object.array[i]._id +"' class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>"+i18nconvert("modify")+"</a>";
-					insertTr += "<input type='button' value='"+i18nconvert("delete")+"' onclick=delete_one(this,'/device/ajax/device_deleteone',i18nconvert ) class='btn btn-sm btn-white width-60' name =' "+ Object.array[i].MAC +"'></td> ";
+					insertTr += "<input type='button' value='"+i18nconvert("delete")+"' onclick=delete_one(this,'/device/ajax/device_deleteone',i18nconvert) class='btn btn-sm btn-white width-60' name =' "+ Object.array[i].MAC +"'></td> ";
 					insertTr += "</tr>";
 					num -= indexcount;
 				}
@@ -892,63 +891,33 @@
      	
      	$("#memDiv1").empty();
      	
-     	
-  //   	insertTr += "<tr>"
-		// insertTr += "	<th width='2.5%'></th>"
-		// insertTr += "	<th width='30.5%' name = 'WNM'>"+i18nconvert("payWNM")+"<a href='javascript:sortpage(pagingObject,i18nconvert,WNM,[WNM,CA,RE]);' name = 'WNM'><i id = 'WNM' class=' float-right mx-1 fas fa-lg fa-fw m-t-3"
-		// if(Object.sort == "WNM2")
-		// 	insertTr += " fa-sort-up'></a></i></th>"
-		// else if(Object.sort == "WNM")
-		// 	insertTr += " fa-sort-down'></a></i></th>"
-		// else 
-		// 	insertTr += " fa-sort'></a></i></th>"
-			
-		// insertTr += "	<th width='24%' name = 'CA'>"+i18nconvert("pointCA")+"<a href='javascript:sortpage(pagingObject,i18nconvert,CA,[WNM,CA,RE]);' name = 'CA'><i id = 'CA' class='float-right mx-1 fas fa-lg fa-fw m-t-3"
-		// if(Object.sort == "CA2")
-		// 	insertTr += " fa-sort-up'></a></i></th>"
-		// else if(Object.sort == "CA")
-		// 	insertTr += " fa-sort-down'></a></i></th>"
-		// else 
-		// 	insertTr += " fa-sort'></a></i></th>"
-			
-		// insertTr += "	<th width='21%' name = 'RE'>"+i18nconvert("RE")+"<a href='javascript:sortpage(pagingObject,i18nconvert,RE,[WNM,CA,RE]);' name = 'RE'><i id = 'RE' class='float-right mx-1 fas fa-lg fa-fw m-t-3"
-		// if(Object.sort == "RE2")
-		// 	insertTr += " fa-sort-up'></a></i></th>"
-		// else if(Object.sort == "RE")
-		// 	insertTr += " fa-sort-down'></a></i></th>"
-		// else 
-		// 	insertTr += " fa-sort'></a></i></th>"
-			
-		// insertTr += "	<th width='1%'></th>"
-		// insertTr += "</tr>"
-     	insertTr += "<tr>"
-		insertTr += "	<th width='2.5%'></th>"
-		insertTr += "	<th width='30.5%' name = 'WNM'>"+i18nconvert("payWNM")+"<a href='javascript:sorttest(pagingObject,i18nconvert,WNM);' name = 'WNM'><i id = 'WNM' class=' float-right mx-1 fas fa-lg fa-fw m-t-3"
+     	insertTr += "<tr>";
+		insertTr += "	<th width='2.5%'></th>";
+		insertTr += "	<th width='30.5%' name = 'WNM'>"+i18nconvert("payWNM")+"<a href='javascript:sortList(pagingObject,i18nconvert,WNM);' name = 'WNM'><i id = 'WNM' class=' float-right mx-1 fas fa-lg fa-fw m-t-3";
 		if(Object.sort == "WNM-2")
-			insertTr += " fa-sort-up'></a></i></th>"
+			insertTr += " fa-sort-up'></a></i></th>";
 		else if(Object.sort == "WNM")
-			insertTr += " fa-sort-down'></a></i></th>"
+			insertTr += " fa-sort-down'></a></i></th>";
 		else 
-			insertTr += " fa-sort'></a></i></th>"
+			insertTr += " fa-sort'></a></i></th>";
 			
-		insertTr += "	<th width='24%' name = 'CA'>"+i18nconvert("pointCA")+"<a href='javascript:sorttest(pagingObject,i18nconvert,CA);' name = 'CA'><i id = 'CA' class='float-right mx-1 fas fa-lg fa-fw m-t-3"
+		insertTr += "	<th width='24%' name = 'CA'>"+i18nconvert("pointCA")+"<a href='javascript:sortList(pagingObject,i18nconvert,CA);' name = 'CA'><i id = 'CA' class='float-right mx-1 fas fa-lg fa-fw m-t-3";
 		if(Object.sort == "CA-2")
-			insertTr += " fa-sort-up'></a></i></th>"
+			insertTr += " fa-sort-up'></a></i></th>";
 		else if(Object.sort == "CA")
-			insertTr += " fa-sort-down'></a></i></th>"
+			insertTr += " fa-sort-down'></a></i></th>";
 		else 
-			insertTr += " fa-sort'></a></i></th>"
+			insertTr += " fa-sort'></a></i></th>";
 			
-		insertTr += "	<th width='21%' name = 'RE'>"+i18nconvert("RE")+"<a href='javascript:sorttest(pagingObject,i18nconvert,RE);' name = 'RE'><i id = 'RE' class='float-right mx-1 fas fa-lg fa-fw m-t-3"
+		insertTr += "	<th width='21%' name = 'RE'>"+i18nconvert("RE")+"<a href='javascript:sortList(pagingObject,i18nconvert,RE);' name = 'RE'><i id = 'RE' class='float-right mx-1 fas fa-lg fa-fw m-t-3";
 		if(Object.sort == "RE-2")
-			insertTr += " fa-sort-up'></a></i></th>"
+			insertTr += " fa-sort-up'></a></i></th>";
 		else if(Object.sort == "RE")
-			insertTr += " fa-sort-down'></a></i></th>"
+			insertTr += " fa-sort-down'></a></i></th>";
 		else 
-			insertTr += " fa-sort'></a></i></th>"
+			insertTr += " fa-sort'></a></i></th>";
 			
-		insertTr += "	<th width='1%'></th>"
-		insertTr += "</tr>"
+		insertTr += "</tr>";
      	
      	$("#memDiv1").append(insertTr);
 		insertTr = "";
