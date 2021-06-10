@@ -39,6 +39,7 @@ router.post("/device/register", controller.registerDevice);
 router.post("/device/find", controller.findDevices);
 router.post("/device/update", controller.updateDevice);
 router.post("/device/delete", controller.deleteDevice);
+router.post("/device/find/id", controller.findDeviceByID);
 
 router.get("/sms",controller.registerSMS);
 

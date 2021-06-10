@@ -390,22 +390,22 @@
 						insertTr += "<td>본사</td>";
 						else
 						insertTr += "<td>대리점</td>";
-						insertTr += "<td><input  name = 'radioau "+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",0'";
+						insertTr += "<td><input onclick ='checkau(this)' name = '"+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",0'";
 						if(Object.array[i].AU ==0)
 							insertTr += "checked/></td>";
 						else 
 							insertTr += "unchecked/></td>";
-						insertTr += "<td><input  name = 'radioau "+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",3'";
+						insertTr += "<td><input onclick ='checkau(this)' name = '"+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",3'";
 						if(Object.array[i].AU ==3)
 							insertTr += "checked/></td>";
 						else 
 							insertTr += "unchecked/></td>";
-						insertTr += "<td><input  name = 'radioau "+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",2'";
+						insertTr += "<td><input onclick ='checkau(this)' name = '"+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",2'";
 						if(Object.array[i].AU ==2)
 							insertTr += "checked/></td>";
 						else 
 							insertTr += "unchecked/></td>";
-						insertTr += "<td><input  name = 'radioau "+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",1'";
+						insertTr += "<td><input onclick ='checkau(this)'  name = '"+i+"' class ='com_ck_au' type='radio'  value ='"+Object.array[i].EM+",1'";
 						if(Object.array[i].AU ==1)
 							insertTr += "checked/></td>";
 						else 
@@ -497,14 +497,14 @@
 						insertTr += "<td>"+ Object.array[i].PN+"</td>";
 						insertTr += "<td>"+ Object.array[i].EM+"</td>";
 						insertTr += "<td class='with-btn' nowrap>";
-						insertTr += "<input onclick ='checkau(this)' class ='ck_au' type='checkbox'  value ='"+Object.array[i].EM+"'";
-						if(Object.array[i].AU ==1)
+						insertTr += "<input onclick ='checkau2(this)' name ='"+i+"' class ='ck_au' type='checkbox'  value ='"+Object.array[i].EM+",2'";
+						if(Object.array[i].AU ==2)
 							insertTr += "checked/>";
 						else
 							insertTr += "unchecked/>";
 						insertTr += "</td>";
 						insertTr += "<td class='with-btn' nowrap>";
-						insertTr += "<input onclick ='checkac(this)' class ='ck_ac' type='checkbox'  value ='"+Object.array[i].EM+"'";
+						insertTr += "<input onclick ='checkac(this) name ='"+i+"'' class ='ck_ac' type='checkbox'  value ='"+Object.array[i].EM+"'";
 						if(Object.array[i].AC ==1)
 							insertTr += "checked/>";
 						else
