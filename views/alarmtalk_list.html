@@ -41,8 +41,8 @@
 									<a id="searchoption" href="javascript:;" class="btn btn-sm btn-white">{{__('search')}}</a>
 									<a href="#" data-toggle="dropdown" class="btn btn-sm btn-white dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
 									<div class="dropdown-menu dropdown-menu-right">
-										<a href="javascript:searchoption('WNM',pagingObject,i18nconvert,{WNM : 'WNM',RE : 'RE'});" class="dropdown-item">{{__('payment_sender')}}</a>
-										<a href="javascript:searchoption('RE',pagingObject,i18nconvert,{WNM : 'WNM',RE : 'RE'});" class="dropdown-item">{{__('payment_result')}}</a>
+										<a href="javascript:searchoption('WNM',pagingObject,{WNM : 'WNM',RE : 'RE'});" class="dropdown-item">{{__('payment_sender')}}</a>
+										<a href="javascript:searchoption('RE',pagingObject,{WNM : 'WNM',RE : 'RE'});" class="dropdown-item">{{__('payment_result')}}</a>
 									</div>
 								</div>
 							</div>
@@ -51,9 +51,9 @@
 								<input  id ="searchtext" type="text" class="w-100 form-control form-control-sm" placeholder ="" />
 					  		</div>
 					  		<div>
-								<button id ="searchbutton" class="btn btn-sm btn-primary text-white" onclick="searchtext(pagingObject,i18nconvert)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
+								<button id ="searchbutton" class="btn btn-sm btn-primary text-white" onclick="searchtext(pagingObject)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
 							</div>
-							<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,i18nconvert) class='d-none ml-1 btn btn-sm btn-primary mr-1 px-2'>{{__('all')}}</a>
+							<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject) class='d-none ml-1 btn btn-sm btn-primary mr-1 px-2'>{{__('all')}}</a>
 						</div>
 					</div>
 					
@@ -65,7 +65,7 @@
 							<option class ="postnumber" value="100">100</option>
 						</select>
 						<p class="mb-0 text-gray">
-							<span>{{__('today')}} </span><span class="text-red font-weight-bold"><u>{{alarmTodayCount}}</u></span>
+							<span>{{__('new')}} </span><span class="text-red font-weight-bold"><u>{{alarmTodayCount}}</u></span>
 							<span> / </span>
 							<span>{{__('all')}} </span><span class="text-dark font-weight-bold"><u>{{alarmCount}}</u></span>
 						</p>
@@ -97,16 +97,16 @@ var pagingObject = new Object({name : "Alarmtalk", url : "/ajax/alarmtalk_list",
 	// 검색 기능
 	$(document).ready(function() {
 		
-		pagereload(pagingObject,i18nconvert);
+		pagereload(pagingObject);
 		
 		$('#selectpage').click(function() {
-			selectpage(pagingObject,i18nconvert,{
+			selectpage(pagingObject, {
 				option : $('#selectpage option:selected').val()
 			});
 		});
 		$('#searchtext').keyup(function(key) {
 			if(key.keyCode == 13) {
-				searchtext(pagingObject,i18nconvert)
+				searchtext(pagingObject)
 			}
 		});
     });

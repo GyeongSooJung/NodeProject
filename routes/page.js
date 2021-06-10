@@ -709,205 +709,376 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, async function(req, res) {
 router.get('/worker_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
-  const aclist = await Worker.find({ "CID": CID, "AC": false });
+  const aclist = await Worker.find({ "CID" : CID, "AC": false });
   const WN = req.query.WN;
   const noticethree = await Notice.find().limit(3).sort({CA : -1});
-
-  let page = req.query.page;
-    const totalNum = await Worker.countDocuments({ "CID": CID });
-    let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-    const workers = await Worker.find({ CID: CID, }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-
-    res.render('worker_list', { company: req.decoded.company, aclist, noticethree, workers, totalNum, currentPage, totalPage, startPage, endPage });
-
-
+  const todayStart = moment().format('YYYY-MM-DD');
+  const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
+  
+  if(CID == "5fd6c731a26c914fbad53ebe") {
+    const workers = await Worker.find({});
+    const workerTodayCount = await Worker.countDocuments({ "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
+    const workerCount = workers.length;
+  
+    res.render('worker_list', { company: req.decoded.company, aclist, noticethree, workers, workerTodayCount, workerCount });
+  }
+  else {
+    const workers = await Worker.find({ "CID" : CID });
+    const workerTodayCount = await Worker.countDocuments({ "CID" : CID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
+    const workerCount = workers.length;
+  
+    res.render('worker_list', { company: req.decoded.company, aclist, noticethree, workers, workerTodayCount, workerCount });
+  }
 });
 
-router.post('/ajax/worker_list', isNotLoggedIn, DataSet, async function(req, res) {
+router.post('/ajax/worker_list', isNotLoggedIn, DataSet, async function(req, res, next) {
   const CID = req.body.CID;
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
+  var searchdate = req.body.searchdate;
+  var sortText = "";
+  var sortNum = 0;
+  var workers = new Object;
   
-  if(CID == "5fd6c731a26c914fbad53ebe") {
-    
-    var franchiseCIDlist = await Company.aggregate([
-            
-                          { $match : {CK : "MK 대리점"} },
-                          { $project : {CID : 1}},
-                             
-                          ], function (err,result) {
-                            if(err) throw err;
-                          });
-    var CIDlist = [];
-    for (var i = 0; i < franchiseCIDlist.length; i ++) {
-      CIDlist.push(String(franchiseCIDlist[i]._id))
-    }
-    
-    CIDlist.push(CID);
-    
-    if ((search!="") && (searchtext!="")) {
-        try{
-          if (search =="WN") {
-            var workers = await Worker.find({ "CID": {$in : CIDlist}, "WN" : {$regex:searchtext} });
-            if(workers.length == 0) 
-            res.send({result : "nothing"});
-          }
-          else if (search =="PN") {
-            var workers = await Worker.find({ "CID": {$in : CIDlist}, "PN" : {$regex:searchtext} });
-            if(workers.length == 0) 
-            res.send({result : "nothing"});
-          }
-          else if (search =="EM") {
-            var workers = await Worker.find({ "CID": {$in : CIDlist}, "EM" : {$regex:searchtext} });
-            if(workers.length == 0) 
-            res.send({result : "nothing"});
-          }
-          else {
-            var workers = await Worker.find({ "CID": {$in : CIDlist} }).sort({ ET: -1 });
-          }
-        }catch(e) {
-          res.send({ result: false});
-        }
-        
-      }
-      
-      else {
-        
-          var workers = await Worker.find({ "CID": {$in : CIDlist} });
-        
-          if(sort == "WN") {
-              workers.sort(function (a,b) {
-                
-                if(typeof(a.WN) == "object")
-                a.WN = JSON.stringify(a.WN);
-                return (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? 1 : 0;
-              })
-          }
-          
-          else if(sort == "WN2") {
-              workers.sort(function (a,b) {
-                if(typeof(a.WN) == "object")
-                a.WN = JSON.stringify(a.WN);
-                return (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? 1 : 0;
-              })
-          }
-          
-          else if(sort == "PN") { 
-              workers.sort(function (a,b) {
-                if(typeof(a.PN) == "object")
-                a.PN = parseInt(a.PN);
-                return (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? 1 : 0;
-              })
-          }
-          
-          else if(sort == "PN2"){
-              workers.sort(function (a,b) {
-                if(typeof(a.PN) == "object")
-                a.PN = JSON.stringify(a.PN);
-                return (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? 1 : 0;
-              })
-           }
-          else if(sort == "EM") {
-              workers.sort(function (a,b) {
-                return (a.EM).length < (b.EM).length ? -1 : (a.EM).length > (b.EM).length ? 1 : 0;
-              });
-              
-          }
-          else if(sort == "EM2") {
-              workers.sort(function (a,b) {
-                return (a.EM).length > (b.EM).length ? -1 : (a.EM).length < (b.EM).length ? 1 : 0;
-              });
-          }
-          else {
-            var workers = await Worker.find({ "CID": {$in : CIDlist} }).sort({ CA: -1 });
-            
-          }
-      }
-    
-    
+  if(sort.includes('-') == true) {
+    sortText = sort.split('-')[0];
+    sortNum = -1;
   }
   else {
-      if ((search!="") && (searchtext!="")) {
-        try{
+    sortText = sort;
+    sortNum = 1;
+  }
+  
+  try {
+    if(CID == "5fd6c731a26c914fbad53ebe") {
+      // 대리점 파악
+      var franchiseCIDlist = await Company.aggregate([
+        { $match : {CK : "MK 대리점"} },
+        { $project : {CID : 1}},
+           
+        ], function (err,result) {
+          if(err) throw err;
+        });
+      var CIDlist = [];
+      for (var i = 0; i < franchiseCIDlist.length; i ++) {
+        CIDlist.push(String(franchiseCIDlist[i]._id));
+      }
+      CIDlist.push(CID);
+      //
+      
+      if (searchdate) {
+        var searchtext2 = searchdate.split("~");
+        if(workers.length == 0) {
+          return res.send({ result : "nothing" });
+        }
+        else {
+          if(search == "WN") {
+            workers = await Worker.find({ "CID": { $in : CIDlist }, "WN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
+          }
+          else if(search == "PN") {
+            workers = await Worker.find({ "CID": { $in : CIDlist }, "PN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
+          }
+          else if(search == "EM") {
+            workers = await Worker.find({ "CID": { $in : CIDlist }, "EM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
+          }
+          else {
+            workers = await Worker.find({ "CID" : { $in : CIDlist }, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
+          }
+        }
+      }
+      else {
+        if(workers.length == 0) {
+          return res.send({ result : "nothing" });
+        }
+        else {
           if (search =="WN") {
-            var workers = await Worker.find({ "CID": CID, "WN" : {$regex:searchtext} });
-            if(workers.length == 0) 
-            res.send({result : "nothing"});
+            workers = await Worker.find({ "CID": { $in : CIDlist }, "WN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
           }
           else if (search =="PN") {
-            var workers = await Worker.find({ "CID": CID, "PN" : {$regex:searchtext} });
-            if(workers.length == 0) 
-            res.send({result : "nothing"});
+            workers = await Worker.find({ "CID": { $in : CIDlist }, "PN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
           }
           else if (search =="EM") {
-            var workers = await Worker.find({ "CID": CID, "EM" : {$regex:searchtext} });
-            if(workers.length == 0) 
-            res.send({result : "nothing"});
+            workers = await Worker.find({ "CID": { $in : CIDlist }, "EM" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
           }
           else {
-            var workers = await Worker.find({ "CID": CID }).sort({ ET: -1 });
+            workers = await Worker.find({ "CID" : { $in : CIDlist } }).sort({ [sortText]: sortNum });
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
           }
-        }catch(e) {
-          res.send({ result: false});
         }
-        
       }
-      
-      else {
-        
-          var workers = await Worker.find({ "CID": {$in : CIDlist} });
-        
-          if(sort == "WN") {
-              workers.sort(function (a,b) {
-                
-                if(typeof(a.WN) == "object")
-                a.WN = JSON.stringify(a.WN);
-                return (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? 1 : 0;
-              })
+    }
+    else {
+      if (searchdate) {
+        var searchtext2 = searchdate.split("~");
+        if(workers.length == 0) {
+          return res.send({ result : "nothing" });
+        }
+        else {
+          if(search == "WN") {
+            workers = await Worker.find({ "CID": CID, "WN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
           }
-          
-          else if(sort == "WN2") {
-              workers.sort(function (a,b) {
-                if(typeof(a.WN) == "object")
-                a.WN = JSON.stringify(a.WN);
-                return (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? 1 : 0;
-              })
+          else if(search == "PN") {
+            workers = await Worker.find({ "CID": CID, "PN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
           }
-          
-          else if(sort == "PN") { 
-              workers.sort(function (a,b) {
-                if(typeof(a.PN) == "object")
-                a.PN = parseInt(a.PN);
-                return (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? 1 : 0;
-              })
-          }
-          
-          else if(sort == "PN2"){
-              workers.sort(function (a,b) {
-                if(typeof(a.PN) == "object")
-                a.PN = JSON.stringify(a.PN);
-                return (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? 1 : 0;
-              })
-           }
-          else if(sort == "EM") {
-              workers.sort(function (a,b) {
-                return (a.EM).length < (b.EM).length ? -1 : (a.EM).length > (b.EM).length ? 1 : 0;
-              });
-              
-          }
-          else if(sort == "EM2") {
-              workers.sort(function (a,b) {
-                return (a.EM).length > (b.EM).length ? -1 : (a.EM).length < (b.EM).length ? 1 : 0;
-              });
+          else if(search == "EM") {
+            workers = await Worker.find({ "CID": CID, "EM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
           }
           else {
-            var workers = await Worker.find({ "CID": CID }).sort({ CA: -1 });
-            
+            workers = await Worker.find({ "CID" : CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
           }
+        }
       }
+      else {
+        if(workers.length == 0) {
+          return res.send({ result : "nothing" });
+        }
+        else {
+          if (search =="WN") {
+            workers = await Worker.find({ "CID": CID, "WN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
+          }
+          else if (search =="PN") {
+            workers = await Worker.find({ "CID": CID, "PN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
+          }
+          else if (search =="EM") {
+            workers = await Worker.find({ "CID": CID, "EM" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
+          }
+          else {
+            workers = await Worker.find({ "CID" : CID }).sort({ [sortText]: sortNum });
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
+          }
+        }
+      }
+    }
+  } catch(err) {
+    console.error(err);
+    next(err);
   }
-  console.log(workers)
+  // if(CID == "5fd6c731a26c914fbad53ebe") {
+    
+  //   var franchiseCIDlist = await Company.aggregate([
+            
+  //                         { $match : {CK : "MK 대리점"} },
+  //                         { $project : {CID : 1}},
+                             
+  //                         ], function (err,result) {
+  //                           if(err) throw err;
+  //                         });
+  //   var CIDlist = [];
+  //   for (var i = 0; i < franchiseCIDlist.length; i ++) {
+  //     CIDlist.push(String(franchiseCIDlist[i]._id))
+  //   }
+    
+  //   CIDlist.push(CID);
+    
+  //   if ((search!="") && (searchtext!="")) {
+  //       try{
+  //         if (search =="WN") {
+  //           var workers = await Worker.find({ "CID": {$in : CIDlist}, "WN" : {$regex:searchtext} });
+  //           if(workers.length == 0) 
+  //           res.send({result : "nothing"});
+  //         }
+  //         else if (search =="PN") {
+  //           var workers = await Worker.find({ "CID": {$in : CIDlist}, "PN" : {$regex:searchtext} });
+  //           if(workers.length == 0) 
+  //           res.send({result : "nothing"});
+  //         }
+  //         else if (search =="EM") {
+  //           var workers = await Worker.find({ "CID": {$in : CIDlist}, "EM" : {$regex:searchtext} });
+  //           if(workers.length == 0) 
+  //           res.send({result : "nothing"});
+  //         }
+  //         else {
+  //           var workers = await Worker.find({ "CID": {$in : CIDlist} }).sort({ ET: -1 });
+  //         }
+  //       }catch(e) {
+  //         res.send({ result: false});
+  //       }
+        
+  //     }
+      
+  //     else {
+        
+  //         var workers = await Worker.find({ "CID": {$in : CIDlist} });
+        
+  //         if(sort == "WN") {
+  //             workers.sort(function (a,b) {
+                
+  //               if(typeof(a.WN) == "object")
+  //               a.WN = JSON.stringify(a.WN);
+  //               return (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? 1 : 0;
+  //             })
+  //         }
+          
+  //         else if(sort == "WN2") {
+  //             workers.sort(function (a,b) {
+  //               if(typeof(a.WN) == "object")
+  //               a.WN = JSON.stringify(a.WN);
+  //               return (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? 1 : 0;
+  //             })
+  //         }
+          
+  //         else if(sort == "PN") { 
+  //             workers.sort(function (a,b) {
+  //               if(typeof(a.PN) == "object")
+  //               a.PN = parseInt(a.PN);
+  //               return (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? 1 : 0;
+  //             })
+  //         }
+          
+  //         else if(sort == "PN2"){
+  //             workers.sort(function (a,b) {
+  //               if(typeof(a.PN) == "object")
+  //               a.PN = JSON.stringify(a.PN);
+  //               return (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? 1 : 0;
+  //             })
+  //         }
+  //         else if(sort == "EM") {
+  //             workers.sort(function (a,b) {
+  //               return (a.EM).length < (b.EM).length ? -1 : (a.EM).length > (b.EM).length ? 1 : 0;
+  //             });
+              
+  //         }
+  //         else if(sort == "EM2") {
+  //             workers.sort(function (a,b) {
+  //               return (a.EM).length > (b.EM).length ? -1 : (a.EM).length < (b.EM).length ? 1 : 0;
+  //             });
+  //         }
+  //         else {
+  //           var workers = await Worker.find({ "CID": {$in : CIDlist} }).sort({ CA: -1 });
+            
+  //         }
+  //     }
+    
+    
+  // }
+  // else {
+  //     if ((search!="") && (searchtext!="")) {
+  //       try{
+  //         if (search =="WN") {
+  //           var workers = await Worker.find({ "CID": CID, "WN" : {$regex:searchtext} });
+  //           if(workers.length == 0) 
+  //           res.send({result : "nothing"});
+  //         }
+  //         else if (search =="PN") {
+  //           var workers = await Worker.find({ "CID": CID, "PN" : {$regex:searchtext} });
+  //           if(workers.length == 0) 
+  //           res.send({result : "nothing"});
+  //         }
+  //         else if (search =="EM") {
+  //           var workers = await Worker.find({ "CID": CID, "EM" : {$regex:searchtext} });
+  //           if(workers.length == 0) 
+  //           res.send({result : "nothing"});
+  //         }
+  //         else {
+  //           var workers = await Worker.find({ "CID": CID }).sort({ ET: -1 });
+  //         }
+  //       }catch(e) {
+  //         res.send({ result: false});
+  //       }
+        
+  //     }
+      
+  //     else {
+        
+  //         var workers = await Worker.find({ "CID": {$in : CIDlist} });
+        
+  //         if(sort == "WN") {
+  //             workers.sort(function (a,b) {
+                
+  //               if(typeof(a.WN) == "object")
+  //               a.WN = JSON.stringify(a.WN);
+  //               return (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? 1 : 0;
+  //             })
+  //         }
+          
+  //         else if(sort == "WN2") {
+  //             workers.sort(function (a,b) {
+  //               if(typeof(a.WN) == "object")
+  //               a.WN = JSON.stringify(a.WN);
+  //               return (a.WN[0]).charCodeAt(0) > (b.WN[0]).charCodeAt(0) ? -1 : (a.WN[0]).charCodeAt(0) < (b.WN[0]).charCodeAt(0) ? 1 : 0;
+  //             })
+  //         }
+          
+  //         else if(sort == "PN") { 
+  //             workers.sort(function (a,b) {
+  //               if(typeof(a.PN) == "object")
+  //               a.PN = parseInt(a.PN);
+  //               return (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? 1 : 0;
+  //             })
+  //         }
+          
+  //         else if(sort == "PN2"){
+  //             workers.sort(function (a,b) {
+  //               if(typeof(a.PN) == "object")
+  //               a.PN = JSON.stringify(a.PN);
+  //               return (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? 1 : 0;
+  //             })
+  //         }
+  //         else if(sort == "EM") {
+  //             workers.sort(function (a,b) {
+  //               return (a.EM).length < (b.EM).length ? -1 : (a.EM).length > (b.EM).length ? 1 : 0;
+  //             });
+              
+  //         }
+  //         else if(sort == "EM2") {
+  //             workers.sort(function (a,b) {
+  //               return (a.EM).length > (b.EM).length ? -1 : (a.EM).length < (b.EM).length ? 1 : 0;
+  //             });
+  //         }
+  //         else {
+  //           var workers = await Worker.find({ "CID": CID }).sort({ CA: -1 });
+            
+  //         }
+  //     }
+  // }
+  // console.log(workers)
   
   var workerlist = [];
   if(workers.length) {
@@ -966,19 +1137,13 @@ router.get('/history_list', isNotLoggedIn, DataSet, async(req, res, next) => {
     const devices = await Device.find({ "CID": CID });
     const CN = req.query.CN;
     const MD = req.query.MD;
-    const keyword = req.query.keyword;
+    const historys = await History.find({ "CID": CID });
+    const todayStart = moment().format('YYYY-MM-DD');
+    const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
+    const historyTodayCount = await History.countDocuments({ "CID" : CID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
+    const historyCount = historys.length;
 
-    let page = req.query.page;
-    
-    const totalNum = await History.countDocuments({ "CID": CID });
-    let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-    const historylist = await History.find({ "CID": CID }).sort({ ET: -1 }).skip(skipPost).limit(postNum);
-    const totalNumlist = [];
-    for (var i = 0; i < totalNum.length; i++) {
-      totalNumlist[i] = i + 1;
-    }
-
-    res.render('history_list', { company: req.decoded.company, aclist, noticethree, cars, devices, historylist, totalNum, currentPage, totalPage, startPage, endPage, totalNumlist });
+    res.render('history_list', { company: req.decoded.company, aclist, noticethree, cars, devices, historys, historyTodayCount, historyCount });
     
   }
   catch (err) {
@@ -987,237 +1152,137 @@ router.get('/history_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   }
 });
 
-router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, res) {
+router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, res, next) {
   const CID = req.body.CID;
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
   var searchdate = req.body.searchdate;
+  var sortText = "";
+  var sortNum = 0;
+  var historys = new Object;
   
-  
-  if(search!="") {
-    if(search =="ET") {
-        var searchtext2 = searchdate.split("~");
-        var historys = await History.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-        
-        for( var i in historys) {
-          historys[i].PD = historys[i].PD.length
-        }
-        
-        if(historys.length == 0) 
-        res.send({result : "nothing"});
-      }
-    else {
-      if(!searchdate) {
-        
-          if (search =="CNM") {
-              var historys =await History.aggregate([
-            
-              { $match : {CID : CID, "CNM" : {$regex:searchtext}} },
-              { $project : {CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM"}},
-                 
-              ], function (err,result) {
-                if(err) throw err;
-              });
-            if(historys.length == 0) 
-            res.send({result : "nothing"});
-          }
-          else if (search =="DNM") {
-            var historys =await History.aggregate([
-            
-              { $match : {CID : CID, "DNM" : {$regex:searchtext}} },
-              { $project : {CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM"}},
-                 
-              ], function (err,result) {
-                if(err) throw err;
-              });
-            if(historys.length == 0) 
-            res.send({result : "nothing"});
-          }
-          else if (search =="WNM") {
-            var historys =await History.aggregate([
-            
-              { $match : {CID : CID, "WNM" : {$regex:searchtext}} },
-              { $project : {CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM"}},
-                 
-              ], function (err,result) {
-                if(err) throw err;
-              });
-            if(historys.length == 0) 
-            res.send({result : "nothing"});
-          }
-      
-      }
-      else {
-        console.log(searchdate, search, searchtext)
-        try {
-          if (search =="CNM") {
-            var searchtext2 = searchdate.split("~");
-            var historys = await History.find({CID : CID, "CNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"}});
-            for( var i in historys) {
-              console.log(historys[i].PD)
-              historys[i].PD = historys[i].PD.length
-            }
-              if(historys.length == 0) 
-              res.send({result : "nothing"});
-            }
-            else if (search =="DNM") {
-              var searchtext2 = searchdate.split("~");
-              var historys = await History.find({CID : CID, "DNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"}});
-              for( var i in historys) {
-                console.log(historys[i].PD)
-                historys[i].PD = historys[i].PD.length
-              }
-              if(historys.length == 0) 
-              res.send({result : "nothing"});
-            }
-            else if (search =="WNM") {
-              var searchtext2 = searchdate.split("~");
-              var historys = await History.find({CID : CID, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"}});
-              for( var i in historys) {
-                console.log(historys[i].PD)
-                historys[i].PD = historys[i].PD.length
-              }
-              if(historys.length == 0) 
-              res.send({result : "nothing"});
-            }
-        }catch(e) {
-          res.send({ result: false });
-        }
-        
-        
-      }
-      
-    }
-    
+  if(sort.includes('-') == true) {
+    sortText = sort.split('-')[0];
+    sortNum = -1;
   }
-  
   else {
-    
-      
-      var historys = await History.aggregate([
-      
-        { $match : {CID : CID} },
-        { $project : {CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM"}},
-           
-        ], function (err,result) {
-          if(err) throw err;
-      });
-      
-    
-      if(sort == "CNM") {
-          historys.sort(function (a,b) {
-                var ax = [], bx = [];
-                a = JSON.stringify(a.CNM);
-                b = JSON.stringify(b.CNM);
-              
-                a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
-                b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
-                
-                while(ax.length && bx.length) {
-                    var an = ax.shift();
-                    var bn = bx.shift();
-                    var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
-                    if(nn) return nn;
-                }
-            
-                return ax.length - bx.length;
-            });
-      }
-      
-      else if(sort == "CNM2") {
-          historys.sort(function (a,b) {
-                var ax = [], bx = [];
-                a = JSON.stringify(a.CNM);
-                b = JSON.stringify(b.CNM);
-              
-                a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
-                b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
-                
-                while(ax.length && bx.length) {
-                    var an = bx.shift();
-                    var bn = ax.shift();
-                    var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
-                    if(nn) return nn;
-                }
-            
-                return ax.length - bx.length;
-            });
-      }
-      
-      else if(sort == "DNM") { 
-          historys.sort(function (a,b) {
-            if(typeof(a.DNM) == "object")
-            a.DNM = JSON.stringify(a.DNM);
-            return (a.DNM[0]).charCodeAt(0) < (b.DNM[0]).charCodeAt(0) ? -1 : (a.DNM[0]).charCodeAt(0) > (b.DNM[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      
-      else if(sort == "DNM2"){
-          historys.sort(function (a,b) {
-            if(typeof(a.DNM) == "object")
-            a.DNM = JSON.stringify(a.DNM);
-            return (a.DNM[0]).charCodeAt(0) > (b.DNM[0]).charCodeAt(0) ? -1 : (a.DNM[0]).charCodeAt(0) < (b.DNM[0]).charCodeAt(0) ? 1 : 0;
-          })
-       }
-      else if(sort == "ET") {
-            historys.sort(function (a,b) {
-                return a.ET > b.ET ? -1 : a.ET < b.ET ? 1 : 0;
-              });
-        }
-          
-      else if(sort == "ET2") {
-            historys.sort(function (a,b) {
-                return a.ET < b.ET ? -1 : a.ET > b.ET ? 1 : 0;
-              })
-        }
-        
-      else if(sort == "PD") {
-          historys.sort(function (a,b) {
-            return a.PD < b.PD ? -1 : a.PD > b.PD ? 1 : 0;
-          });
-          
-      }
-      else if(sort == "PD2") {
-          historys.sort(function (a,b) {
-            return a.PD > b.PD ? -1 : a.PD < b.PD ? 1 : 0;
-          });
-      }
-      else if(sort == "WNM") {
-          historys.sort(function (a,b) {
-            if(typeof(a.WNM) == "object")
-            a.WNM = JSON.stringify(a.WNM);
-            return (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      else if(sort == "WNM2") {
-          historys.sort(function (a,b) {
-            if(typeof(a.WNM) == "object")
-            a.WNM = JSON.stringify(a.WNM);
-            return (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      else {
-        var historys =await History.aggregate([
-      
-        { $match : {CID : CID} },
-        { $project : {CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM"}},
-           
-        ], function (err,result) {
-          if(err) throw err;
-      });
-        
-      }
+    sortText = sort;
+    sortNum = 1;
   }
   
-  var historylist = [];
-  if(historys.length) {
-    for(var i = 0; i < historys.length; i ++) {
-      historylist[i] = historys[i];
+  try {
+    if (searchdate) {
+      var searchtext2 = searchdate.split("~");
+      if(historys.length == 0) {
+        return res.send({ result : "nothing" });
+      }
+      else {
+        if(search == "CNM") {
+          historys = await History.aggregate([
+            { $match : { "CID" : CID, "CNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(historys.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if(search == "DNM") {
+          historys = await History.aggregate([
+            { $match : { "CID" : CID, "DNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(historys.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if(search == "WNM") {
+          historys = await History.aggregate([
+            { $match : { "CID" : CID, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(historys.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else {
+          historys = await History.aggregate([
+            { $match : { "CID" : CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(historys.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+      }
     }
+    else {
+      if(historys.length == 0) {
+        return res.send({ result : "nothing" });
+      }
+      else {
+        if (search =="CNM") {
+          historys = await History.aggregate([
+            { $match : { "CID" : CID, "CNM" : {$regex:searchtext} } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(historys.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if (search =="DNM") {
+          historys = await History.aggregate([
+            { $match : { "CID" : CID, "DNM" : {$regex:searchtext} } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(historys.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if (search =="WNM") {
+          historys = await History.aggregate([
+            { $match : { "CID" : CID, "WNM" : {$regex:searchtext} } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(historys.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else {
+          historys = await History.aggregate([
+            { $match : { "CID" : CID } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(historys.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+      }
+    }
+    
+    var historylist = [];
+    if(historys.length) {
+      for(var i = 0; i < historys.length; i ++) {
+        historylist[i] = historys[i];
+      }
+    }
+    
+    console.log(historylist);
+    
+    res.send({ result: true, pagelist : historylist, totalnum : historys.length});
+    
+  } catch(err) {
+    console.error(err);
+    next(err);
   }
-  res.send({ result: true, pagelist : historylist, totalnum : historys.length});
- 
 });
 
 //소독 그래프
@@ -1325,25 +1390,18 @@ router.get('/pay_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-  const imp_code = process.env.imp_code;
-  let page = req.query.page;
   const GN = req.query.GN;
   const IP = process.env.IP;
   const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
   try {
-    const order = await Order.find({ "CID": CID });
-      try {
-        const totalNum = await Order.countDocuments({ "CID": CID });
-        let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-        const orders = await Order.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-
-        res.render('pay_list', { company: req.decoded.company, aclist, noticethree, totalNum, currentPage, totalPage, startPage, endPage, IP, orders });
-      }
-      catch (err) {
-        console.error(err);
-        next(err);
-      }
+    const orders = await Order.find({ "CID": CID });
+    const todayStart = moment().format('YYYY-MM-DD');
+    const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
+    const orderTodayCount = await Order.countDocuments({ "CID" : CID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
+    const orderCount = orders.length;
+    
+    res.render('pay_list', { company: req.decoded.company, aclist, noticethree, IP, orders, orderTodayCount, orderCount });
   }
   catch (err) {
     console.error(err);
@@ -1351,136 +1409,207 @@ router.get('/pay_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   }
 });
 
-router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res) {
+router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res, next) {
   const CID = req.body.CID;
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
   var searchdate = req.body.searchdate;
-  if (search!="") {
-    if(search == "CA") {
-          var searchtext2 = searchdate.split("~");
-          var orders = await Order.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-          if(orders.length == 0) 
-          res.send({result : "nothing"});
+  var sortText = "";
+  var sortNum = 0;
+  var orders = new Object;
+  
+  if(sort.includes('-') == true) {
+    sortText = sort.split('-')[0];
+    sortNum = -1;
+  }
+  else {
+    sortText = sort;
+    sortNum = 1;
+  }
+  
+  
+  try {
+    if (searchdate) {
+      var searchtext2 = searchdate.split("~");
+      if(orders.length == 0) {
+        return res.send({ result : "nothing" });
+      }
+      else {
+        if(search == "MID") {
+          orders = await Order.find({ "CID": CID, "MID" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          if(orders.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if(search == "GN") {
+          orders = await Order.find({ "CID": CID, "GN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          if(orders.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else {
+          orders = await Order.find({ "CID" : CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          if(orders.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+      }
     }
     else {
-      if(!searchdate) {
-        try{
-          if (search =="MID") {
-            var orders = await Order.find({ "CID": CID, "MID" : {$regex:searchtext} });
-            if(orders.length == 0) 
-            res.send({result : "nothing"});
-          }
-          else if (search =="GN") {
-            var orders = await Order.find({ "CID": CID, "GN" : {$regex:searchtext} });
-            if(orders.length == 0) 
-            res.send({result : "nothing"});
-          }
-          else if (search =="AM") {
-            searchtext = parseInt(searchtext)
-            var orders = await Order.find({ "CID": CID, "AM" : searchtext });
-            if(orders.length == 0) 
-            res.send({result : "nothing"});
-          }
-          
-        }catch(e) {
-          res.send({ result: false });
-        }
+      if(orders.length == 0) {
+        return res.send({ result : "nothing" });
       }
       else {
         if (search =="MID") {
-          var searchtext2 = searchdate.split("~");
-            var orders = await Order.find({ "CID": CID, "MID" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-            if(orders.length == 0) 
-            res.send({result : "nothing"});
+          orders = await Order.find({ "CID": CID, "MID" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          if(orders.length == 0) {
+            return res.send({ result : "nothing"});
           }
-          else if (search =="GN") {
-            var searchtext2 = searchdate.split("~");
-            var orders = await Order.find({ "CID": CID, "GN" : {$regex:searchtext} , "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"}});
-            if(orders.length == 0) 
-            res.send({result : "nothing"});
+        }
+        else if (search =="GN") {
+          orders = await Order.find({ "CID": CID, "GN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          if(orders.length == 0) {
+            return res.send({ result : "nothing"});
           }
-          else if (search =="AM") {
-            var searchtext2 = searchdate.split("~");
-            searchtext = parseInt(searchtext)
-            var orders = await Order.find({ "CID": CID, "AM" : searchtext, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-            if(orders.length == 0) 
-            res.send({result : "nothing"});
+        }
+        else {
+          orders = await Order.find({ "CID" : CID }).sort({ [sortText]: sortNum });
+          if(orders.length == 0) {
+            return res.send({ result : "nothing"});
           }
+        }
       }
-      
     }
-  }
-  
-  else {
-      var orders = await Order.find({ "CID": CID });
     
-      if(sort == "MID") {
-          orders.sort(function (a,b) {
-            
-            if(typeof(a.MID) == "object")
-            a.MID = JSON.stringify(a.MID);
-            return (a.MID[0]).charCodeAt(0) < (b.MID[0]).charCodeAt(0) ? -1 : (a.MID[0]).charCodeAt(0) > (b.MID[0]).charCodeAt(0) ? 1 : 0;
-          })
+    var orderlist = [];
+    if(orders.length) {
+      for(var i = 0; i < orders.length; i ++) {
+        orderlist[i] = orders[i];
       }
-      
-      else if(sort == "MID2") {
-          orders.sort(function (a,b) {
-            if(typeof(a.MID) == "object")
-            a.MID = JSON.stringify(a.MID);
-            return (a.MID[0]).charCodeAt(0) > (b.MID[0]).charCodeAt(0) ? -1 : (a.MID[0]).charCodeAt(0) < (b.MID[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      
-      else if(sort == "CA") { 
-          var orders = await Order.find({ "CID": CID }).sort({ CA: -1 });
-      }
-      
-      else if(sort == "CA2"){
-          var orders = await Order.find({ "CID": CID }).sort({ CA: 1 });
-       }
-      else if(sort == "GN") {
-          orders.sort(function (a,b) {
-            
-            if(typeof(a.GN) == "object")
-            a.GN = JSON.stringify(a.GN);
-            return (a.GN[0]).charCodeAt(0) < (b.GN[0]).charCodeAt(0) ? -1 : (a.GN[0]).charCodeAt(0) > (b.GN[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      
-      else if(sort == "GN2") {
-          orders.sort(function (a,b) {
-            if(typeof(a.GN) == "object")
-            a.GN = JSON.stringify(a.GN);
-            return (a.GN[0]).charCodeAt(0) > (b.GN[0]).charCodeAt(0) ? -1 : (a.GN[0]).charCodeAt(0) < (b.GN[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      else if(sort == "AM") {
-          orders.sort(function (a,b) {
-            return a.AM < b.AM ? -1 : a.AM > b.AM ? 1 : 0;
-          })
-      }
-      
-      else if(sort == "AM2") {
-          orders.sort(function (a,b) {
-            return a.AM > b.AM ? -1 : a.AM < b.AM ? 1 : 0;
-          })
-      }
-      else {
-        var orders = await Order.find({ "CID": CID }).sort({ CA: -1 });
-        
-      }
-  }
-  
-  var orderlist = [];
-  if(orders.length) {
-    for(var i = 0; i < orders.length; i ++) {
-      orderlist[i] = orders[i];
     }
+    
+    res.send({ result: true, pagelist : orderlist, totalnum : orders.length});
+    
+  } catch(err) {
+    console.error(err);
+    next(err);
   }
-  res.send({ result: true, pagelist : orderlist, totalnum : orders.length});
- 
+  // if (search!="") {
+  //   if(search == "CA") {
+  //         var searchtext2 = searchdate.split("~");
+  //         var orders = await Order.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
+  //         if(orders.length == 0) 
+  //         res.send({result : "nothing"});
+  //   }
+  //   else {
+  //     if(!searchdate) {
+  //       try{
+  //         if (search =="MID") {
+  //           var orders = await Order.find({ "CID": CID, "MID" : {$regex:searchtext} });
+  //           if(orders.length == 0) 
+  //           res.send({result : "nothing"});
+  //         }
+  //         else if (search =="GN") {
+  //           var orders = await Order.find({ "CID": CID, "GN" : {$regex:searchtext} });
+  //           if(orders.length == 0) 
+  //           res.send({result : "nothing"});
+  //         }
+  //         else if (search =="AM") {
+  //           searchtext = parseInt(searchtext)
+  //           var orders = await Order.find({ "CID": CID, "AM" : searchtext });
+  //           if(orders.length == 0) 
+  //           res.send({result : "nothing"});
+  //         }
+          
+  //       }catch(e) {
+  //         res.send({ result: false });
+  //       }
+  //     }
+  //     else {
+  //       if (search =="MID") {
+  //         var searchtext2 = searchdate.split("~");
+  //           var orders = await Order.find({ "CID": CID, "MID" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
+  //           if(orders.length == 0) 
+  //           res.send({result : "nothing"});
+  //         }
+  //         else if (search =="GN") {
+  //           var searchtext2 = searchdate.split("~");
+  //           var orders = await Order.find({ "CID": CID, "GN" : {$regex:searchtext} , "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"}});
+  //           if(orders.length == 0) 
+  //           res.send({result : "nothing"});
+  //         }
+  //         else if (search =="AM") {
+  //           var searchtext2 = searchdate.split("~");
+  //           searchtext = parseInt(searchtext)
+  //           var orders = await Order.find({ "CID": CID, "AM" : searchtext, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
+  //           if(orders.length == 0) 
+  //           res.send({result : "nothing"});
+  //         }
+  //     }
+      
+  //   }
+  // }
+  
+  // else {
+  //     var orders = await Order.find({ "CID": CID });
+    
+  //     if(sort == "MID") {
+  //         orders.sort(function (a,b) {
+            
+  //           if(typeof(a.MID) == "object")
+  //           a.MID = JSON.stringify(a.MID);
+  //           return (a.MID[0]).charCodeAt(0) < (b.MID[0]).charCodeAt(0) ? -1 : (a.MID[0]).charCodeAt(0) > (b.MID[0]).charCodeAt(0) ? 1 : 0;
+  //         })
+  //     }
+      
+  //     else if(sort == "MID2") {
+  //         orders.sort(function (a,b) {
+  //           if(typeof(a.MID) == "object")
+  //           a.MID = JSON.stringify(a.MID);
+  //           return (a.MID[0]).charCodeAt(0) > (b.MID[0]).charCodeAt(0) ? -1 : (a.MID[0]).charCodeAt(0) < (b.MID[0]).charCodeAt(0) ? 1 : 0;
+  //         })
+  //     }
+      
+  //     else if(sort == "CA") { 
+  //         var orders = await Order.find({ "CID": CID }).sort({ CA: -1 });
+  //     }
+      
+  //     else if(sort == "CA2"){
+  //         var orders = await Order.find({ "CID": CID }).sort({ CA: 1 });
+  //     }
+  //     else if(sort == "GN") {
+  //         orders.sort(function (a,b) {
+            
+  //           if(typeof(a.GN) == "object")
+  //           a.GN = JSON.stringify(a.GN);
+  //           return (a.GN[0]).charCodeAt(0) < (b.GN[0]).charCodeAt(0) ? -1 : (a.GN[0]).charCodeAt(0) > (b.GN[0]).charCodeAt(0) ? 1 : 0;
+  //         })
+  //     }
+      
+  //     else if(sort == "GN2") {
+  //         orders.sort(function (a,b) {
+  //           if(typeof(a.GN) == "object")
+  //           a.GN = JSON.stringify(a.GN);
+  //           return (a.GN[0]).charCodeAt(0) > (b.GN[0]).charCodeAt(0) ? -1 : (a.GN[0]).charCodeAt(0) < (b.GN[0]).charCodeAt(0) ? 1 : 0;
+  //         })
+  //     }
+  //     else if(sort == "AM") {
+  //         orders.sort(function (a,b) {
+  //           return a.AM < b.AM ? -1 : a.AM > b.AM ? 1 : 0;
+  //         })
+  //     }
+      
+  //     else if(sort == "AM2") {
+  //         orders.sort(function (a,b) {
+  //           return a.AM > b.AM ? -1 : a.AM < b.AM ? 1 : 0;
+  //         })
+  //     }
+  //     else {
+  //       var orders = await Order.find({ "CID": CID }).sort({ CA: -1 });
+        
+  //     }
+  // }
 });
 
 router.post('/ajax/pay_list_detail', isNotLoggedIn, DataSet, async(req, res, next) => {
@@ -1541,20 +1670,18 @@ router.get('/point_list', isNotLoggedIn, DataSet, async(req, res, next) => {
 
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-  const imp_code = process.env.imp_code;
-  let page = req.query.page;
   const GN = req.query.GN;
   const IP = process.env.IP;
   const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
   try {
-    const point = await Point.find({ "CID": CID });
+    const points = await Point.find({ "CID": CID });
+    const todayStart = moment().format('YYYY-MM-DD');
+    const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
+    const pointTodayCount = await Point.countDocuments({ "CID" : CID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
+    const pointCount = points.length;
 
-    const totalNum = await Point.countDocuments({ "CID": CID });
-    let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-    const points = await Point.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-
-    res.render('point_list', { company: req.decoded.company, aclist, noticethree, totalNum, currentPage, totalPage, startPage, endPage, IP, points });
+    res.render('point_list', { company: req.decoded.company, aclist, noticethree, IP, points, pointTodayCount, pointCount });
 
   }
   catch (err) {
@@ -1563,109 +1690,96 @@ router.get('/point_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   }
 });
 
-router.post('/ajax/point_list', isNotLoggedIn, DataSet, async function(req, res) {
+router.post('/ajax/point_list', isNotLoggedIn, DataSet, async function(req, res, next) {
   const CID = req.body.CID;
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
   var searchdate = req.body.searchdate;
+  var sortText = "";
+  var sortNum = 0;
+  var points = new Object;
   
-  if (search!="") {
-    if(search == "CA") {
-        try{
-          var searchtext2 = searchdate.split("~");
-          var points = await Point.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-          if(points.length == 0) 
-          res.send({result : "nothing"});
-        }catch(e) {
-          res.send({ result: false });
+  // 스키마 변경 시 삭제예정
+  if(search == "pointPN") {
+    search = "PN";
+  }
+  
+  if(sort.includes('-') == true) {
+    sortText = sort.split('-')[0];
+    sortNum = -1;
+  }
+  else {
+    sortText = sort;
+    sortNum = 1;
+  }
+  
+  try {
+    if (searchdate) {
+      var searchtext2 = searchdate.split("~");
+      if(points.length == 0) {
+        return res.send({ result : "nothing" });
+      }
+      else {
+        if(search == "PN") {
+          points = await Point.find({ "CID": CID, "PN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          if(points.length == 0) {
+            return res.send({ result : "nothing"});
+          }
         }
+        else if(search == "PO") {
+          points = await Point.find({ "CID": CID, "PO" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          if(points.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else {
+          points = await Point.find({ "CID" : CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          if(points.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+      }
     }
     else {
-      if(!searchdate) {
-        try{
-          if (search =="PN") {
-            var points = await Point.find({ "CID": CID, "PN" : {$regex:searchtext} });
-            if(points.length == 0) 
-            res.send({result : "nothing"});
-          }
-          else if (search =="PO") {
-            searchtext = parseInt(searchtext)
-            var points = await Point.find({ "CID": CID, "PO" : searchtext });
-            if(points.length == 0) 
-            res.send({result : "nothing"});
-          }
-          
-        }catch(e) {
-          res.send({ result: false });
-        }
+      if(points.length == 0) {
+        return res.send({ result : "nothing" });
       }
       else {
         if (search =="PN") {
-          var searchtext2 = searchdate.split("~");
-            var points = await Point.find({ "CID": CID, "PN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-            if(points.length == 0) 
-            res.send({result : "nothing"});
+          points = await Point.find({ "CID": CID, "PN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          if(points.length == 0) {
+            return res.send({ result : "nothing"});
           }
-          else if (search =="PO") {
-            searchtext = parseInt(searchtext)
-            var points = await Point.find({ "CID": CID, "PO" : searchtext , "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"}});
-            if(points.length == 0) 
-            res.send({result : "nothing"});
+        }
+        else if (search =="PO") {
+          points = await Point.find({ "CID": CID, "PO" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          if(points.length == 0) {
+            return res.send({ result : "nothing"});
           }
+        }
+        else {
+          points = await Point.find({ "CID" : CID }).sort({ [sortText]: sortNum });
+          if(points.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
       }
-      
     }
-  }
-  else {
-      var points = await Point.find({ "CID": CID });
     
-      if(sort == "PN") {
-          points.sort(function (a,b) {
-            
-            if(typeof(a.PN) == "object")
-            a.PN = JSON.stringify(a.PN);
-            b.PN = JSON.stringify(b.PN);
-            return (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? 1 : 0;
-          })
+    var pointlist = [];
+    if(points.length) {
+      for(var i = 0; i < points.length; i ++) {
+        pointlist[i] = points[i];
       }
-      
-      else if(sort == "PN2") {
-          points.sort(function (a,b) {
-            if(typeof(a.PN) == "object")
-            a.PN = JSON.stringify(a.PN);
-            b.PN = JSON.stringify(b.PN);
-            return (a.PN[0]).charCodeAt(0) > (b.PN[0]).charCodeAt(0) ? -1 : (a.PN[0]).charCodeAt(0) < (b.PN[0]).charCodeAt(0) ? 1 : 0;
-          })
-      }
-      
-      else if(sort == "CA") { 
-          var points = await Point.find({ "CID": CID }).sort({ CA: -1 });
-      }
-      
-      else if(sort == "CA2"){
-          var points = await Point.find({ "CID": CID }).sort({ CA: 1 });
-       }
-      else if(sort == "PO") {
-          var points = await Point.find({ "CID": CID }).sort({ PO: -1 });
-      }
-      else if(sort == "PO2") {
-          var points = await Point.find({ "CID": CID }).sort({ PO: 1 });
-      }
-      else {
-        var points = await Point.find({ "CID": CID }).sort({ CA: -1 });
-        
-      }
-  }
-  
-  var pointlist = [];
-  if(points.length) {
-    for(var i = 0; i < points.length; i ++) {
-      pointlist[i] = points[i];
     }
+    
+    res.send({ result: true, pagelist : pointlist, totalnum : points.length});
+  
+  } catch(err) {
+    console.error(err);
+    next(err);
   }
-  res.send({ result: true, pagelist : pointlist, totalnum : points.length});
- 
 });
 
 //----------------------------------------------------------------------------//
@@ -1938,7 +2052,6 @@ router.get('/sendkko2', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-  let page = req.query.page;
   const WNM = req.query.WNM;
   const noticethree = await Notice.find().limit(3).sort({CA : -1});
   
@@ -1946,13 +2059,9 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   let apiSecret = process.env.sol_secret;
   let apiKey = process.env.sol_key;
 
-  const moment = require('moment');
   const nanoidGenerate = require('nanoid/generate');
   const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32);
   const HmacSHA256 = require('crypto-js/hmac-sha256');
-
-
-  
   
   const messageIds = []; //메세지 ID 담을 배열 선언
   
@@ -2057,10 +2166,12 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
     }
 
   try {
-        const totalNum = await Alarm.countDocuments({ "CID": CID });
-        let { currentPage, postNum, pageNum, totalPage, skipPost, startPage, endPage } = await pagination(page, totalNum);
-        const alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 }).skip(skipPost).limit(postNum);
-        res.render('alarmtalk_list', { company: req.decoded.company, aclist, noticethree, totalNum, currentPage, totalPage, startPage, endPage, alarms });
+    const alarms = await Alarm.find({ "CID": CID });
+    const todayStart = moment().format('YYYY-MM-DD');
+    const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
+    const alarmTodayCount = await Alarm.countDocuments({ "CID" : CID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
+    const alarmCount = alarms.length;
+    res.render('alarmtalk_list', { company: req.decoded.company, aclist, noticethree, alarms, alarmCount, alarmTodayCount });
 
   }
   catch (err) {
@@ -2078,8 +2189,8 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
   var searchdate = req.body.searchdate;
   var sortText = "";
   var sortNum = 0;
+  var alarms = new Object;
   
-  console.log("확인"+sort.includes('-'));
   if(sort.includes('-') == true) {
     sortText = sort.split('-')[0];
     sortNum = -1;
@@ -2088,25 +2199,28 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
     sortText = sort;
     sortNum = 1;
   }
-  console.log(sortText+"/"+sortNum);
-  
   
   try {
     if (searchdate) {
       var searchtext2 = searchdate.split("~");
-      var alarms = await Alarm.find({ "CID" : CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ sortText: sortNum });
       if(alarms.length == 0) {
         return res.send({ result : "nothing" });
       }
       else {
         if(search == "WNM") {
-          var alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ sortText: sortNum });
+          alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "RE") {
-          var alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ sortText: sortNum });
+          alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          if(alarms.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else {
+          alarms = await Alarm.find({ "CID" : CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -2114,19 +2228,24 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
       }
     }
     else {
-      var alarms = await Alarm.find({ "CID" : CID }).sort({ sortText: sortNum });
       if(alarms.length == 0) {
         return res.send({ result : "nothing" });
       }
       else {
         if (search =="WNM") {
-          var alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext} }).sort({ sortText: sortNum });
+          alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if (search =="RE") {
-          var alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext} }).sort({ sortText: sortNum });
+          alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          if(alarms.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else {
+          alarms = await Alarm.find({ "CID" : CID }).sort({ [sortText]: sortNum });
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -2147,108 +2266,6 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
     console.error(err);
     next(err);
   }
-  // if (search!="") {
-  //     if(search == "CA") {
-  //         try{
-  //           var searchtext2 = searchdate.split("~");
-  //           var alarms = await Alarm.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-  //           if(alarms.length == 0) 
-  //           res.send({result : "nothing"});
-  //         }catch(e) {
-  //           res.send({ result: false });
-  //         }
-  //     }
-  //     else {
-  //       if(!searchdate) {
-  //         try{
-  //           if (search =="WNM") {
-  //             var alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext} });
-  //             if(alarms.length == 0) 
-  //             res.send({result : "nothing"});
-  //           }
-  //           else if (search =="RE") {
-  //             var alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext} });
-  //             if(alarms.length == 0) 
-  //             res.send({result : "nothing"});
-  //           }
-            
-  //         }catch(e) {
-  //           res.send({ result: false });
-  //         }
-  //       }
-  //       else {
-  //         if (search =="WNM") {
-  //           var searchtext2 = searchdate.split("~");
-  //             var alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-  //             if(alarms.length == 0) 
-  //             res.send({result : "nothing"});
-  //           }
-  //           else if (search =="RE") {
-  //             var alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext} , "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"}});
-  //             if(alarms.length == 0) 
-  //             res.send({result : "nothing"});
-  //           }
-  //       }
-        
-  //     }
-  // }
-  // else {
-  //     var alarms = await Alarm.find({ "CID": CID });
-    
-  //     if(sort == "WNM") {
-  //         alarms.sort(function (a,b) {
-            
-  //           if(typeof(a.WNM) == "object")
-  //           a.WNM = JSON.stringify(a.WNM);
-  //           return (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? 1 : 0;
-  //         })
-  //     }
-      
-  //     else if(sort == "WNM2") {
-  //         alarms.sort(function (a,b) {
-  //           if(typeof(a.WNM) == "object")
-  //           a.WNM = JSON.stringify(a.WNM);
-  //           return (a.WNM[0]).charCodeAt(0) > (b.WNM[0]).charCodeAt(0) ? -1 : (a.WNM[0]).charCodeAt(0) < (b.WNM[0]).charCodeAt(0) ? 1 : 0;
-  //         })
-  //     }
-      
-  //     else if(sort == "CA") { 
-  //         var alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
-  //     }
-      
-  //     else if(sort == "CA2"){
-  //         var alarms = await Alarm.find({ "CID": CID }).sort({ CA: 1 });
-  //     }
-  //     else if(sort == "RE") {
-  //         alarms.sort(function (a,b) {
-            
-  //           if(typeof(a.RE) == "object")
-  //           a.RE = JSON.stringify(a.RE);
-  //           return (a.RE[0]).charCodeAt(0) < (b.RE[0]).charCodeAt(0) ? -1 : (a.RE[0]).charCodeAt(0) > (b.RE[0]).charCodeAt(0) ? 1 : 0;
-  //         })
-  //     }
-  //     else if(sort == "RE2") {
-  //         alarms.sort(function (a,b) {
-            
-  //           if(typeof(a.RE) == "object")
-  //           a.RE = JSON.stringify(a.RE);
-  //           return (a.RE[0]).charCodeAt(0) > (b.RE[0]).charCodeAt(0) ? -1 : (a.RE[0]).charCodeAt(0) < (b.RE[0]).charCodeAt(0) ? 1 : 0;
-  //         })
-  //     }
-  //     else {
-  //       var alarms = await Alarm.find({ "CID": CID }).sort({ CA: -1 });
-        
-  //     }
-  // }
-  
-  // var alarmlist = [];
-  // if(alarms.length) {
-  //   for(var i = 0; i < alarms.length; i ++) {
-  //     alarmlist[i] = alarms[i];
-  //   }
-  // }
-  // res.send({ result: true, pagelist : alarmlist, totalnum : alarms.length});
- 
 });
 
 //----------------------------------------------------------------------------//
