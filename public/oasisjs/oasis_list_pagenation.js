@@ -11,7 +11,6 @@
                 data: {
                 	CID : Object.CID,
                     sort : Object.sort,
-                    sortNum : Object.sortNum,
                     search : Object.search,
                     searchtext : Object.searchtext,
                     searchdate : Object.searchdate
@@ -191,7 +190,7 @@
 	    	Object.endpage = 0;
 	    	Object.search = "";
 	    	Object.searchtext = "";
-    		
+    		Object.searchdate = "";
     	}
     	else if(Object.name == "History") {
     		Object.array = [];
@@ -203,6 +202,7 @@
 	    	Object.endpage = 0;
 	    	Object.search = "";
 	    	Object.searchtext = "";
+	    	Object.searchdate = "";
     	}
     	else if(Object.name == "CarExcel") {
     		Object.array = [];
@@ -214,6 +214,7 @@
 	    	Object.endpage = 0;
 	    	Object.search = "";
 	    	Object.searchtext = "";
+	    	Object.searchdate = "";
     	}
     	else {
     		Object.array = [];
@@ -225,7 +226,7 @@
 	    	Object.endpage = 0;
 	    	Object.search = "";
 	    	Object.searchtext = "";
-    		
+    		Object.searchdate = "";
     	}
     	
     }

@@ -1,6 +1,6 @@
 	        
 	// 정렬 기능        
-	function sortpage (Object,  i18nconvert,string,json) {
+	function sortpage (Object,  i18nconvert, string, json) {
 		
 		var paglist = Object.array;
 		
@@ -20,8 +20,8 @@
 		
 	}   
 	
-	// 테스트 기능
-	function sorttest(Object, i18nconvert, sort) {
+	// 테스트 정렬 기능
+	function sortList(Object, i18nconvert, sort) {
 		var pagelist = Object.array;
 		var sortPlus = sort.id;
 		
@@ -57,16 +57,17 @@
     		}
     	}
     	$("#searchtext").val('');
-    	$("#searchdatetext1").val('');
-    	$("#searchdatetext2").val('');
+    	// $("#searchdatetext1").val('');
+    	// $("#searchdatetext2").val('');
     	$("#searchoption").append(string);
     	$("#searchoption").show();
     }
     
     //검색기능
-    function searchtext (Object,  i18nconvert) {
-		if(Object.search == "")
-			alert(i18nconvert('choiceerror'));
+    function searchtext (Object, i18nconvert) {
+		if(Object.search == "" && $('#searchtext').val() != "") {
+			alert(i18nconvert('search_option_error'));
+		}
 		else{
 	    	if(($('#searchdatetext1').val() != "") && ($('#searchdatetext2').val() != "")) {
 				Object.searchtext = $('#searchtext').val();
