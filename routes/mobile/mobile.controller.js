@@ -551,6 +551,25 @@ exports.deleteDevice = async(req, res) => {
     }
 };
 
+// 소독기 검색
+exports.findDeviceByID = async(req, res) => {
+    
+    try {
+            const {MAC} = req.body;
+            const device = await Device.findOne({MAC : MAC});
+            res.send({
+                result: true,
+                data: JSON.stringify(device),
+            });
+    }
+    catch (exception) {
+            res.send({
+                result: false,
+                error: UNKOWN,
+            });
+    }
+}
+
 /// 히스토리 관련
 
 exports.root = (req, res) => {
