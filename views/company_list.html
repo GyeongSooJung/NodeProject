@@ -42,12 +42,12 @@
 							<a id="searchoption" href="javascript:;" class="btn btn-sm btn-white">{{__('search')}}</a>
 							<a href="#" data-toggle="dropdown" class="btn btn-sm btn-white dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
 							<div class="dropdown-menu dropdown-menu-right">
-								<a href="javascript:searchoption('MD',pagingObject,i18nconvert,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('device_model')}}</a>
-								<a href="javascript:searchoption('VER',pagingObject,i18nconvert,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('device_version')}}</a>
-								<a href="javascript:searchoption('MAC',pagingObject,i18nconvert,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('device_mac')}}</a>
-								<a href="javascript:searchoption('NN',pagingObject,i18nconvert,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('device_nick')}}</a>
-								<a href="javascript:searchoption('UN',pagingObject,i18nconvert,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('device_use_number')}}</a>
-								<a href="javascript:searchoption('CA',pagingObject,i18nconvert,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('create_date')}}</a>
+								<a href="javascript:searchoption('MD',pagingObject,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('device_model')}}</a>
+								<a href="javascript:searchoption('VER',pagingObject,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('device_version')}}</a>
+								<a href="javascript:searchoption('MAC',pagingObject,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('device_mac')}}</a>
+								<a href="javascript:searchoption('NN',pagingObject,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('device_nick')}}</a>
+								<a href="javascript:searchoption('UN',pagingObject,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('device_use_number')}}</a>
+								<a href="javascript:searchoption('CA',pagingObject,{MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN', UN : 'UN', CA : 'CA'});" class="dropdown-item">{{__('create_date')}}</a>
 							</div>
 						</div>
 					</div>
@@ -56,13 +56,13 @@
 						<input  id ="searchtext" type="text" class="w-100 form-control form-control-sm" placeholder ="" />
 			  		</div>
 			  		<div>
-						<button id ="searchbutton" class="btn btn-sm btn-primary text-white" onclick="searchtext(pagingObject,i18nconvert)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
+						<button id ="searchbutton" class="btn btn-sm btn-primary text-white" onclick="searchtext(pagingObject)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
 					</div>
-					<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,i18nconvert) class='d-none ml-1 btn btn-sm btn-primary mr-1 px-2'>{{__('all')}}</a>
+					<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject) class='d-none ml-1 btn btn-sm btn-primary mr-1 px-2'>{{__('all')}}</a>
 				</div>
 			</div>
 			
-			<div class="mr-auto">
+			<div class="ml-auto">
 				<select id = "selectpage" name="data-table-default_length" aria-controls="data-table-default" class="custom-select custom-select-sm width-80 mb-2">
 					<option class ="postnumber" value="10">10</option>
 					<option class ="postnumber" value="25">25</option>
@@ -73,17 +73,13 @@
 			
 			<div class="overflow-auto">
 				<table id="data-table-combine" class="table table-striped table-bordered table-td-valign-middle text-center">	
-						<thead id="memDiv1">
-							
-						</thead>
-						<tbody id="memDiv2">
-							
-						</tbody>
+					<thead id="memDiv1"></thead>
+					<tbody id="memDiv2"></tbody>
 				</table>
 			</div>
 			<div class="d-flex justify-content-between align-item-center">
-				<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="delete_check('/car/ajax/car_delete',i18nconvert);">
-				<a href='javascript:;' onclick=company_gotolist(pagingObject,i18nconvert) class='ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
+				<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="delete_check('/car/ajax/car_delete');">
+				<a href='javascript:;' onclick=company_gotolist(pagingObject) class='ml-1 btn btn-primary mr-1 px-2'>{{__('all')}}</a>
 				<div id="pagebox" class="justify-content-around align-item-center"></div>
 			</div>
 		</div>
@@ -104,14 +100,14 @@ var pagingObject = new Object({name : "Company" ,url : "/ajax/company_list",CID 
 		pagereload(pagingObject, i18nconvert); // 첫 화면 페이지 로드
 		
     	$('#selectpage').click(function() {
-			selectpage(pagingObject,i18nconvert,{
+			selectpage(pagingObject,{
 				option : $('#selectpage option:selected').val()
 			})
 		});
 		                                   
 		$('#searchtext').keyup(function(key) {
 			if(key.keyCode == 13) {
-				searchtext(pagingObject,i18nconvert)
+				searchtext(pagingObject)
 			}
 		});
 		
@@ -120,7 +116,7 @@ var pagingObject = new Object({name : "Company" ,url : "/ajax/company_list",CID 
 			$("#searchoption").append("{{__('search')}}");
 			
 			if(pagingObject.name == "Device") {
-				sortpage(pagingObject,i18nconvert,{
+				sortpage(pagingObject,{
 					name : $(this).attr('name')
 				},
 				{

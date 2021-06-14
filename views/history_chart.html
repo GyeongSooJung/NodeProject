@@ -77,7 +77,7 @@
 							<th width="15%">{{__('history_time')}}</th>
 							<th width="20%">{{__('history_max')}}</th>
 							<th width="20%">{{__('history_end')}}</th>
-							<th width="20%">{{__('history_result')}}</th>
+							<!--<th width="20%">{{__('history_result')}}</th>-->
 							<th width="25%">{{__('register_date')}}</th>
 						</tr>
 					</thead>
@@ -90,11 +90,11 @@
 						{% endif %}
 			              <td>{{historyone.MP}}</td>
 			              <td>{{historyone.FP}}</td>
-						{% if historyone.RC == 1 %}
-							<td>{{__('success')}}</td>
-						{% else %}
-							<td>{{__('failed')}}</td>
-						{% endif %}
+						<!--{% if historyone.RC == 1 %}-->
+						<!--	<td>{{__('success')}}</td>-->
+						<!--{% else %}-->
+						<!--	<td>{{__('failed')}}</td>-->
+						<!--{% endif %}-->
 			              <td>
 			              	<script>
 								var het = moment('{{historyone.CA}}').format('YYYY-MM-DD HH:mm');

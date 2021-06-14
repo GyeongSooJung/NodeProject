@@ -26,7 +26,6 @@ const mobileRouter = require('./routes/mobile/'); // mobile 뒤에 슬래쉬 삭
 const findRouter = require('./routes/find');
 const inflowRouter = require('./routes/inflow');
 const publishRouter = require('./routes/publish');
-const paymentsRouter = require('./routes/payments');
 const shopRouter = require('./routes/shop');
 //----------------------------------------
 
@@ -77,7 +76,6 @@ app.use('/email', emailRouter);
 app.use('/mobile', mobileRouter);
 app.use('/inflow', inflowRouter);
 app.use('/publish', publishRouter);
-app.use('/payments', paymentsRouter);
 app.use('/shop', shopRouter);
 
 app.use(function(req, res, next) {
