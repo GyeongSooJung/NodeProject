@@ -1,25 +1,3 @@
-	        
-	// 정렬 기능        
-	function sortpage (Object, string, json) {
-		
-		var paglist = Object.array;
-		
-		var check_sort = string.id;
-		
-		if(document.getElementById(string.id).classList.contains('fa-sort-down')) {
-	 		var check2 = check_sort + "2";
-		}
-		else {
-	 		var check2 = check_sort;
-		}
-		
-			Object.array = paglist;
-			Object.sort = check2;
-			Object.page = 0;
-			pagereload(Object, i18nconvert);
-		
-	}   
-	
 	// 정렬 기능
 	function sortList(Object, sort) {
 		var pagelist = Object.array;

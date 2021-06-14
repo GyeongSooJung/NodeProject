@@ -34,9 +34,9 @@ const workerSchema = new Schema({
         type: Date,
         default: Date.now,
     },
-    AU: { // Auth, 0: MK 관리자, 1: 사업주, 2: 작업자, 3: 대리점(장비,차량등록 권한)
+    AU: { // Auth, 0: MK 관리자, 1: 작업자, 2: 사업주, 3: 대리점(장비,차량등록 권한)
         type: Number,
-        default:2,
+        default:1,
     },
     AC: { // Activated(장비작동권한)
         type: Boolean,

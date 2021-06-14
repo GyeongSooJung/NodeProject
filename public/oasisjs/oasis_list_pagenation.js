@@ -83,12 +83,41 @@
 	        	}
 	        	
 	        	else if (data.result == "nothing") {
-	        		
 	        		$("#searchtext").val('');
 			    	$("#searchdatetext1").val('');
 			    	$("#searchdatetext2").val('');
+			    	$("#memDiv2").empty();
+			    	
+			    	if(Object.name == "Company") {
+						companylist_condition(Object);
+					}
+					else if (Object.name == "Device") {
+						devicelist_condition(Object);
+					}
+					
+					else if (Object.name == "Car") {
+						carlist_condition(Object);
+					}
+					
+					else if (Object.name == "Worker") {
+						workerlist_condition(Object);
+					}
+					else if (Object.name == "History") {
+						historylist_condition(Object);
+					}
+					else if (Object.name == "Pay") {
+						paylist_condition(Object);
+					}
+					else if (Object.name == "Point") {
+						pointlist_condition(Object);
+					}
+					else if (Object.name == "Alarmtalk") {
+						alarmtalklist_condition(Object);
+					}
+					else if (Object.name == "Notice") {
+						noticeList_condition(Object);
+					}
 	        	}
-	        	
 	        	else {
 			    	$("#searchdatetext1").val('');
 			    	$("#searchdatetext2").val('');
@@ -140,7 +169,7 @@
         			}
         			
         			var insertTr = "";
-					insertTr += "<input class='btn btn-primary width-80 excelJoinBtn' type='button' value='"+i18nconvert('registration')+"'>"
+					insertTr += "<input class='btn btn-primary width-80 excelJoinBtn' type='button' value='"+i18nconvert('registration')+"' onclick=excelJoin()>"
 					insertTr += "<div class='d-flex justify-content-around align-item-center'>"
 					insertTr += "<a href='javascript:;' onclick=pageDoubleBtn('left',pagingObject,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>"
 					insertTr += "<a href='javascript:;' onclick=pageBtn('left',pagingObject,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>"

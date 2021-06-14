@@ -100,9 +100,9 @@
 	}
 	
 	// 차량 excel 등록 ajax
-	$(document).on('click', '.excelJoinBtn', function() {
+	function excelJoin() {
 		ajaxJoin('/car/car_join_excel', i18nconvert, { excelData: document.getElementsByName("excelData")[0].value });
-	});
+	};
 	
 	// 폼 enter키 submit 막기
 	document.addEventListener('keydown', function(event) {
