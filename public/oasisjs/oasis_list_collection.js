@@ -156,7 +156,6 @@
 		
 		insertTr = "";
 		for (var i = ( Object.postNum *  Object.page) ; i < ( Object.postNum *  Object.page) +  Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
-			console.log(Object.array);
 			if( Object.array.length != 0) {
 				if( Object.array[i]) {
 					insertTr += "<tr>";
