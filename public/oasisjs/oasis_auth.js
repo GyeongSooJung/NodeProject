@@ -7,14 +7,13 @@ function loginAjax(companyNumber, password) {
 		data: {
 			CNU: companyNumber,
 			PW: password
-		},
-		success: function(result) {
-			if(result.status == 'success') {
-				location = '/main';
-			}
-			else if(result.status == 'fail') {
-				alert(i18nconvert('login_error'));
-			}
+		}
+	}).done(function(data) {
+		if(data.result == 'success') {
+			location = '/main';
+		}
+		else if(data.result == 'fail') {
+			alert(i18nconvert('login_error'));
 		}
 	});
 }

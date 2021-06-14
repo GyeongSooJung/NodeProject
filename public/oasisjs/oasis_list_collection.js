@@ -119,8 +119,6 @@
 		var	insertTr = ""; // 채워넣을 HTML 초기화
 		var indexcount = 1; // 인덱스번호 초기화
 		
-		console.log("뭐누"+JSON.stringify(Object.array));
-		
 		$("#memDiv1").empty();
 	    insertTr += "<tr>";
 		insertTr += "<th id ='allcheck' width='1%'>";
