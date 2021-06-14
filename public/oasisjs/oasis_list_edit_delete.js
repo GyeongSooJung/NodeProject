@@ -16,47 +16,46 @@
 					dataType: 'json',
 					data: {
 						car_id: car_id
-					},
-					success: function(result) {
-						if(result.status == 'success') {
-							var carone = result.carone[0];
-							var insertTr  = ""
-							$(obj).text(i18nconvert("modify"));
-							$(obj).removeData().type;
-							$(obj).data('type', 'hide');
-							insertTr += "<tr class='tr-edit'>"
-							insertTr += "<td colspan='6'>"
-						    insertTr += 	"<div class='panel-body'>"
-							insertTr +=	"	<form id='car-edit-form' action='' method='post' data-parsley-validate='true'>"
-							insertTr +=	"		<div class='form-group row m-b-15'>"
-							insertTr +=	"			<label class='col-md-4 col-sm-4 col-form-label' for='CN'>"+i18nconvert("CN")+" <span class='text-danger'>*</span> :</label>"
-							insertTr +=	"			<div class='col-md-8 col-sm-8'>"
-							insertTr +=	"				<input class='form-control' id='CN' type='text' name = 'CN'  placeholder='"+i18nconvert("CN")+"' data-parsley-required='true' />"
-							insertTr +=	"			</div>"
-							insertTr +=	"		</div>"
-							insertTr +=	"		<div class='form-group row m-b-15'>"
-							insertTr +=	"			<label class='col-md-4 col-sm-4 col-form-label' for='CN'>"+i18nconvert("CPN")+" :</label>"
-							insertTr +=	"			<div class='col-md-8 col-sm-8'>"
-							insertTr +=	"				<input class='form-control' id='CPN' type='text' name = 'CPN'  placeholder='"+i18nconvert("CPN")+"' />"
-							insertTr +=	"				<input class='form-control' id='car_id' type='hidden' name = 'car_id' value='"+carone._id+"'/>"
-							insertTr +=	"			</div>"
-							insertTr +=	"		</div>"
-							insertTr +=	"		<div class='form-group row m-b-0'>"
-							insertTr +=	"			<label class='col-md-4 col-sm-4 col-form-label'>&nbsp;</label>"
-							insertTr +=	"			<div class='col-md-8 col-sm-8'>"
-							insertTr +=	"				<a href='javascript:;' onclick='carEdit(pagingObject);' class='btn btn-primary width-80'>"+i18nconvert("modify")+"</a>"
-							insertTr +=	"				<button type='reset' class='btn btn-primary width-80'>"+i18nconvert("reset")+"</button>"
-							insertTr +=	"			</div>"
-							insertTr +=	"		</div>"
-							insertTr +=	"	</form>"
-							insertTr +=	"</div>"
-							insertTr += "</td></tr>"
-							$(obj).parents('tr').after(insertTr);
-						}
-						else {
-							alert("{{__('modify_failed')}}");
-						}
-					 }
+					}
+				}).done(function(data) {
+					if(data.result == 'success') {
+						var carone = data.carone[0];
+						var insertTr  = ""
+						$(obj).text(i18nconvert("modify"));
+						$(obj).removeData().type;
+						$(obj).data('type', 'hide');
+						insertTr += "<tr class='tr-edit'>"
+						insertTr += "<td colspan='6'>"
+					    insertTr += 	"<div class='panel-body'>"
+						insertTr +=	"	<form id='car-edit-form' action='' method='post' data-parsley-validate='true'>"
+						insertTr +=	"		<div class='form-group row m-b-15'>"
+						insertTr +=	"			<label class='col-md-4 col-sm-4 col-form-label' for='CN'>"+i18nconvert("CN")+" <span class='text-danger'>*</span> :</label>"
+						insertTr +=	"			<div class='col-md-8 col-sm-8'>"
+						insertTr +=	"				<input class='form-control' id='CN' type='text' name = 'CN'  placeholder='"+i18nconvert("CN")+"' data-parsley-required='true' />"
+						insertTr +=	"			</div>"
+						insertTr +=	"		</div>"
+						insertTr +=	"		<div class='form-group row m-b-15'>"
+						insertTr +=	"			<label class='col-md-4 col-sm-4 col-form-label' for='CN'>"+i18nconvert("CPN")+" :</label>"
+						insertTr +=	"			<div class='col-md-8 col-sm-8'>"
+						insertTr +=	"				<input class='form-control' id='CPN' type='text' name = 'CPN'  placeholder='"+i18nconvert("CPN")+"' />"
+						insertTr +=	"				<input class='form-control' id='car_id' type='hidden' name = 'car_id' value='"+carone._id+"'/>"
+						insertTr +=	"			</div>"
+						insertTr +=	"		</div>"
+						insertTr +=	"		<div class='form-group row m-b-0'>"
+						insertTr +=	"			<label class='col-md-4 col-sm-4 col-form-label'>&nbsp;</label>"
+						insertTr +=	"			<div class='col-md-8 col-sm-8'>"
+						insertTr +=	"				<a href='javascript:;' onclick='carEdit(pagingObject);' class='btn btn-primary width-80'>"+i18nconvert("modify")+"</a>"
+						insertTr +=	"				<button type='reset' class='btn btn-primary width-80'>"+i18nconvert("reset")+"</button>"
+						insertTr +=	"			</div>"
+						insertTr +=	"		</div>"
+						insertTr +=	"	</form>"
+						insertTr +=	"</div>"
+						insertTr += "</td></tr>"
+						$(obj).parents('tr').after(insertTr);
+					}
+					else {
+						alert("{{__('modify_failed')}}");
+					}
 				});
 			}
 			else {
@@ -67,15 +66,11 @@
 			$(obj).text(i18nconvert("modify"));
 			$(obj).removeData().type;
 			$(obj).data('type', 'show');
-			// alert($('.tr-edit').html());
 			$('.tr-edit').remove();
-			
 		}
 	}
 	
 	function carEdit(Object) {
-		
-		
 		$.ajax({
 			type: 'POST',
 			url: '/car/ajax/car_list_edit2',
@@ -85,36 +80,33 @@
 				CPN : $('#car-edit-form [name="CPN"]').val(),
 				CID : Object.CID,
 				car_id : $('#car-edit-form [name="car_id"]').val()
-			},
-			success: function(result) {
-				if(result.status == 'success') {
-					$('.tr-edit').remove();
-					pagereload(Object);
-					alert(i18nconvert("car_modify_success"));
-					
-				}
-				else if(result.status == 'length') {
-					alert(i18nconvert("car_length_error"));
-				}
-				else if(result.status == 'type') {
-					alert(i18nconvert("car_type_error"));
-				}
-				else if(result.status == 'exist') {
-					alert(i18nconvert("car_exist_error"));
-				}
-				else if(result.status == 'numErr') {
-					alert(i18nconvert("register_digits_error"));
-				}
-				else {
-					alert(i18nconvert("modify_failed"));
-				}
-			 }
+			}
+		}).done(function(data) {
+			if(data.result == 'success') {
+				$('.tr-edit').remove();
+				pagereload(Object);
+				alert(i18nconvert("car_modify_success"));
+			}
+			else if(data.result == 'length') {
+				alert(i18nconvert("car_length_error"));
+			}
+			else if(data.result == 'type') {
+				alert(i18nconvert("car_type_error"));
+			}
+			else if(data.result == 'exist') {
+				alert(i18nconvert("car_exist_error"));
+			}
+			else if(data.result == 'numErr') {
+				alert(i18nconvert("register_digits_error"));
+			}
+			else {
+				alert(i18nconvert("modify_failed"));
+			}
 		});
 		
 	}
 	
 	// 장비
-	
 	function device_editone(obj) {
 		var type = $(obj).data().type;
 		$('.tr-edit').empty();
@@ -182,9 +174,7 @@
 			$(obj).text(i18nconvert("modify"));
 			$(obj).removeData().type;
 			$(obj).data('type', 'show');
-			// alert($('.tr-edit').html());
 			$('.tr-edit').remove();
-			
 		}
 	}
 	
@@ -234,7 +224,7 @@
                     	select : $(obj).attr('name'),
                     }
 	    	}).done(function (data) {  
-	    		if(data.result == true) {
+	    		if(data.result == 'success') {
 	    			alert(i18nconvert('deletesuccess'));
 	    			location.reload();
 	    		}
@@ -271,7 +261,7 @@
 	                    	select : select_obj,
 	                    }
 		    	}).done(function (data) {  
-		    		if(data.result == true) {
+		    		if(data.result == 'success') {
 		    			alert(i18nconvert('deletesuccess'));
 		    			location.reload();
 		    		}
