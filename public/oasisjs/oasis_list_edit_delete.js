@@ -1,7 +1,7 @@
 	//----------------------------------------리스트 수정 기능 ----------------------------------//
 	
 	// 차량
-	function car_editone(obj,i18nconvert) {
+	function car_editone(obj) {
 		var type = $(obj).data().type;
 		$('.tr-edit').empty();
 		$(obj).parents('tr').siblings().find('.edit-btn').text(i18nconvert("modify"));
@@ -44,7 +44,7 @@
 							insertTr +=	"		<div class='form-group row m-b-0'>"
 							insertTr +=	"			<label class='col-md-4 col-sm-4 col-form-label'>&nbsp;</label>"
 							insertTr +=	"			<div class='col-md-8 col-sm-8'>"
-							insertTr +=	"				<a href='javascript:;' onclick='carEdit(pagingObject,i18nconvert);' class='btn btn-primary width-80'>"+i18nconvert("modify")+"</a>"
+							insertTr +=	"				<a href='javascript:;' onclick='carEdit(pagingObject);' class='btn btn-primary width-80'>"+i18nconvert("modify")+"</a>"
 							insertTr +=	"				<button type='reset' class='btn btn-primary width-80'>"+i18nconvert("reset")+"</button>"
 							insertTr +=	"			</div>"
 							insertTr +=	"		</div>"
@@ -73,7 +73,7 @@
 		}
 	}
 	
-	function carEdit(Object,i18nconvert) {
+	function carEdit(Object) {
 		
 		
 		$.ajax({
@@ -89,7 +89,7 @@
 			success: function(result) {
 				if(result.status == 'success') {
 					$('.tr-edit').remove();
-					pagereload(Object,  i18nconvert);
+					pagereload(Object);
 					alert(i18nconvert("car_modify_success"));
 					
 				}
@@ -115,7 +115,7 @@
 	
 	// 장비
 	
-	function device_editone(obj,i18nconvert) {
+	function device_editone(obj) {
 		var type = $(obj).data().type;
 		$('.tr-edit').empty();
 		$(obj).parents('tr').siblings().find('.edit-btn').text(i18nconvert("modify"));
@@ -159,7 +159,7 @@
 						    insertTr += "      <div class='form-group row m-b-0'>"
 						    insertTr += "         <label class='col-md-4 col-sm-4 col-form-label'>&nbsp;</label>"
 						    insertTr += "         <div class='col-md-8 col-sm-8'>"
-						    insertTr += "            	<a href='javascript:;' onclick='deviceEdit(pagingObject,i18nconvert);' class='btn btn-primary width-80'>"+i18nconvert("modify")+"</a>"
+						    insertTr += "            	<a href='javascript:;' onclick='deviceEdit(pagingObject);' class='btn btn-primary width-80'>"+i18nconvert("modify")+"</a>"
 						    insertTr += "            <button type='reset' class='btn btn-primary width-80'>"+i18nconvert("reset")+"</button>"
 						    insertTr += "         </div>"
 						    insertTr += "      </div>"
@@ -188,7 +188,7 @@
 		}
 	}
 	
-	function deviceEdit(Object,i18nconvert) {
+	function deviceEdit(Object) {
 		
 		$.ajax({
 			type: 'POST',
@@ -203,7 +203,7 @@
 			success: function(result) {
 				if(result.status == 'success') {
 					$('.tr-edit').remove();
-					pagereload(Object, i18nconvert);
+					pagereload(Object);
 					alert(i18nconvert("device_modify_success"));
 					
 				}
@@ -221,7 +221,7 @@
 	
 		
 	// 일반 삭제 기능
-	function delete_one(obj,url,i18nconvert) {
+	function delete_one(obj,url) {
 		
 		var answer;
 	    	answer = confirm(i18nconvert('deleteconfirm'));
@@ -250,7 +250,7 @@
 	}
 	
 	// 선택항목 삭제 기능
-	function delete_check(url,i18nconvert) {
+	function delete_check(url) {
 		var check = $("input:checkbox[name='ck']").is(":checked");
 		if(!check) {
 			alert(i18nconvert('choiceerror'));

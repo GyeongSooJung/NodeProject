@@ -41,8 +41,8 @@
 									<a id="searchoption" href="javascript:;" class="btn btn-sm btn-white">{{__('search')}}</a>
 									<a href="#" data-toggle="dropdown" class="btn btn-sm btn-white dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
 									<div class="dropdown-menu dropdown-menu-right">
-										<a href="javascript:searchoption('WNM',pagingObject,i18nconvert,{WNM : 'WNM',RE : 'RE'});" class="dropdown-item">{{__('payment_sender')}}</a>
-										<a href="javascript:searchoption('RE',pagingObject,i18nconvert,{WNM : 'WNM',RE : 'RE'});" class="dropdown-item">{{__('payment_result')}}</a>
+										<a href="javascript:searchoption('WNM',pagingObject,{WNM : 'WNM',RE : 'RE'});" class="dropdown-item">{{__('payment_sender')}}</a>
+										<a href="javascript:searchoption('RE',pagingObject,{WNM : 'WNM',RE : 'RE'});" class="dropdown-item">{{__('payment_result')}}</a>
 									</div>
 								</div>
 							</div>
@@ -51,23 +51,21 @@
 								<input  id ="searchtext" type="text" class="w-100 form-control form-control-sm" placeholder ="" />
 					  		</div>
 					  		<div>
-								<button id ="searchbutton" class="btn btn-sm btn-primary text-white" onclick="searchtext(pagingObject,i18nconvert)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
+								<button id ="searchbutton" class="btn btn-sm btn-primary text-white" onclick="searchtext(pagingObject)"><i class="mx-1 fas fa-lg fa-fw fa-search align-items-center"></i></button>
 							</div>
-							<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject,i18nconvert) class='d-none ml-1 btn btn-sm btn-primary mr-1 px-2'>{{__('all')}}</a>
+							<a href='javascript:;' id ="gotolist" onclick=gotolist(pagingObject) class='d-none ml-1 btn btn-sm btn-primary mr-1 px-2'>{{__('all')}}</a>
 						</div>
 					</div>
 					
 					<div class="d-flex justify-content-between align-items-center mb-2">
-					<!--<div class="mr-auto">-->
 						<select id = "selectpage" name="data-table-default_length" aria-controls="data-table-default" class="custom-select custom-select-sm width-80 mb-0">
 							<option class ="postnumber" value="10">10</option>
 							<option class ="postnumber" value="25">25</option>
 							<option class ="postnumber" value="50">50</option>
 							<option class ="postnumber" value="100">100</option>
 						</select>
-					<!--</div>-->
 						<p class="mb-0 text-gray">
-							<span>{{__('today')}} </span><span class="text-red font-weight-bold"><u>{{alarmTodayCount}}</u></span>
+							<span>{{__('new')}} </span><span class="text-red font-weight-bold"><u>{{alarmTodayCount}}</u></span>
 							<span> / </span>
 							<span>{{__('all')}} </span><span class="text-dark font-weight-bold"><u>{{alarmCount}}</u></span>
 						</p>
@@ -99,16 +97,16 @@ var pagingObject = new Object({name : "Alarmtalk", url : "/ajax/alarmtalk_list",
 	// 검색 기능
 	$(document).ready(function() {
 		
-		pagereload(pagingObject,i18nconvert);
+		pagereload(pagingObject);
 		
 		$('#selectpage').click(function() {
-			selectpage(pagingObject,i18nconvert,{
+			selectpage(pagingObject, {
 				option : $('#selectpage option:selected').val()
 			});
 		});
 		$('#searchtext').keyup(function(key) {
 			if(key.keyCode == 13) {
-				searchtext(pagingObject,i18nconvert)
+				searchtext(pagingObject)
 			}
 		});
     });
@@ -119,26 +117,4 @@ var pagingObject = new Object({name : "Alarmtalk", url : "/ajax/alarmtalk_list",
 
 
 {% block script %}
-
-<script src="../assets/plugins/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-<script src="../assets/plugins/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
-<script src="../assets/plugins/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="../assets/plugins/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script src="../assets/plugins/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-<script src="../assets/plugins/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
-<script src="../assets/plugins/datatables.net-colreorder/js/dataTables.colReorder.min.js"></script>
-<script src="../assets/plugins/datatables.net-colreorder-bs4/js/colReorder.bootstrap4.min.js"></script>
-<script src="../assets/plugins/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
-<script src="../assets/plugins/datatables.net-keytable-bs4/js/keyTable.bootstrap4.min.js"></script>
-<script src="../assets/plugins/datatables.net-rowreorder-bs4/js/rowReorder.bootstrap4.min.js"></script>
-<script src="../assets/plugins/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-<script src="../assets/plugins/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
-<script src="../assets/plugins/datatables.net-buttons/js/buttons.colVis.min.js"></script>
-<script src="../assets/plugins/datatables.net-buttons/js/buttons.flash.min.js"></script>
-<script src="../assets/plugins/datatables.net-buttons/js/buttons.html5.min.js"></script>
-<script src="../assets/plugins/datatables.net-buttons/js/buttons.print.min.js"></script>
-<script src="../assets/plugins/pdfmake/build/pdfmake.min.js"></script>
-<script src="../assets/plugins/pdfmake/build/vfs_fonts.js"></script>
-<script src="../assets/plugins/jszip/dist/jszip.min.js"></script>
-<!--<script src="../assets/js/demo/table-manage-combine.demo.js"></script>-->
 {% endblock %}

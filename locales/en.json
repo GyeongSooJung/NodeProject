@@ -233,7 +233,7 @@
 	"success" : "success",
 	"failed" : "failed",
 	"all" : "All",
-	"today": "Today",
+	"new": "New",
     
 	"company": "Company",
 	"company_list" : "Company List",
