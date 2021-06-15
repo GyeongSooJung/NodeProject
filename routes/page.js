@@ -2210,93 +2210,68 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.get('/gstest', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-
-try {
   
-            
-            const historyid = "60c31ca14dcc4f3e853c55ba";
-            const number = "01021128228";
-            
-            let apiSecret = process.env.sol_secret;
-            let apiKey = process.env.sol_key;
-            
-            const { config, Group, msg } = require('solapi');
-           
-            
-            const historyone = await History.findOne({'_id' : historyid});
-            console.log(historyone)
-            var companyone = await Company.findOne({'_id' : historyone.CID});
-            var companypoint = companyone.SPO;
-            
-            
-            
-            if(companypoint > 0) {
-                
-                config.init({ apiKey, apiSecret })
-                
-                var fn = async function send (params = {}) {
-                    try {
-                      const response = await Group.sendSimpleMessage(params);
-                      const pointone = await Point.insertMany({
-                        "CID": companyone._id,
-                        "PN": "알림톡 전송",
-                        "PO": 50,
-                        "MID" : response.messageId,
-                        "WNM" : historyone.WNM,
-                      });
-                      console.log(pointone);
-                    
-                      console.log(companypoint);
-                      companypoint = companypoint - 50;
-                      console.log(companypoint);
-                    
-                      await Company.where({ '_id': historyone.CID })
-                        .update({ "SPO": companypoint }).setOptions({ runValidators: true })
-                        .exec();
-                      
-                    } catch (e) {
-                      console.log(e);
-                    }
-                  }
-                  
-                  const params = {
-                    autoTypeDetect: true,
-                    text: companyone.CNA + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
-                    to: number, // 수신번호 (받는이)
-                    from: '16443486', // 발신번호 (보내는이)
-                    type: 'ATA',
-                    kakaoOptions: {
-                      pfId: 'KA01PF210319072804501wAicQajTRe4',
-                      templateId: 'KA01TP210319074611283wL0AjgZVdog',
-                            buttons: [{
-                              buttonType: 'WL',
-                              buttonName: '확인하기',
-                              linkMo: process.env.IP + '/publish?cat=1&hid=' + historyid,
-                              linkPc: process.env.IP + '/publish?cat=1&hid=' + historyid
-                            }]
-                    }
-                  }
-                  
-                  fn(params)
-            }
-            else {
-              console.log("@@@")
-                res.json({
-                result: false,
-                });
-            }
-        
-        
-        }
-        catch (exception) {
-          console.log(exception)
-            res.json({
-                result: false,
-            });
-        }
+    // Excel Test
+  //로직 흐름 : 
+  //엑셀 워크북 생성 -> 엑셀 시트 생성 -> 대표행(타이틀행) 설정 및 입력 -> 데이터 입력 -> 저장
   
+  const Excel = require('excel4node');
+  
+  //비동기 함수 생성
+  async function ExcelTest(){
+    
+    try{
+    //엑셀 워크북 생성 및 시트 생성
+      const workbook = new Excel.Workbook();
+      const worksheet = workbook.addWorksheet("My Sheet");
+    
+      //대표행(타이틀행) 설정 및 입력
+    worksheet.columns = [
+      {header: 'Id', key: 'id', width: 10},
+      {header: 'Name', key: 'name', width: 35}, 
+      {header: 'Birth', key: 'birth', width: 15},
+    ];
+    
+    //데이터 추가 (행단위 추가)
+    worksheet.addRow({id: 1, name: 'Hong', birth: new Date().toLocaleDateString()});
+    worksheet.addRow({id: 2, name: 'Kim', birth: new Date().toLocaleDateString()});
+    
+    //엑셀 데이터 저장
+    await workbook.xlsx.writeFile('export.xlsx');
+    
+    //엑셀 데이터 읽고 워크북 불러오기
+    const newWorkbook = new Excel.Workbook();
+    await newWorkbook.xlsx.readFile('export.xlsx');
+    
+    //엑셀 시트 불러오기
+    const newworksheet = newWorkbook.getWorksheet('My Sheet');
+    
+    //데이터 추가 (행단위 추가)
+    newworksheet.addRow(
+      {id: 3, name: 'Lee', date: new Date().toLocaleDateString()}
+    );
+    
+    //다른이름으로 저장 (기존 파일명과 같으면 덮어쓰기)
+    await newWorkbook.xlsx.writeFile('export2.xlsx');
+    
+    //종료
+    console.log("끝!");
+    
+    }
+    
+  catch(e) {
+    console.log(e)
+  }
+  
+  
+  }
+  
+  //함수실행
+    ExcelTest();
   
 })
+
+
 
 
   
