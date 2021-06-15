@@ -100,6 +100,7 @@
 	"find_no_register" : "This business number is not registered.",
 	"find_enter" : "Please enter your business number.",
 	"find_email_error" : "Email is not the same as the subscription information.",
+	"find_pw_fail": "Password retrieval failed.",
 	
 	"register_title": "OASIS | Register",
 	"register_text1" : "Create an OASIS account. It can be managed efficiently.",
@@ -132,8 +133,11 @@
 	"register_auth_fail" : "The authentication number is different.",
 	"register_auth_enter" : "Please enter the authentication number.",
 	"register_auth_need" : "Email authentication is required.",
+	"register_company_need_cer": "Company certification is required.",
+	"register_company_cer_success": "Company verification has been completed.",
 	"register_digits_error" : "Please enter the numbers",
 	"register_success": "Sign up is complete.",
+	"register_email_send_fail" : "Email sending failed.",
 	
 	"main_title": "OASIS | Admin",
     "main_point": "point",
@@ -199,6 +203,7 @@
     "profile_pw_need" : "Please enter your password.",
     "profile_pw_success" : "Your password has been changed.",
     "profile_form_error" : "Please enter it according to the format.",
+    "profile_fail": "Failed to edit profile.",
     
     "setting_point": "Setting Point",
     "setting_send_available": "Number of SMS Notification Available to Send",
@@ -257,8 +262,9 @@
 	"device_duplicated" : "MAC already exists.",
 	"device_mac_wrong" : "Please enter the MAC address correctly.",
 	"device_edit" : "Device Modify",
-	"device_edit_version_enter" : "Please enter a version",
+	"device_edit_version_enter" : "Please enter a version.",
 	"device_edit_nick_enter" : "Please enter your alias as desired.",
+	"device_register_fail": "Device registration failed.",
 	
 	"car": "Car",
 	"car_number": "Car Number",
@@ -289,6 +295,8 @@
 	"car_excelsize_error" : "Only 100 in-file lists are allowed.",
 	"car_excellength_error" : "Please check the number of digits of the car number in the file.",
 	"car_exceltype_error" : "Invalid car number in file exists.",
+	"car_register_fail": "Car registration failed.",
+	"car_excel_fail": "File upload failed.",
 	"car_modify" : "Modify Car",
 	"car_list" : "Car List",
 	
@@ -348,6 +356,7 @@
 	"payment_option_name_ex": "Red, Blue",
 	"payment_registration_required": "Goods name and Goods amount are required.",
 	"payment_img_fail": "Goods image registration failed.",
+	"payment_goods_upload_fail": "Goods registration failed",
 	"payment_goods_exist": "Existing goods name. Please set it differently.",
 	"payment_check_option": "Please choose an option.",
 	"payment_name" : "Goods Name",
@@ -376,6 +385,7 @@
 	"payment_receit_confirm1" : "This transaction confirmation cannot be used as a substitute for a tax invoice.",
 	"payment_receit_confirm2" : "Confirmed the above transaction",
 	"payment_complete": "Payment Complete",
+	"payment_shop_err": "Shop Error",
 	
 	"purchase_failed" : "Your purchase is incorrect",
 	

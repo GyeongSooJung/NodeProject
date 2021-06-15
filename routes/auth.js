@@ -1,20 +1,19 @@
 //Express
 const express = require('express');
 const router = express.Router();
-
 //Module
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const secretObj = require("../config/jwt");
-
 //Schemas
 const Company = require('../schemas/company');
 const Device = require('../schemas/device');
 const Car = require('../schemas/car');
 const Worker = require('../schemas/worker');
-
 //Middleware
 const { isNotLoggedIn } = require('./middleware');
+
+// -- Start Code -- //
 
 //login 진행 할경우 토큰 만들어서 cookie에 넣음
 router.post("/login", async(req, res, next) => {

@@ -59,33 +59,21 @@ function editInfoAjax(companyName, mobileNumber, phoneNumber, password) {
 			MN : mobileNumber,
 			PN : phoneNumber,
 			PW : password,
-		},
-		success: function(result) {
-			if (result.status == 'success') {
-				alert(i18nconvert('profile_success'));
-				location = '/profile';
-			}
-			else if (result.status == 'exMn') {
-				alert(i18nconvert('profile_ex_mn'));
-				document.getElementsByName("CNA")[0].value = result.company.CNA;
-				document.getElementsByName("MN")[0].value = result.company.MN;
-				document.getElementsByName("PN")[0].value = result.company.PN;
-				document.getElementsByName("PW")[0].value = null;
-			}
-			else if (result.status == 'exPn') {
-				alert(i18nconvert('profile_ex_pn'));
-				document.getElementsByName("CNA")[0].value = result.company.CNA;
-				document.getElementsByName("MN")[0].value = result.company.MN;
-				document.getElementsByName("PN")[0].value = result.company.PN;
-				document.getElementsByName("PW")[0].value = null;
-			}
-			else if (result.status == 'fail') {
-				alert(i18nconvert('profile_pw_error'));
-				document.getElementsByName("CNA")[0].value = result.company.CNA;
-				document.getElementsByName("MN")[0].value = result.company.MN;
-				document.getElementsByName("PN")[0].value = result.company.PN;
-				document.getElementsByName("PW")[0].value = null;
-			}
+		}
+	}).done(function(data) {
+		if (data.result == 'success') {
+			alert(i18nconvert('profile_success'));
+			location = '/profile';
+		}
+		else if(data.result == 'noMatch') {
+			alert(i18nconvert('profile_pw_error'));
+			document.getElementsByName("CNA")[0].value = data.company.CNA;
+			document.getElementsByName("MN")[0].value = data.company.MN;
+			document.getElementsByName("PN")[0].value = data.company.PN;
+			document.getElementsByName("PW")[0].value = null;
+		}
+		else {
+			alert(i18nconvert('profile_fail'));
 		}
 	});
 }
@@ -98,16 +86,28 @@ function emailCheckAjax(email) {
 		dataType: 'json',
 		data: {
 			EA : email,
-		},
-		success: function(result) {
-			if (result.status == 'match') {
-				document.getElementById('emailBox').classList.add('d-none');
-				document.getElementById('editPw').classList.remove('d-none');
-			}
-			else if (result.status == 'mismatch') {
-				alert(i18nconvert('find_email_error'));
-				document.getElementsByName('EA')[0].value = null;
-			}
+		}
+		// success: function(result) {
+		// 	if (result.status == 'match') {
+		// 		document.getElementById('emailBox').classList.add('d-none');
+		// 		document.getElementById('editPw').classList.remove('d-none');
+		// 	}
+		// 	else if (result.status == 'mismatch') {
+		// 		alert(i18nconvert('find_email_error'));
+		// 		document.getElementsByName('EA')[0].value = null;
+		// 	}
+		// }
+	}).done(function(data) {
+		if(data.result == 'success') {
+			document.getElementById('emailBox').classList.add('d-none');
+			document.getElementById('editPw').classList.remove('d-none');
+		}
+		else if(data.result == 'noMatch') {
+			alert(i18nconvert('find_email_error'));
+			document.getElementsByName('EA')[0].value = null;
+		}
+		else {
+			alert(i18nconvert('profile_fail'));
 		}
 	});
 }
@@ -122,18 +122,22 @@ function editPwAjax(currentPassword, changePassword, rePassword) {
 			PW : currentPassword,
 			CPW : changePassword,
 			RPW : rePassword,
-		},
-		success: function(result) {
-			if (result.status == 'success') {
-				alert(i18nconvert('profile_pw_success')+"\n"+i18nconvert('login_again'));
-				location = '/login'
-			}
-			else if (result.status == 'fail') {
-				alert(i18nconvert('profile_pw_error'));
-				document.getElementsByName("PW2")[0].value = null;
-				document.getElementsByName("CPW")[0].value = null;
-				document.getElementsByName("RPW")[0].value = null;
-			}
+		}
+	}).done(function(data) {
+		if (data.result == 'success') {
+			alert(i18nconvert('profile_pw_success')+"\n"+i18nconvert('login_again'));
+			location = '/login'
+		}
+		else if (data.result == 'noMatch') {
+			alert(i18nconvert('profile_pw_error'));
+			document.getElementsByName("PW2")[0].value = null;
+			document.getElementsByName("CPW")[0].value = null;
+			document.getElementsByName("RPW")[0].value = null;
+			$("#pwNotice").hide();
+			$("#pwNotice2").hide();
+		}
+		else {
+			alert(i18nconvert('profile_fail'));
 		}
 	});
 }

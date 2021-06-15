@@ -163,18 +163,17 @@ function goodsImgAjax(formName, img) {
 		data: formData,
 		enctype: 'multipart/form',
 		processData: false,
-		contentType: false,
-		success: function(result) {
-			if(result.status == "success") {
-				$("input[name=GIurl").eq(0).val(result.imgUrl);
-				goodsJoinAjax();
-			}
-			else if(result.status == "sendNull") {
-				goodsJoinAjax();
-			}
-			else {
-				alert(i18nconvert("payment_img_fail"));
-			}
+		contentType: false
+    }).done(function(data) {
+    	if(data.result == "success") {
+			$("input[name=GIurl").eq(0).val(data.imgUrl);
+			goodsJoinAjax();
+		}
+		else if(data.result == "sendNull") {
+			goodsJoinAjax();
+		}
+		else {
+			alert(i18nconvert("payment_img_fail"));
 		}
     });
 }
@@ -189,7 +188,6 @@ function goodsJoinAjax() {
 		ON[i] = [];
 		OP[i] = [];
 		for(var j = 0; j < $('.option').eq(i).find('input[name=ON]').length; j++) {
-			// console.log(i+"/"+j+"/"+$('.option').eq(i).find('input[name=ON]').eq(j).val());
 			ON[i][j] = $('.option').eq(i).find('input[name=ON]').eq(j).val();
 			OP[i][j] = $('.option').eq(i).find('input[name=OP]').eq(j).val();
 		}
@@ -208,15 +206,18 @@ function goodsJoinAjax() {
 			OT: OT,
 			ON: JSON.stringify(ON),
 			OP: JSON.stringify(OP)
-		},
-		success: function(result) {
-			if(result.status == "exist") {
-				alert(i18nconvert("payment_goods_exist"));
-			}
-			else if(result.status == "success") {
-				$(".modal").modal("hide");
-				location.reload();
-			}
+		}
+	}).done(function(data) {
+		if(data.result == "success") {
+			$(".modal").modal("hide");
+			location.reload();
+		}
+		else if(data.result == "exist") {
+			alert(i18nconvert("payment_goods_exist"));
+		}
+		else {
+			alert(i18nconvert("payment_goods_upload_fail"));
+			location.reload();
 		}
 	});
 }
@@ -235,75 +236,77 @@ function goodsModal(click, Object) {
 		dataType: 'json',
         data: {
         	GN: GN
-        },
-        success: function(result) {
-			$("input[type=radio]").prop("checked", false);
-			document.getElementsByName("count")[0].value = 1;
-			$(".option-box").empty();
-			
-			Object.GN = result.goods.GN;
-			Object.GP = result.goods.GP;
-			Object.GI = result.goods.GI;
-			Object.GE = result.goods.GE;
-			Object.GO = result.goods.GO;
-			Object.TT = result.goods.GP;
-			
-			$(".modal-title").html(Object.GN);
-			$(".modal-desc").html(Object.GE);
-			if(Object.GP == 0) {
-				$(".modal-price").html(i18nconvert("payment_price_diff_option"));
-			}
-			else {
-				$(".modal-price").html(Object.GP);
-			}
-			if(!Object.GI) {
-				$(".pos-product-img").html("<div class='img' style='background-image: url(../assets/img/oasis_logo_shop.png)'></div>");
-			}
-			else {
-				$(".pos-product-img").html("<div class='img' style='background-image: url("+Object.GI+")'></div>");
-			}
-			
-        	if(result.status == 'option') {
-	    		$(".point-option").show();
-	    		for(var i = 0; i < result.optionType.length; i++) {
-	    			Object.OT[i] = result.optionType[i];
-	    			$(".option-box").append("\
-						<div class='option-row'>\
-							<div class='option-title'>"+result.optionType[i]+"</div>\
-							<div id='option"+i+"' class='option-list'>\
-							</div>\
-						</div>\
-    				");
-		    		for(var j = 0; j < result.option.length; j++) {
-		    			var optionOP;
-		    			if(result.option[j].OP) {
-		    				optionOP = result.option[j].OP;
-		    			}
-		    			else {
-		    				optionOP = 0;
-		    			}
-		    			if(result.option[j].OT == result.optionType[i]) {
-		    				$("#option"+i).append("\
-		    					<div class='option'>\
-		    						<input type='radio' class='option-input' id='op"+i+j+"' name='op"+i+"' value='"+result.option[j].OP+"' onclick=checkOption(this,shopObject); onclick=checkOption(this,Object); data-num='"+i+"' data-name='"+result.option[j].ON+"' data-parsley-required-message='"+i18nconvert('payment_check_option')+"' required />\
-		    						<label class='option-label' for='op"+i+j+"'>\
-		    							<span class='option-text'>\
-		    								"+result.option[j].ON+"\
-		    							</span>\
-		    							<span class='option-price'>\
-		    								"+optionOP+"\
-		    							</span>\
-		    						</label>\
-		    					</div>\
-		    				");
-		    			}
-		    		}
-	    		}
-        	}
-        	else {
-        		$(".point-option").hide();
-        	}
         }
+	}).done(function(data) {
+		$("input[type=radio]").prop("checked", false);
+		document.getElementsByName("count")[0].value = 1;
+		$(".option-box").empty();
+		
+		Object.GN = data.goods.GN;
+		Object.GP = data.goods.GP;
+		Object.GI = data.goods.GI;
+		Object.GE = data.goods.GE;
+		Object.GO = data.goods.GO;
+		Object.TT = data.goods.GP;
+		
+		$(".modal-title").html(Object.GN);
+		$(".modal-desc").html(Object.GE);
+		if(Object.GP == 0) {
+			$(".modal-price").html(i18nconvert("payment_price_diff_option"));
+		}
+		else {
+			$(".modal-price").html(Object.GP);
+		}
+		if(!Object.GI) {
+			$(".pos-product-img").html("<div class='img' style='background-image: url(../assets/img/oasis_logo_shop.png)'></div>");
+		}
+		else {
+			$(".pos-product-img").html("<div class='img' style='background-image: url("+Object.GI+")'></div>");
+		}
+		
+    	if(data.result == 'option') {
+    		$(".point-option").show();
+    		for(var i = 0; i < data.optionType.length; i++) {
+    			Object.OT[i] = data.optionType[i];
+    			$(".option-box").append("\
+					<div class='option-row'>\
+						<div class='option-title'>"+data.optionType[i]+"</div>\
+						<div id='option"+i+"' class='option-list'>\
+						</div>\
+					</div>\
+				");
+	    		for(var j = 0; j < data.option.length; j++) {
+	    			var optionOP;
+	    			if(data.option[j].OP) {
+	    				optionOP = data.option[j].OP;
+	    			}
+	    			else {
+	    				optionOP = 0;
+	    			}
+	    			if(data.option[j].OT == data.optionType[i]) {
+	    				$("#option"+i).append("\
+	    					<div class='option'>\
+	    						<input type='radio' class='option-input' id='op"+i+j+"' name='op"+i+"' value='"+data.option[j].OP+"' onclick=checkOption(this,shopObject); onclick=checkOption(this,Object); data-num='"+i+"' data-name='"+data.option[j].ON+"' data-parsley-required-message='"+i18nconvert('payment_check_option')+"' required />\
+	    						<label class='option-label' for='op"+i+j+"'>\
+	    							<span class='option-text'>\
+	    								"+data.option[j].ON+"\
+	    							</span>\
+	    							<span class='option-price'>\
+	    								"+optionOP+"\
+	    							</span>\
+	    						</label>\
+	    					</div>\
+	    				");
+	    			}
+	    		}
+    		}
+    	}
+    	else if(data.result == 'noOption') {
+    		$(".point-option").hide();
+    	}
+    	else {
+    		alert(i18nconvert('payment_shop_err'));
+    	}
 	});
 }
 
@@ -352,13 +355,14 @@ function cartNumCount(math, num) {
 			MATH : math,
 			GN : document.getElementsByName('GN')[num].value,
 			ON : document.getElementsByName('ON')[num].value,
-		},
-		success: function(result) {
-			if(result.status == 'success') {
-				showCart();
-			}
 		}
-		
+	}).done(function(data) {
+		if(result.status == 'success') {
+			showCart();
+		}
+		else {
+			alert(i18nconvert('payment_shop_err'));
+		}
 	});
 }
 
@@ -395,12 +399,14 @@ function addCart(formName,Object) {
 				ON : Object.ON,
 				OP : Object.OP,
 				NUM : Object.NUM,
-			},
-			success: function(result) {
-				if(result.status == 'success') {
-					showCart();
-					$(".modal").modal("hide");
-				}
+			}
+		}).done(function(data) {
+			if(data.result == 'success') {
+				showCart();
+				$(".modal").modal("hide");
+			}
+			else {
+				alert(i18nconvert('payment_shop_err'));
 			}
 		});
 	}
@@ -416,82 +422,84 @@ function showCart() {
 		url: '/shop/showCart',
 		traditional: true,
 		dataType: 'json',
-		data: {},
-		success: function(result) {
-			$(".pos-table").empty();
-			$(".total").empty();
-			if(result.status == 'success') {
-				for(var i = 0; i < result.cart.length; i ++) {
-					var cartON = [];
-					if(result.cart[i].ON) {
-						if(typeof(result.cart[i].ON) == 'string') {
-							cartON = "- "+result.cart[i].OT+" : "+result.cart[i].ON+"<br><small class='ml-2'> (+ "+result.cart[i].OP+")</small>";
-						}
-						else {
-							for(var j = 0; j < result.cart[i].ON.length; j++) {
-								cartON[j] = "- "+result.cart[i].OT[j]+" : "+result.cart[i].ON[j]+"<br><small class='ml-2'> (+ "+result.cart[i].OP[j]+")</small><br>";
-							}
-							cartON = cartON.toString().replace(/,/g, "");
-						}
+		data: {}
+	}).done(function(data) {
+		$(".pos-table").empty();
+		$(".total").empty();
+		if(data.result == 'success') {
+			for(var i = 0; i < data.cart.length; i ++) {
+				var cartON = [];
+				if(data.cart[i].ON) {
+					if(typeof(data.cart[i].ON) == 'string') {
+						cartON = "- "+data.cart[i].OT+" : "+data.cart[i].ON+"<br><small class='ml-2'> (+ "+data.cart[i].OP+")</small>";
 					}
 					else {
-						cartON = "";
+						for(var j = 0; j < data.cart[i].ON.length; j++) {
+							cartON[j] = "- "+data.cart[i].OT[j]+" : "+data.cart[i].ON[j]+"<br><small class='ml-2'> (+ "+data.cart[i].OP[j]+")</small><br>";
+						}
+						cartON = cartON.toString().replace(/,/g, "");
 					}
-					var cartImg = "";
-					if(!result.cart[i].GI) {
-						cartImg = "<div class='img' style='background-image: url(../assets/img/oasis_logo_shop.png)'></div>"
-					}
-					else {
-						cartImg = "<div class='img' style='background-image: url("+result.cart[i].GI+")'></div>"
-					}
-			    	$(".pos-table").append("\
-				    	<div class='row pos-table-row'>\
-							<div class='col-9'>\
-								<div class='pos-product-thumb'>\
-									"+cartImg+"\
-									<div class='info'>\
-											<input type='hidden' id='index' name='index' value='"+i+"' />\
-										<div class='title'>"+result.cart[i].GN+"</div>\
-											<input type='hidden' id='GN' name='GN' value='"+result.cart[i].GN+"' />\
-										<div class='single-price'>"+result.cart[i].GP+"</div>\
-											<input type='hidden' id='GP' name='GP' value='"+result.cart[i].GP+"' />\
-										<div class='desc'>"+cartON+"</div>\
-											<input type='hidden' id='OT' name='OT' value='"+result.cart[i].OT+"' />\
-											<input type='hidden' id='ON' name='ON' value='"+result.cart[i].ON+"' />\
-											<input type='hidden' id='OP' name='OP' value='"+result.cart[i].OP+"' />\
-										<div class='input-group qty'>\
-											<div class='input-group-append'>\
-												<button class='btn btn-default list-count-btn' onclick=cartNumCount('minus','"+i+"');><i class='fa fa-minus'></i></button>\
-											</div>\
-											<input type='text' class='form-control' name='list-count' value='"+result.cart[i].NUM+"' />\
-											<div class='input-group-prepend'>\
-												<button class='btn btn-default list-count-btn' onclick=cartNumCount('plus','"+i+"');><i class='fa fa-plus'></i></button>\
-											</div>\
+				}
+				else {
+					cartON = "";
+				}
+				var cartImg = "";
+				if(!data.cart[i].GI) {
+					cartImg = "<div class='img' style='background-image: url(../assets/img/oasis_logo_shop.png)'></div>"
+				}
+				else {
+					cartImg = "<div class='img' style='background-image: url("+data.cart[i].GI+")'></div>"
+				}
+		    	$(".pos-table").append("\
+			    	<div class='row pos-table-row'>\
+						<div class='col-9'>\
+							<div class='pos-product-thumb'>\
+								"+cartImg+"\
+								<div class='info'>\
+										<input type='hidden' id='index' name='index' value='"+i+"' />\
+									<div class='title'>"+data.cart[i].GN+"</div>\
+										<input type='hidden' id='GN' name='GN' value='"+data.cart[i].GN+"' />\
+									<div class='single-price'>"+data.cart[i].GP+"</div>\
+										<input type='hidden' id='GP' name='GP' value='"+data.cart[i].GP+"' />\
+									<div class='desc'>"+cartON+"</div>\
+										<input type='hidden' id='OT' name='OT' value='"+data.cart[i].OT+"' />\
+										<input type='hidden' id='ON' name='ON' value='"+data.cart[i].ON+"' />\
+										<input type='hidden' id='OP' name='OP' value='"+data.cart[i].OP+"' />\
+									<div class='input-group qty'>\
+										<div class='input-group-append'>\
+											<button class='btn btn-default list-count-btn' onclick=cartNumCount('minus','"+i+"');><i class='fa fa-minus'></i></button>\
+										</div>\
+										<input type='text' class='form-control' name='list-count' value='"+data.cart[i].NUM+"' />\
+										<div class='input-group-prepend'>\
+											<button class='btn btn-default list-count-btn' onclick=cartNumCount('plus','"+i+"');><i class='fa fa-plus'></i></button>\
 										</div>\
 									</div>\
 								</div>\
 							</div>\
-							<div class='col-3 d-flex flex-column justify-content-between align-items-end'>\
-								<div class='align-middle text-gray list-remove-btn' onclick=cartDelete(this,'one'); data-num='"+i+"' style='cursor: pointer'>\
-				    				<i class='fas fa-lg fa-times m-2 p-2'></i>\
-				    			</div>\
-				    			<div class='total-price mb-1'>Price : <b>"+result.cart[i].TT+"</b></div>\
-							</div>\
 						</div>\
-			    	");
-				}
-				var totalSum = 0;
-				for(var i = 0; i < result.cart.length; i++) {
-					totalSum += parseInt(result.cart[i].TT);
-				}
-				$(".total").append("\
-					<div class='text'>Total</div>\
-					<div class='price'>"+totalSum+"</div>\
-						<input type='hidden' id='TS' name='TS' value='"+totalSum+"' />\
-				")
+						<div class='col-3 d-flex flex-column justify-content-between align-items-end'>\
+							<div class='align-middle text-gray list-remove-btn' onclick=cartDelete(this,'one'); data-num='"+i+"' style='cursor: pointer'>\
+			    				<i class='fas fa-lg fa-times m-2 p-2'></i>\
+			    			</div>\
+			    			<div class='total-price mb-1'>Price : <b>"+data.cart[i].TT+"</b></div>\
+						</div>\
+					</div>\
+		    	");
 			}
+			var totalSum = 0;
+			for(var i = 0; i < data.cart.length; i++) {
+				totalSum += parseInt(data.cart[i].TT);
+			}
+			$(".total").append("\
+				<div class='text'>Total</div>\
+				<div class='price'>"+totalSum+"</div>\
+					<input type='hidden' id='TS' name='TS' value='"+totalSum+"' />\
+			");
 		}
-	})
+		else {
+			alert(i18nconvert('payment_shop_err'));
+		}
+	});
 }
 
 // 장바구니 삭제 기능
@@ -506,11 +514,13 @@ function cartDelete(click, amount) {
 				GN : document.getElementsByName('GN')[clickNum].value,
 				ON : document.getElementsByName('ON')[clickNum].value,
 				amount : amount,
-			},
-			success: function(result) {
-				if(result.status == 'delete') {
-					showCart();
-				}
+			}
+		}).done(function(data) {
+			if(data.result == 'delete') {
+				showCart();
+			}
+			else {
+				alert(i18nconvert('payment_shop_err'));
 			}
 		});
 	}
@@ -521,11 +531,13 @@ function cartDelete(click, amount) {
 			dataType: 'json',
 			data: {
 				amount : amount,
-			},
-			success: function(result) {
-				if(result.status == 'delete') {
-					showCart();
-				}
+			}
+		}).done(function(data) {
+			if(data.result == 'delete') {
+				showCart();
+			}
+			else {
+				alert(i18nconvert('payment_shop_err'));
 			}
 		});
 	}

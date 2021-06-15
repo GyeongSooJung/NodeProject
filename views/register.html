@@ -56,8 +56,10 @@
         							<div class="d-flex justify-content-between align-items-center mb-2">
         								<input id="CNU" name="CNU" type="text" class="form-control form-control-lg inverse-mode w-70 mr-2" placeholder="{{__('business_number')}}" data-parsley-type="digits" data-parsley-type-message="{{__('register_digits_error')}}" data-parsley-required-message="{{__('required_detail')}}" data-parsley-errors-container="#err-msg1" required/>
     								    <input type="button" class="btn btn-primary btn-block btn-lg w-25" value="{{__('confirm')}}" onclick="checkCNU('CNU');">
+    							    	<input type="hidden" id="hideCNU" name="hideCNU" value="">
     							    </div>
     							    <div id="err-msg1"></div>
+    							    <div id="err-msg-cnu" class="text-realred"></div>
         						</div>
         						<!--업체명-->
         						<label class="control-label">{{__('company_name')}} <span class="text-danger"> *</span></label>
@@ -276,6 +278,15 @@
     	}
     	else if(string == "register_auth_need" ) {
     		return "{{__('register_auth_need')}}";
+    	}
+    	else if(string == "register_company_need_cer") {
+    		return "{{__('register_company_need_cer')}}";
+    	}
+    	else if(string == "register_company_cer_success") {
+    		return "{{__('register_company_cer_success')}}";
+    	}
+    	else if(string == "register_email_send_fail") {
+    		return "{{__('register_email_send_fail')}}";
     	}
 	}
 </script>

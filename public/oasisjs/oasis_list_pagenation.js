@@ -137,20 +137,19 @@
 			processData: false,
         	contentType: false
 		}).done(function(data) {
-			Object.array = data.excelData; // 전체 리스트
-		    Object.startpage = Math.floor((Object.page) / Object.pageNum) * Object.pageNum;
-		    Object.endpage = Object.startpage + Object.pageNum;
-		    
-		    var excelList = Object.array;
-		    var postNum = Object.postNum; // 게시될 페이지 숫자
-		    var pageNum = Object.pageNum; // 페이지 번호의 갯수
-		    var totalPage = Math.ceil(Object.array.length/Object.postNum); // 전체 페이지의 갯수
-		    
-		    if (Object.endpage > totalPage) { // 끝 페이지가 총 페이지 수보다 많다면 같게끔 처리
-		        Object.endpage = totalPage;
-		    }
-			
     		if(data.result == 'send') {
+    			Object.array = data.excelData; // 전체 리스트
+			    Object.startpage = Math.floor((Object.page) / Object.pageNum) * Object.pageNum;
+			    Object.endpage = Object.startpage + Object.pageNum;
+			    
+			    var excelList = Object.array;
+			    var postNum = Object.postNum; // 게시될 페이지 숫자
+			    var pageNum = Object.pageNum; // 페이지 번호의 갯수
+			    var totalPage = Math.ceil(Object.array.length/Object.postNum); // 전체 페이지의 갯수
+			    
+			    if (Object.endpage > totalPage) { // 끝 페이지가 총 페이지 수보다 많다면 같게끔 처리
+			        Object.endpage = totalPage;
+			    }
     			$('#car-form-div').hide();
 				$('#pagebox > *').remove();
 				$('#excel-table > tbody > tr').remove();
@@ -191,13 +190,16 @@
 				$("#pagebox").show();
     		}
     		else if (data.result == 'overSize') {
-    			alert("{{__('car_excelsize_error')}}");
+    			alert(i18nconvert('car_excelsize_error'));
     		}
     		else if (data.result == 'sendNull') {
-    			alert("{{__('car_nofile_error')}}");
+    			alert(i18nconvert('car_nofile_error'));
     		}
     		else if (data.result == 'sendFail') {
-    			alert("{{__('car_excel_error')}}");
+    			alert(i18nconvert('car_excel_error'));
+    		}
+    		else {
+    			alert(i18nconvert('car_excel_fail'));
     		}
 		});
     }

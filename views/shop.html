@@ -283,7 +283,7 @@
 			                    TS: TS,
 			                }
 				        }).done(function (data) {
-		                    switch(data.status) {
+		                    switch(data.result) {
 		                        // case "vbankIssued":
 		                        //     var msg = "가상계좌가 생성되었습니다.";
 		                        //     msg += '\n가상계좌명' + rsp.vbank_name;
@@ -335,7 +335,7 @@
 	    		return "{{__('payment_selection_option')}}";
 	    	}
 	    	else if(string == "payment_add_option") {
-	    		return "{{__('payment_add_option')}}"
+	    		return "{{__('payment_add_option')}}";
 	    	}
 	    	else if(string == "payment_regulation2" ) {
 	    		return "{{__('payment_regulation2')}}";
@@ -350,31 +350,37 @@
 	    		return "{{__('payment_regulation5')}}";
 	    	}
 	    	else if(string == "payment_option_type") {
-	    		return "{{__('payment_option_type')}}"
+	    		return "{{__('payment_option_type')}}";
 	    	}
 	    	else if(string == "payment_option_type_ex") {
-	    		return "{{__('payment_option_type_ex')}}"
+	    		return "{{__('payment_option_type_ex')}}";
 	    	}
 	    	else if(string == "payment_option_name") {
-	    		return "{{__('payment_option_name')}}"
+	    		return "{{__('payment_option_name')}}";
 	    	}
 	    	else if(string == "payment_option_name_ex") {
-	    		return "{{__('payment_option_name_ex')}}"
+	    		return "{{__('payment_option_name_ex')}}";
 	    	}
 	    	else if(string == "payment_option_price") {
-	    		return "{{__('payment_option_price')}}"
+	    		return "{{__('payment_option_price')}}";
 	    	}
 	    	else if(string == "payment_img_fail") {
-	    		return "{{__('payment_img_fail')}}"
+	    		return "{{__('payment_img_fail')}}";
 	    	}
 	    	else if(string == "payment_goods_exist") {
-	    		return "{{__('payment_goods_exist')}}"
+	    		return "{{__('payment_goods_exist')}}";
 	    	}
 	    	else if(string == "payment_price_diff_option") {
-	    		return "{{__('payment_price_diff_option')}}"
+	    		return "{{__('payment_price_diff_option')}}";
 	    	}
 	    	else if(string == "payment_check_option") {
-	    		return "{{__('payment_check_option')}}"
+	    		return "{{__('payment_check_option')}}";
+	    	}
+	    	else if(string == "payment_goods_upload_fail") {
+	    		return "{{__('payment_goods_upload_fail')}}";
+	    	}
+	    	else if(string == "payment_shop_err") {
+	    		return "{{__('payment_shop_err')}}";
 	    	}
     	};
 	</script>

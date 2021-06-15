@@ -172,6 +172,12 @@
 	    	else if(string == "register_auth_fail" ) {
 	    		return "{{__('register_auth_fail')}}";
 	    	}
+	    	else if(string == "register_email_send_fail" ) {
+	    		return "{{__('register_email_send_fail')}}";
+	    	}
+	    	else if(string == "find_pw_fail" ) {
+	    		return "{{__('find_pw_fail')}}";
+	    	}
 	    	else if(string == "login_findpw" ) {
 	    		return "{{__('login_findpw')}}";
 	    	}
@@ -191,5 +197,6 @@
 	<script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
 	<!-- ================== END BASE JS ================== -->
 	<script src="../oasisjs/oasis_find.js"></script>
+	<script src="../oasisjs/oasis_keyup.js"></script>
 </body>
 </html>

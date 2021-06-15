@@ -6,16 +6,25 @@ function checkAjax(companyNumber) {
         dataType: 'json',
         data: {
             CNU: companyNumber
-        },
-        success: function(result) {
-            if (result.status == 'fail') {
-                alert(i18nconvert("find_no_register"));
-            }
-            else if (result.status == 'success') {
-                document.getElementById('emailbox').classList.remove('d-none');
-                document.getElementsByName('CNU')[0].readOnly = true;
-                document.getElementById('exEmail').innerHTML = "Your Email : " + "<span class='h5'>" + result.mask + "</span>";
-            }
+        }
+        // success: function(result) {
+        //     if (result.status == 'fail') {
+        //         alert(i18nconvert("find_no_register"));
+        //     }
+        //     else if (result.status == 'success') {
+        //         document.getElementById('emailbox').classList.remove('d-none');
+        //         document.getElementsByName('CNU')[0].readOnly = true;
+        //         document.getElementById('exEmail').innerHTML = "Your Email : " + "<span class='h5'>" + result.mask + "</span>";
+        //     }
+        // }
+    }).done(function(data) {
+        if (data.result == 'success') {
+            document.getElementById('emailbox').classList.remove('d-none');
+            document.getElementsByName('CNU')[0].readOnly = true;
+            document.getElementById('exEmail').innerHTML = "Your Email : " + "<span class='h5'>" + data.mask + "</span>";
+        }
+        else {
+            alert(i18nconvert("find_no_register"));
         }
     });
 }
@@ -55,21 +64,23 @@ function emailSendAjax(companyNumber, email) {
 		data: {
 		    CNU: companyNumber,
 			EA: email
-		},
-		success: function(result) {
-			if (result.status == 'wrong') {
-				alert(i18nconvert('find_email_error'));
-			}
-			else if (result.status == 'send') {
-				alert(i18nconvert('register_auth_com_msg'));
-				document.getElementsByName('EA')[0].readOnly = true;
-				document.getElementById('CEA').classList.remove('d-none');
-				document.getElementById('cerBtn').classList.remove('d-none');
-				document.getElementById('sendBtn').classList.add('d-none');
-				
-			clearTimeout(timer);
-			stopWatch(300);
-			}
+		}
+	}).done(function(data) {
+	    if (data.result == 'wrong') {
+			alert(i18nconvert('find_email_error'));
+		}
+		else if (data.result == 'send') {
+			alert(i18nconvert('register_auth_com_msg'));
+			document.getElementsByName('EA')[0].readOnly = true;
+			document.getElementById('CEA').classList.remove('d-none');
+			document.getElementById('cerBtn').classList.remove('d-none');
+			document.getElementById('sendBtn').classList.add('d-none');
+			
+		clearTimeout(timer);
+		stopWatch(300);
+		}
+		else {
+		    alert(i18nconvert('register_email_send_fail'));
 		}
 	});
 }
@@ -84,22 +95,21 @@ function emailCerAjax(companyNumber, email, cerNum) {
     	    CNU: companyNumber,
     	    EA: email,
     		CEA: cerNum
-    	},
-    	success: function(result) {
-    		if (result.status == 'success') {
-    			alert(i18nconvert('register_auth_success'));
-    			clearTimeout(timer);
-    			document.getElementsByName('CEA')[0].readOnly = true;
-    			document.getElementById('err-msg2').innerHTML = i18nconvert('register_auth_success');
-    			document.getElementsByName('hideCK')[0].value = 'true';
-    			document.getElementById('findBtn').classList.remove('d-none');
-    		}
-    		else if (result.status == 'fail') {
-    			alert(i18nconvert('register_auth_fail'));
-    			document.getElementsByName('CEA')[0].value = null;
-    			document.getElementsByName('hideCK')[0].value = null;
-    		}
     	}
+    }).done(function(data) {
+        if (data.result == 'success') {
+			alert(i18nconvert('register_auth_success'));
+			clearTimeout(timer);
+			document.getElementsByName('CEA')[0].readOnly = true;
+			document.getElementById('err-msg2').innerHTML = i18nconvert('register_auth_success');
+			document.getElementsByName('hideCK')[0].value = 'true';
+			document.getElementById('findBtn').classList.remove('d-none');
+		}
+		else {
+			alert(i18nconvert('register_auth_fail'));
+			document.getElementsByName('CEA')[0].value = null;
+			document.getElementsByName('hideCK')[0].value = null;
+		}
     });
 }
 
@@ -115,12 +125,15 @@ function tempPw(companyNumber, email) {
         data: {
             CNU: CNU,
             EA: EA
-        },
-        success: function(result) {
-            if (result.status == 'success') {
-                alert(i18nconvert('login_findpw')+"\n"+i18nconvert('login_again')+"\n"+i18nconvert('login_findpw2'));
-                location = '/login';
-            }
+        }
+    }).done(function(data) {
+        if (data.result == 'success') {
+            alert(i18nconvert('login_findpw')+"\n"+i18nconvert('login_again')+"\n"+i18nconvert('login_findpw2'));
+            location = '/login';
+        }
+        else {
+            alert(i18nconvert('find_pw_fail'));
+            location.reload();
         }
     });
     event.preventDefault();

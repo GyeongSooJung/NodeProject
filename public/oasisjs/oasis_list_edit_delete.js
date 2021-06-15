@@ -1,6 +1,6 @@
 	//----------------------------------------리스트 수정 기능 ----------------------------------//
 	
-	// 차량
+	// 차량 - 수정 나타내기
 	function car_editone(obj) {
 		var type = $(obj).data().type;
 		$('.tr-edit').empty();
@@ -20,37 +20,34 @@
 				}).done(function(data) {
 					if(data.result == 'success') {
 						var carone = data.carone[0];
-						var insertTr  = ""
+						var insertTr  = "";
 						$(obj).text(i18nconvert("modify"));
 						$(obj).removeData().type;
 						$(obj).data('type', 'hide');
-						insertTr += "<tr class='tr-edit'>"
-						insertTr += "<td colspan='6'>"
-					    insertTr += 	"<div class='panel-body'>"
-						insertTr +=	"	<form id='car-edit-form' action='' method='post' data-parsley-validate='true'>"
-						insertTr +=	"		<div class='form-group row m-b-15'>"
-						insertTr +=	"			<label class='col-md-4 col-sm-4 col-form-label' for='CN'>"+i18nconvert("CN")+" <span class='text-danger'>*</span> :</label>"
-						insertTr +=	"			<div class='col-md-8 col-sm-8'>"
-						insertTr +=	"				<input class='form-control' id='CN' type='text' name = 'CN'  placeholder='"+i18nconvert("CN")+"' data-parsley-required='true' />"
-						insertTr +=	"			</div>"
-						insertTr +=	"		</div>"
-						insertTr +=	"		<div class='form-group row m-b-15'>"
-						insertTr +=	"			<label class='col-md-4 col-sm-4 col-form-label' for='CN'>"+i18nconvert("CPN")+" :</label>"
-						insertTr +=	"			<div class='col-md-8 col-sm-8'>"
-						insertTr +=	"				<input class='form-control' id='CPN' type='text' name = 'CPN'  placeholder='"+i18nconvert("CPN")+"' />"
-						insertTr +=	"				<input class='form-control' id='car_id' type='hidden' name = 'car_id' value='"+carone._id+"'/>"
-						insertTr +=	"			</div>"
-						insertTr +=	"		</div>"
-						insertTr +=	"		<div class='form-group row m-b-0'>"
-						insertTr +=	"			<label class='col-md-4 col-sm-4 col-form-label'>&nbsp;</label>"
-						insertTr +=	"			<div class='col-md-8 col-sm-8'>"
-						insertTr +=	"				<a href='javascript:;' onclick='carEdit(pagingObject);' class='btn btn-primary width-80'>"+i18nconvert("modify")+"</a>"
-						insertTr +=	"				<button type='reset' class='btn btn-primary width-80'>"+i18nconvert("reset")+"</button>"
-						insertTr +=	"			</div>"
-						insertTr +=	"		</div>"
-						insertTr +=	"	</form>"
-						insertTr +=	"</div>"
-						insertTr += "</td></tr>"
+						insertTr += "<tr class='tr-edit'>";
+						insertTr += "<td colspan='6'>";
+					    insertTr += "<div class='panel-body'>";
+						insertTr +=	"<form id='car-edit-form' action='' method='post' data-parsley-validate='true'>";
+						insertTr +=	"<div class='form-group row m-b-15'>";
+						insertTr +=	"<label class='col-md-4 col-sm-4 col-form-label' for='CN'>"+i18nconvert("CN")+" <span class='text-danger'>*</span> :</label>";
+						insertTr +=	"<div class='col-md-8 col-sm-8'>";
+						insertTr +=	"<input class='form-control' id='CN' type='text' name = 'CN'  placeholder='"+i18nconvert("CN")+"' data-parsley-required='true' />";
+						insertTr +=	"</div>";
+						insertTr +=	"</div>";
+						insertTr +=	"<div class='form-group row m-b-15'>";
+						insertTr +=	"<label class='col-md-4 col-sm-4 col-form-label' for='CN'>"+i18nconvert("CPN")+" :</label>";
+						insertTr +=	"<div class='col-md-8 col-sm-8'>";
+						insertTr +=	"<input class='form-control' id='CPN' type='text' name = 'CPN'  placeholder='"+i18nconvert("CPN")+"' />";
+						insertTr +=	"<input class='form-control' id='car_id' type='hidden' name = 'car_id' value='"+carone._id+"'/>";
+						insertTr +=	"</div>";
+						insertTr +=	"</div>";
+						insertTr +=	"<div class='d-flex justify-content-center align-items-center'>";
+						insertTr +=	"<a href='javascript:;' onclick='carEdit(pagingObject);' class='btn btn-primary width-80 mx-2'>"+i18nconvert("modify")+"</a>";
+						insertTr +=	"<button type='reset' class='btn btn-primary width-80 mx-2'>"+i18nconvert("reset")+"</button>";
+						insertTr +=	"</div>";
+						insertTr +=	"</form>";
+						insertTr +=	"</div>";
+						insertTr += "</td></tr>";
 						$(obj).parents('tr').after(insertTr);
 					}
 					else {
@@ -70,6 +67,7 @@
 		}
 	}
 	
+	// 차량 - 데이터 수정
 	function carEdit(Object) {
 		$.ajax({
 			type: 'POST',
@@ -106,7 +104,7 @@
 		
 	}
 	
-	// 장비
+	// 장비 - 수정 나타내기
 	function device_editone(obj) {
 		var type = $(obj).data().type;
 		$('.tr-edit').empty();
@@ -122,48 +120,44 @@
 					dataType: 'json',
 					data: {
 						device_id: device_id
-					},
-					success: function(result) {
-						if(result.status == 'success') {
-							var deviceone = result.deviceone[0];
-							var insertTr  = ""
-							$(obj).text(i18nconvert("modify"));
-							$(obj).removeData().type;
-							$(obj).data('type', 'hide');
-							insertTr += "<tr class='tr-edit'>"
-							insertTr += "<td colspan='9'>"
-							
-							insertTr += "<div class='panel-body'>"
-						    insertTr += "   <form id='device-edit-form' action='' method='post' class='form-horizontal' data-parsley-validate='true' name='device-form' onsubmit='deviceEdit();'>"
-						    insertTr += "      <div class='form-group row m-b-15'>"
-						    insertTr += "         <label class='col-md-4 col-sm-4 col-form-label' for='VER'>"+i18nconvert("VER")+" <span class='text-danger'>*</span> :</label>"
-						    insertTr += "         <div class='col-md-8 col-sm-8'>"
-						    insertTr += "            <input class='form-control' id='VER' type='text' name = 'VER' placeholder='"+i18nconvert("device_edit_version_enter")+"' data-parsley-required='true' data-parsley-error-message='{{__('required_detail')}}' />"
-						    insertTr += "         </div>"
-						    insertTr += "      </div>"
-						    insertTr += "      <div class='form-group row m-b-15'>"
-						    insertTr += "         <label class='col-md-4 col-sm-4 col-form-label' for='NN'>"+i18nconvert("NN")+" :</label></label>"
-						    insertTr += "         <div class='col-md-8 col-sm-8'>"
-						    insertTr += "            <input class='form-control' id='NN' type='text' name = 'NN'  placeholder='"+i18nconvert("device_edit_nick_enter")+"'/>"
-						    insertTr += "            <input class='form-control' id='device_id' type='hidden' name = 'device_id' value='"+deviceone._id+"'/>"
-						    insertTr += "         </div>"
-						    insertTr += "      </div>"
-						    insertTr += "      <div class='form-group row m-b-0'>"
-						    insertTr += "         <label class='col-md-4 col-sm-4 col-form-label'>&nbsp;</label>"
-						    insertTr += "         <div class='col-md-8 col-sm-8'>"
-						    insertTr += "            	<a href='javascript:;' onclick='deviceEdit(pagingObject);' class='btn btn-primary width-80'>"+i18nconvert("modify")+"</a>"
-						    insertTr += "            <button type='reset' class='btn btn-primary width-80'>"+i18nconvert("reset")+"</button>"
-						    insertTr += "         </div>"
-						    insertTr += "      </div>"
-						    insertTr += "   </form>"
-						    insertTr += "</div>"
-							insertTr += "</td></tr>"
-							$(obj).parents('tr').after(insertTr);
-						}
-						else {
-							alert(i18nconvert("modify_failed"));
-						}
-					 }
+					}
+				}).done(function(data) {
+					if(data.result == 'success') {
+						var deviceone = data.deviceone[0];
+						var insertTr  = "";
+						$(obj).text(i18nconvert("modify"));
+						$(obj).removeData().type;
+						$(obj).data('type', 'hide');
+						insertTr += "<tr class='tr-edit'>";
+						insertTr += "<td colspan='9'>";
+						
+						insertTr += "<div class='panel-body'>";
+					    insertTr += "<form id='device-edit-form' action='' method='post' class='form-horizontal' data-parsley-validate='true' name='device-form' onsubmit='deviceEdit();'>";
+					    insertTr += "<div class='form-group row m-b-15'>";
+					    insertTr += "<label class='col-md-4 col-sm-4 col-form-label' for='VER'>"+i18nconvert("VER")+" <span class='text-danger'>*</span> :</label>";
+					    insertTr += "<div class='col-md-8 col-sm-8'>";
+					    insertTr += "<input class='form-control' id='VER' type='text' name = 'VER' placeholder='"+i18nconvert("device_edit_version_enter")+"' data-parsley-required='true' data-parsley-error-message='{{__('required_detail')}}' />";
+					    insertTr += "</div>";
+					    insertTr += "</div>";
+					    insertTr += "<div class='form-group row m-b-15'>";
+					    insertTr += "<label class='col-md-4 col-sm-4 col-form-label' for='NN'>"+i18nconvert("NN")+" :</label></label>";
+					    insertTr += "<div class='col-md-8 col-sm-8'>";
+					    insertTr += "<input class='form-control' id='NN' type='text' name = 'NN'  placeholder='"+i18nconvert("device_edit_nick_enter")+"'/>";
+					    insertTr += "<input class='form-control' id='device_id' type='hidden' name = 'device_id' value='"+deviceone._id+"'/>";
+					    insertTr += "</div>";
+					    insertTr += "</div>";
+					    insertTr += "<div class='d-flex justify-content-center align-items-center'>";
+					    insertTr += "<a href='javascript:;' onclick='deviceEdit(pagingObject);' class='btn btn-primary width-80 mx-2'>"+i18nconvert("modify")+"</a>";
+					    insertTr += "<button type='reset' class='btn btn-primary width-80 mx-2'>"+i18nconvert("reset")+"</button>";
+					    insertTr += "</div>";
+					    insertTr += "</form>";
+					    insertTr += "</div>";
+						insertTr += "</td></tr>";
+						$(obj).parents('tr').after(insertTr);
+					}
+					else {
+						alert(i18nconvert("modify_failed"));
+					}
 				});
 			}
 			else {
@@ -178,6 +172,7 @@
 		}
 	}
 	
+	// 장비 - 데이터 수정
 	function deviceEdit(Object) {
 		
 		$.ajax({
@@ -189,18 +184,17 @@
 				NN : $('#device-edit-form [name="NN"]').val(),
 				CID : Object.CID,
 				device_id : $('#device-edit-form [name="device_id"]').val()
-			},
-			success: function(result) {
-				if(result.status == 'success') {
-					$('.tr-edit').remove();
-					pagereload(Object);
-					alert(i18nconvert("device_modify_success"));
-					
-				}
-				else {
-					alert(i18nconvert("modify_failed"));
-				}
-			 }
+			}
+		}).done(function(data) {
+			if(data.result == 'success') {
+				$('.tr-edit').remove();
+				pagereload(Object);
+				alert(i18nconvert("device_modify_success"));
+				
+			}
+			else {
+				alert(i18nconvert("modify_failed"));
+			}
 		});
 		
 	}
@@ -217,21 +211,20 @@
 	    	answer = confirm(i18nconvert('deleteconfirm'));
 		if(answer == true){
 			$.ajax({
-    		url: url,
-                    type: "POST",
-                    dataType: 'json',
-                    data: {
-                    	select : $(obj).attr('name'),
-                    }
+	    		url: url,
+	            type: "POST",
+	            dataType: 'json',
+	            data: {
+	            	select : $(obj).attr('name'),
+	            }
 	    	}).done(function (data) {  
-	    		if(data.result == 'success') {
-	    			alert(i18nconvert('deletesuccess'));
-	    			location.reload();
-	    		}
-	    		else {
-	    			alert(i18nconvert('choiceerror'));
-	    		}
-	    		
+				if(data.result == 'success') {
+					alert(i18nconvert('deletesuccess'));
+					location.reload();
+				}
+				else {
+					alert(i18nconvert('choiceerror'));
+				}
 	    	});
 		}
 		else {
@@ -251,27 +244,24 @@
 	                select_obj[index] = $(this).val() ;
 	        });
 			var answer;
-		    	answer = confirm(i18nconvert('deleteconfirm'));
+	    		answer = confirm(i18nconvert('deleteconfirm'));
 			if(answer == true){
 				$.ajax({
-	    		url: url,
-	                    type: "POST",
-	                    dataType: 'json',
-	                    data: {
-	                    	select : select_obj,
-	                    }
+		    		url: url,
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                    	select : select_obj,
+                    }
 		    	}).done(function (data) {  
-		    		if(data.result == 'success') {
-		    			alert(i18nconvert('deletesuccess'));
-		    			location.reload();
-		    		}
-		    		else {
-		    			alert(i18nconvert('choiceerror'));
-		    		}
-		    		
-		    	})
-	    	
-	    	
+					if(data.result == 'success') {
+						alert(i18nconvert('deletesuccess'));
+						location.reload();
+					}
+					else {
+						alert(i18nconvert('choiceerror'));
+					}
+		    	});
 			}
 			else {
 				$("input:checkbox[name='allck']").prop("checked", false);

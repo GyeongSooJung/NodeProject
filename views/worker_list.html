@@ -75,20 +75,14 @@
 					</div>
 					
 					<div class="overflow-auto">
-					    <form action="/worker/worker_update" method="post">
+					    <form method="post">
 					        <table id="data-table-combine" class="table table-striped table-bordered table-hover table-td-valign-middle text-center">
-	        					<thead id = "memDiv1">
-	        					</thead>
-	        					<tbody id ="memDiv2">
-									
-	        					</tbody>
+	        					<thead id="memDiv1"></thead>
+	        					<tbody id="memDiv2"></tbody>
 	        				</table>
-							<div class="justify-content-between align-item-center">
-								<center>
-										<div id="pagebox" class=" justify-content-around align-item-center">
-											
-										</div>
-								</center>
+	        				<div class="d-flex justify-content-between align-item-center">
+								<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="delete_check('/worker/ajax/worker_delete');">
+								<div id="pagebox" class=" justify-content-around align-item-center"></div>
 							</div>
 					    </form>
 				    </div>
