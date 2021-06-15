@@ -1,15 +1,15 @@
+//Express
 const express = require('express');
 const router = express.Router();
-//schema
+//Module
+const moment = require('moment');
+//Schemas
 const Company = require('../schemas/company');
 const Device = require('../schemas/device');
-const Car = require('../schemas/car');
-const Worker = require('../schemas/worker');
 const History = require('../schemas/history');
 const Publish = require('../schemas/publish');
-const moment = require('moment');
-//Router or MiddleWare
 
+// -- Start Code -- //
 
 //Mobile QR Code Page
   //publish_main
@@ -17,54 +17,51 @@ router.get('/', async (req, res, next) => {
   const CN = req.query.cn;
   const HID = req.query.hid;
   const cat = req.query.cat;
-  // const cid = req.query.cid;
   const timenow = moment().format('YYYY-MM-DD HH:mm');
   const kakao = process.env.KAKAO;
   
-    try {
-      if(HID){
-        const historyone = await History.findOne({"_id" : HID});
-        if(historyone) {
-          await Publish.update({"PUC" : cat}, {$inc : {"PUN" : 1}}, {upsert: true});
-          
-          const companyone = await Company.findOne({"_id" : historyone.CID});
-          const deviceone = await Device.findOne({"_id" : historyone.DID});
-          const history_array = await historyone.PD;
-          
-          const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
-          const term = await moment(timenow).diff(et, 'hours');
-          
-          res.render('publish', {companyone, deviceone, historyone, history_array, term, kakao});
-        }
-        else {
-          res.redirect('/inflow?cat='+cat+'&nodata=true');
-        }
+  try {
+    if(HID){
+      const historyone = await History.findOne({"_id" : HID});
+      if(historyone) {
+        await Publish.update({"PUC" : cat}, {$inc : {"PUN" : 1}}, {upsert: true});
+        
+        const companyone = await Company.findOne({"_id" : historyone.CID});
+        const deviceone = await Device.findOne({"_id" : historyone.DID});
+        const history_array = await historyone.PD;
+        
+        const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
+        const term = await moment(timenow).diff(et, 'hours');
+        
+        res.render('publish', {companyone, deviceone, historyone, history_array, term, kakao});
       }
       else {
-        const historyone = await History.findOne({"CNM" : CN}).sort({"ET" : -1}).limit(1);
-      
-        if(historyone) { //historyone.RC == 1
-          await Publish.update({"PUC" : cat}, {$inc : {"PUN" : 1}}, {upsert: true});
-          
-          const companyone = await Company.findOne({"_id" : historyone.CID});
-          const deviceone = await Device.findOne({"_id" : historyone.DID});
-          console.log("히스2"+historyone);
-          console.log("디바2"+deviceone);
-          const history_array = await historyone.PD;
-          
-          const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
-          const term = await moment(timenow).diff(et, 'hours');
-          
-          res.render('publish', {companyone, deviceone, historyone, history_array, term, kakao, cat});
-        }
-        else {
-          res.redirect('/inflow?cat='+cat+'&nodata=true');
-        }
+        res.redirect('/inflow?cat='+cat+'&nodata=true');
       }
-    } catch(err) {
-        console.error(err);
-        next(err);
     }
+    else {
+      const historyone = await History.findOne({"CNM" : CN}).sort({"ET" : -1}).limit(1);
+    
+      if(historyone) { //historyone.RC == 1
+        await Publish.update({"PUC" : cat}, {$inc : {"PUN" : 1}}, {upsert: true});
+        
+        const companyone = await Company.findOne({"_id" : historyone.CID});
+        const deviceone = await Device.findOne({"_id" : historyone.DID});
+        const history_array = await historyone.PD;
+        
+        const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
+        const term = await moment(timenow).diff(et, 'hours');
+        
+        res.render('publish', {companyone, deviceone, historyone, history_array, term, kakao, cat});
+      }
+      else {
+        res.redirect('/inflow?cat='+cat+'&nodata=true');
+      }
+    }
+  } catch(err) {
+      console.error(err);
+      next(err);
+  }
 });
 
   //publish_detail

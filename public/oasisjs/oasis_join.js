@@ -19,6 +19,9 @@ function ajaxJoin(url, i18nconvert, data) {
 			else if(data.result == 'type') {
 				alert(i18nconvert('device_mac_wrong'));
 			}
+			else {
+				alert(i18nconvert('device_register_fail'));
+			}
         }
 		else if(data.type == 'car') {
 			if(data.result == 'success') {
@@ -39,6 +42,9 @@ function ajaxJoin(url, i18nconvert, data) {
 			}
 			else if(data.result == 'excelLength') {
 				alert(i18nconvert('car_excellength_error'));
+			}
+			else {
+				alert(i18nconvert('car_register_fail'));
 			}
 		}
     });

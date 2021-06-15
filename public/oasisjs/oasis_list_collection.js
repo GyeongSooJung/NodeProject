@@ -421,7 +421,7 @@
 							insertTr += "unchecked/>";
 						insertTr += "</td>";
 						insertTr += "<td>";
-						insertTr += "<input type='button' value='"+i18nconvert("delete")+"' onclick=delete_one(this,'/worker/worker_delete') class='btn btn-sm btn-white width-60' name ='"+ Object.array[i].EM +"'></td> ";
+						insertTr += "<input type='button' value='"+i18nconvert("delete")+"' onclick=delete_one(this,'/worker/ajax/worker_deleteone') class='btn btn-sm btn-white width-60' name ='"+ Object.array[i].EM +"'></td> ";
 						insertTr += "</td>";
 						insertTr += "</tr>";
 						num -= indexcount;
@@ -699,7 +699,7 @@
 					  insertTr += moment(Object.array[i].CA).format('YYYY-MM-DD');
 					}
 					insertTr += "</td><td>"+ Object.array[i].GN+"</td>";
-					insertTr += "<td>"+ Math.floor(Object.array[i].AM * 1.1)+"</td>";
+					insertTr += "<td>"+ Math.floor(Object.array[i].AM)+"</td>";
 					insertTr += "<td class='with-btn' nowrap>";
 					insertTr += "<a href='javascript:;' onclick='showDetail(this);' class='btn btn-sm btn-white width-60 m-r-2 edit-btn detail-btn' data-type='show' name='"+ Object.array[i].MID +"'>"+i18nconvert("main_indetail")+"</a>"
 					insertTr += "<a href='javascript:;' onclick='receiptPay(this);' class='btn btn-sm btn-primary width-60 m-r-2 edit-btn' name='"+ Object.array[i].IID +"' >"+i18nconvert("payment_receit")+"</a>";

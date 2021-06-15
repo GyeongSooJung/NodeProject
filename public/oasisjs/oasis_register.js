@@ -1,3 +1,51 @@
+//   // 사업자 정보 불러오기(현재 사용불가능, 사용가능시 checkCNU, if문 안에 삽입)
+// var answer = confirm(i18nconvert('register_business_right')+i18nconvert('register_business_info'));
+
+// if (answer == true) {
+// 	$.ajax({
+// 		type: 'POST',
+// 		url: '/company/infoCNU',
+// 		dataType: 'json',
+// 		data: {
+// 			CNU : CNU
+// 		},
+// 		success: function(result) {
+// 			if (result.searchResult == ",,,") {
+// 				alert("{{__('register_business_null')}}");
+// 			}
+// 			else {
+// 				document.getElementsByName("CNA")[0].value = result.searchResult[0];
+// 				document.getElementsByName("NA")[0].value = result.searchResult[3];
+				
+// 				if (result.searchResult[2].substr(0,3) == '010' || result.searchResult[2].substr(0,3) == '011') {
+// 					document.getElementsByName("MN")[0].value = result.searchResult[2];
+// 					document.getElementsByName("PN")[0].value = null;
+// 				}
+// 				else {
+// 					document.getElementsByName("MN")[0].value = null;
+// 					document.getElementsByName("PN")[0].value = result.searchResult[2];
+// 				}
+				
+// 				if (result.searchResult[1].indexOf(',') == '-1' ) {
+// 					document.getElementsByName("addr1")[0].value = result.searchResult[1];
+// 					document.getElementsByName("addr2")[0].value = null;
+// 				}
+// 				else {
+// 					var addr = result.searchResult[1];
+// 					var splitAddr = addr.split(',');
+// 					document.getElementsByName("addr1")[0].value = splitAddr[0];
+					
+// 					var splitDetailAddr = addr.substring(splitAddr[0].length+2, addr.length);
+// 					document.getElementsByName("addr2")[0].value = splitDetailAddr;
+// 				}
+// 			}
+// 		}
+// 	});
+// }
+// else {
+// 	return false;
+// }
+
 // 사업자 번호 조회 및 정보 가져오기 기능
 function checkCNU(companyNumber) {
 	var CNU = document.getElementsByName(companyNumber)[0].value;
@@ -7,66 +55,23 @@ function checkCNU(companyNumber) {
 		dataType: 'json',
 		data: {
 			CNU : CNU
-		},
-		success: function(result) {
-			if(result.CRNumber) {
-			    alert(i18nconvert('register_business_right'));
-				// var answer = confirm(i18nconvert('register_business_right')+i18nconvert('register_business_info'));
-				
-				// if (answer == true) {
-				// 	$.ajax({
-				// 		type: 'POST',
-				// 		url: '/company/infoCNU',
-				// 		dataType: 'json',
-				// 		data: {
-				// 			CNU : CNU
-				// 		},
-				// 		success: function(result) {
-				// 			if (result.searchResult == ",,,") {
-				// 				alert("{{__('register_business_null')}}");
-				// 			}
-				// 			else {
-				// 				document.getElementsByName("CNA")[0].value = result.searchResult[0];
-				// 				document.getElementsByName("NA")[0].value = result.searchResult[3];
-								
-				// 				if (result.searchResult[2].substr(0,3) == '010' || result.searchResult[2].substr(0,3) == '011') {
-				// 					document.getElementsByName("MN")[0].value = result.searchResult[2];
-				// 					document.getElementsByName("PN")[0].value = null;
-				// 				}
-				// 				else {
-				// 					document.getElementsByName("MN")[0].value = null;
-				// 					document.getElementsByName("PN")[0].value = result.searchResult[2];
-				// 				}
-								
-				// 				if (result.searchResult[1].indexOf(',') == '-1' ) {
-				// 					document.getElementsByName("addr1")[0].value = result.searchResult[1];
-				// 					document.getElementsByName("addr2")[0].value = null;
-				// 				}
-				// 				else {
-				// 					var addr = result.searchResult[1];
-				// 					var splitAddr = addr.split(',');
-				// 					document.getElementsByName("addr1")[0].value = splitAddr[0];
-									
-				// 					var splitDetailAddr = addr.substring(splitAddr[0].length+2, addr.length);
-				// 					document.getElementsByName("addr2")[0].value = splitDetailAddr;
-				// 				}
-				// 			}
-				// 		}
-				// 	});
-				// }
-				// else {
-				// 	return false;
-				// }
-			}
-			else {
-				alert(i18nconvert('register_business_noexist'));
-				document.getElementsByName("CNA").value = null;
-				document.getElementsByName("NA").value = null;
-				document.getElementsByName("MN").value = null;
-				document.getElementsByName("PN").value = null;
-				document.getElementsByName("addr1").value = null;
-				document.getElementsByName("addr2").value = null;
-			}
+		}
+	}).done(function(data) {
+		if(data.CRNumber) {
+		    alert(i18nconvert('register_business_right'));
+		    document.getElementsByName('hideCNU')[0].value = 'true';
+		    document.getElementById('err-msg-cnu').innerHTML = i18nconvert('register_company_cer_success');
+		}
+		else {
+			alert(i18nconvert('register_business_noexist'));
+			document.getElementsByName("CNA").value = null;
+			document.getElementsByName("NA").value = null;
+			document.getElementsByName("MN").value = null;
+			document.getElementsByName("PN").value = null;
+			document.getElementsByName("addr1").value = null;
+			document.getElementsByName("addr2").value = null;
+			document.getElementsByName('hideCNU')[0].value = null;
+			document.getElementById('err-msg-cnu').innerHTML = i18nconvert('register_company_need_cer');
 		}
 	});
 }
@@ -89,6 +94,7 @@ function stopWatch(TimeSet) {
 			document.getElementsByName('EA')[0].readOnly = false;
 			document.getElementsByName('CEA')[0].readOnly = false;
 			document.getElementsByName('hideCK')[0].value = null;
+			document.getElementsByName('hideCNU')[0].value = null;
 			document.getElementById('CEA').classList.add('d-none');
 			document.getElementById('cerBtn').classList.add('d-none');
 			document.getElementById('sendBtn').classList.remove('d-none');
@@ -105,21 +111,23 @@ function emailSendAjax(email) {
 		dataType: 'json',
 		data: {
 			EA: email
-		},
-		success: function(result) {
-			if (result.status == 'exist') {
-				alert(i18nconvert('register_already_msg'));
-			}
-			else if (result.status == 'send') {
-				alert(i18nconvert('register_auth_com_msg'));
-				document.getElementsByName('EA')[0].readOnly = true;
-				document.getElementById('CEA').classList.remove('d-none');
-				document.getElementById('cerBtn').classList.remove('d-none');
-				document.getElementById('sendBtn').classList.add('d-none');
-				
+		}
+	}).done(function(data) {
+		if (data.result == 'exist') {
+			alert(i18nconvert('register_already_msg'));
+		}
+		else if (data.result == 'send') {
+			alert(i18nconvert('register_auth_com_msg'));
+			document.getElementsByName('EA')[0].readOnly = true;
+			document.getElementById('CEA').classList.remove('d-none');
+			document.getElementById('cerBtn').classList.remove('d-none');
+			document.getElementById('sendBtn').classList.add('d-none');
+			
 			clearTimeout(timer);
 			stopWatch(300);
-			}
+		}
+		else {
+			alert(i18nconvert('register_email_send_fail'));
 		}
 	});
 }
@@ -132,20 +140,19 @@ function emailCerAjax(cerNum) {
 		dataType: 'json',
 		data: {
 			CEA: cerNum
-		},
-		success: function(result) {
-			if (result.status == 'success') {
-				alert(i18nconvert('register_auth_success'));
-				clearTimeout(timer);
-				document.getElementsByName('CEA')[0].readOnly = true;
-				document.getElementById('err-msg2').innerHTML = i18nconvert('register_auth_success');
-				document.getElementsByName('hideCK')[0].value = 'true';
-			}
-			else if (result.status == 'fail') {
-				alert(i18nconvert('register_auth_fail'));
-				document.getElementsByName('CEA')[0].value = null;
-				document.getElementsByName('hideCK')[0].value = null;
-			}
+		}
+	}).done(function(data) {
+		if (data.result == 'success') {
+			alert(i18nconvert('register_auth_success'));
+			clearTimeout(timer);
+			document.getElementsByName('CEA')[0].readOnly = true;
+			document.getElementById('err-msg2').innerHTML = i18nconvert('register_auth_success');
+			document.getElementsByName('hideCK')[0].value = 'true';
+		}
+		else {
+			alert(i18nconvert('register_auth_fail'));
+			document.getElementsByName('CEA')[0].value = null;
+			document.getElementsByName('hideCK')[0].value = null;
 		}
 	});
 }
@@ -154,6 +161,9 @@ function emailCerAjax(cerNum) {
 function checkForm() {
 	if(document.getElementsByName('hideCK')[0].value != 'true') {
 		document.getElementById('err-msg2').innerHTML = i18nconvert('register_auth_need');
+	}
+	else if(document.getElementsByName('hideCNU')[0].value != 'true') {
+		document.getElementById('err-msg-cnu').innerHTML = i18nconvert('register_company_need_cer');
 	}
 	else {
 	    $.ajax({
@@ -172,25 +182,24 @@ function checkForm() {
 		        PW: document.getElementsByName('PW')[0].value,
 		        EA: document.getElementsByName('EA')[0].value,
 		        CEA: document.getElementsByName('CEA')[0].value,
-		    },
-		    success: function(result) {
-		        if(result.status == 'success') {
-		            alert(i18nconvert('register_success'));
-		            location = '/';
-		        }
-		        else if(result.status == 'cerFail') {
-		            alert(i18nconvert('register_mn_error'));
-		        }
-		        else if(result.status == 'existEA') {
-		            alert(i18nconvert('register_email_error'));
-		        }
-		        else if(result.status == 'existCNU') {
-		            alert(i18nconvert('register_cnu_error'));
-		        }
-		        else if(result.status == 'fail') {
-		            alert(i18nconvert('register_fail'));
-		        }
 		    }
+		}).done(function(data) {
+			if(data.result == 'success') {
+	            alert(i18nconvert('register_success'));
+	            location = '/';
+	        }
+	        else if(data.result == 'cerFail') {
+	            alert(i18nconvert('register_mn_error'));
+	        }
+	        else if(data.result == 'existEA') {
+	            alert(i18nconvert('register_email_error'));
+	        }
+	        else if(data.result == 'existCNU') {
+	            alert(i18nconvert('register_cnu_error'));
+	        }
+	        else {
+	            alert(i18nconvert('register_fail'));
+	        }
 		});
 	}
 	event.preventDefault();

@@ -1,21 +1,20 @@
 //Express
 const express = require('express');
 const router = express.Router();
-
 //Module
 var moment = require('moment');
 const multiparty = require('multiparty');
 const xlsx = require('xlsx');
 const path = require('path');
 const Mongoose = require('mongoose');
-
 //Schemas
 const Car = require('../schemas/car');
 const Cardelete = require('../schemas/car_delete');
 const Company = require('../schemas/company');
-
 //Middleware
 const { isNotLoggedIn } = require('./middleware');
+
+// -- Start Code -- //
 
 //자동차 등록
   // 수기 입력(하나씩) 차량 등록
@@ -59,9 +58,9 @@ router.post('/car_join', isNotLoggedIn, async (req, res, next) => {
       return res.send({ result : 'length', type : 'car' });
     }
   } catch(err) {
+    res.send({ result : "fail" });
     console.error(err);
     next(err);
-    return res.send({ result : 'fail'});
   }
 });
 
@@ -128,6 +127,7 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
     return res.send({ result : 'success', type : 'car' });
     
   } catch(err) {
+    res.send({ result : "fail" });
     console.error(err);
     next(err);
   }
@@ -179,6 +179,7 @@ router.post('/car_json_excel', isNotLoggedIn, async (req, res, next) => {
     form.parse(req);
     
   } catch(err) {
+    res.send({ result : "fail" });
     console.error(err);
     next(err);
   }
@@ -194,7 +195,7 @@ router.post('/ajax/car_list_edit1', isNotLoggedIn, async(req, res, next) => {
   res.send({ result : "success", carone : carone });
 });
 
-// 수정 - 실데이터 수정
+// 수정 - 데이터 수정
 router.post('/ajax/car_list_edit2', isNotLoggedIn, async(req, res, next) => {
   const { CN, CPN, CID, car_id } = req.body;
   
@@ -241,8 +242,9 @@ router.post('/ajax/car_list_edit2', isNotLoggedIn, async(req, res, next) => {
       return res.send({ result : 'length' });
     }
   }catch(err) {
-    console.error(err);
     res.send({ result : "fail" });
+    console.error(err);
+    next(err);
   }
 });
 
@@ -304,7 +306,7 @@ router.post('/ajax/car_delete', isNotLoggedIn ,async (req, res, next) => {
              }
           }
           
-          await Company.where({"CNU" : CNU})
+          await Company.where({ "CNU" : CNU })
             .update({ "CUA" : CUA }).setOptions({runValidators : true})
             .exec();
             

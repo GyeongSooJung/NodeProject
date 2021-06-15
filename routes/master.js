@@ -1,5 +1,9 @@
+//Express
 const express = require('express');
-const session = require('express-session');
+const router = express.Router();
+//Module
+var moment = require('moment');
+//Schemas
 const Company = require('../schemas/company');
 const Device = require('../schemas/device');
 const Devicedelete = require('../schemas/device_delete');
@@ -8,14 +12,15 @@ const Cardelete = require('../schemas/car_delete');
 const Worker = require('../schemas/worker');
 const Workerdelete = require('../schemas/worker_delete');
 const History = require('../schemas/history');
-var moment = require('moment');
+//Middleware
 const { isNotLoggedIn } = require('./middleware');
-const router = express.Router();
+
+// -- Start Code -- //
 
 // 일반 삭제
 router.post('/ajax/delete_one', isNotLoggedIn, async (req, res, next) => {
     const { division, select, CID } = req.body;
-    console.log(division+"/"+select+"/"+CID);
+    
     try {
         if(division == "device") {
             const deviceone = await Device.findOne({ "CID" : CID, "MAC" : select });
@@ -27,7 +32,7 @@ router.post('/ajax/delete_one', isNotLoggedIn, async (req, res, next) => {
                 "MAC" : deviceone.MAC
             });
             await Device.remove({ "CID" : CID, "MAC" : select });
-            return res.send({ result: true });
+            return res.send({ result : 'success' });
         }
         else if(division == "car") {
             const carone = await Car.findOne({ "CID" : CID, "CN" : select });
@@ -37,7 +42,7 @@ router.post('/ajax/delete_one', isNotLoggedIn, async (req, res, next) => {
                 "CPN" : carone.CPN,
             });
             await Car.remove({ "CID" : CID, "CN" : select });
-            return res.send({ result: true });
+            return res.send({ result : 'success' });
         }
         else if(division == "worker") {
             const workerone = await Worker.findOne({ "CID" : CID, "EM" : select });
@@ -52,14 +57,14 @@ router.post('/ajax/delete_one', isNotLoggedIn, async (req, res, next) => {
                 "AC" :workerone.AC
             });
             await Worker.remove({ "CID" : CID, "EM" : select });
-            return res.send({ result: true });
+            return res.send({ result : 'success' });
         }
         else if(division == "history") {
             await History.remove({ "CID" : CID, "_id" : select });
-            return res.send({ result: true });
+            return res.send({ result : 'success' });
         }
     } catch (err) {
-        res.send({ result : false });
+        res.send({ result : 'fail' });
         console.error(err);
         next(err);
     }
@@ -74,7 +79,7 @@ router.post('/ajax/delete_check', isNotLoggedIn, async (req, res, next) => {
     const listCNU = listCompany.CNU;
     
     if(!select) {
-        res.send({ result : false });
+        res.send({ result : 'fail' });
     }
     else {
         if(division == 'device') {
@@ -102,7 +107,7 @@ router.post('/ajax/delete_check', isNotLoggedIn, async (req, res, next) => {
                     await Device.remove({ "CID" : CID, "MAC" : select[i] });
                 }
             }
-            return res.send({ result : true });
+            return res.send({ result : 'success' });
         }
         else if(division == 'car') {
             if (typeof(select) == 'string') {
@@ -115,7 +120,7 @@ router.post('/ajax/delete_check', isNotLoggedIn, async (req, res, next) => {
                 await Car.remove({ "CID" : CID, "CN" : select });
             }
             else {
-                for(var i = 0; i < select.length; i++){
+                for(var i = 0; i < select.length; i++) {
                     var carone = await Car.findOne({ "CID" : CID, "CN" : select[i] });  
                     await Cardelete.create({
                         "CID" : carone.CID,
@@ -128,7 +133,7 @@ router.post('/ajax/delete_check', isNotLoggedIn, async (req, res, next) => {
             await Company.where({"CNU" : listCNU})
                 .update({ "CUA" : CUA }).setOptions({runValidators : true})
                 .exec();
-            return res.send({ result : true });
+            return res.send({ result : 'success' });
         }
         else if(division == 'worker') {
             if(typeof(select) == 'string') {
@@ -161,18 +166,18 @@ router.post('/ajax/delete_check', isNotLoggedIn, async (req, res, next) => {
                     await Worker.remove({ "CID" : CID,  "EM" : select[i] });                
                 }
             }
-            return res.send({ result : true });
+            return res.send({ result : 'success' });
         }
         else if(division == 'history') {
             if(typeof(select) == 'string') {
                 await History.remove({ "CID" : CID,  "_id" : select });
             }
             else {
-                for(var i=0; i < select.length; i++){
+                for(var i=0; i < select.length; i++) {
                     await History.remove({ "CID" : CID,  "_id" : select[i] });
                 }
             }
-            return res.send({ result : true });
+            return res.send({ result : 'success' });
         }
     }
 });
