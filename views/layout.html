@@ -27,6 +27,7 @@
 	<script src="../oasisjs/oasis_list_edit_delete.js"></script>
 	<script src="../oasisjs/oasis_list_search_sort.js"></script>
 	<script src="../oasisjs/oasis_list_pagenation.js"></script>
+	<script src="../oasisjs/oasis_list_excel.js"></script>
 	
 	<!-- begin #page-loader -->
 	<div id="page-loader" class="fade show">
@@ -434,6 +435,18 @@
 	    	else if(string == "car_register_success" ) {
 	    		return "{{__('car_register_success')}}";
 	    	}
+	    	else if(string == "car_excelsize_error" ) {
+	    		return "{{__('car_excelsize_error')}}";
+	    	}
+	    	else if(string == "car_nofile_error" ) {
+	    		return "{{__('car_nofile_error')}}";
+	    	}
+	    	else if(string == "car_excel_error" ) {
+	    		return "{{__('car_excel_error')}}";
+	    	}
+	    	else if(string == "car_excel_fail" ) {
+	    		return "{{__('car_excel_fail')}}";
+	    	}
 	    	else if(string == "car_exceltype_error" ) {
 	    		return "{{__('car_exceltype_error')}}";
 	    	}
@@ -470,14 +483,11 @@
 	    	else if(string == "profile_success") {
 	    		return "{{__('profile_success')}}"
 	    	}
-	    	else if(string == "profile_ex_mn") {
-	    		return "{{__('profile_ex_mn')}}"
-	    	}
-	    	else if(string == "profile_ex_pn") {
-	    		return "{{__('profile_ex_pn')}}"
-	    	}
 	    	else if(string == "profile_pw_error") {
 	    		return "{{__('profile_pw_error')}}"
+	    	}
+	    	else if(string == "profile_fail") {
+	    		return "{{__('profile_fail')}}"
 	    	}
 	    	else if(string == "find_email_error") {
 	    		return "{{__('find_email_error')}}"

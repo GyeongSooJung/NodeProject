@@ -1,16 +1,20 @@
+//Express
 const express = require('express');
-const Car = require('../schemas/car');
-const Cardelete = require('../schemas/car_delete');
+const router = express.Router();
+//Module
 var moment = require('moment');
-const {isNotLoggedIn} = require('./middleware');
 const multiparty = require('multiparty');
-const excelToJson = require('convert-excel-to-json');
 const xlsx = require('xlsx');
 const path = require('path');
-const router = express.Router();
-const Company = require('../schemas/company');
-
 const Mongoose = require('mongoose');
+//Schemas
+const Car = require('../schemas/car');
+const Cardelete = require('../schemas/car_delete');
+const Company = require('../schemas/company');
+//Middleware
+const { isNotLoggedIn } = require('./middleware');
+
+// -- Start Code -- //
 
 //자동차 등록
   // 수기 입력(하나씩) 차량 등록
@@ -19,7 +23,6 @@ router.post('/car_join', isNotLoggedIn, async (req, res, next) => {
   const jsonData = JSON.parse(data);
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
-  // const CA = moment().format('YYYY-MM-DD hh:mm:ss');
   
   try {
     // 차량번호 정규식
@@ -40,22 +43,24 @@ router.post('/car_join', isNotLoggedIn, async (req, res, next) => {
           await Company.where({ "CNU" : CNU })
             .update({ "CUA" : CUA }).setOptions({runValidators : true})
             .exec();
-          return res.send({ status: 'success', type: 'car' });
+            
+          return res.send({ result : 'success', type : 'car' });
         }
         else {
-          return res.send({ status: 'exist', type: 'car' });
+          return res.send({ result : 'exist', type : 'car' });
         }
       }
       else {
-        return res.send({ status: 'type', type: 'car' });
+        return res.send({ result : 'type', type : 'car' });
       }
     }
     else {
-      return res.send({ status: 'length', type: 'car' });
+      return res.send({ result : 'length', type : 'car' });
     }
-  } catch (err) {
+  } catch(err) {
+    res.send({ result : "fail" });
     console.error(err);
-    return next(err);
+    next(err);
   }
 });
 
@@ -72,7 +77,7 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
   try {
     // 차량번호 정규식
     var check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
-          // String으로 넘어온 값들을 배열로 변환하는 함수
+    // String으로 넘어온 값들을 배열로 변환하는 함수
     var changeArr = function strToArr(str) {
       const array = str.split(",");
       return array;
@@ -95,11 +100,11 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
           a += 1;
         }
         else {
-          return res.send({ status: 'excelType', type: 'car' });
+          return res.send({ result : 'excelType', type : 'car' });
         }
       }
       else {
-        return res.send({ status: 'excelLength', type: 'car' });
+        return res.send({ result : 'excelLength', type : 'car' });
       }
     }
     // 엑셀 데이터(차주전화번호) 배열에 담기
@@ -110,7 +115,7 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
     a = 0;
     b = 0;
     
-    // 엑셀 데이터 DB에 upsert방식으로 넣기
+    // 엑셀 데이터 DB에 upsert방식(없으면 insert, 있으면 update)으로 넣기
     for(var h = 0; h < excelCN.length; h++) {
       await Car.update({ "CID" : CID, "CN" : excelCN[h] }, { "CID" : CID, "CN" : excelCN[h], "CPN" : excelCPN[h], "CA" : current }, { upsert : true });
     }
@@ -119,9 +124,10 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
       .update({ "CUA" : CUA }).setOptions({runValidators : true})
       .exec();
     
-    return res.send({ status: 'success', type: 'car' });
+    return res.send({ result : 'success', type : 'car' });
     
   } catch(err) {
+    res.send({ result : "fail" });
     console.error(err);
     next(err);
   }
@@ -133,15 +139,12 @@ router.post('/car_json_excel', isNotLoggedIn, async (req, res, next) => {
   const resData = {};
   try {
     const form = new multiparty.Form({
-        autoFiles: true,
+      autoFiles: true,
     });
     
     form.on('file', async (name, file) => {
-      console.log("패쓰"+file.path);
-      const extname = path.extname(file.path);
-      console.log("확장자명"+extname);
-      const fileName = path.basename(file.path);
-      console.log("파파파"+fileName);
+      const extname = path.extname(file.path); //확장자명
+      const fileName = path.basename(file.path); //파일전체경로
       
       if(extname == '.xlsx') {
         // 엑셀 파일 처리
@@ -151,25 +154,23 @@ router.post('/car_json_excel', isNotLoggedIn, async (req, res, next) => {
         
         // 항목이 100개 이하인 경우
         if (resData.Sheet1.length <= 1000) {
-          
           // 엑셀 데이터를 반복문 통해서 배열에 담기
           const excelData = [];
           for(var j = 0; j < resData.Sheet1.length; j++) {
             excelData[j] = [resData.Sheet1[j].차량번호, resData.Sheet1[j].차주전화번호];
           }
-          console.log("엑셀데이터"+excelData);
           
-          return res.send({ status: 'send', excelData: excelData });
+          return res.send({ result : 'send', excelData : excelData });
         }
         else {
-          return res.send({ status: 'overSize' });
+          return res.send({ result : 'overSize' });
         }
       }
       else if (extname == "") {
-        return res.send({ status: 'sendNull' });
+        return res.send({ result : 'sendNull' });
       }
       else {
-        return res.send({ status: 'sendFail' });
+        return res.send({ result : 'sendFail' });
       }
     });
     
@@ -178,19 +179,23 @@ router.post('/car_json_excel', isNotLoggedIn, async (req, res, next) => {
     form.parse(req);
     
   } catch(err) {
+    res.send({ result : "fail" });
     console.error(err);
     next(err);
   }
 });
 
+// 수정 - 브라우저 나타내기
 router.post('/ajax/car_list_edit1', isNotLoggedIn, async(req, res, next) => {
   const { car_id } = req.body;
   
   var ObjectId = Mongoose.Types.ObjectId;
   const carone = await Car.find({ _id : ObjectId(car_id) });
-  res.send({ status : "success", carone : carone });
+  
+  res.send({ result : "success", carone : carone });
 });
 
+// 수정 - 데이터 수정
 router.post('/ajax/car_list_edit2', isNotLoggedIn, async(req, res, next) => {
   const { CN, CPN, CID, car_id } = req.body;
   
@@ -206,42 +211,46 @@ router.post('/ajax/car_list_edit2', isNotLoggedIn, async(req, res, next) => {
           if(numCheck.test(CPN) == true) {
             const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
             
-            const car = await Car.where({"_id" : car_id})
-                        .updateOne({ "CID" : CID,
-                                  "CN" : CN,
-                                  "CPN" : CPN,
-                        }).setOptions({runValidators : true})
-                        .exec();
-            const company = await Company.where({"_id" : CID})
-                        .updateOne({ "CUA" : CUA }).setOptions({runValidators : true})
-                        .exec();
-            return res.send({ status : "success" });
+            await Car.where({ "_id" : car_id })
+              .updateOne({
+                "CID" : CID,
+                "CN" : CN,
+                "CPN" : CPN,
+              }).setOptions({runValidators : true})
+              .exec();
+            await Company.where({ "_id" : CID })
+              .updateOne({
+                "CUA" : CUA
+              }).setOptions({runValidators : true})
+              .exec();
+              
+            return res.send({ result : "success" });
           }
           else {
-            return res.send({ status : "numErr" });
+            return res.send({ result : "numErr" });
           }
         }
         else {
-          return res.send({ status: 'exist' });
+          return res.send({ result : 'exist' });
         }
       }
       else {
-        return res.send({ status: 'type' });
+        return res.send({ result : 'type' });
       }
     }
     else {
-      return res.send({ status: 'length' });
+      return res.send({ result : 'length' });
     }
-  }catch(e) {
-    console.log(e)
-    res.send({ status : "failed" });
+  }catch(err) {
+    res.send({ result : "fail" });
+    console.error(err);
+    next(err);
   }
 });
 
 //차량 한개 삭제
 router.post('/ajax/car_deleteone', isNotLoggedIn, async (req, res, next) => {
   var select = req.body["select"];
-  console.log(select);
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
@@ -256,9 +265,10 @@ router.post('/ajax/car_deleteone', isNotLoggedIn, async (req, res, next) => {
     await Company.where({"CNU" : CNU})
       .update({ "CUA" : CUA }).setOptions({runValidators : true})
       .exec();
-    res.send({ result : true });
+      
+    res.send({ result : 'success' });
   } catch (err) {
-    res.send({ result : false });
+    res.send({ result : 'fail' });
     console.error(err);
     next(err);
   }
@@ -267,24 +277,21 @@ router.post('/ajax/car_deleteone', isNotLoggedIn, async (req, res, next) => {
 //차량 선택삭제
 router.post('/ajax/car_delete', isNotLoggedIn ,async (req, res, next) => {
     var select = req.body["select[]"];
-    console.log(JSON.stringify(req.body));
-    console.log(select);
     const CID = req.decoded.CID;
     const CNU = req.decoded.CNU;
     const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
     try {
         if(!select) {
-          res.send({ result : false });
+          res.send({ result : 'fail' });
         }
         else {
-          
           if (typeof(select) == 'string') {
             const carone = await Car.findOne({ "CID" : CID, "CN" : select });
-                await Cardelete.create({
-                    "CID" : carone.CID,
-                    "CN" : carone.CN,
-                    "CPN" : carone.CPN,
-                });
+            await Cardelete.create({
+                "CID" : carone.CID,
+                "CN" : carone.CN,
+                "CPN" : carone.CPN,
+            });
             await Car.remove({ "CID" : CID, "CN" : select });
           }
           else {
@@ -299,16 +306,17 @@ router.post('/ajax/car_delete', isNotLoggedIn ,async (req, res, next) => {
              }
           }
           
-          await Company.where({"CNU" : CNU})
+          await Company.where({ "CNU" : CNU })
             .update({ "CUA" : CUA }).setOptions({runValidators : true})
             .exec();
-        res.send({ result : true });
+            
+          res.send({ result : 'success' });
         }
     } catch (err) {
-    res.send({ result : true });
-    console.error(err);
-    next(err);
-  }
+      res.send({ result : 'fail' });
+      console.error(err);
+      next(err);
+    }
 });
 
 module.exports = router;

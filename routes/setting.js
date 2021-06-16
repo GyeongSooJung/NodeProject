@@ -1,7 +1,12 @@
-const Company = require('../schemas/company');
+//Express
 const express = require('express');
 const router = express.Router();
-const {isLoggedIn,isNotLoggedIn,DataSet} = require('./middleware');
+//Schemas
+const Company = require('../schemas/company');
+//Middleware
+const { isNotLoggedIn, DataSet } = require('./middleware');
+
+// -- Start Code -- //
 
 // 포인트 설정
 router.post('/point', isNotLoggedIn, DataSet, async(req, res, next) => {
@@ -10,9 +15,9 @@ router.post('/point', isNotLoggedIn, DataSet, async(req, res, next) => {
     
     try {
         await Company.update({ "_id" : company._id }, { "POA" : POA });
-        return res.send({ status: 'success' });
+        return res.send({ result : 'success' });
     } catch(err) {
-        res.send({ status: 'fail' });
+        res.send({ result : 'fail' });
         console.error(err);
         next(err);
     }

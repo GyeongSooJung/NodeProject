@@ -100,6 +100,7 @@
 	"find_no_register": "가입되지 않은 사업자번호입니다.",
 	"find_enter": "사업자 번호를 입력해주세요.",
 	"find_email_error": "이메일이 가입된 정보와 다릅니다.",
+	"find_pw_fail": "비밀번호 찾기가 실패했습니다.",
 	
 	"register_title": "OASIS | 회원가입",
 	"register_text1": "OASIS 계정을 만드세요. 효율적인 관리가 가능합니다.",
@@ -132,8 +133,11 @@
 	"register_auth_fail": "인증번호가 다릅니다.",
 	"register_auth_enter": "인증번호를 입력해주세요.",
 	"register_auth_need": "이메일 인증이 필요합니다.",
+	"register_company_need_cer": "사업자 인증이 필요합니다.",
+	"register_company_cer_success": "사업자 인증이 완료되었습니다.",
 	"register_digits_error": "숫자만 입력해주세요.",
 	"register_success": "회원가입이 완료되었습니다.",
+	"register_email_send_fail" : "이메일 전송이 실패했습니다.",
 	
 	"main_title": "OASIS | 관리자",
 	"main_point": "보유 포인트",
@@ -199,6 +203,7 @@
 	"profile_pw_need": "비밀번호를 입력해주세요.",
 	"profile_pw_success": "비밀번호가 변경되었습니다.",
 	"profile_form_error": "형식에 맞게 입력해주세요.",
+	"profile_fail": "프로필 수정에 실패했습니다.",
 	
 	"setting_point": "포인트 설정",
 	"setting_send_available": "전송 가능한 알림톡 수",
@@ -257,8 +262,9 @@
 	"device_duplicated": "이미 존재하는 MAC 입니다.",
 	"device_mac_wrong": "MAC 주소를 정확히 입력해주세요.",
 	"device_edit": "장비 수정",
-	"device_edit_version_enter": "버전을 입력하세요",
-	"device_edit_nick_enter": "별칭을 원하는대로 입력하세요",
+	"device_edit_version_enter": "버전을 입력하세요.",
+	"device_edit_nick_enter": "별칭을 원하는대로 입력하세요.",
+	"device_register_fail": "장비 등록에 실패했습니다.",
 	
 	"car": "자동차",
 	"car_number": "차량 번호",
@@ -289,6 +295,8 @@
 	"car_excelsize_error": "파일 내 목록은 100개 이하만 가능합니다.",
 	"car_excellength_error": "파일 내 차량 번호 자릿수를 확인해주세요.",
 	"car_exceltype_error": "파일 내 잘못된 차량 번호가 존재합니다.",
+	"car_register_fail": "차량 등록에 실패했습니다.",
+	"car_excel_fail": "파일 업로드에 실패했습니다.",
 	"car_modify": "차량 수정",
 	"car_list": "차량 목록",
 	
@@ -348,6 +356,7 @@
 	"payment_option_name_ex": "빨강, 파랑",
 	"payment_registration_required": "상품명과 상품금액은 필수항목입니다.",
 	"payment_img_fail": "상품 이미지 등록에 실패했습니다.",
+	"payment_goods_upload_fail": "상품 등록에 실패했습니다.",
 	"payment_goods_exist": "존재하는 상품명입니다. 다르게 설정해주세요.",
 	"payment_check_option": "옵션을 선택해주세요.",
 	"payment_name": "상품명",
@@ -376,6 +385,7 @@
 	"payment_receit_confirm1": "본 거래확인서는 세금계산서 대용으로 사용할 수 없습니다.",
 	"payment_receit_confirm2": "위 거래를 확인함",
 	"payment_complete": "결제 완료",
+	"payment_shop_err": "쇼핑몰 에러",
 	
 	"purchase_failed" : "구매내역이 잘못되었습니다.",
 	

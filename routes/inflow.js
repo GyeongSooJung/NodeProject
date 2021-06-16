@@ -1,13 +1,8 @@
+//Express
 const express = require('express');
 const router = express.Router();
-//schema
-const Company = require('../schemas/company');
-const Device = require('../schemas/device');
-const Car = require('../schemas/car');
-const Worker = require('../schemas/worker');
-const History = require('../schemas/history');
-const moment = require('moment');
-//Router or MiddleWare
+
+// -- Start Code -- //
 
 //Mobile Connect Page
 router.get('/', async(req, res, next) => {

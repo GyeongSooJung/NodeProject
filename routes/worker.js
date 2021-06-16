@@ -1,195 +1,114 @@
+//Express
 const express = require('express');
+const router = express.Router();
+//Schemas
 const Worker = require('../schemas/worker');
 const Workerdelete = require('../schemas/worker_delete');
-const moment = require('moment');
-const {isLoggedIn,isNotLoggedIn,DataSet} = require('./middleware');
-const router = express.Router();
+//Middleware
+const { isNotLoggedIn } = require('./middleware');
 
-//작업자 목록
-
-//작업자 수정
-router.post('/worker_update',isNotLoggedIn ,async (req, res, next) => {
-    try {
-        const {EM, AC} = req.body;
-        var i,j;
-        let  workerone;
-        console.log("AC: " + AC);
-        console.log("EM: " + EM);
-        
-        /* EM 이랑 AC 비교 */
-        if (!AC) {
-            for (i = 0; i< EM.length; i++){
-              workerone = await Worker.where({"EM" : EM[i]}).update({ "AC" : false }).setOptions({runValidators : true}).exec();
-            }
-            return res.redirect('/worker_list');
-        }
-        else if(!(AC instanceof Object)) {
-          for (i =0; i < EM.length; i ++) {
-            console.log(EM[i]);
-             if (EM[i] == AC) {
-              workerone = await Worker.where({"EM" : EM[i]}).update({ "AC" : true }).setOptions({runValidators : true}).exec();
-            }
-            else {
-              workerone = await Worker.where({"EM" : EM[i]}).update({ "AC" : false }).setOptions({runValidators : true}).exec();
-            }
-          }
-        }
-        else{
-          for (i =0; i < EM.length; i ++) {
-            for(j =0; j < AC.length; j ++) {
-              if(EM[i] == AC[j]){
-                workerone = await Worker.where({"EM" : EM[i]}).update({ "AC" : true }).setOptions({runValidators : true}).exec();
-                break;
-              }
-              else {
-                workerone = await Worker.where({"EM" : EM[i]}).update({ "AC" : false }).setOptions({runValidators : true}).exec();
-              }
-            }
-          }
-        }
-        res.redirect('/worker_list');
-    }   catch (err) {
-        console.error(err);
-        next(err);
-  }
-});
-
-// 작업자 단일 체크박스 수정
-
-router.post('/worker_select_update',isNotLoggedIn ,async (req, res, next) => {
-    try {
-      
-    const workerac = req.body.AC;
-    const workerem = req.body.EM;
-    console.log(workerac);
-    console.log(workerem);
-      
-        const {EM, AC} = req.body;
-        var i,j;
-        let  workerone;
-        console.log("AC: " + AC);
-        console.log("EM: " + EM);
-        
-        if (!AC) {
-            for (i = 0; i< EM.length; i++){
-              workerone = await Worker.where({"EM" : EM[i]}).update({ "AC" : false }).setOptions({runValidators : true}).exec();
-            }
-            return res.redirect('/worker_list');
-        }
-        else if(!(AC instanceof Object)) {
-          for (i =0; i < EM.length; i ++) {
-            console.log(EM[i]);
-             if (EM[i] == AC) {
-              workerone = await Worker.where({"EM" : EM[i]}).update({ "AC" : true }).setOptions({runValidators : true}).exec();
-            }
-            else {
-              workerone = await Worker.where({"EM" : EM[i]}).update({ "AC" : false }).setOptions({runValidators : true}).exec();
-            }
-          }
-        }
-        else{
-          for (i =0; i < EM.length; i ++) {
-            for(j =0; j < AC.length; j ++) {
-              if(EM[i] == AC[j]){
-                workerone = await Worker.where({"EM" : EM[i]}).update({ "AC" : true }).setOptions({runValidators : true}).exec();
-                break;
-              }
-              else {
-                workerone = await Worker.where({"EM" : EM[i]}).update({ "AC" : false }).setOptions({runValidators : true}).exec();
-              }
-            }
-          }
-        }
-        
-        
-        
-        res.redirect('/worker_list');
-    }   catch (err) {
-        console.error(err);
-        next(err);
-  }
-});
-
-//작업자 체크박스 사업주 권한 부여
-
-router.post('/worker_select_manager',isNotLoggedIn ,async (req, res, next) => {
-    try {
-      
-    const workerac = req.body.AU;
-    const workerem = req.body.EM;
-    console.log(workerac);
-    console.log(workerem);
-      
-        const {EM, AC} = req.body;
-        var i,j;
-        let  workerone;
-        console.log("AC: " + AC);
-        console.log("EM: " + EM);
-        
-        if (!AC) {
-            for (i = 0; i< EM.length; i++){
-              workerone = await Worker.where({"EM" : EM[i]}).update({ "AU" : 2 }).setOptions({runValidators : true}).exec();
-            }
-            return res.redirect('/worker_list');
-        }
-        else if(!(AC instanceof Object)) {
-          for (i =0; i < EM.length; i ++) {
-            console.log(EM[i]);
-             if (EM[i] == AC) {
-              workerone = await Worker.where({"EM" : EM[i]}).update({ "AU" : 1 }).setOptions({runValidators : true}).exec();
-            }
-            else {
-              workerone = await Worker.where({"EM" : EM[i]}).update({ "AU" : 2 }).setOptions({runValidators : true}).exec();
-            }
-          }
-        }
-        else{
-          for (i =0; i < EM.length; i ++) {
-            for(j =0; j < AC.length; j ++) {
-              if(EM[i] == AC[j]){
-                workerone = await Worker.where({"EM" : EM[i]}).update({ "AU" : 1 }).setOptions({runValidators : true}).exec();
-                break;
-              }
-              else {
-                workerone = await Worker.where({"EM" : EM[i]}).update({ "AU" : 2 }).setOptions({runValidators : true}).exec();
-              }
-            }
-          }
-        }
-        
-        
-        
-        res.redirect('/worker_list');
-    }   catch (err) {
-        console.error(err);
-        next(err);
-  }
-});
-
-
-//작업자 삭제
-router.post('/worker_delete',isNotLoggedIn ,async (req, res, next) => {
+//작업자 한개 삭제
+router.post('/ajax/worker_deleteone', isNotLoggedIn, async (req, res, next) => {
+  var select = req.body["select"];
+  const CID = req.decoded.CID;
+  const CNU = req.decoded.CNU;
+  
   try {
-    console.log(req.body["select"])
-    const workerone = await Worker.findOne({ "EM" : req.body["select"] });
+    const workerone = await Worker.findOne({ "CID" : CID, "EM" : select.split(' ') });
     await Workerdelete.create({
       "CID" : workerone.CID,
-        "WN" : workerone.WN,
-        "PN" : workerone.PN,
-        "GID" : workerone.GID,
-        "EM" : workerone.EM,
-        "PU" : workerone.PU,
-        "AU" : workerone.AU,
-        "AC" :workerone.AC
+      "WN" : workerone.WN,
+      "PN" : workerone.PN,
+      "GID" : workerone.GID,
+      "EM" : workerone.EM,
+      "PU" : workerone.PU,
+      "AU" : workerone.AU,
+      "AC" :workerone.AC
     });
+    await Worker.remove({ "CID" : CID, "EM" : select.split(' ') });
     
-    await Worker.remove({ "EM" : req.body["select"] });
-    res.send({ result : true });
+    res.send({ result : 'success' });
+    
   } catch (err) {
-    res.send({ result : false });
+    res.send({ result : 'fail' });
     console.error(err);
     next(err);
   }
 });
+
+//작업자 선택삭제
+router.post('/ajax/worker_delete', isNotLoggedIn ,async (req, res, next) => {
+    var select = req.body["select[]"];
+    const CID = req.decoded.CID;
+    const CNU = req.decoded.CNU;
+    
+    try {
+        if(!select) {
+          res.send({ result : 'fail' });
+        }
+        else {
+          if (typeof(select) == 'string') {
+            const workerone = await Worker.findOne({ "CID" : CID, "EM" : select });
+            await Workerdelete.create({
+                "CID" : workerone.CID,
+                "WN" : workerone.WN,
+                "PN" : workerone.PN,
+                "GID" : workerone.GID,
+                "EM" : workerone.EM,
+                "PU" : workerone.PU,
+                "AU" : workerone.AU,
+                "AC" :workerone.AC
+            });
+            await Worker.remove({ "CID" : CID, "EM" : select });
+          }
+          else {
+             for(var i = 0; i < select.length; i++){
+               var workerone = await Worker.findOne({ "CID" : CID, "EM" : select[i] });  
+                 await Workerdelete.create({
+                    "CID" : workerone.CID,
+                    "WN" : workerone.WN,
+                    "PN" : workerone.PN,
+                    "GID" : workerone.GID,
+                    "EM" : workerone.EM,
+                    "PU" : workerone.PU,
+                    "AU" : workerone.AU,
+                    "AC" :workerone.AC
+                });
+                await Worker.remove({ "CID" : CID, "EM" : select[i] });
+             }
+          }
+            
+          res.send({ result : 'success' });
+        }
+    } catch (err) {
+      res.send({ result : 'fail' });
+      console.error(err);
+      next(err);
+    }
+});
+// //작업자 삭제
+// router.post('/ajax/worker_delete',isNotLoggedIn ,async (req, res, next) => {
+//   try {
+//     const workerone = await Worker.findOne({ "EM" : req.body["select"] });
+//     await Workerdelete.create({
+//       "CID" : workerone.CID,
+//       "WN" : workerone.WN,
+//       "PN" : workerone.PN,
+//       "GID" : workerone.GID,
+//       "EM" : workerone.EM,
+//       "PU" : workerone.PU,
+//       "AU" : workerone.AU,
+//       "AC" :workerone.AC
+//     });
+//     await Worker.remove({ "EM" : req.body["select"] });
+    
+//     res.send({ result : 'success' });
+    
+//   } catch (err) {
+//     res.send({ result : 'fail' });
+//     console.error(err);
+//     next(err);
+//   }
+// });
 
 module.exports = router;

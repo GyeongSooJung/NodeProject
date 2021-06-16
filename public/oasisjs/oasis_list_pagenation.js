@@ -83,12 +83,41 @@
 	        	}
 	        	
 	        	else if (data.result == "nothing") {
-	        		
 	        		$("#searchtext").val('');
 			    	$("#searchdatetext1").val('');
 			    	$("#searchdatetext2").val('');
+			    	$("#memDiv2").empty();
+			    	
+			    	if(Object.name == "Company") {
+						companylist_condition(Object);
+					}
+					else if (Object.name == "Device") {
+						devicelist_condition(Object);
+					}
+					
+					else if (Object.name == "Car") {
+						carlist_condition(Object);
+					}
+					
+					else if (Object.name == "Worker") {
+						workerlist_condition(Object);
+					}
+					else if (Object.name == "History") {
+						historylist_condition(Object);
+					}
+					else if (Object.name == "Pay") {
+						paylist_condition(Object);
+					}
+					else if (Object.name == "Point") {
+						pointlist_condition(Object);
+					}
+					else if (Object.name == "Alarmtalk") {
+						alarmtalklist_condition(Object);
+					}
+					else if (Object.name == "Notice") {
+						noticeList_condition(Object);
+					}
 	        	}
-	        	
 	        	else {
 			    	$("#searchdatetext1").val('');
 			    	$("#searchdatetext2").val('');
@@ -106,71 +135,72 @@
 			url: '/car/car_json_excel',
 			data: data,
 			processData: false,
-        	contentType: false,
-        	success: function(result) {
-				Object.array = result.excelData; // 전체 리스트
-    		    Object.startpage = Math.floor((Object.page) / Object.pageNum) * Object.pageNum;
-    		    Object.endpage = Object.startpage + Object.pageNum;
-    		    
-    		    var excelList = Object.array;
-    		    var postNum = Object.postNum; // 게시될 페이지 숫자
-    		    var pageNum = Object.pageNum; // 페이지 번호의 갯수
-    		    var totalPage = Math.ceil(Object.array.length/Object.postNum); // 전체 페이지의 갯수
-    		    
-    		    if (Object.endpage > totalPage) { // 끝 페이지가 총 페이지 수보다 많다면 같게끔 처리
+        	contentType: false
+		}).done(function(data) {
+    		if(data.result == 'send') {
+    			Object.array = data.excelData; // 전체 리스트
+			    Object.startpage = Math.floor((Object.page) / Object.pageNum) * Object.pageNum;
+			    Object.endpage = Object.startpage + Object.pageNum;
+			    
+			    var excelList = Object.array;
+			    var postNum = Object.postNum; // 게시될 페이지 숫자
+			    var pageNum = Object.pageNum; // 페이지 번호의 갯수
+			    var totalPage = Math.ceil(Object.array.length/Object.postNum); // 전체 페이지의 갯수
+			    
+			    if (Object.endpage > totalPage) { // 끝 페이지가 총 페이지 수보다 많다면 같게끔 처리
 			        Object.endpage = totalPage;
 			    }
+    			$('#car-form-div').hide();
+				$('#pagebox > *').remove();
+				$('#excel-table > tbody > tr').remove();
+    			$('#excel-table-div').removeClass('d-none');
+    			$('#pagebox').removeClass('d-none');
+    			$('#excel-table > tbody:last').append("<input type='hidden' id='excelData' name='excelData' value='"+excelList+"'>");
+    			
+    			for(var i = (postNum * Object.page); i < (postNum * Object.page) + postNum; i++) {
+    				if(excelList[i]) {
+        				$('#excel-table > tbody:last').append("<tr>\
+	        				<td>"+(i+1)+"</td>\
+	        				<td>"+data.excelData[i][0]+"</td><input type='hidden' id='excelCN' name='excelCN' value='"+data.excelData[i][0]+"'>\
+	        				<td>"+data.excelData[i][1]+"</td><input type='hidden' id='excelCPN' name='excelCPN' value='"+data.excelData[i][1]+"'>\
+    					</tr>");
+    				}
+    			}
+    			
+    			var insertTr = "";
+				insertTr += "<input class='btn btn-primary width-80 excelJoinBtn' type='button' value='"+i18nconvert('registration')+"' onclick=excelJoin()>"
+				insertTr += "<div class='d-flex justify-content-around align-item-center'>"
+				insertTr += "<a href='javascript:;' onclick=pageDoubleBtn('left',pagingObject,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>"
+				insertTr += "<a href='javascript:;' onclick=pageBtn('left',pagingObject,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>"
 				
-        		if(result.status == 'send') {
-        			$('#car-form-div').hide();
-					$('#pagebox > *').remove();
-					$('#excel-table > tbody > tr').remove();
-        			$('#excel-table-div').removeClass('d-none');
-        			$('#pagebox').removeClass('d-none');
-        			$('#excel-table > tbody:last').append("<input type='hidden' id='excelData' name='excelData' value='"+excelList+"'>");
-        			
-        			for(var i = (postNum * Object.page); i < (postNum * Object.page) + postNum; i++) {
-        				if(excelList[i]) {
-	        				$('#excel-table > tbody:last').append("<tr>\
-		        				<td>"+(i+1)+"</td>\
-		        				<td>"+result.excelData[i][0]+"</td><input type='hidden' id='excelCN' name='excelCN' value='"+result.excelData[i][0]+"'>\
-		        				<td>"+result.excelData[i][1]+"</td><input type='hidden' id='excelCPN' name='excelCPN' value='"+result.excelData[i][1]+"'>\
-	    					</tr>");
-        				}
-        			}
-        			
-        			var insertTr = "";
-					insertTr += "<input class='btn btn-primary width-80 excelJoinBtn' type='button' value='"+i18nconvert('registration')+"'>"
-					insertTr += "<div class='d-flex justify-content-around align-item-center'>"
-					insertTr += "<a href='javascript:;' onclick=pageDoubleBtn('left',pagingObject,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-left'></i></a>"
-					insertTr += "<a href='javascript:;' onclick=pageBtn('left',pagingObject,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-left'></i></a>"
-					
-					for(var j = Object.startpage; j < Object.endpage; j ++) {
-						if(Object.page == j) {
-							insertTr += "<input type='button' onclick=pagebutton(pagingObject,"+ j +",'excel') value ='"+ (j+1) +"' class='btn btn-white mr-1 px-2 text-primary' style='background-color: #00acac; color: white !important;' >";
-						} else {
-							insertTr += "<input type='button' onclick=pagebutton(pagingObject,"+ j +",'excel') value ='"+ (j+1) +"' class='btn btn-white mr-1 px-2 text-primary' >";
-						}
+				for(var j = Object.startpage; j < Object.endpage; j ++) {
+					if(Object.page == j) {
+						insertTr += "<input type='button' onclick=pagebutton(pagingObject,"+ j +",'excel') value ='"+ (j+1) +"' class='btn btn-white mr-1 px-2 text-primary' style='background-color: #00acac; color: white !important;' >";
+					} else {
+						insertTr += "<input type='button' onclick=pagebutton(pagingObject,"+ j +",'excel') value ='"+ (j+1) +"' class='btn btn-white mr-1 px-2 text-primary' >";
 					}
+				}
 
-					insertTr += "<a href='javascript:;' onclick=pageBtn('right',pagingObject,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-right'></i></a>"
-					insertTr += "<a href='javascript:;' onclick=pageDoubleBtn('right',pagingObject,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-right'></i></a>"
-					insertTr += "</div>"
-					
-					$("#pagebox").append(insertTr);
-					
-					$("#pagebox").show();
-        		}
-        		else if (result.status == 'overSize') {
-        			alert("{{__('car_excelsize_error')}}");
-        		}
-        		else if (result.status == 'sendNull') {
-        			alert("{{__('car_nofile_error')}}");
-        		}
-        		else if (result.status == 'sendFail') {
-        			alert("{{__('car_excel_error')}}");
-        		}
-        	}
+				insertTr += "<a href='javascript:;' onclick=pageBtn('right',pagingObject,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-right'></i></a>"
+				insertTr += "<a href='javascript:;' onclick=pageDoubleBtn('right',pagingObject,'excel') class='btn btn-primary mr-1 px-2'><i class='fas fa-angle-double-right'></i></a>"
+				insertTr += "</div>"
+				
+				$("#pagebox").append(insertTr);
+				
+				$("#pagebox").show();
+    		}
+    		else if (data.result == 'overSize') {
+    			alert(i18nconvert('car_excelsize_error'));
+    		}
+    		else if (data.result == 'sendNull') {
+    			alert(i18nconvert('car_nofile_error'));
+    		}
+    		else if (data.result == 'sendFail') {
+    			alert(i18nconvert('car_excel_error'));
+    		}
+    		else {
+    			alert(i18nconvert('car_excel_fail'));
+    		}
 		});
     }
     

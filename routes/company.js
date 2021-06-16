@@ -1,11 +1,17 @@
+//Express
 const express = require('express');
 const router = express.Router();
+//Module
 const bcrypt = require('bcrypt');
 const xml2js = require('xml2js'); // xml 파싱 모듈
-const Company = require('../schemas/company');
 const axios = require('axios');
 const request = require('request');
+//Schemas
+const Company = require('../schemas/company');
 
+// -- Start Code -- //
+
+// 회원가입
 router.post('/register', async (req, res, next) => {
   const { CNU, CNA, CK, addr1, addr2, PN, NA, MN, PW, EA, CEA } = req.body;
   const ADR = addr1+addr2;
@@ -29,28 +35,29 @@ router.post('/register', async (req, res, next) => {
             PW : hashPW,
             EA
           });
-          return res.send({ status: 'success' });
+          return res.send({ result : 'success' });
       }
       else {
-        return res.send({ status: 'cerFail' });
+        return res.send({ result : 'cerFail' });
       }
     }
     else if(companyEA) {
-      return res.send({ status: 'existEA' });
+      return res.send({ result : 'existEA' });
     }
     else if(companyCNU) {
-      return res.send({ status: 'existCNU' });
+      return res.send({ result : 'existCNU' });
     }
     else {
-      return res.send({ status: 'fail' });
+      return res.send({ result : 'fail' });
     }
   } catch(err) {
+    res.send({ result : 'fail' });
     console.error(err);
     next(err);
   }
 });
 
-
+// 사업자등록번호 검증
 router.post('/checkCNU', async (req, res, next) => {
   const CNU = req.body.CNU;
   const CNU_CK = await postCRN(CNU);
@@ -59,37 +66,38 @@ router.post('/checkCNU', async (req, res, next) => {
   async function postCRN(crn){
     const postUrl = "https://teht.hometax.go.kr/wqAction.do?actionId=ATTABZAA001R08&screenId=UTEABAAA13&popupYn=false&realScreenId=";
     const xmlRaw = "<map id=\"ATTABZAA001R08\"><pubcUserNo/><mobYn>N</mobYn><inqrTrgtClCd>1</inqrTrgtClCd><txprDscmNo>{CRN}</txprDscmNo><dongCode>15</dongCode><psbSearch>Y</psbSearch><map id=\"userReqInfoVO\"/></map>";
-      try{
-          const result  = await axios.post(postUrl,xmlRaw.replace(/\{CRN\}/, crn),
-            { headers: { 'Content-Type': 'text/xml' } });
-          let CRNumber = await getCRNresultFromXml(result.data);
-          console.log(CRNumber);
-          
-          if (CRNumber ==='부가가치세 일반과세자 입니다.') {
-            CRNumber = true;
-          } else {
-            CRNumber = false;
-          }
-          
-          return res.send({ CRNumber: CRNumber });
-          
+      try {
+        const result  = await axios.post(postUrl,xmlRaw.replace(/\{CRN\}/, crn),
+          { headers: { 'Content-Type': 'text/xml' } });
+        let CRNumber = await getCRNresultFromXml(result.data);
+        
+        if (CRNumber ==='부가가치세 일반과세자 입니다.') {
+          CRNumber = true;
+        } else {
+          CRNumber = false;
+        }
+        
+        return res.send({ CRNumber : CRNumber });
+        
       } catch(err){
         console.error(err);
+        next(err);
       }
           
   }
   
   function getCRNresultFromXml(dataString) {
     return new Promise((resolve, reject) => {
-        xml2js.parseString(dataString, // API 응답의 'data' 에 지정된 xml 값 추출, 파싱
-          (err, res) => {
-            if (err) reject(err);
-            else resolve(res.map.trtCntn[0]); // trtCntn 이라는 TAG 의 값을 get
-          });
+      xml2js.parseString(dataString, // API 응답의 'data' 에 지정된 xml 값 추출, 파싱
+        (err, res) => {
+          if (err) reject(err);
+          else resolve(res.map.trtCntn[0]); // trtCntn 이라는 TAG 의 값을 get
+        });
     });
   }
 });
 
+// 사업자정보 가져오기
 router.post('/infoCNU', async (req, res, next) => {
   const CNU = req.body.CNU;
   
@@ -110,7 +118,6 @@ router.post('/infoCNU', async (req, res, next) => {
       // 대표 전화번호
       // 취급품목
       // 신고일자
-      console.log("길이파악"+searchname.length);
       
       var bizUrl =  'https://www.ftc.go.kr/bizCommPop.do?wrkr_no='+CNU;
       
@@ -118,30 +125,27 @@ router.post('/infoCNU', async (req, res, next) => {
         if (error) throw error;
           var searchResult = [];
           
-          for (var i = 0; i < searchname.length; i ++){
-            var start = body.indexOf(searchname[i]+'</th>');
-            var end = body.indexOf('</td>',start+1);
-            
-            var searchText = "";
-            for ( var j = start; j < end; j ++) {
-              searchText += body[j];
-            }
-            
-            var searchText2 = "";
-            var start2 = searchText.indexOf('>',20);
-            for ( var h = start2; h < searchText.length-1; h ++) {
-              searchText2 += searchText[h+1];
-            }
-            
-            searchText2 = searchText2.trim().replace(/-/g, "");
-            // console.log("써테텍"+searchText2);
-            
-            searchResult[i] = searchText2;
-            console.log(searchText2);
-          }
-          console.log("써치"+searchResult);
+        for (var i = 0; i < searchname.length; i ++) {
+          var start = body.indexOf(searchname[i]+'</th>');
+          var end = body.indexOf('</td>',start+1);
           
-          return res.send({ searchResult: searchResult });
+          var searchText = "";
+          for ( var j = start; j < end; j ++) {
+            searchText += body[j];
+          }
+          
+          var searchText2 = "";
+          var start2 = searchText.indexOf('>',20);
+          for ( var h = start2; h < searchText.length-1; h ++) {
+            searchText2 += searchText[h+1];
+          }
+          
+          searchText2 = searchText2.trim().replace(/-/g, "");
+          
+          searchResult[i] = searchText2;
+        }
+        
+        return res.send({ searchResult: searchResult });
       });
   } catch(err) {
     console.error(err);

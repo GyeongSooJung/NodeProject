@@ -21,24 +21,21 @@ router.post('/goodsImg', isNotLoggedIn, DataSet, async(req, res, next) => {
             autoFiles: true,
         });
         form.on('file', async (name, file) => {
-            // console.log("패쓰"+file.path);
-            const extname = path.extname(file.path);
-            // console.log("확장자명"+extname);
-            const fileName = path.basename(file.path);
-            // console.log("파파파"+fileName);
+            const extname = path.extname(file.path); //확장자명
+            const fileName = path.basename(file.path); //전체경로
             
             if (extname == "") {
-                return res.send({ status: 'sendNull' });
+                return res.send({ result : 'sendNull' });
             }
             else {
                 const options = {
                     apiKey: process.env.imgBB,
                     imagePath: file.path,
                     name: fileName,
-                }
+                };
                 
                 imgbbUploader(options)
-                    .then((response) => res.send({ status : "success", imgUrl: response.url}))
+                    .then((response) => res.send({ result : "success", imgUrl: response.url}))
                     .catch((error) => console.error(error));
             }
         });
@@ -47,6 +44,7 @@ router.post('/goodsImg', isNotLoggedIn, DataSet, async(req, res, next) => {
         form.parse(req);
         
     } catch(err) {
+        res.send({ result : "fail" });
         console.error(err);
         next(err);
     }
@@ -64,7 +62,7 @@ router.post('/goodsJoin', isNotLoggedIn, DataSet, async(req, res, next) => {
         
         const exGoods = await Goods.findOne({ "GN" : GN });
         if(exGoods) {
-            return res.send({ status: "exist" });
+            return res.send({ result : "exist" });
         }
         else {
             if(OT) {
@@ -75,7 +73,6 @@ router.post('/goodsJoin', isNotLoggedIn, DataSet, async(req, res, next) => {
                     GI : GI,
                     GO : true
                 });
-                
                 
                 const newGoods = await Goods.findOne({ "GN" : GN });
                 if(typeof(OT) == "string") {
@@ -112,9 +109,11 @@ router.post('/goodsJoin', isNotLoggedIn, DataSet, async(req, res, next) => {
                     GO : false
                 });
             }
-            return res.send({ status: "success" });
+            
+            return res.send({ result : 'success' });
         }
     } catch(err) {
+        res.send({ result : 'fail' });
         console.error(err);
         next(err);
     }
@@ -129,13 +128,15 @@ router.post('/modal', isNotLoggedIn, DataSet, async(req, res, next) => {
         if(goods.GO == true) {
             const option = await GoodsOption.find({ "GID" : goods._id });
             const optionType = await GoodsOption.where({ "GID" : goods._id }).distinct("OT");
-            return res.send({ status: 'option', goods: goods, option: option, optionType: optionType });
+            
+            return res.send({ result : 'option', goods : goods, option : option, optionType : optionType });
         }
         else {
-            return res.send({ status: 'noOption', goods: goods });
+            return res.send({ result : 'noOption', goods : goods });
         }
        
     } catch(err) {
+        res.send({ result : 'fail' });
         console.error(err);
         next(err);
     }
@@ -178,8 +179,10 @@ router.post('/addCart', isNotLoggedIn, DataSet, async(req, res, next) => {
             res.cookie("shop", shop);
         }
         
-        return res.send({ status: "success" });
+        return res.send({ result : 'success' });
+        
     } catch(err) {
+        res.send({ result : 'fail' });
         console.error(err);
         next(err);
     }
@@ -189,7 +192,14 @@ router.post('/addCart', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.post('/showCart', isNotLoggedIn, DataSet, async(req, res, next) => {
     var cartCookie = req.cookies.shop;
     
-    res.send({ status: "success", cart : cartCookie });
+    try {
+        res.send({ result : 'success', cart : cartCookie });
+        
+    } catch(err) {
+        res.send({ result : 'fail' });
+        console.error(err);
+        next(err);
+    }
     
 });
 
@@ -197,78 +207,92 @@ router.post('/showCart', isNotLoggedIn, DataSet, async(req, res, next) => {
 router.post('/cartNum', isNotLoggedIn, DataSet, async(req, res, next) => {
     const { MATH, GN, ON } = req.body;
     
-    var cartCookie = req.cookies.shop;
-    var findCookie = cartCookie.find(function(e) {
-        if(e.ON) {
-            if(e.GN == GN && e.ON == ON) {
-                var price = e.TT / e.NUM;
-                if(MATH == 'minus') {
-                    if(e.NUM < 2) {
-                        e.NUM = "1";
+    try {
+        var cartCookie = req.cookies.shop;
+        var findCookie = cartCookie.find(function(e) {
+            if(e.ON) {
+                if(e.GN == GN && e.ON == ON) {
+                    var price = e.TT / e.NUM;
+                    if(MATH == 'minus') {
+                        if(e.NUM < 2) {
+                            e.NUM = "1";
+                        }
+                        else {
+                            e.NUM = (parseInt(e.NUM) - 1).toString();
+                        }
                     }
                     else {
-                        e.NUM = (parseInt(e.NUM) - 1).toString();
+                        e.NUM = (parseInt(e.NUM) + 1).toString();
                     }
+                    e.TT = price * e.NUM;
+                    return true;
                 }
-                else {
-                    e.NUM = (parseInt(e.NUM) + 1).toString();
-                }
-                e.TT = price * e.NUM;
-                return true;
             }
-        }
-        else {
-            if(e.GN == GN) {
-                var price = e.TT / e.NUM;
-                if(MATH == 'minus') {
-                    if(e.NUM < 2) {
-                        e.NUM = "1";
+            else {
+                if(e.GN == GN) {
+                    var price = e.TT / e.NUM;
+                    if(MATH == 'minus') {
+                        if(e.NUM < 2) {
+                            e.NUM = "1";
+                        }
+                        else {
+                            e.NUM = (parseInt(e.NUM) - 1).toString();
+                        }
                     }
                     else {
-                        e.NUM = (parseInt(e.NUM) - 1).toString();
+                        e.NUM = (parseInt(e.NUM) + 1).toString();
                     }
+                    e.TT = price * e.NUM;
+                    return true;
                 }
-                else {
-                    e.NUM = (parseInt(e.NUM) + 1).toString();
-                }
-                e.TT = price * e.NUM;
-                return true;
             }
-        }
-    });
-    
-    res.cookie("shop", cartCookie);
-    res.send({ status: "success" });
+        });
+        
+        res.cookie("shop", cartCookie);
+        res.send({ result : 'success' });
+        
+    } catch(err) {
+        res.send({ result : 'fail' });
+        console.error(err);
+        next(err);
+    }
 });
 
 // 쇼핑몰 장바구니 삭제
 router.post('/cartRemove', isNotLoggedIn, DataSet, async(req, res, next) => {
     const { GN, ON, amount } = req.body;
     
-    if(amount == 'one') {
-        var cartCookie = req.cookies.shop;
-        var findCookie = cartCookie.find(function(e) {
-            if(e.ON) {
-                if(e.GN == GN && e.ON == ON) {
-                    return true;
+    try {
+        if(amount == 'one') {
+            var cartCookie = req.cookies.shop;
+            var findCookie = cartCookie.find(function(e) {
+                if(e.ON) {
+                    if(e.GN == GN && e.ON == ON) {
+                        return true;
+                    }
                 }
-            }
-            else {
-                if(e.GN == GN) {
-                    return true;
+                else {
+                    if(e.GN == GN) {
+                        return true;
+                    }
                 }
-            }
-        });
-        var idx = cartCookie.indexOf(findCookie);
-        cartCookie.splice(idx, 1);
+            });
+            var idx = cartCookie.indexOf(findCookie);
+            cartCookie.splice(idx, 1);
+        }
+        else {
+            var cartCookie = req.cookies.shop;
+            cartCookie.length = 0;
+        }
+        
+        res.cookie("shop", cartCookie);
+        res.send({ result : 'delete' });
+        
+    } catch(err) {
+        res.send({ result : 'fail' });
+        console.error(err);
+        next(err);
     }
-    else {
-        var cartCookie = req.cookies.shop;
-        cartCookie.length = 0;
-    }
-    
-    res.cookie("shop", cartCookie);
-    res.send({ status: "delete" });
 });
 
 // 쇼핑몰 일반결제 진행
@@ -489,17 +513,17 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
                             await Company.update({"_id" : company._id}, {$inc : { SPO : point }});
                         }
                         res.clearCookie('shop');
-                        res.send({ status: "success", message: "일반 결제 성공" });
+                        res.send({ result : "success", message : "일반 결제 성공" });
                         break;
                     case "cancelled": // 결제 취소
-                        res.send({ status: "cancelled", message: "결제 취소" });
+                        res.send({ result : "cancelled", message : "결제 취소" });
                         break;
                     case "failed": // 결제 실패
-                        res.send({ status: "failed", message: "결제 실패" });
+                        res.send({ result : "failed", message : "결제 실패" });
                         break;
                 }
             } else { // 결제 금액 불일치. 위/변조 된 결제
-                return res.send({ status: "forgery", message: "위조된 결제시도" });
+                return res.send({ result : "forgery", message : "위조된 결제시도" });
             }
         }
         else {
@@ -517,7 +541,7 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
                     imp_uid
                 }
             });
-            return res.send({ status: "failed", message: "결제 실패" });
+            return res.send({ result : "failed", message : "결제 실패" });
         }
     }
     catch(err) {
@@ -743,17 +767,17 @@ router.post("/iamport-webhook", isNotLoggedIn, DataSet, async(req, res, next) =>
                             await Company.update({"_id" : company._id}, {$inc : { SPO : point }});
                         }
                         res.clearCookie('shop');
-                        res.send({ status: "success", message: "일반 결제 성공" });
+                        res.send({ result : "success", message : "일반 결제 성공" });
                         break;
                     case "cancelled": // 결제 취소
-                        res.send({ status: "cancelled", message: "결제 취소" });
+                        res.send({ result : "cancelled", message : "결제 취소" });
                         break;
                     case "failed": // 결제 실패
-                        res.send({ status: "failed", message: "결제 실패" });
+                        res.send({ result : "failed", message : "결제 실패" });
                         break;
                 }
             } else { // 결제 금액 불일치. 위/변조 된 결제
-                return res.send({ status: "forgery", message: "위조된 결제시도" });
+                return res.send({ result : "forgery", message : "위조된 결제시도" });
             }
         }
         else {
@@ -771,7 +795,7 @@ router.post("/iamport-webhook", isNotLoggedIn, DataSet, async(req, res, next) =>
                     imp_uid
                 }
             });
-            return res.send({ status: "failed", message: "결제 실패" });
+            return res.send({ result : "failed", message : "결제 실패" });
         }
     }
     catch(err) {
@@ -997,17 +1021,17 @@ router.get("/complete/mobile", isNotLoggedIn, DataSet, async(req, res, next) => 
                             await Company.update({"_id" : company._id}, {$inc : { SPO : point }});
                         }
                         res.clearCookie('shop');
-                        res.send({ status: "success", message: "일반 결제 성공" });
+                        res.send({ result : "success", message : "일반 결제 성공" });
                         break;
                     case "cancelled": // 결제 취소
-                        res.send({ status: "cancelled", message: "결제 취소" });
+                        res.send({ result : "cancelled", message : "결제 취소" });
                         break;
                     case "failed": // 결제 실패
-                        res.send({ status: "failed", message: "결제 실패" });
+                        res.send({ result : "failed", message : "결제 실패" });
                         break;
                 }
             } else { // 결제 금액 불일치. 위/변조 된 결제
-                return res.send({ status: "forgery", message: "위조된 결제시도" });
+                return res.send({ result : "forgery", message : "위조된 결제시도" });
             }
         }
         else {
@@ -1025,7 +1049,7 @@ router.get("/complete/mobile", isNotLoggedIn, DataSet, async(req, res, next) => 
                     imp_uid
                 }
             });
-            return res.send({ status: "failed", message: "결제 실패" });
+            return res.send({ result : "failed", message : "결제 실패" });
         }
     }
     catch(err) {
