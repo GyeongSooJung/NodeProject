@@ -8,6 +8,25 @@ const {isNotLoggedIn} = require('./middleware');
 
 // -- Start Code -- //
 
+//소독이력 한개 삭제
+router.post('/ajax/history_deleteone', isNotLoggedIn, async (req, res, next) => {
+  var select = req.body["select"];
+  const CID = req.decoded.CID;
+  const CNU = req.decoded.CNU;
+  console.log(select);
+  
+  try {
+    await History.remove({ "_id" : select.split(' ') });
+    
+    res.send({ result : 'success' });
+    
+  } catch (err) {
+    res.send({ result : 'fail' });
+    console.error(err);
+    next(err);
+  }
+});
+
 //소독이력 선택 삭제
 router.post('/ajax/history_delete', isNotLoggedIn, async (req, res, next) => {
   var select = req.body["select[]"];
