@@ -402,5 +402,10 @@
 	"qrcode_generated": "Created QR code",
 	"qrcode_sticker": "Sticker",
 	
-	"manual_title": "OASIS | Manual"
+	"manual_title": "OASIS | Manual",
+	
+	"agent_manager" : "Agent Manager",
+	"agent_list" : "Agent List"
+	
+	
 }

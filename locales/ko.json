@@ -402,5 +402,8 @@
 	"qrcode_generated": "생성된 QR코드",
 	"qrcode_sticker": "스티커",
 	
-	"manual_title": "OASIS | 메뉴얼"
+	"manual_title": "OASIS | 메뉴얼",
+	
+	"agent_manager" : "지점 관리",
+	"agent_list" : "지점 목록"
 }

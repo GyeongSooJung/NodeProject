@@ -2195,6 +2195,25 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
   res.render('ozone_spread', { company: req.decoded.company, aclist });
 });
 
+//----------------------------------------------------------------------------//
+//                                  Agent Manager                             //
+//----------------------------------------------------------------------------//
+
+router.get('/agent_manager', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+
+  res.render('agent_manager', { company: req.decoded.company, aclist });
+});
+
+router.get('/agent_list', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+
+  res.render('agent_list', { company: req.decoded.company, aclist });
+});
+
+
 // var {graphqlHTTP} = require('express-graphql');
 
 // const schema = require('../graphql/schema');
