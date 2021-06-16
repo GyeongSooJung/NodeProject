@@ -138,6 +138,10 @@
 	"register_digits_error": "숫자만 입력해주세요.",
 	"register_success": "회원가입이 완료되었습니다.",
 	"register_email_send_fail" : "이메일 전송이 실패했습니다.",
+	"register_company_agent_kind": "회원님의 기업은",
+	"register_branch_agent_guide": "지점을 선택해주세요.",
+	"register_agent_no_exist": "등록된 지점이 없습니다. 본사 계정에서 지점을 등록해주세요.",
+	"register_agent_head_need": "등록된 본사가 없습니다. 본사로 가입해주세요.",
 	
 	"main_title": "OASIS | 관리자",
 	"main_point": "보유 포인트",
@@ -401,5 +405,8 @@
 	"qrcode_generated": "생성된 QR코드",
 	"qrcode_sticker": "스티커",
 	
-	"manual_title": "OASIS | 메뉴얼"
+	"manual_title": "OASIS | 메뉴얼",
+	
+	"agent_head": "본사",
+	"agent_branch": "지점"
 }

@@ -5,7 +5,6 @@ $(function(){
 	
 	// register(회원가입) - 비밀번호 입력 시 notice
 	if(cut[1] == 'register') {
-		console.log('hi');
 	    $('#PW').keyup(function() {
 	    	if($('#PW').val() == "") {
 	    		$('#pwNotice').hide();

@@ -138,6 +138,10 @@
 	"register_digits_error" : "Please enter the numbers",
 	"register_success": "Sign up is complete.",
 	"register_email_send_fail" : "Email sending failed.",
+	"register_company_agent_kind": "Your company is the",
+	"register_branch_agent_guide": "Please select a branch office",
+	"register_agent_no_exist": "There are no registered branches. Please register a branch in your head office account.",
+	"register_agent_head_need": "There is no registered head office. Please sign up for the head office.",
 	
 	"main_title": "OASIS | Admin",
     "main_point": "point",
@@ -401,5 +405,8 @@
 	"qrcode_generated": "Created QR code",
 	"qrcode_sticker": "Sticker",
 	
-	"manual_title": "OASIS | Manual"
+	"manual_title": "OASIS | Manual",
+	
+	"agent_head": "Head Agent",
+	"agent_branch": "Branch Agent"
 }
