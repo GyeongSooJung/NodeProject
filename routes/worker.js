@@ -86,29 +86,5 @@ router.post('/ajax/worker_delete', isNotLoggedIn ,async (req, res, next) => {
       next(err);
     }
 });
-// //작업자 삭제
-// router.post('/ajax/worker_delete',isNotLoggedIn ,async (req, res, next) => {
-//   try {
-//     const workerone = await Worker.findOne({ "EM" : req.body["select"] });
-//     await Workerdelete.create({
-//       "CID" : workerone.CID,
-//       "WN" : workerone.WN,
-//       "PN" : workerone.PN,
-//       "GID" : workerone.GID,
-//       "EM" : workerone.EM,
-//       "PU" : workerone.PU,
-//       "AU" : workerone.AU,
-//       "AC" :workerone.AC
-//     });
-//     await Worker.remove({ "EM" : req.body["select"] });
-    
-//     res.send({ result : 'success' });
-    
-//   } catch (err) {
-//     res.send({ result : 'fail' });
-//     console.error(err);
-//     next(err);
-//   }
-// });
 
 module.exports = router;

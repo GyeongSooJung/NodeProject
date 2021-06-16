@@ -49,13 +49,16 @@ function logout(i18nconvert) {
 }
 
 // 프로필 수정 - 일반 정보 수정 기능
-function editInfoAjax(companyName, mobileNumber, phoneNumber, password) {
+function editInfoAjax(companyName, ceoName, email, reEmail, mobileNumber, phoneNumber, password) {
 	$.ajax({
 		type: 'POST',
 		url: '/profile/editInfo',
 		dataType: 'json',
 		data: {
 			CNA : companyName,
+			NA : ceoName,
+			EA : email,
+			REA : reEmail,
 			MN : mobileNumber,
 			PN : phoneNumber,
 			PW : password,
@@ -65,9 +68,22 @@ function editInfoAjax(companyName, mobileNumber, phoneNumber, password) {
 			alert(i18nconvert('profile_success'));
 			location = '/profile';
 		}
+		else if(data.result == 'exist') {
+			alert(i18nconvert('profile_ex_email'));
+			document.getElementsByName("CNA")[0].value = data.company.CNA;
+			document.getElementsByName("NA")[0].value = data.company.NA;
+			document.getElementsByName("EA")[0].value = data.company.EA;
+			document.getElementsByName("REA")[0].value = data.company.EA;
+			document.getElementsByName("MN")[0].value = data.company.MN;
+			document.getElementsByName("PN")[0].value = data.company.PN;
+			document.getElementsByName("PW")[0].value = null;
+		}
 		else if(data.result == 'noMatch') {
 			alert(i18nconvert('profile_pw_error'));
 			document.getElementsByName("CNA")[0].value = data.company.CNA;
+			document.getElementsByName("NA")[0].value = data.company.NA;
+			document.getElementsByName("EA")[0].value = data.company.EA;
+			document.getElementsByName("REA")[0].value = data.company.EA;
 			document.getElementsByName("MN")[0].value = data.company.MN;
 			document.getElementsByName("PN")[0].value = data.company.PN;
 			document.getElementsByName("PW")[0].value = null;
@@ -87,16 +103,6 @@ function emailCheckAjax(email) {
 		data: {
 			EA : email,
 		}
-		// success: function(result) {
-		// 	if (result.status == 'match') {
-		// 		document.getElementById('emailBox').classList.add('d-none');
-		// 		document.getElementById('editPw').classList.remove('d-none');
-		// 	}
-		// 	else if (result.status == 'mismatch') {
-		// 		alert(i18nconvert('find_email_error'));
-		// 		document.getElementsByName('EA')[0].value = null;
-		// 	}
-		// }
 	}).done(function(data) {
 		if(data.result == 'success') {
 			document.getElementById('emailBox').classList.add('d-none');

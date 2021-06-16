@@ -52,7 +52,7 @@
 				<div class="tab-content">
 					<!-- begin tab-pane -->
 					<div class="tab-pane fade active show" id="editInfoBox">
-						<form action="" method="post" id="editInfo" class="margin-bottom-0" data-parsley-validate="true" onsubmit="editInfo('CNA','MN','PN','PW');">
+						<form action="" method="post" id="editInfo" class="margin-bottom-0" data-parsley-validate="true" onsubmit="editInfo('CNA','NA','EA','REA','MN','PN','PW');">
 							<table class="table table-borderless table-th-valign-middle w-50 mx-auto my-2">
 								<tr>
 									<th>{{__('business_number')}}</th>
@@ -62,9 +62,14 @@
 									<th>{{__('profile_company_name')}}</th>
 									<td><input type="text" id="CNA" name="CNA"  class="form-control form-control-sm" value="{{company.CNA}}" data-parsley-error-message="{{__('required_detail')}}" required /></td>
 								</tr>
-								<tr >
+								<tr>
 									<th>{{__('profile_company_ceo_name')}}</th>
-									<td>{{company.NA}}</td>
+									<td><input type="text" id="NA" name="NA"  class="form-control form-control-sm" value="{{company.NA}}" data-parsley-error-message="{{__('required_detail')}}" required /></td>
+								</tr>
+								<tr>
+									<th>{{__('email')}}</th>
+									<td><input type="email" id="EA" name="EA"  class="form-control form-control-sm inverse-model" value="{{company.EA}}" data-parsley-required-message="{{__('required_detail')}}" required /></td>
+									<input type="hidden" id="REA" name="REA" value="{{company.EA}}" />
 								</tr>
 								<tr>
 									<th>{{__('profile_company_phone')}}</th>
@@ -145,18 +150,24 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
 // 회원정보 수정 ajax 기능
-function editInfo(companyName, mobileNumber, phoneNumber, password) {
+function editInfo(companyName, ceoName, email, reEmail, mobileNumber, phoneNumber, password) {
 	var validateCNA = $("#"+companyName).parsley();
+	var validateNA = $("#"+ceoName).parsley();
+	var validateEA = $("#"+email).parsley();
+	var validateREA = $("#"+reEmail).parsley();
 	var validateMN = $("#"+mobileNumber).parsley();
 	var validatePN = $("#"+phoneNumber).parsley();
 	var validatePW = $("#"+password).parsley();
 	var CNA = document.getElementsByName(companyName)[0].value;
+	var NA = document.getElementsByName(ceoName)[0].value;
+	var EA = document.getElementsByName(email)[0].value;
+	var REA = document.getElementsByName(reEmail)[0].value;
 	var MN = document.getElementsByName(mobileNumber)[0].value;
 	var PN = document.getElementsByName(phoneNumber)[0].value;
 	var PW = document.getElementsByName(password)[0].value;
 	
-	if (validateCNA.isValid() == true && validateMN.isValid() == true && validatePN.isValid() == true && validatePW.isValid() == true) {
-    	editInfoAjax(CNA,MN,PN,PW);
+	if (validateCNA.isValid() == true && validateNA.isValid() == true && validateEA.isValid() == true && validateREA.isValid() == true && validateMN.isValid() == true && validatePN.isValid() == true && validatePW.isValid() == true) {
+    	editInfoAjax(CNA,NA,EA,REA,MN,PN,PW);
 	}
 	else {
 		alert("{{__('profile_form_error')}}");

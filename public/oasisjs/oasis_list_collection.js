@@ -600,7 +600,7 @@
 					insertTr += "<input id='ck' type='checkbox' name ='ck' class='neHeros' value="+ Object.array[i]._id +" onChange='eachCheckedBox(this);'/>";
 					insertTr += "</td>";
 					insertTr += "<td class='font-weight-bold'>"+(num - (Object.page*10)) +" </td>";
-					insertTr += "<td>"+ Object.array[i].CNM +"</td>";
+					insertTr += "<td><a href='javascript:;' class='text-black' onclick=searchNow(pagingObject,'CNM','"+ Object.array[i].CNM +"')><u>"+ Object.array[i].CNM +"</u></a></td>";
 					insertTr += "<td>"+ Object.array[i].DNM+"</td><td>";
 					if ( (moment(Object.array[i].ET).format('DD')) == moment().format('DD') )
 					{
@@ -614,11 +614,12 @@
 					else 
 						insertTr += "</td><td>"+parseInt((Object.array[i].PD)/60)+"m "+(parseInt(parseInt(Object.array[i].PD)%60))+"s</td>"
 					
-					insertTr += "<td>"+ Object.array[i].WNM+"</td>";
+					insertTr += "<td><a href='javascript:;' class='text-black' onclick=searchNow(pagingObject,'WNM','"+ Object.array[i].WNM +"')><u>"+ Object.array[i].WNM+"</u></a></td>";
 					
 					
 					insertTr += "<td class='with-btn' nowrap>"	;
-					insertTr += "<a href='/history_chart/"+Object.array[i]._id+"' class='btn btn-sm btn-white width-60'>"+i18nconvert("main_indetail")+"</a>";
+					insertTr += "<a href='/history_chart/"+Object.array[i]._id+"' class='btn btn-sm btn-white width-60 mx-1'>"+i18nconvert("main_indetail")+"</a>";
+					insertTr += "<input type='button' value='"+i18nconvert("delete")+"' onclick=delete_one(this,'/history/ajax/history_deleteone') class='btn btn-sm btn-primary width-60 mx-1' name ='"+ Object.array[i]._id +"'></td> ";
 					insertTr += "</tr>";
 					num -= indexcount;
 				}
