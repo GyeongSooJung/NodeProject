@@ -11,16 +11,28 @@ const { isNotLoggedIn, DataSet } = require('./middleware');
 // -- Start Code -- //
 
 router.post('/editInfo', isNotLoggedIn, DataSet, async(req, res, next) => {
-   const { CNA, MN, PN, PW } = req.body;
+   const { CNA, NA, EA, REA, MN, PN, PW } = req.body;
    const company = req.decoded.company;
    
   try {
       if (bcrypt.compareSync(PW, company.PW)) {
-         await Company.where({ "_id" : company._id }).update({$set : { "CNA" : CNA, "MN" : MN, "PN" : PN, "UA" : Date.now() }});
-         
-         return res.send({ result : 'success', company : company });
+         const companyone = await Company.findOne({ "EA" : EA });
+         if(!companyone) {
+            await Company.where({ "_id" : company._id }).update({$set : { "CNA" : CNA, "NA" : NA, "EA" : EA, "MN" : MN, "PN" : PN, "UA" : Date.now() }});
+            
+            return res.send({ result : 'success', company : company });
+         }
+         else {
+            if(EA == REA) {
+               await Company.where({ "_id" : company._id }).update({$set : { "CNA" : CNA, "NA" : NA, "EA" : EA, "MN" : MN, "PN" : PN, "UA" : Date.now() }});
+            
+               return res.send({ result : 'success', company : company });
+            }
+            else {
+               return res.send({ result : 'exist', company : company });
+            }
+         }
       } else {
-         
          return res.send({ result : 'noMatch', company : company });
       }
   } catch(err) {

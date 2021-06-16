@@ -54,3 +54,11 @@
 			}
 		}
 	}
+
+	//클릭 시 즉시 검색 기능(history_list)
+	function searchNow(Object, key, value) {
+		Object.search = key;
+		Object.searchtext = value;
+		
+		pagereload(Object);
+	}
