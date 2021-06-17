@@ -2213,17 +2213,12 @@ router.get('/agent_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   res.render('agent_list', { company: req.decoded.company, aclist });
 });
 
-
-// var {graphqlHTTP} = require('express-graphql');
-
-// const schema = require('../graphql/schema');
-// const rootValue = require("../graphql/resolvers")
-
-// router.get('/graphql', graphqlHTTP({
-//   schema, rootValue, graphiql: true,
-// }), DataSet, async(req, res, next) => {
+router.post('/ajax/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
   
-// });
+  
+  
+  })
+
 
 
 router.get('/gstest', isNotLoggedIn, DataSet, async(req, res, next) => {

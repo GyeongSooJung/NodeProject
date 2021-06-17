@@ -27,25 +27,8 @@
                                 <div class="col-sm-12">
                                 	<!-- Category -->
                                 	<div class="single category">
-                                		<h3 class="side-title">회사 이름</h3>
-                                		<ul class="list-unstyled">
-                                			<li><a href="" title=""> 본사 <span class="pull-right">13</span></a></li>
-                                			<li><a href="" title=""> 부산점 <span class="pull-right">13</span></a></li>
-                                			<li><a href="" title=""> 제주점 <span class="pull-right">13</span></a></li>
-                                			<li><a href="" title="">Ecommerce <span class="pull-right">13</span></a></li>
-                                			<li><a href="" title="">Wordpress <span class="pull-right">13</span></a></li>
-                                			<li><a href="" title="">Android <span class="pull-right">13</span></a></li>
-                                			<li><a href="" title="">IOS <span class="pull-right">13</span></a></li>
-                                			<li><a href="" title="">Windows <span class="pull-right">13</span></a></li>
-                                			<li><a href="" title="">Windows <span class="pull-right">13</span></a></li>
-                                			<li><a href="" title="">Windows <span class="pull-right">13</span></a></li>
-                                			<li><a href="" title="">Windows <span class="pull-right">13</span></a></li>
-                                			<li><a href="" title="">Windows <span class="pull-right">13</span></a></li>
-                                			<li><a href="" title="">Windows <span class="pull-right">13</span></a></li>
-                                			<li><a href="" title="">Windows <span class="pull-right">13</span></a></li>
-                                			<li><a href="" title="">Windows <span class="pull-right">13</span></a></li>
-                                			<li><a href="" title="">Windows <span class="pull-right">13</span></a></li>
-                                			<li><a href="" title="">Windows <span class="pull-right">13</span></a></li>
+                                		<h3 class="side-title">목록 / 수정 </h3>
+                                		<ul id='agentlist' class="list-unstyled">
                                 		</ul>
                                    </div>
                                 </div> 
@@ -54,7 +37,29 @@
                     </div>
                     
                     <div class='border border-gray rounded py-2 px-2 col-xl-6'>
-                            
+                        <div class="row">
+                            <div class="col-sm-12">
+                            	<!-- Category -->
+                            	<div class="single category">
+                            	    <h3 class="mx-auto side-title">등록 </h3>
+                            	    <form id="agent-form" action="" method="post" class="form-horizontal" data-parsley-validate="true" name="agent-form" onsubmit="agentJoin();">
+                        	    		<div class='form-group row m-b-15'>
+                                    		<label class='col-md-4 col-sm-4 col-form-label font-weight-bold' for='GI'>지점명 :</label>
+                                    		<div class='col-md-8 col-sm-8'>
+                                        			<input class="form-control" type="String" id="ANA" name="ANA" placeholder="지점 명" data-parsley-required="true" data-parsley-error-message="{{__('required_detail')}}" data-parsley-trim-value="true" />
+                                    		</div>
+                                		</div>
+                                		<div class='form-group row m-b-15'>
+                                    		<label class='col-md-4 col-sm-4 col-form-label font-weight-bold' for='GI'>지점코드 :</label>
+                                    		<div class='col-md-8 col-sm-8'>
+                                        			<input class="form-control" type="String" id="ANU" name="ANU" placeholder="지점 코드" data-parsley-required="true" data-parsley-error-message="{{__('required_detail')}}" data-parsley-trim-value="true" />
+                                    		</div>
+                                		</div>
+                                		<button type="submit" class="btn btn-primary width-80">{{__('registration')}}</button>
+                            		</form>
+                               </div>
+                            </div> 
+                        </div>
                     </div>
 				</div>                              
 				    
@@ -67,17 +72,72 @@
 	<!-- end row -->
 </div>
 
-<!-- Begin Script -->
-<script language ="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-<script>
-	var pagingObject = new Object({name : "CarExcel", url : "/car/car_json_excel", CID : "{{company._id}}", array : [], sort : "CA", page : 0, postNum : 50, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : "" });
-	
-
-</script>
-<!--End Script-->
 {% endblock %}
 
 {% block script %}
+<script language ="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script>
+	var agentObject = new Object({ANAlist : [], ANUlist : []});
+	
+	$(document).ready(function() {
+	    agentreroad(agentObject);
+	    
+	})
+	
+	function agentInit (Object) {
+	}
+	
+	function agentreroad (Object) {
+	    
+	    Object.ANAlist.push("본사");
+	    Object.ANAlist.push("부산점");
+	    Object.ANAlist.push("제주점");
+	    
+	    Object.ANUlist.push("000");
+	    Object.ANUlist.push("001");
+	    Object.ANUlist.push("002");
+	    
+	    console.log(Object)
+	    var insertTr = ""
+	    
+	    for (var i = 0; i < Object.ANAlist.length; i ++) {
+	        insertTr += "<li><a href='javascript:agentedit(this);' data-type='show' class ='edit-btn'> "+ Object.ANAlist[i] +" <span class='pull-right'>"+ Object.ANUlist[i]+"</span></a></li>"
+	    }
+	    
+	    $("#agentlist").append(insertTr);
+	    
+// 	    insertTr += ""
+// 	    <li><a href="" title=""> 본사 <span class="pull-right">13</span></a></li>
+// 		<li><a href="" title=""> 부산점 <span class="pull-right">13</span></a></li>
+// 		<li><a href="" title=""> 제주점 <span class="pull-right">13</span></a></li>
+// 		<li><a href="" title="">Ecommerce <span class="pull-right">13</span></a></li>
+// 		<li><a href="" title="">Wordpress <span class="pull-right">13</span></a></li>
+	}
+	
+	function agentedit(obj) {
+	    var type = $(obj).data().type;
+	    console.log($(obj))
+	    console.log(type)
+		$('.li-edit').empty();
+		$(obj).parents('tr').siblings().find('.edit-btn').text(i18nconvert("modify"));
+		$(obj).parents('tr').siblings().find('.edit-btn').removeData().type;
+		$(obj).parents('tr').siblings().find('.edit-btn').data('type', 'show');
+		
+	}
+	
+	function agentJoin () {
+	   var formParsley  = $('#agent-form').parsley();
+		if(formParsley.isValid() == true) {
+		    console.log(document.getElementsByName("ANA")[0].value)
+		    console.log(document.getElementsByName("ANU")[0].value)
+		    ajaxJoin('/ajax/agent_join', { ANA : document.getElementsByName("ANA")[0].value, ANU : document.getElementsByName("ANU")[0].value})
+		}
+		event.preventDefault();
+	    
+	}
+
+</script>
+
 <script src="../oasisjs/oasis_join.js"></script>
 <script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
 <script src="../assets/plugins/highlight.js/highlight.min.js"></script>
@@ -85,7 +145,6 @@
 
 <link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" />
 <script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
-
 <script type="text/javascript">
     jQuery(function ($) {
         $("#treeview").shieldTreeView();
