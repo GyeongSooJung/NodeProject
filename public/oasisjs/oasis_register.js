@@ -102,12 +102,14 @@ $("input[name='CAK']").change(function() {
 				
 				$('#ANA').append(insertTr);
 				$('input[name=CNA]').val(data.agents.CNA);
+				$('#CK').val(data.agents.CK).prop('selected', true);
 			}
 			else if(data.result == 'noAgents') {
 				alert(i18nconvert('register_agent_no_exist'));
 				$('.agent-box').addClass('d-none');
 				$('#ANA').empty();
 				$('input[name=CNA]').val('');
+				$('#CK').val('').prop('selected', true);
 				$("input[name='CAK']:radio[value='head']").prop('checked',true);
 			}
 			else if(data.result == 'noCompany') {
@@ -208,8 +210,8 @@ function emailCerAjax(cerNum) {
 
 // 폼 submit 시 인증 과정 여부 확인 기능
 function checkForm() {
-	var ANA;
 	var ANU;
+	var ANA;
 	
 	if(document.getElementsByName('hideCK')[0].value != 'true') {
 		document.getElementById('err-msg2').innerHTML = i18nconvert('register_auth_need');
@@ -222,12 +224,12 @@ function checkForm() {
 		for(var i = 0; i < CAK_length; i ++) {
 			if(document.getElementsByName('CAK'[i].checked == true)) {
 				if(document.getElementsByName('CAK')[i].value == "head") {
-					ANA = "본사";
 					ANU = "000";
+					ANA = "본사";
 				}
 				else {
-					ANA = document.getElementsByName('ANA')[0].value.split("/")[0];
-					ANU = document.getElementsByName('ANA')[0].value.split("/")[1];
+					ANU = document.getElementsByName('ANA')[0].value.split("/")[0];
+					ANA = document.getElementsByName('ANA')[0].value.split("/")[1];
 				}
 			}
 		}
@@ -237,9 +239,9 @@ function checkForm() {
 		    dataType: 'json',
 		    data: {
 		        CNU: document.getElementsByName('CNU')[0].value,
-		        ANA: ANA,
-		        ANU: ANU,
 		        CNA: document.getElementsByName('CNA')[0].value,
+		        ANU: ANU,
+		        ANA: ANA,
 		        CK: document.getElementsByName('CK')[0].value,
 		        addr1: document.getElementsByName('addr1')[0].value,
 		        addr2: document.getElementsByName('addr2')[0].value,

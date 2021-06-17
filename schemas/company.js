@@ -7,14 +7,14 @@ const CompanySchema = new Schema({
         type: String,
         required: true,
     },
-    // //Company_Agent_Name_List
-    // ANL: {
-    //     type: [String],
-    // },
-    // //Company_Agent_Number_List
-    // ACL: {
-    //     type: [String],
-    // },
+    //Company_Agent_Name_List
+    ANL: {
+        type: [String],
+    },
+    //Company_Agent_Number_List
+    ACL: {
+        type: [String],
+    },
     //Company_Agent_Name
     ANA: {
         type: String,

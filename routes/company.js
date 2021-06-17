@@ -27,7 +27,7 @@ router.post('/register', async (req, res, next) => {
         const hashPW = await bcrypt.hash(PW, 12);
           await Company.create({
             CNU : CNU+ANU,
-            CNA : CNA+"("+ANA+")",
+            CNA,
             ANU,
             ANA,
             CK,
