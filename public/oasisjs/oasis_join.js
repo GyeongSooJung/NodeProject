@@ -1,5 +1,6 @@
 // 공통 등록(차량, 장비)
 function ajaxJoin(url, i18nconvert, data) {
+	console.log(data)
     $.ajax({
         type: 'POST',
         url: url,

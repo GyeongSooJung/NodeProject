@@ -2213,9 +2213,39 @@ router.get('/agent_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   res.render('agent_list', { company: req.decoded.company, aclist });
 });
 
-router.post('/ajax/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
+router.post('/ajax/agent_join', isNotLoggedIn, DataSet, async(req, res, next) => {
+  var {data} = req.body
+  data = JSON.parse(data)
+  var ANA = data.ANA;
+  var ANU = data.ANU;
   
+  console.log(ANA, ANU)
   
+  // 몽고db 등록 코드
+  
+  })
+  
+router.post('/ajax/agent_edit', isNotLoggedIn, DataSet, async(req, res, next) => {
+  var {data} = req.body
+  data = JSON.parse(data)
+  var ANA = data.ANA;
+  var ANU = data.ANU;
+  
+  console.log(ANA, ANU)
+  
+  // 몽고db 등록 코드
+  
+  })
+  
+  router.post('/ajax/agent_edit', isNotLoggedIn, DataSet, async(req, res, next) => {
+  var {data} = req.body
+  data = JSON.parse(data)
+  var ANA = data.ANA;
+  var ANU = data.ANU;
+  
+  console.log(ANA, ANU)
+  
+  // 몽고db 등록 코드
   
   })
 

@@ -115,22 +115,35 @@
 	}
 	
 	function agentedit(obj) {
-	    var type = $(obj).data().type;
-	    console.log($(obj))
-	    console.log(type)
 		$('.li-edit').empty();
-		$(obj).parents('tr').siblings().find('.edit-btn').text(i18nconvert("modify"));
-		$(obj).parents('tr').siblings().find('.edit-btn').removeData().type;
-		$(obj).parents('tr').siblings().find('.edit-btn').data('type', 'show');
+		$(obj).removeData().type;
+		
+		var type = $(obj).data().type;
+		
+		var insertTr = "";
+		
+		if(type == 'show') {
+			
+			$(obj).removeData().type;
+			$(obj).data('type', 'hide');
+			$('.li-edit').remove();
+			
+		}
+		else {
+			console.log($(obj).parents('ul').val())
+			$(obj).removeData().type;
+			$(obj).data('type', 'show');
+			insertTr += "<li class='li-edit'><a href='javascript:agentedit(this);' data-type='show' class ='edit-btn'> 123123 <span class='pull-right'>123123</span></a></li>" 
+			$(obj).parents('li').parents('ul').after(insertTr);
+		}
 		
 	}
 	
 	function agentJoin () {
 	   var formParsley  = $('#agent-form').parsley();
+	   
 		if(formParsley.isValid() == true) {
-		    console.log(document.getElementsByName("ANA")[0].value)
-		    console.log(document.getElementsByName("ANU")[0].value)
-		    ajaxJoin('/ajax/agent_join', { ANA : document.getElementsByName("ANA")[0].value, ANU : document.getElementsByName("ANU")[0].value})
+		    ajaxJoin('/ajax/agent_join',i18nconvert, { ANA : document.getElementsByName("ANA")[0].value, ANU : document.getElementsByName("ANU")[0].value})
 		}
 		event.preventDefault();
 	    
