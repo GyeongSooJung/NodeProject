@@ -407,6 +407,8 @@
 	
 	"manual_title": "OASIS | 메뉴얼",
 	
+	"agent_manager" : "지점 관리",
+	"agent_list" : "지점 목록",
 	"agent_head": "본사",
 	"agent_branch": "지점"
 }

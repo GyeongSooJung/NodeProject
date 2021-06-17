@@ -407,6 +407,8 @@
 	
 	"manual_title": "OASIS | Manual",
 	
+	"agent_manager" : "Agent Manager",
+	"agent_list" : "Agent List",
 	"agent_head": "Head Agent",
 	"agent_branch": "Branch Agent"
 }

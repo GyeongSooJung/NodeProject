@@ -2195,16 +2195,66 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
   res.render('ozone_spread', { company: req.decoded.company, aclist });
 });
 
-// var {graphqlHTTP} = require('express-graphql');
+//----------------------------------------------------------------------------//
+//                                  Agent Manager                             //
+//----------------------------------------------------------------------------//
 
-// const schema = require('../graphql/schema');
-// const rootValue = require("../graphql/resolvers")
+router.get('/agent_manager', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
 
-// router.get('/graphql', graphqlHTTP({
-//   schema, rootValue, graphiql: true,
-// }), DataSet, async(req, res, next) => {
+  res.render('agent_manager', { company: req.decoded.company, aclist });
+});
+
+router.get('/agent_list', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+
+  res.render('agent_list', { company: req.decoded.company, aclist });
+});
+
+router.post('/ajax/agent_join', isNotLoggedIn, DataSet, async(req, res, next) => {
+  var {data} = req.body
+  data = JSON.parse(data)
+  var ANA = data.ANA;
+  var ANU = data.ANU;
   
-// });
+  console.log(ANA, ANU)
+  
+  // 몽고db 등록 코드
+  
+  })
+  
+router.post('/ajax/agent_edit', isNotLoggedIn, DataSet, async(req, res, next) => {
+  var {data} = req.body
+  data = JSON.parse(data)
+  var ANA = data.ANA;
+  var ANU = data.ANU;
+  var CID = data.CID;
+  
+  console.log(ANA, ANU)
+  
+  // 몽고db 등록 코드
+  
+  await Company.where({CID : CID}).update({AL : {ANU : ANU, ANA : ANA}})
+  
+  })
+  
+  router.post('/ajax/agent_edit', isNotLoggedIn, DataSet, async(req, res, next) => {
+  var {data} = req.body
+  data = JSON.parse(data)
+  var ANA = data.ANA;
+  var ANU = data.ANU;
+  var CID = data.CID;
+  
+  
+  
+  console.log(ANA, ANU)
+  
+  // 몽고db 등록 코드
+  
+  })
+
 
 
 router.get('/gstest', isNotLoggedIn, DataSet, async(req, res, next) => {

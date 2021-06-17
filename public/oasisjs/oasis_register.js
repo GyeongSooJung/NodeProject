@@ -96,8 +96,8 @@ $("input[name='CAK']").change(function() {
 				$('.agent-box').removeClass('d-none');
 				
 				insertTr += "<option value =''>"+i18nconvert('register_branch_agent_guide')+"</option>";
-				for(var i = 0; i < data.agents.ACL.length; i ++) {
-					insertTr += "<option value ='"+ data.agents.ACL[i] +"/"+ data.agents.ANL[i] +"'>"+ data.agents.ANL[i] +"</option>"
+				for(var i = 0; i < data.agents.AL.length; i ++) {
+					insertTr += "<option value ='"+ data.agents.AL[i] +"/"+ data.agents.AL[i] +"'>"+ data.agents.AL[i] +"</option>"
 				}
 				
 				$('#ANA').append(insertTr);

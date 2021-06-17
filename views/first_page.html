@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div id="content" class="content">
+	<!-- begin page-header -->
+	<h1 class="page-header mt-3">{{__('agent_manager')}}</h1>
+	<!-- end page-header -->
+	<!-- begin row -->
+	<div class="row">
+		<!-- begin col-6 -->
+		<div class="col-xl-12">
+			<!-- begin panel -->
+			<div class="panel panel-inverse" data-sortable-id="form-validation-1">
+				<!-- begin panel-heading -->
+				<div class="panel-heading">
+				    {{__('agent_manager')}}
+				</div>
+				<!-- end panel-heading -->
+				<!-- begin panel-body -->
+				<div id="car-form-div" class="panel-body">
+				    
+				    
+				</div>
+			</div>
+			<!-- end panel -->
+		</div>
+	</div>
+	<!-- end row -->
+</div>
+
+<!-- Begin Script -->
+<script language ="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script>
+	var pagingObject = new Object({name : "CarExcel", url : "/car/car_json_excel", CID : "{{company._id}}", array : [], sort : "CA", page : 0, postNum : 50, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : "" });
+	
+
+</script>
+<!--End Script-->
+{% endblock %}
+
+{% block script %}
+<script src="../oasisjs/oasis_join.js"></script>
+<script src="../assets/plugins/parsleyjs/dist/parsley.min.js"></script>
+<script src="../assets/plugins/highlight.js/highlight.min.js"></script>
+<script src="../assets/js/demo/render.highlight.js"></script>
+{% endblock %}

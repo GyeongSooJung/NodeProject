@@ -163,7 +163,7 @@ router.post('/agent', async (req, res, next) => {
   try {
     const agents = await Company.findOne({ "CNU" : CNU+"000" });
     if(agents) {
-      if(agents.ACL.length != 0) {
+      if(agents.AL.length != 0) {
         return res.send({ result : 'yesAgents', agents : agents });
       }
       else {
