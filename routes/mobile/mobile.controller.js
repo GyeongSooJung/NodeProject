@@ -4,28 +4,61 @@ const Worker = require('../../schemas/worker');
 const Company = require('../../schemas/company');
 const Car = require('../../schemas/car');
 const History = require('../../schemas/history');
-const Point = require('../../schemas/point')
+const Point = require('../../schemas/point');
 var moment = require('moment');
 const Device = require('../../schemas/device');
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = "OASIS";
 
-const UNKOWN = "UNKOWN";
-const NO_SUCH_DATA = "NO_SUCH_DATA";
-const FAIL = "FAIL";
-const TOKEN_ERROR = "TOKEN_ERROR";
-const NO_POINT = "NO_POINT";
+// const UNKOWN = "UNKOWN";
+// const NO_SUCH_DATA = "NO_SUCH_DATA";
+// const FAIL = "FAIL";
+// const TOKEN_ERROR = "TOKEN_ERROR";
+// const NO_POINT = "NO_POINT";
 
 const { config, Group } = require('solapi');
 
 const Mongoose = require('mongoose');
 const ObjectId = Mongoose.Types.ObjectId;
 
+const ERR_CODE = {
+    UNKNOWN: "UNKNOWN",
+    NO_SUCH_DATA: "NO_SUCH_DATA",
+    FAIL: "FAIL",
+    TOKEN_ERROR: "TOKEN_ERROR",
+    NO_POINT: "NO_POINT",
+};
+
+const MODEL_NAME = {
+    "History": "History",
+};
+const MODEL = {
+    "History": History,
+};
+
+const HISTORY = {
+    "workerID": "WID",
+    "deviceID": "DID",
+    "companyID": "CID",
+    "vehicleID": "VID",
+    "workerName": "WNM",
+    "carNumber": "CNM",
+    "deviceName": "DNM",
+    "deviceNickname": "DNN",
+    "fwVersion": "VER",
+    "endTime": "ET",
+    "processData": "PD",
+    "maximumPPM": "MP",
+    "finishPPM": "FP",
+    "resultCode": "RC",
+    "resultDetail": "RD",
+    "course": "COS",
+    "createAt": "CA"
+};
 
 
-
-exports.test = async(req, res, next) => {
+exports.tokenVerification = async(req, res, next) => {
     const token = req.body.token;
     console.log("token: " + token);
 
@@ -36,7 +69,7 @@ exports.test = async(req, res, next) => {
     catch (error) {
         res.json({
             result: false,
-            error: TOKEN_ERROR,
+            error: ERR_CODE.TOKEN_ERROR,
         });
     }
 
@@ -57,8 +90,8 @@ exports.signIn = async(req, res) => {
     const { type, id, email } = req.body;
     if (type == "GOOGLE") {
         var worker = await Worker.findOne({ "GID": id, "EM": email });
-        console.log(type, id, email)
-        console.log(worker)
+        // console.log(type, id, email);
+        // console.log(worker);
 
         if (worker != null) {
             // 토큰 생성
@@ -90,13 +123,13 @@ exports.signIn = async(req, res) => {
         else {
             return res.json({
                 result: false,
-                error: NO_SUCH_DATA,
+                error: ERR_CODE.NO_SUCH_DATA,
             });
         }
     }
     res.json({
         result: false,
-        error: UNKOWN,
+        error: ERR_CODE.UNKNOWN,
     });
 
 };
@@ -117,7 +150,7 @@ exports.signUp = async(req, res) => {
         console.log(exception);
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
@@ -138,7 +171,7 @@ exports.updateWorkerInfo = async(req, res) => {
     catch (exception) {
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
@@ -158,7 +191,7 @@ exports.withdrawal = async(req, res) => {
     catch (exception) {
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
@@ -181,14 +214,14 @@ exports.findCompanyByID = async(req, res) => {
 
             res.json({
                 result: false,
-                error: NO_SUCH_DATA,
+                error: ERR_CODE.NO_SUCH_DATA,
             });
         }
     }
     catch (exception) {
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
@@ -230,14 +263,14 @@ exports.fineCompanies = async(req, res) => {
 
             res.json({
                 result: false,
-                error: NO_SUCH_DATA,
+                error: ERR_CODE.NO_SUCH_DATA,
             });
         }
     }
     catch (exception) {
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
@@ -260,7 +293,7 @@ exports.confirmConpanyPW = async(req, res) => {
 
         return res.json({
             result: false,
-            error: FAIL,
+            error: ERR_CODE.FAIL,
         });
 
 
@@ -268,7 +301,7 @@ exports.confirmConpanyPW = async(req, res) => {
     catch (exception) {
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
@@ -283,11 +316,10 @@ exports.registerCar = async(req, res) => {
         var result = await Car.create({ CID, CC, CN, SN });
         console.log(result);
         var ObjectId = Mongoose.Types.ObjectId;
-        console.log(ObjectId(CID))
+        // console.log(ObjectId(CID));
         await Company.where({ "_id": ObjectId(CID) })
             .updateOne({ "CUA": Date.now() }).setOptions({ runValidators: true })
             .exec();
-
         res.json({
             result: true,
         });
@@ -296,7 +328,7 @@ exports.registerCar = async(req, res) => {
         console.log(exception);
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
@@ -317,14 +349,14 @@ exports.findCarByComID = async(req, res) => {
 
             res.json({
                 result: false,
-                error: NO_SUCH_DATA,
+                error: ERR_CODE.NO_SUCH_DATA,
             });
         }
     }
     catch (exception) {
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
@@ -349,7 +381,7 @@ exports.updateCar = async(req, res) => {
     catch (exception) {
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
@@ -376,35 +408,96 @@ exports.deleteCar = async(req, res) => {
     catch (exception) {
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
+    }
+};
+
+exports.historyRoot = async(req, res, next) => {
+    console.log("historyRoot");
+    console.log("req.method   : " + req.method);
+    console.log("req.path: " + req.path);
+    console.log(JSON.stringify(HISTORY));
+    console.log(Object.keys(HISTORY).length);
+    for (var key in HISTORY) {
+        console.log('key:' + key + ' / ' + 'value:' + HISTORY[key]);
+    }
+    if (req.method == "POST" && req.path == "/create") {
+        console.log("to create");
+        createModel(req, res, MODEL_NAME.History);
+    }
+    else {
+        next();
     }
 };
 
 /// 소독 공정 관련
 exports.createHistory = async(req, res) => {
-    try {
-        console.log(req.body);
-        const { WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD } = req.body;
+    // try {
+    //     console.log(req.body);
+    //     // const { WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD } = req.body;
+    //     // var result = await History.create({ WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD });
 
-        var result = await History.create({ WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD });
-        await Device.where({ _id: DID }).update({ $inc: { UN: 1 } });
+    //     var history = new History(req.body);
+    //     var result = await History.create(history);
 
-        console.log(result);
+    //     await Device.where({ _id: history[HISTORY.deviceID] }).update({ $inc: { UN: 1 } });
 
+    //     console.log(result);
+
+    //     res.json({
+    //         result: true,
+    //         data: result._id,
+    //     });
+    // }
+    // catch (exception) {
+    //     console.log(exception);
+    //     res.json({
+    //         result: false,
+    //         error: ERR_CODE.UNKNOWN,
+    //     });
+    // }
+
+    createModel(req, res, MODEL_NAME.History);
+};
+
+
+
+async function createModel(req, res, model) {
+    var Model;
+    var doc = req.body;
+    var postJob;
+
+    switch (model) {
+        case MODEL_NAME.History:
+            Model = MODEL.History;
+            postJob = async function() {
+                await Device.where({ _id: doc[HISTORY.deviceID] }).update({ $inc: { UN: 1 } });
+            };
+            break;
+        default:
+            return onError();
+    }
+
+    const onError = (error) => {
+        res.json({
+            result: false,
+            error: ERR_CODE.UNKNOWN,
+        });
+    };
+
+    const resResult = (result) => {
+        if (postJob != null) {
+            postJob();
+        }
         res.json({
             result: true,
             data: result._id,
         });
-    }
-    catch (exception) {
-        console.log(exception);
-        res.json({
-            result: false,
-            error: UNKOWN,
-        });
-    }
-};
+    };
+
+    await Model.create(doc).then(resResult).catch(onError);
+}
 
 // 히스토리 리스트 조회
 exports.findHistories = async(req, res) => {
@@ -422,14 +515,14 @@ exports.findHistories = async(req, res) => {
 
             res.json({
                 result: false,
-                error: NO_SUCH_DATA,
+                error: ERR_CODE.NO_SUCH_DATA,
             });
         }
     }
     catch (exception) {
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
@@ -450,14 +543,14 @@ exports.findHistory = async(req, res) => {
 
             res.json({
                 result: false,
-                error: NO_SUCH_DATA,
+                error: ERR_CODE.NO_SUCH_DATA,
             });
         }
     }
     catch (exception) {
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
@@ -479,7 +572,7 @@ exports.registerDevice = async(req, res) => {
     catch (exception) {
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
@@ -497,14 +590,14 @@ exports.findDevices = async(req, res) => {
         else {
             res.json({
                 result: false,
-                error: NO_SUCH_DATA,
+                error: ERR_CODE.NO_SUCH_DATA,
             });
         }
     }
     catch (exception) {
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
@@ -525,7 +618,7 @@ exports.updateDevice = async(req, res) => {
     catch (exception) {
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
@@ -545,7 +638,7 @@ exports.deleteDevice = async(req, res) => {
     catch (exception) {
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
@@ -569,7 +662,7 @@ exports.findOneDevice = async(req, res) => {
         else {
             res.send({
                 result: false,
-                error: NO_SUCH_DATA,
+                error: ERR_CODE.NO_SUCH_DATA,
             });
         }
 
@@ -578,20 +671,20 @@ exports.findOneDevice = async(req, res) => {
         console.log(exception);
         res.send({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
 
 /// 히스토리 관련
 
-exports.root = (req, res) => {
-    var tz = moment.tz.guess();
-    console.log(tz);
-    res.json({
-        result: "hello",
-    });
-};
+// exports.root = (req, res) => {
+//     var tz = moment.tz.guess();
+//     console.log(tz);
+//     res.json({
+//         result: "hello",
+//     });
+// };
 
 // SMS 관련
 
@@ -664,7 +757,7 @@ exports.registerSMS = async(req, res) => {
         else {
             res.json({
                 result: false,
-                error: UNKOWN,
+                error: ERR_CODE.UNKNOWN,
             });
         }
 
@@ -673,7 +766,7 @@ exports.registerSMS = async(req, res) => {
     catch (exception) {
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
@@ -752,7 +845,7 @@ exports.registerKAKAO = async(req, res) => {
         else {
             res.json({
                 result: false,
-                error: NO_POINT,
+                error: ERR_CODE.NO_POINT,
             });
         }
 
@@ -761,7 +854,7 @@ exports.registerKAKAO = async(req, res) => {
     catch (exception) {
         res.json({
             result: false,
-            error: UNKOWN,
+            error: ERR_CODE.UNKNOWN,
         });
     }
 };
