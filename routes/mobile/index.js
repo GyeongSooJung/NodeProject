@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const controller = require("./mobile.controller");
 
-router.post("/", controller.root);
-router.get("/", controller.root);
+// router.post("/", controller.root);
+// router.get("/", controller.root);
 
 
 // 미들웨어를 타선 안되는 공개 라우터
@@ -11,7 +11,7 @@ router.post("/worker/signup", controller.signUp);
 router.post("/company/find", controller.fineCompanies);
 
 
-router.use("/", controller.test);
+router.use("/", controller.tokenVerification);
 
 /// 작업자 관련
 router.post("/worker/find", controller.findWorker);
@@ -29,7 +29,8 @@ router.post("/car/update", controller.updateCar);
 router.post("/car/delete", controller.deleteCar);
 
 // 소독 이력 관련
-router.post("/history/create", controller.createHistory);
+router.use("/history/", controller.historyRoot);
+// router.post("/history/create", controller.createHistory);
 router.post("/history/find", controller.findHistories);
 router.post("/history/findOne", controller.findHistory);
 router.post("/history/share",controller.registerKAKAO);
