@@ -61,6 +61,8 @@ function checkCNU(companyNumber) {
 		    alert(i18nconvert('register_business_right'));
 		    document.getElementsByName('hideCNU')[0].value = 'true';
 		    document.getElementById('err-msg-cnu').innerHTML = i18nconvert('register_company_cer_success');
+		    $("input[name='CNU']").prop('readonly', true);
+		    $('.agent-select').removeClass('d-none');
 		}
 		else {
 			alert(i18nconvert('register_business_noexist'));
@@ -72,6 +74,8 @@ function checkCNU(companyNumber) {
 			document.getElementsByName("addr2").value = null;
 			document.getElementsByName('hideCNU')[0].value = null;
 			document.getElementById('err-msg-cnu').innerHTML = i18nconvert('register_company_need_cer');
+			$("input[name='CNU']").prop('readonly', false);
+		    $('.agent-select').addClass('d-none');
 		}
 	});
 }
@@ -96,8 +100,8 @@ $("input[name='CAK']").change(function() {
 				$('.agent-box').removeClass('d-none');
 				
 				insertTr += "<option value =''>"+i18nconvert('register_branch_agent_guide')+"</option>";
-				for(var i = 0; i < data.agents.AL.length; i ++) {
-					insertTr += "<option value ='"+ data.agents.AL[i] +"/"+ data.agents.AL[i] +"'>"+ data.agents.AL[i] +"</option>"
+				for(var i = 0; i < data.nameList.length; i ++) {
+					insertTr += "<option value ='"+ data.codeList[i] +"/"+ data.nameList[i] +"'>"+ data.nameList[i] +"</option>"
 				}
 				
 				$('#ANA').append(insertTr);
@@ -124,6 +128,7 @@ $("input[name='CAK']").change(function() {
 		$('.agent-box').addClass('d-none');
 		$('#ANA').empty();
 		$('input[name=CNA]').val('');
+		$('#CK').val('').prop('selected', true);
 	}
 });
 

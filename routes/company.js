@@ -163,8 +163,14 @@ router.post('/agent', async (req, res, next) => {
   try {
     const agents = await Company.findOne({ "CNU" : CNU+"000" });
     if(agents) {
+      var nameList = Object.keys(agents.AL);
+      var codeList = [];
+      for(var i = 0; i < nameList.length; i++) {
+        codeList[i] = agents.AL[nameList[i]];
+      }
+      
       if(agents.AL.length != 0) {
-        return res.send({ result : 'yesAgents', agents : agents });
+        return res.send({ result : 'yesAgents', agents : agents, nameList : nameList, codeList : codeList });
       }
       else {
         return res.send({ result : 'noAgents' });

@@ -18,8 +18,6 @@ const { isNotLoggedIn } = require('./middleware');
 //login 진행 할경우 토큰 만들어서 cookie에 넣음
 router.post("/login", async(req, res, next) => {
   const {CNU, PW} = req.body;
-  console.log("씨엔유"+CNU);
-  console.log("피"+PW);
   try {
     const company = await Company.findOne({ "CNU" : CNU }); // CNU에 맞는 데이터 찾아오기
     console.log(company);

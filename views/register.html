@@ -62,21 +62,23 @@
     							    <div id="err-msg-cnu" class="text-realred"></div>
         						</div>
         						<!--본사/지점 선택-->
-        						<label class="control-label">회원님의 기업은 <span class="text-danger"> *</span></label>
-        						<div class="form-group m-b-20 d-flex justify-content-start align-items-center">
-									<div class="form-check h4 mr-3 mb-0">
-										<input class="form-check-input" type="radio" name="CAK" id="CAK1" value="head" checked />
-										<label class="form-check-label" for="CAK1">
-											{{__('agent_head')}}
-										</label>
-									</div>
-									<div class="form-check h4 mb-0">
-										<input class="form-check-input" type="radio" name="CAK" id="CAK2" value="branch" />
-										<label class="form-check-label" for="CAK2">
-											{{__('agent_branch')}}
-										</label>
-									</div>
-        						</div>
+        						<div class="agent-select d-none">
+	        						<label class="control-label">회원님의 기업은 <span class="text-danger"> *</span></label>
+	        						<div class="form-group m-b-20 d-flex justify-content-start align-items-center">
+										<div class="form-check h4 mr-3 mb-0">
+											<input class="form-check-input" type="radio" name="CAK" id="CAK1" value="head" checked />
+											<label class="form-check-label" for="CAK1">
+												{{__('agent_head')}}
+											</label>
+										</div>
+										<div class="form-check h4 mb-0">
+											<input class="form-check-input" type="radio" name="CAK" id="CAK2" value="branch" />
+											<label class="form-check-label" for="CAK2">
+												{{__('agent_branch')}}
+											</label>
+										</div>
+	        						</div>
+	        					</div>
         						<!--지점 종류-->
         						<div class="agent-box d-none">
 	        						<label class="control-label">{{__('agent_branch')}} <span class="text-danger"> *</span></label>
