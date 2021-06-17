@@ -138,6 +138,10 @@
 	"register_digits_error" : "Please enter the numbers",
 	"register_success": "Sign up is complete.",
 	"register_email_send_fail" : "Email sending failed.",
+	"register_company_agent_kind": "Your company is the",
+	"register_branch_agent_guide": "Please select a branch office",
+	"register_agent_no_exist": "There are no registered branches. Please register a branch in your head office account.",
+	"register_agent_head_need": "There is no registered head office. Please sign up for the head office.",
 	
 	"main_title": "OASIS | Admin",
     "main_point": "point",
@@ -404,7 +408,7 @@
 	"manual_title": "OASIS | Manual",
 	
 	"agent_manager" : "Agent Manager",
-	"agent_list" : "Agent List"
-	
-	
+	"agent_list" : "Agent List",
+	"agent_head": "Head Agent",
+	"agent_branch": "Branch Agent"
 }

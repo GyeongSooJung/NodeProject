@@ -13,7 +13,8 @@ const Company = require('../schemas/company');
 
 // 회원가입
 router.post('/register', async (req, res, next) => {
-  const { CNU, CNA, CK, addr1, addr2, PN, NA, MN, PW, EA, CEA } = req.body;
+  const { CNU, CNA, ANU, ANA, CK, addr1, addr2, PN, NA, MN, PW, EA, CEA } = req.body;
+  console.log("씨에케"+ANA+"/"+ANU);
   const ADR = addr1+addr2;
   const hashAuth = req.cookies.hashAuth;
   
@@ -25,8 +26,10 @@ router.post('/register', async (req, res, next) => {
       if(bcrypt.compareSync(CEA, hashAuth)) {
         const hashPW = await bcrypt.hash(PW, 12);
           await Company.create({
-            CNU,
-            CNA,
+            CNU : CNU+ANU,
+            CNA : CNA+"("+ANA+")",
+            ANU,
+            ANA,
             CK,
             ADR,
             PN,
@@ -148,6 +151,31 @@ router.post('/infoCNU', async (req, res, next) => {
         return res.send({ searchResult: searchResult });
       });
   } catch(err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+// 본사/지점 확인
+router.post('/agent', async (req, res, next) => {
+  const CNU = req.body.CNU;
+  
+  try {
+    const agents = await Company.findOne({ "CNU" : CNU+"000" });
+    if(agents) {
+      if(agents.ACL.length != 0) {
+        return res.send({ result : 'yesAgents', agents : agents });
+      }
+      else {
+        return res.send({ result : 'noAgents' });
+      }
+    }
+    else {
+      return res.send({ result : 'noCompany' });
+    }
+    
+  } catch(err) {
+    res.send({ result : 'fail' });
     console.error(err);
     next(err);
   }

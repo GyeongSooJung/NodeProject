@@ -76,6 +76,55 @@ function checkCNU(companyNumber) {
 	});
 }
 
+// 본사/지점 선택 기능
+$("input[name='CAK']").change(function() {
+	var CAK = this.value;
+	insertTr = "";
+	
+	if(CAK == 'branch') {
+		var CNU = document.getElementsByName('CNU')[0].value;
+		
+		$.ajax({
+			type: 'POST',
+			url: '/company/agent',
+			datatype: 'json',
+			data: {
+				CNU : CNU
+			}
+		}).done(function(data) {
+			if(data.result == 'yesAgents') {
+				$('.agent-box').removeClass('d-none');
+				
+				insertTr += "<option value =''>"+i18nconvert('register_branch_agent_guide')+"</option>";
+				for(var i = 0; i < data.agents.ACL.length; i ++) {
+					insertTr += "<option value ='"+ data.agents.ACL[i] +"/"+ data.agents.ANL[i] +"'>"+ data.agents.ANL[i] +"</option>"
+				}
+				
+				$('#ANA').append(insertTr);
+				$('input[name=CNA]').val(data.agents.CNA);
+			}
+			else if(data.result == 'noAgents') {
+				alert(i18nconvert('register_agent_no_exist'));
+				$('.agent-box').addClass('d-none');
+				$('#ANA').empty();
+				$('input[name=CNA]').val('');
+				$("input[name='CAK']:radio[value='head']").prop('checked',true);
+			}
+			else if(data.result == 'noCompany') {
+				alert(i18nconvert('register_agent_head_need'));
+				$('.agent-box').addClass('d-none');
+				$('#ANA').empty();
+				$("input[name='CAK']:radio[value='head']").prop('checked',true);
+			}
+		});
+	}
+	else {
+		$('.agent-box').addClass('d-none');
+		$('#ANA').empty();
+		$('input[name=CNA]').val('');
+	}
+});
+
 // 타이머 기능
 var timer;
 var sec = '';
@@ -159,6 +208,9 @@ function emailCerAjax(cerNum) {
 
 // 폼 submit 시 인증 과정 여부 확인 기능
 function checkForm() {
+	var ANA;
+	var ANU;
+	
 	if(document.getElementsByName('hideCK')[0].value != 'true') {
 		document.getElementById('err-msg2').innerHTML = i18nconvert('register_auth_need');
 	}
@@ -166,12 +218,27 @@ function checkForm() {
 		document.getElementById('err-msg-cnu').innerHTML = i18nconvert('register_company_need_cer');
 	}
 	else {
+		var CAK_length = document.getElementsByName('CAK').length;
+		for(var i = 0; i < CAK_length; i ++) {
+			if(document.getElementsByName('CAK'[i].checked == true)) {
+				if(document.getElementsByName('CAK')[i].value == "head") {
+					ANA = "본사";
+					ANU = "000";
+				}
+				else {
+					ANA = document.getElementsByName('ANA')[0].value.split("/")[0];
+					ANU = document.getElementsByName('ANA')[0].value.split("/")[1];
+				}
+			}
+		}
 	    $.ajax({
 		    type: 'POST',
 		    url: '/company/register',
 		    dataType: 'json',
 		    data: {
 		        CNU: document.getElementsByName('CNU')[0].value,
+		        ANA: ANA,
+		        ANU: ANU,
 		        CNA: document.getElementsByName('CNA')[0].value,
 		        CK: document.getElementsByName('CK')[0].value,
 		        addr1: document.getElementsByName('addr1')[0].value,

@@ -27,7 +27,7 @@
                                 <div class="col-sm-12">
                                 	<!-- Category -->
                                 	<div class="single category">
-                                		<h3 class="side-title">목록 / 수정 </h3>
+                                		<h3 class="side-title">목록  </h3>
                                 		<ul id='agentlist' class="list-unstyled">
                                 		</ul>
                                    </div>
@@ -43,6 +43,25 @@
                             	<div class="single category">
                             	    <h3 class="mx-auto side-title">등록 </h3>
                             	    <form id="agent-form" action="" method="post" class="form-horizontal" data-parsley-validate="true" name="agent-form" onsubmit="agentJoin();">
+                        	    		<div class='form-group row m-b-15'>
+                                    		<label class='col-md-4 col-sm-4 col-form-label font-weight-bold' for='GI'>지점명 :</label>
+                                    		<div class='col-md-8 col-sm-8'>
+                                        			<input class="form-control" type="String" id="ANA" name="ANA" placeholder="지점 명" data-parsley-required="true" data-parsley-error-message="{{__('required_detail')}}" data-parsley-trim-value="true" />
+                                    		</div>
+                                		</div>
+                                		<div class='form-group row m-b-15'>
+                                    		<label class='col-md-4 col-sm-4 col-form-label font-weight-bold' for='GI'>지점코드 :</label>
+                                    		<div class='col-md-8 col-sm-8'>
+                                        			<input class="form-control" type="String" id="ANU" name="ANU" placeholder="지점 코드" data-parsley-required="true" data-parsley-error-message="{{__('required_detail')}}" data-parsley-trim-value="true" />
+                                    		</div>
+                                		</div>
+                                		<button type="submit" class="btn btn-primary width-80">{{__('registration')}}</button>
+                            		</form>
+                               </div>
+                               
+                               <div class="single category">
+                            	    <h3 class="mx-auto side-title"> 수정 / 삭제 </h3>
+                            	    <form id="agent-form" action="" method="post" class="form-horizontal" data-parsley-validate="true" name="agent-form" onsubmit="agentEdit();">
                         	    		<div class='form-group row m-b-15'>
                                     		<label class='col-md-4 col-sm-4 col-form-label font-weight-bold' for='GI'>지점명 :</label>
                                     		<div class='col-md-8 col-sm-8'>
@@ -77,7 +96,7 @@
 {% block script %}
 <script language ="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script>
-	var agentObject = new Object({ANAlist : [], ANUlist : []});
+	var agentObject = new Object({ CID : "{{company._id}}", ANAlist : [], ANUlist : []});
 	
 	$(document).ready(function() {
 	    agentreroad(agentObject);
@@ -130,11 +149,11 @@
 			
 		}
 		else {
-			console.log($(obj).parents('ul').val())
+			console.log($(this).parent())
 			$(obj).removeData().type;
 			$(obj).data('type', 'show');
 			insertTr += "<li class='li-edit'><a href='javascript:agentedit(this);' data-type='show' class ='edit-btn'> 123123 <span class='pull-right'>123123</span></a></li>" 
-			$(obj).parents('li').parents('ul').after(insertTr);
+			$(obj[a]).parent().parent().after(insertTr);
 		}
 		
 	}
@@ -143,7 +162,7 @@
 	   var formParsley  = $('#agent-form').parsley();
 	   
 		if(formParsley.isValid() == true) {
-		    ajaxJoin('/ajax/agent_join',i18nconvert, { ANA : document.getElementsByName("ANA")[0].value, ANU : document.getElementsByName("ANU")[0].value})
+		    ajaxJoin('/ajax/agent_join',i18nconvert, { ANA : document.getElementsByName("ANA")[0].value, ANU : document.getElementsByName("ANU")[0].value, CID : Object.CID})
 		}
 		event.preventDefault();
 	    

@@ -61,6 +61,30 @@
     							    <div id="err-msg1"></div>
     							    <div id="err-msg-cnu" class="text-realred"></div>
         						</div>
+        						<!--본사/지점 선택-->
+        						<label class="control-label">회원님의 기업은 <span class="text-danger"> *</span></label>
+        						<div class="form-group m-b-20 d-flex justify-content-start align-items-center">
+									<div class="form-check h4 mr-3 mb-0">
+										<input class="form-check-input" type="radio" name="CAK" id="CAK1" value="head" checked />
+										<label class="form-check-label" for="CAK1">
+											{{__('agent_head')}}
+										</label>
+									</div>
+									<div class="form-check h4 mb-0">
+										<input class="form-check-input" type="radio" name="CAK" id="CAK2" value="branch" />
+										<label class="form-check-label" for="CAK2">
+											{{__('agent_branch')}}
+										</label>
+									</div>
+        						</div>
+        						<!--지점 종류-->
+        						<div class="agent-box d-none">
+	        						<label class="control-label">{{__('agent_branch')}} <span class="text-danger"> *</span></label>
+	        						<div id="selectBranch" class="form-group m-b-20" >
+	    								<select id="ANA" name="ANA" class="form-control form-control-lg inverse-mode text-gray-700" data-parsley-error-message="{{__('required_detail')}}" required>
+	    								</select>
+	        						</div>
+	        					</div>
         						<!--업체명-->
         						<label class="control-label">{{__('company_name')}} <span class="text-danger"> *</span></label>
         						<div class="form-group m-b-20" >
@@ -70,15 +94,15 @@
         						<label class="control-label">{{__('company_type')}} <span class="text-danger"> *</span></label>
         						<div id="selectBack" class="form-group m-b-20" >
     								<select id="CK" name="CK" class="form-control form-control-lg inverse-mode text-gray-700" data-parsley-error-message="{{__('required_detail')}}" required>
-    									<option value ="">{{__('company_type_guide')}}</option>
-    									  <option value="렌터카">{{__('company_type1')}}</option>
-    									  <option value="카센터">{{__('company_type2')}}</option>
-    									  <option value="출장 정비">{{__('company_type3')}}</option>
-    									  <option value="출장 세차">{{__('company_type4')}}</option>
-    									  <option value="택시 운수업">{{__('company_type5')}}</option>
-    									  <option value="버스 운수업">{{__('company_type6')}}</option>
-    									  <option value="타이어 샵">{{__('company_type7')}}</option>
-    									  <option value="MK 대리점">{{__('company_type8')}}</option>
+										<option value ="">{{__('company_type_guide')}}</option>
+										<option value="렌터카">{{__('company_type1')}}</option>
+										<option value="카센터">{{__('company_type2')}}</option>
+										<option value="출장 정비">{{__('company_type3')}}</option>
+										<option value="출장 세차">{{__('company_type4')}}</option>
+										<option value="택시 운수업">{{__('company_type5')}}</option>
+										<option value="버스 운수업">{{__('company_type6')}}</option>
+										<option value="타이어 샵">{{__('company_type7')}}</option>
+										<option value="MK 대리점">{{__('company_type8')}}</option>
     								</select>
         						</div>
         						<!--주소-->
@@ -197,6 +221,7 @@
 	<!-- end page container -->
 
 <!--Begin Script-->
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script>
 	// 이메일 전송 기능
 	function emailSend(email) {
@@ -287,6 +312,15 @@
     	}
     	else if(string == "register_email_send_fail") {
     		return "{{__('register_email_send_fail')}}";
+    	}
+    	else if(string == "register_branch_agent_guide") {
+    		return "{{__('register_branch_agent_guide')}}";
+    	}
+    	else if(string == "register_agent_no_exist") {
+    		return "{{__('register_agent_no_exist')}}";
+    	}
+    	else if(string == "register_agent_head_need") {
+    		return "{{__('register_agent_head_need')}}";
     	}
 	}
 </script>

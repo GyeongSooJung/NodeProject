@@ -2230,10 +2230,13 @@ router.post('/ajax/agent_edit', isNotLoggedIn, DataSet, async(req, res, next) =>
   data = JSON.parse(data)
   var ANA = data.ANA;
   var ANU = data.ANU;
+  var CID = data.CID;
   
   console.log(ANA, ANU)
   
   // 몽고db 등록 코드
+  
+  await Company.where({CID : CID}).update({AL : {ANU : ANU, ANA : ANA}})
   
   })
   
@@ -2242,6 +2245,9 @@ router.post('/ajax/agent_edit', isNotLoggedIn, DataSet, async(req, res, next) =>
   data = JSON.parse(data)
   var ANA = data.ANA;
   var ANU = data.ANU;
+  var CID = data.CID;
+  
+  
   
   console.log(ANA, ANU)
   
