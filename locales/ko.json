@@ -95,6 +95,7 @@
 	"login_pw_change": "비밀번호 변경이 완료되었습니다.",
 	"login_findpw": "임시 비밀번호가 이메일로 전송되었습니다.",
 	"login_findpw2": "보안을 위해 비밀번호는 추후에 변경해주세요.",
+	"login_fail": "로그인에 실패했습니다.",
 	
 	"find_title": "OASIS | 비밀번호 찾기",
 	"find_no_register": "가입되지 않은 사업자번호입니다.",
@@ -140,6 +141,7 @@
 	"register_email_send_fail" : "이메일 전송이 실패했습니다.",
 	"register_company_agent_kind": "회원님의 기업은",
 	"register_branch_agent_guide": "지점을 선택해주세요.",
+	"register_branch_agent_guide2": "지점이 없습니다.",
 	"register_agent_no_exist": "등록된 지점이 없습니다. 본사 계정에서 지점을 등록해주세요.",
 	"register_agent_head_need": "등록된 본사가 없습니다. 본사로 가입해주세요.",
 	

@@ -83,10 +83,11 @@ function checkCNU(companyNumber) {
 // 본사/지점 선택 기능
 $("input[name='CAK']").change(function() {
 	var CAK = this.value;
-	insertTr = "";
+	var insertTr = "";
 	
 	if(CAK == 'branch') {
 		var CNU = document.getElementsByName('CNU')[0].value;
+		$('#ANA').empty();
 		
 		$.ajax({
 			type: 'POST',
@@ -101,7 +102,7 @@ $("input[name='CAK']").change(function() {
 				
 				insertTr += "<option value =''>"+i18nconvert('register_branch_agent_guide')+"</option>";
 				for(var i = 0; i < data.nameList.length; i ++) {
-					insertTr += "<option value ='"+ data.codeList[i] +"/"+ data.nameList[i] +"'>"+ data.nameList[i] +"</option>"
+					insertTr += "<option value ='"+ data.codeList[i] +"/"+ data.nameList[i] +"'>"+ data.nameList[i] +"</option>";
 				}
 				
 				$('#ANA').append(insertTr);
@@ -121,6 +122,10 @@ $("input[name='CAK']").change(function() {
 				$('.agent-box').addClass('d-none');
 				$('#ANA').empty();
 				$("input[name='CAK']:radio[value='head']").prop('checked',true);
+			}
+			else {
+				alert(i18nconvert('register_fail'));
+				location.reload();
 			}
 		});
 	}
@@ -215,8 +220,8 @@ function emailCerAjax(cerNum) {
 
 // 폼 submit 시 인증 과정 여부 확인 기능
 function checkForm() {
-	var ANU;
-	var ANA;
+	var ANU = "";
+	var ANA = "";
 	
 	if(document.getElementsByName('hideCK')[0].value != 'true') {
 		document.getElementById('err-msg2').innerHTML = i18nconvert('register_auth_need');
@@ -225,19 +230,33 @@ function checkForm() {
 		document.getElementById('err-msg-cnu').innerHTML = i18nconvert('register_company_need_cer');
 	}
 	else {
-		var CAK_length = document.getElementsByName('CAK').length;
-		for(var i = 0; i < CAK_length; i ++) {
-			if(document.getElementsByName('CAK'[i].checked == true)) {
-				if(document.getElementsByName('CAK')[i].value == "head") {
-					ANU = "000";
-					ANA = "본사";
-				}
-				else {
-					ANU = document.getElementsByName('ANA')[0].value.split("/")[0];
-					ANA = document.getElementsByName('ANA')[0].value.split("/")[1];
-				}
-			}
+	
+		// var CAK_length = document.getElementsByName('CAK').length;
+		// for(var i = 0; i < CAK_length; i ++) {
+		// 	if(document.getElementsByName('CAK'[i].checked == true)) {
+		// 		if(document.getElementsByName('CAK')[i].value == "head") {
+		// 			alert('hi');
+		// 			ANU = "000";
+		// 			ANA = "본사";
+		// 			break;
+		// 		}
+		// 		else {
+		// 			alert('bye');
+		// 			ANU = document.getElementsByName('ANA')[0].value.split("/")[0];
+		// 			ANA = document.getElementsByName('ANA')[0].value.split("/")[1];
+		// 			break;
+		// 		}
+		// 	}
+		// }
+		if($("input:radio[name='CAK']:checked").val() == "head") {
+			ANU = "000";
+			ANA = "본사";
 		}
+		else {
+			ANU = document.getElementsByName('ANA')[0].value.split("/")[0];
+			ANA = document.getElementsByName('ANA')[0].value.split("/")[1];
+		}
+		
 	    $.ajax({
 		    type: 'POST',
 		    url: '/company/register',
