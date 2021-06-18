@@ -11,8 +11,14 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
 	<link href="../assets/css/default/app.min.css" rel="stylesheet" />
 	<!-- ================== END BASE CSS STYLE ================== -->
+	<link href="../oasiscss/login.css" rel="stylesheet" />
 	
 	<link href="../assets/img/favicon.png" rel="icon">
+	<style>
+		input::placeholder {
+			color: gray !important;
+		}
+	</style>
 </head>
 <body class="pace-top">
 	<!-- begin #page-loader -->
@@ -48,19 +54,70 @@
 				<div class="login-body">
 					<!-- begin login-content -->
 					<div class="login-content">
-						<form action="" method="post" id="login-form" class="margin-bottom-0" onsubmit="login('login-form','CNU','PW');">
-							<div class="form-group m-b-20">
-								<input id="CNU" name = "CNU" type="text" class="form-control form-control-lg inverse-mode" placeholder="{{__('business_number')}}" required />
+						<!-- begin nav-tabs -->
+						<ul class="nav nav-tabs m-b-20">
+							<li class="nav-item w-50 text-center">
+								<a href="#head" data-toggle="tab" class="nav-link active">
+									<span class="d-sm-none h5 mb-0">{{__('agent_head')}}</span>
+									<span class="d-sm-block d-none h5 mb-0">{{__('agent_head')}}</span>
+								</a>
+							</li>
+							<li class="nav-item w-50 text-center">
+								<a href="#branch" data-toggle="tab" class="nav-link">
+									<span class="d-sm-none h5 mb-0">{{__('agent_branch')}}</span>
+									<span class="d-sm-block d-none h5 mb-0">{{__('agent_branch')}}</span>
+								</a>
+							</li>
+						</ul>
+						<!-- end nav-tabs -->
+						<!-- begin tab-content -->
+						<div class="tab-content bg-transparent p-0">
+							<!-- begin tab-pane -->
+							<div class="tab-pane fade active show" id="head">
+								<form action="" method="post" id="login-form" class="margin-bottom-0" onsubmit="login('login-form','CNU','ANA','PW');">
+									<!--사업자번호-->
+									<div class="form-group m-b-20">
+										<input id="CNU" name = "CNU" type="text" class="form-control form-control-lg inverse-mode" placeholder="{{__('business_number')}}" required />
+									</div>
+									<!--지점 종류-->
+									<input id="ANA" name="ANA" type="hidden" value="000/본사" />
+		        					<!--비밀번호-->
+									<div class="form-group m-b-20">
+										<input id="PW" name = 'PW' type="password" class="form-control form-control-lg inverse-mode" placeholder="{{__('pw')}}" required />
+									</div>
+									<!--버튼-->
+									<div class="login-buttons">
+										<button type="submit" class="btn btn-primary btn-block btn-lg">{{__('login')}}</button> 
+										<li class="form-control-lg inverse-mode"><a href="/register" >{{__('signup')}}</a>   /  <a href="/find" > {{__('findpw')}}</a></li>
+									</div>
+								</form>
 							</div>
-							<div class="form-group m-b-20">
-								<input id="PW" name = 'PW' type="password" class="form-control form-control-lg inverse-mode" placeholder="{{__('pw')}}" required />
+							<div class="tab-pane fade" id="branch">
+								<form action="" method="post" id="login-form2" class="margin-bottom-0" onsubmit="login('login-form2','CNU2','ANA2','PW2');">
+									<!--사업자번호-->
+									<div class="form-group m-b-20">
+										<input id="CNU2" name = "CNU2" type="text" class="form-control form-control-lg inverse-mode" placeholder="{{__('business_number')}}" required />
+									</div>
+		    						<!--지점 종류-->
+		    						<div class="agent-box">
+		        						<div id="selectBranch" class="form-group m-b-20" >
+		    								<select id="ANA2" name="ANA2" class="form-control form-control-lg inverse-mode text-gray-700" data-parsley-error-message="{{__('required_detail')}}" required>
+		    									<option value =''>{{__('register_branch_agent_guide2')}}</option>
+		    								</select>
+		        						</div>
+		        					</div>
+		        					<!--비밀번호-->
+									<div class="form-group m-b-20">
+										<input id="PW2" name = 'PW2' type="password" class="form-control form-control-lg inverse-mode" placeholder="{{__('pw')}}" required />
+									</div>
+									<!--버튼-->
+									<div class="login-buttons">
+										<button type="submit" class="btn btn-primary btn-block btn-lg">{{__('login')}}</button> 
+										<li class="form-control-lg inverse-mode"><a href="/register" >{{__('signup')}}</a>   /  <a href="/find" > {{__('findpw')}}</a></li>
+									</div>
+								</form>
 							</div>
-							<div class="login-buttons">
-								<button type="submit" class="btn btn-primary btn-block btn-lg">{{__('login')}}</button> 
-								<li class="form-control-lg inverse-mode"><a href="/register" >{{__('signup')}}</a>   /  <a href="/find" > {{__('findpw')}}</a></li>
-							</div>
-						</form>
-		
+						</div>
 					</div>
 					<!-- end login-content -->
 				</div>
@@ -80,14 +137,17 @@
 	<!-- end page container -->
 	
 	<!--Begin Script-->
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 	<script>
-		function login(form, companyNumber, password) {
+		function login(form, companyNumber, agentInfo, password) {
 			var CNU = document.getElementsByName(companyNumber)[0].value;
+			var ANU = document.getElementsByName(agentInfo)[0].value.split("/")[0];
+			var ANA = document.getElementsByName(agentInfo)[0].value.split("/")[1];
 			var PW = document.getElementsByName(password)[0].value;
 		    var validateCNU = $('#'+form).parsley();
 		    
 		    if(validateCNU.isValid() == true) {
-		    	loginAjax(CNU,PW);
+		    	loginAjax(CNU,ANU,ANA,PW);
 		    }
 		    event.preventDefault();
 		}
@@ -95,6 +155,15 @@
 		var i18nconvert = function (string) {
 			if(string == "login_error") {
 				return "{{__('login_error')}}";
+			}
+			else if(string == "register_branch_agent_guide") {
+				return "{{__('register_branch_agent_guide')}}";
+			}
+			else if(string == "register_branch_agent_guide2") {
+				return "{{__('register_branch_agent_guide2')}}";
+			}
+			else if(string == "login_fail") {
+				return "{{__('login_fail')}}";
 			}
 		}
 	</script>
