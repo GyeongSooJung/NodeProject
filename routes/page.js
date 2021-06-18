@@ -902,7 +902,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
       else {
         if(search == "CNM") {
           historys = await History.aggregate([
-            { $match : { "CID" : searchCID, "CNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
+            { $match : { "CID" : { $in : searchCID }, "CNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
             { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
             { $sort : { [sortText]: sortNum } }
           ]);
@@ -912,7 +912,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
         }
         else if(search == "DNM") {
           historys = await History.aggregate([
-            { $match : { "CID" : searchCID, "DNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
+            { $match : { "CID" : { $in : searchCID }, "DNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
             { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
             { $sort : { [sortText]: sortNum } }
           ]);
@@ -922,7 +922,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
         }
         else if(search == "WNM") {
           historys = await History.aggregate([
-            { $match : { "CID" : searchCID, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
+            { $match : { "CID" : { $in : searchCID }, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
             { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
             { $sort : { [sortText]: sortNum } }
           ]);
@@ -932,7 +932,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
         }
         else {
           historys = await History.aggregate([
-            { $match : { "CID" : searchCID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
+            { $match : { "CID" : { $in : searchCID }, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
             { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
             { $sort : { [sortText]: sortNum } }
           ]);
@@ -949,7 +949,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
       else {
         if (search =="CNM") {
           historys = await History.aggregate([
-            { $match : { "CID" : searchCID, "CNM" : {$regex:searchtext} } },
+            { $match : { "CID" : { $in : searchCID }, "CNM" : {$regex:searchtext} } },
             { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
             { $sort : { [sortText]: sortNum } }
           ]);
@@ -959,7 +959,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
         }
         else if (search =="DNM") {
           historys = await History.aggregate([
-            { $match : { "CID" : searchCID, "DNM" : {$regex:searchtext} } },
+            { $match : { "CID" : { $in : searchCID }, "DNM" : {$regex:searchtext} } },
             { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
             { $sort : { [sortText]: sortNum } }
           ]);
@@ -969,7 +969,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
         }
         else if (search =="WNM") {
           historys = await History.aggregate([
-            { $match : { "CID" : searchCID, "WNM" : {$regex:searchtext} } },
+            { $match : { "CID" : { $in : searchCID }, "WNM" : {$regex:searchtext} } },
             { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
             { $sort : { [sortText]: sortNum } }
           ]);
@@ -979,7 +979,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
         }
         else {
           historys = await History.aggregate([
-            { $match : { "CID" : searchCID } },
+            { $match : { "CID" : { $in : searchCID } } },
             { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
             { $sort : { [sortText]: sortNum } }
           ]);
@@ -2255,7 +2255,7 @@ router.get('/manual', async(req, res, next) => {
 router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-
+  
   res.render('ozone_spread', { company: req.decoded.company, aclist });
 });
 
@@ -2377,14 +2377,14 @@ router.post('/ajax/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
         
       }
       else {
+        console.log("@@@");
         for (var i =0; i < al.length; i ++) {
           if(Object.values(al[i]).includes(ANU)) {
                 al.splice(i,1);
                 jsondata[ANA] = ANU;
-                al.push(jsondata)
-                await Company.where({_id : CID}).updateOne({AL : al})
-                res.send({type : "agent", result : "successedit"})
-                
+                al.push(jsondata);
+                await Company.where({_id : CID}).updateOne({AL : al});
+                res.send({type : "agent", result : "successedit"});
               }
         }
         
