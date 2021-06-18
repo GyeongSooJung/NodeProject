@@ -410,5 +410,10 @@
 	"agent_manager" : "지점 관리",
 	"agent_list" : "지점 목록",
 	"agent_head": "본사",
-	"agent_branch": "지점"
+	"agent_branch": "지점",
+	"agent_register_success" : "지점이 등록되었습니다.",
+	"agent_name_duplicated" : "지점 이름이 중복되었습니다.",
+	"agent_code_duplicated" : "지점 코드가 중복되었습니다.",
+	"agent_edit_success" : "지점 수정이 완료되었습니다.",
+	"agent_delete_success" : "지점 삭제가 완료되었습니다."
 }

@@ -9,7 +9,7 @@ const CompanySchema = new Schema({
     },
     // Agent list
     AL: {
-        type: Object,
+        type: [Object],
     },
     //Company_Agent_Name
     ANA: {

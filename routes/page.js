@@ -2213,47 +2213,132 @@ router.get('/agent_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   res.render('agent_list', { company: req.decoded.company, aclist });
 });
 
-router.post('/ajax/agent_join', isNotLoggedIn, DataSet, async(req, res, next) => {
-  var {data} = req.body
+router.post('/ajax/agent_list', isNotLoggedIn, DataSet, async(req, res, next) => {
+  var {data} = req.body;
   data = JSON.parse(data)
-  var ANA = data.ANA;
-  var ANU = data.ANU;
-  
-  console.log(ANA, ANU)
-  
-  // 몽고db 등록 코드
-  
-  })
-  
-router.post('/ajax/agent_edit', isNotLoggedIn, DataSet, async(req, res, next) => {
-  var {data} = req.body
+  const companyone = await Company.findOne({_id : data.CID})
+  var al = companyone.AL; 
+  res.send({al : al})
+})
+
+router.post('/ajax/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
+  var {data} = req.body;
   data = JSON.parse(data)
   var ANA = data.ANA;
   var ANU = data.ANU;
   var CID = data.CID;
+  var type = data.type;
   
-  console.log(ANA, ANU)
+  var b_ANA = String(data.b_ANA);
+  var b_ANU = String(data.b_ANU);
   
-  // 몽고db 등록 코드
+  var jsondata = {};
+  var anaarray = [];
+  var anuarray = [];
   
-  await Company.where({CID : CID}).update({AL : {ANU : ANU, ANA : ANA}})
+  const companyone = await Company.findOne({_id : CID})
+    var al = companyone.AL;
+    
+    
+    for (var i = 0; i < al.length; i ++) {
+      anaarray.push(String(Object.keys(al[i])))
+      anuarray.push(String(Object.values(al[i])))
+    }
   
-  })
+  if (type == 'join') {
+    
+    if(anaarray.includes(ANA)) {
+      res.send({type : "agent", result : "dupleN"})
+    }
+    else if (anuarray.includes(ANU)) {
+      res.send({type : "agent", result : "dupleC"})
+    }
+    else {
+      jsondata[ANA] = ANU;
+      al.push(jsondata);
+      await Company.where({_id : CID}).updateOne({AL : al})
+      res.send({type : "agent", result : "success"})
+    }
+  }
+  else if (type=='edit') {
+    
+    if(anaarray.includes(ANA)) {
+      if((ANA == b_ANA)) {
+        if(anuarray.includes(ANU)) {
+          if((ANU == b_ANU)) {
+            res.send({type : "agent", result : "successedit"})
+          }
+          else {
+            res.send({type : "agent", result : "dupleN"})
+          }
+        }
+        else {
+          for (var i =0; i < al.length; i ++) {
+            if(Object.keys(al[i]).includes(ANA)) {
+              al[i][ANA] = ANU;
+            }
+          }
+          await Company.where({_id : CID}).updateOne({AL : al})
+          res.send({type : "agent", result : "successedit"})
+        }
+        
+      }
+      else {
+        res.send({type : "agent", result : "dupleN"})
+      }
+      
+    }
+    else {
+      if (anuarray.includes(ANU)) {
+        
+        if (ANU == b_ANU) {
+          for (var i =0; i < al.length; i ++) {
+            if(Object.values(al[i]).includes(ANU)) {
+              al.splice(i,1);
+              jsondata[ANA] = ANU;
+              al.push(jsondata);
+              console.log(jsondata);
+              console.log(al);
+              await Company.where({_id : CID}).updateOne({AL : al})
+              res.send({type : "agent", result : "successedit"})
+              
+            }
+          }
+          
+        }
+        else {
+          res.send({type : "agent", result : "dupleC"})
+        }
+        
+      }
+      else {
+        
+        if(Object.values(al[i]).includes(ANU)) {
+              al.splice(i,1);
+              jsondata[ANA] = ANU;
+              al.push(jsondata)
+              await Company.where({_id : CID}).updateOne({AL : al})
+              res.send({type : "agent", result : "successedit"})
+              
+            }
+        
+      }
+    }
+  }
+  else if (type =='delete') {
+    
+    for (var i =0; i < al.length; i ++) {
+      if(Object.keys(al[i]).includes(b_ANA)) {
+        al.splice(i,1);
+      }
+    }
+    
+    await Company.where({_id : CID}).updateOne({AL : al})
+    res.send({type : "agent", result : "successdelete"})
+  }
   
-  router.post('/ajax/agent_edit', isNotLoggedIn, DataSet, async(req, res, next) => {
-  var {data} = req.body
-  data = JSON.parse(data)
-  var ANA = data.ANA;
-  var ANU = data.ANU;
-  var CID = data.CID;
+})
   
-  
-  
-  console.log(ANA, ANU)
-  
-  // 몽고db 등록 코드
-  
-  })
 
 
 

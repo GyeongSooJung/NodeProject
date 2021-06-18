@@ -410,5 +410,10 @@
 	"agent_manager" : "Agent Manager",
 	"agent_list" : "Agent List",
 	"agent_head": "Head Agent",
-	"agent_branch": "Branch Agent"
+	"agent_branch": "Branch Agent",
+	"agent_register_success" : "The agent has been registered.",
+	"agent_name_duplicated" : "Agent number already exists.",
+	"agent_code_duplicated" : " Agent code already exists.",
+	"agent_edit_success" : "The agent has been modified.",
+	"agent_delete_success" : "The agent has been deleted."
 }
