@@ -2317,7 +2317,6 @@ router.post('/ajax/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
             res.send({type : "agent", result : "successedit"})
           }
           else {
-            console.log("@@@")
             res.send({type : "agent", result : "dupleC"})
           }
         }
@@ -2327,7 +2326,8 @@ router.post('/ajax/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
               al[i][ANA] = ANU;
             }
           }
-          await Company.where({_id : CID}).updateOne({AL : al})
+          const companyone = await Company.where({_id : CID}).updateOne({AL : al})
+          // await Company.update({ CNU : companyone.CNU + b_ANU}, { AL : al, CNU : companyone.CNU + ANA, ANA : ANA, ANU : ANU }, { upsert : true });
           res.send({type : "agent", result : "successedit"})
         }
         
@@ -2346,9 +2346,8 @@ router.post('/ajax/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
               al.splice(i,1);
               jsondata[ANA] = ANU;
               al.push(jsondata);
-              console.log(jsondata);
-              console.log(al);
               await Company.where({_id : CID}).updateOne({AL : al})
+              // await Company.update({ CNU : companyone.CNU + b_ANU}, { AL : al, CNU : companyone.CNU + ANA, ANA : ANA, ANU : ANU }, { upsert : true });
               res.send({type : "agent", result : "successedit"})
               
             }
@@ -2367,6 +2366,7 @@ router.post('/ajax/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
                 jsondata[ANA] = ANU;
                 al.push(jsondata)
                 await Company.where({_id : CID}).updateOne({AL : al})
+                // await Company.update({ CNU : companyone.CNU + b_ANU}, { AL : al, CNU : companyone.CNU + ANA, ANA : ANA, ANU : ANU }, { upsert : true });
                 res.send({type : "agent", result : "successedit"})
                 
               }
@@ -2382,6 +2382,7 @@ router.post('/ajax/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
       }
     }
     await Company.where({_id : CID}).updateOne({AL : al})
+    await Company.
     res.send({type : "agent", result : "successdelete"})
   }
   
