@@ -409,6 +409,8 @@
 	
 	"manual_title": "OASIS | Manual",
 	
+	"agent_name" : "Agent Name",
+	"agent_code" : "Agent Code",
 	"agent_manager" : "Agent Manager",
 	"agent_list" : "Agent List",
 	"agent_head": "Head Agent",
@@ -417,5 +419,8 @@
 	"agent_name_duplicated" : "Agent number already exists.",
 	"agent_code_duplicated" : " Agent code already exists.",
 	"agent_edit_success" : "The agent has been modified.",
-	"agent_delete_success" : "The agent has been deleted."
+	"agent_delete_success" : "The agent has been deleted.",
+	"agent_delete_confirm" : "Are you sure you want to delete the branch? If you need existing data, please move it in advance.",
+	"agent_select" : "Please select an Agent",
+	"agent_three" : "Please write your branch code in three letters.(ex.001)"
 }

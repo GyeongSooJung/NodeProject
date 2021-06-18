@@ -27,7 +27,7 @@
                                 <div class="col-sm-12">
                                 	<!-- Category -->
                                 	<div class="single category">
-                                		<h3 class="side-title">목록  </h3>
+                                		<h3 class="side-title">{{__('agent_list')}}  </h3>
                                 		<ul id='agentlist' class="list-unstyled">
                                 		</ul>
                                    </div>
@@ -41,29 +41,31 @@
                             <div class="col-sm-12">
                             	<!-- Category -->
                             	<div class="single category">
-                            	    <h3 class="mx-auto side-title">등록 </h3>
+                            	    <h3 class="mx-auto side-title">{{__('registration')}} </h3>
                             	    <form id="agent-form" action="" method="post" class="form-horizontal" data-parsley-validate="true" name="agent-form" onsubmit="agentJoin(agentObject);">
                         	    		<div class='form-group row m-b-15'>
-                                    		<label class='col-md-4 col-sm-4 col-form-label font-weight-bold' for='GI'>지점명 :</label>
+                                    		<label class='col-md-4 col-sm-4 col-form-label font-weight-bold' for='GI'>{{__('agent_name')}} :</label>
                                     		<div class='col-md-8 col-sm-8'>
-                                        			<input class="form-control" type="String" id="ANA" name="ANA" placeholder="지점 명" data-parsley-required="true" data-parsley-error-message="{{__('required_detail')}}" data-parsley-trim-value="true" />
+                                        			<input class="form-control" type="String" id="ANA" name="ANA" placeholder="{{__('agent_name')}}" data-parsley-required="true" data-parsley-error-message="{{__('required_detail')}}" data-parsley-trim-value="true" />
                                     		</div>
                                 		</div>
                                 		<div class='form-group row m-b-15'>
-                                    		<label class='col-md-4 col-sm-4 col-form-label font-weight-bold' for='GI'>지점코드 :</label>
+                                    		<label class='col-md-4 col-sm-4 col-form-label font-weight-bold' for='GI'>{{__('agent_code')}} :</label>
                                     		<div class='col-md-8 col-sm-8'>
-                                        			<input class="form-control" type="String" id="ANU" name="ANU" placeholder="지점 코드" data-parsley-required="true" data-parsley-error-message="{{__('required_detail')}}" data-parsley-trim-value="true" />
+                                        			<input class="form-control" type="String" id="ANU" name="ANU" placeholder="{{__('agent_code')}}" data-parsley-required="true" data-parsley-error-message="{{__('required_detail')}}" data-parsley-trim-value="true" />
                                     		</div>
                                 		</div>
                                 		<button type="submit" class="btn btn-primary width-80">{{__('registration')}}</button>
                             		</form>
                                </div>
                                
-                               <div class="single category">
-                            	    <h3 class="mx-auto side-title"> 수정 / 삭제 </h3>
-                            	    	<div id="category2">
-                            	    		지점을 클릭해주세요.
-	                            		</div>
+                               <div class="single category" >
+                               		<form id="agent-form2" action="" method="post" data-parsley-validate="true" name="agent-form2" >
+		                        	    <h3 class="mx-auto side-title"> {{__('modify')}} / {{__('delete')}} </h3>
+		                        	    	<div id="category2">
+		                        	    		{{__('agent_select')}}
+		                            		</div>
+                        			</form>
                                </div>
                             </div> 
                         </div>
@@ -90,191 +92,6 @@
 	    agentreroad(agentObject);
 	    
 	})
-	
-	function agentreroad (Obj) {
-	    var data = {CID : Obj.CID}
-	    $.ajax({
-		        type: 'POST',
-		        url: '/ajax/agent_list',
-		        dataType: 'json',
-		        data: {
-		            data : JSON.stringify(data)
-		        }
-		    }).done(function(data) {
-		    	$("#agentlist").empty();
-		    	
-		    	var allist = data.al;
-		    	
-		    	allist.sort(function(a,b) {
-		    		var first = Number(Object.values(a)[0])
-		    		var twice = Number(Object.values(b)[0])
-		    		return (first < twice) ?  -1 : (first > twice) ? 1 : 0;
-		    	})
-		    	
-		    	console.log(Object.keys(allist[0])[0])
-		    	
-		    	var insertTr = ""
-			    for (var i = 0; i < allist.length; i ++) {
-			        insertTr += "<li><a href='javascript:;' onclick='agenteditview(this)' id='"+Object.keys(allist[i])[0]+"' name='"+ Object.values(allist[i])[0]+"' class ='edit-btn'> "+ Object.keys(allist[i])[0] +" <span class='pull-right'>"+ Object.values(allist[i])[0]+"</span></a></li>"
-			    }
-			    
-			    $("#agentlist").append(insertTr);
-				    	
-		    })
-	    
-	    
-	}
-	
-	function agenteditview(obj) {
-		
-		$('#category2').empty();
-		
-		var insertTr = "";
-		
-		insertTr += ""
-		
-		insertTr += "	<div class='form-group row m-b-15'>"
-	    insertTr += "		<label class='col-md-4 col-sm-4 col-form-label font-weight-bold' for='GI'>지점명 :</label>"
-	    insertTr += "		<div class='d-flex col-md-8 col-sm-8'>"
-	    insertTr += "    			<input class='col-sm-4 form-control' type='String'  placeholder='"+$(obj).attr('id')+"' data-parsley-required='true' data-parsley-error-message='{{__('required_detail')}}' data-parsley-trim-value='true' readonly/>"
-	    insertTr += "               <i class='ml-3 mr-3 mt-2 fas fa-lg fa-fw  fa-arrow-right'></i>"
-	    insertTr += "    			<input class='col-sm-4 form-control' type='String' id='ANA2' name='ANA2'  placeholder='' data-parsley-required='true' data-parsley-error-message='{{__('required_detail')}}' data-parsley-trim-value='true' />"
-	    insertTr += "		</div>"
-		insertTr += "	</div>"
-		insertTr += "	<div class='form-group row m-b-15'>"
-	    insertTr += "		<label class='col-md-4 col-sm-4 col-form-label font-weight-bold' for='GI'>지점코드 :</label>"
-	    insertTr += "		<div class='d-flex col-md-8 col-sm-8'>"
-	    insertTr += "    			<input class='col-sm-4 form-control' type='String'  placeholder='"+$(obj).attr('name')+"' data-parsley-required='true' data-parsley-error-message='{{__('required_detail')}}' data-parsley-trim-value='true' readonly/>"
-	    insertTr += "               <i class='ml-3 mr-3 mt-2 fas fa-lg fa-fw  fa-arrow-right'></i>"
-	    insertTr += "    			<input class='col-sm-4 form-control' type='String' id='ANU2' name='ANU2'  placeholder='' data-parsley-required='true' data-parsley-error-message='{{__('required_detail')}}' data-parsley-trim-value='true' />"	    
-	    insertTr += "		</div>"
-		insertTr += "	</div>"
-		insertTr += "	<div class='d-flex'>"
-		insertTr += "<a href='javascript:;' class='ml-5 btn btn-primary width-80' onclick='agentEdit(agentObject,"+$(obj).attr('id')+")'>{{__('modify')}}</a>";
-		insertTr += "<a href='javascript:;' class='ml-5 btn btn-primary width-80' onclick='agentDelete(agentObject,"+$(obj).attr('id')+")'>{{__('delete')}}</a>";
-		insertTr += "	</div>"
-
-		
-		$('#category2').append(insertTr);
-		
-	}
-	
-	function agentEdit(Object,string) {
-			// console.log($('input[name=ANA2]').val())
-
-			var data = { ANA :$('input[name=ANA2]').val(), ANU : $('input[name=ANU2]').val(),b_ANA : string.id, b_ANU : string.name, CID : Object.CID, type : "edit" };
-			
-			$.ajax({
-		        type: 'POST',
-		        url: '/ajax/agent',
-		        dataType: 'json',
-		        data: {
-		            data : JSON.stringify(data)
-		        }
-		    }).done(function(data) {
-		    	
-			    if(data.result == 'success') {
-					alert(i18nconvert('agent_register_success'));
-					agentreroad(agentObject);
-				}
-				else if(data.result == 'successedit') {
-					alert(i18nconvert('agent_edit_success'));
-					agentreroad(agentObject);
-					$('#category2').empty();
-					$('#category2').append("지점을 클릭해주세요.");
-				}
-				else if(data.result == 'successdelete') {
-					alert(i18nconvert('agent_delete_success'));
-					agentreroad(agentObject);
-				}
-				else if(data.result == 'dupleN') {
-					alert(i18nconvert('agent_name_duplicated'));
-				}
-				else if(data.result == 'dupleC') {
-					alert(i18nconvert('agent_code_duplicated'));
-				}
-		    });
-		
-		
-	}
-	
-	function agentDelete(Object,string) {
-		
-		var data = {b_ANA : string.id, b_ANU : string.name, CID : Object.CID, type : "delete" };
-		console.log(string)
-		$.ajax({
-		        type: 'POST',
-		        url: '/ajax/agent',
-		        dataType: 'json',
-		        data: {
-		            data : JSON.stringify(data)
-		        }
-		    }).done(function(data) {
-		    	
-			    if(data.result == 'success') {
-					alert(i18nconvert('agent_register_success'));
-					agentreroad(agentObject);
-				}
-				else if(data.result == 'successedit') {
-					alert(i18nconvert('agent_edit_success'));
-					agentreroad(agentObject);
-					$('#category2').empty();
-					$('#category2').append("지점을 클릭해주세요.");
-				}
-				else if(data.result == 'successdelete') {
-					alert(i18nconvert('agent_delete_success'));
-					agentreroad(agentObject);
-				}
-				else if(data.result == 'dupleN') {
-					alert(i18nconvert('agent_name_duplicated'));
-				}
-				else if(data.result == 'dupleC') {
-					alert(i18nconvert('agent_code_duplicated'));
-				}
-		    });
-		
-		
-	}
-	
-	function agentJoin (Object) {
-	   var formParsley  = $('#agent-form').parsley();
-	   
-		if(formParsley.isValid() == true) {
-			var data = { ANA : document.getElementsByName("ANA")[0].value, ANU : document.getElementsByName("ANU")[0].value, CID : Object.CID, type : "join" };
-			
-		     $.ajax({
-		        type: 'POST',
-		        url: '/ajax/agent',
-		        dataType: 'json',
-		        data: {
-		            data : JSON.stringify(data)
-		        }
-		    }).done(function(data) {
-		    	
-			    if(data.result == 'success') {
-					alert(i18nconvert('agent_register_success'));
-					agentreroad(agentObject);
-				}
-				else if(data.result == 'successedit') {
-					alert(i18nconvert('agent_edit_success'));
-					agentreroad(agentObject);
-				}
-				else if(data.result == 'successdelete') {
-					alert(i18nconvert('agent_delete_success'));
-					agentreroad(agentObject);
-				}
-				else if(data.result == 'dupleN') {
-					alert(i18nconvert('agent_name_duplicated'));
-				}
-				else if(data.result == 'dupleC') {
-					alert(i18nconvert('agent_code_duplicated'));
-				}
-		    });
-		}
-		event.preventDefault();
-	    
-	}
-
 </script>
 
 <script src="../oasisjs/oasis_join.js"></script>

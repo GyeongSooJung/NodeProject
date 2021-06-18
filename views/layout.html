@@ -247,7 +247,7 @@
 						</a>
 						<ul class="sub-menu">
 							<li><a href="/agent_manager">{{__('agent_manager')}}</a></li>
-							<li><a href="/agent_list">{{__('agent_list')}}</a></li>
+							<!--<li><a href="/agent_list">{{__('agent_list')}}</a></li>-->
 						</ul>
 					</li>
 				
@@ -530,6 +530,30 @@
 	    	else if(string == "agent_delete_success" ) {
 	    		return "{{__('agent_delete_success')}}";
 	    	}
+	    	else if(string == "agent_delete_confirm" ) {
+	    		return "{{__('agent_delete_confirm')}}";
+	    	}
+	    	else if(string == "agent_select" ) {
+	    		return "{{__('agent_select')}}";
+	    	}
+	    	else if(string == "agent_name" ) {
+	    		return "{{__('agent_name')}}";
+	    	}
+	    	else if(string == "agent_code" ) {
+	    		return "{{__('agent_code')}}";
+	    	}
+	    	else if(string == "agent_three" ) {
+	    		return "{{__('agent_three')}}";
+	    	}
+	    	else if(string == "" ) {
+	    		return "{{__('')}}";
+	    	}
+	    	else if(string == "" ) {
+	    		return "{{__('')}}";
+	    	}
+	    	else if(string == "" ) {
+	    		return "{{__('')}}";
+	    	}
 	    	else if(string == "" ) {
 	    		return "{{__('')}}";
 	    	}
@@ -551,6 +575,7 @@
 	<script src="../oasisjs/oasis_flag.js"></script>
 	<script src="../oasisjs/oasis_auth.js"></script>
 	<script src="../oasisjs/oasis_worker_auth.js"></script>
+	<script src="../oasisjs/oasis_agent.js"></script>
 	<!--End Script-->
 {% block script %}
 {% endblock %}

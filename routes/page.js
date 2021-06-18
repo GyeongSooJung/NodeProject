@@ -2312,27 +2312,26 @@ router.post('/ajax/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
         
       }
       else {
-        
-        if(Object.values(al[i]).includes(ANU)) {
-              al.splice(i,1);
-              jsondata[ANA] = ANU;
-              al.push(jsondata)
-              await Company.where({_id : CID}).updateOne({AL : al})
-              res.send({type : "agent", result : "successedit"})
-              
-            }
+        for (var i =0; i < al.length; i ++) {
+          if(Object.values(al[i]).includes(ANU)) {
+                al.splice(i,1);
+                jsondata[ANA] = ANU;
+                al.push(jsondata)
+                await Company.where({_id : CID}).updateOne({AL : al})
+                res.send({type : "agent", result : "successedit"})
+                
+              }
+        }
         
       }
     }
   }
   else if (type =='delete') {
-    
     for (var i =0; i < al.length; i ++) {
       if(Object.keys(al[i]).includes(b_ANA)) {
         al.splice(i,1);
       }
     }
-    
     await Company.where({_id : CID}).updateOne({AL : al})
     res.send({type : "agent", result : "successdelete"})
   }
