@@ -95,7 +95,6 @@
 	"login_pw_change": "비밀번호 변경이 완료되었습니다.",
 	"login_findpw": "임시 비밀번호가 이메일로 전송되었습니다.",
 	"login_findpw2": "보안을 위해 비밀번호는 추후에 변경해주세요.",
-	"login_fail": "로그인에 실패했습니다.",
 	
 	"find_title": "OASIS | 비밀번호 찾기",
 	"find_no_register": "가입되지 않은 사업자번호입니다.",
@@ -141,7 +140,6 @@
 	"register_email_send_fail" : "이메일 전송이 실패했습니다.",
 	"register_company_agent_kind": "회원님의 기업은",
 	"register_branch_agent_guide": "지점을 선택해주세요.",
-	"register_branch_agent_guide2": "지점이 없습니다.",
 	"register_agent_no_exist": "등록된 지점이 없습니다. 본사 계정에서 지점을 등록해주세요.",
 	"register_agent_head_need": "등록된 본사가 없습니다. 본사로 가입해주세요.",
 	
@@ -409,8 +407,18 @@
 	
 	"manual_title": "OASIS | 메뉴얼",
 	
+	"agent_name" : "지점 명",
+	"agent_code" : "지점 코드",
 	"agent_manager" : "지점 관리",
 	"agent_list" : "지점 목록",
 	"agent_head": "본사",
-	"agent_branch": "지점"
+	"agent_branch": "지점",
+	"agent_register_success" : "지점이 등록되었습니다.",
+	"agent_name_duplicated" : "지점 이름이 중복되었습니다.",
+	"agent_code_duplicated" : "지점 코드가 중복되었습니다.",
+	"agent_edit_success" : "지점 수정이 완료되었습니다.",
+	"agent_delete_success" : "지점 삭제가 완료되었습니다.",
+	"agent_delete_confirm" : "지점을 삭제하시겠습니까? 기존 데이터가 필요할 시 미리 옮겨주세요.",
+	"agent_select" : "지점을 선택해주세요",
+	"agent_three" : "지점코드를 세글자로 작성해주세요.(ex.001)"
 }
