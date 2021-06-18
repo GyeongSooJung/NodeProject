@@ -638,7 +638,7 @@ router.post('/ajax/worker_list', isNotLoggedIn, DataSet, async function(req, res
     if(CID == "5fd6c731a26c914fbad53ebe") {
       // 대리점 파악
       var franchiseCIDlist = await Company.aggregate([
-        { $match : {CK : "MK 대리점", CNU : searchCNU} },
+        { $match : {CK : "MK 대리점"} },
         { $project : {CID : 1}},
            
         ], function (err,result) {
