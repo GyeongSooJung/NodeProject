@@ -2317,7 +2317,8 @@ router.post('/ajax/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
             res.send({type : "agent", result : "successedit"})
           }
           else {
-            res.send({type : "agent", result : "dupleN"})
+            console.log("@@@")
+            res.send({type : "agent", result : "dupleC"})
           }
         }
         else {
