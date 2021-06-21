@@ -13,9 +13,11 @@ router.post("/company/find", controller.fineCompanies);
 
 router.use("/", controller.tokenVerification);
 
+
 /// 작업자 관련
-router.post("/worker/find", controller.findWorker);
-router.post("/worker/update", controller.updateWorkerInfo);
+router.use("/worker", controller.workerRoot);
+// router.post("/worker/find", controller.findWorker);
+// router.post("/worker/update", controller.updateWorkerInfo);
 router.post("/worker/withdrawal", controller.withdrawal);
 
 // 사업자 관련
@@ -31,8 +33,8 @@ router.post("/car/delete", controller.deleteCar);
 // 소독 이력 관련
 router.use("/history/", controller.historyRoot);
 // router.post("/history/create", controller.createHistory);
-router.post("/history/find", controller.findHistories);
-router.post("/history/findOne", controller.findHistory);
+// router.post("/history/find", controller.findHistories);
+// router.post("/history/findOne", controller.findHistory);
 router.post("/history/share",controller.registerKAKAO);
 
 // 소독기 관련
@@ -42,6 +44,7 @@ router.post("/device/update", controller.updateDevice);
 router.post("/device/delete", controller.deleteDevice);
 router.post("/device/fine/one", controller.findOneDevice);
 
+router.use("/", controller.errorHandler);
 
 router.get("/sms",controller.registerSMS);
 
