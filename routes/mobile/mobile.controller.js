@@ -11,850 +11,985 @@ const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = "OASIS";
 
-// const UNKOWN = "UNKOWN";
-// const NO_SUCH_DATA = "NO_SUCH_DATA";
-// const FAIL = "FAIL";
-// const TOKEN_ERROR = "TOKEN_ERROR";
-// const NO_POINT = "NO_POINT";
-
 const { config, Group } = require('solapi');
 
 const Mongoose = require('mongoose');
 const ObjectId = Mongoose.Types.ObjectId;
 
 const ERR_CODE = {
-    UNKNOWN: "UNKNOWN",
-    NO_SUCH_DATA: "NO_SUCH_DATA",
-    FAIL: "FAIL",
-    TOKEN_ERROR: "TOKEN_ERROR",
-    NO_POINT: "NO_POINT",
+   UNKNOWN: "UNKNOWN",
+   NO_SUCH_DATA: "NO_SUCH_DATA",
+   FAIL: "FAIL",
+   TOKEN_ERROR: "TOKEN_ERROR",
+   NO_POINT: "NO_POINT",
 };
 
-const MODEL_NAME = {
-    "History": "History",
+const COLLECTION_NAME = {
+   "History": "History",
+   "Worker": "Worker",
 };
-const MODEL = {
-    "History": History,
+const COLLECTIONS = {
+   "History": History,
+   "Worker": Worker,
 };
+
+
 
 const HISTORY = {
-    "workerID": "WID",
-    "deviceID": "DID",
-    "companyID": "CID",
-    "vehicleID": "VID",
-    "workerName": "WNM",
-    "carNumber": "CNM",
-    "deviceName": "DNM",
-    "deviceNickname": "DNN",
-    "fwVersion": "VER",
-    "endTime": "ET",
-    "processData": "PD",
-    "maximumPPM": "MP",
-    "finishPPM": "FP",
-    "resultCode": "RC",
-    "resultDetail": "RD",
-    "course": "COS",
-    "createAt": "CA"
+   "workerID": "WID",
+   "deviceID": "DID",
+   "companyID": "CID",
+   "vehicleID": "VID",
+   "workerName": "WNM",
+   "carNumber": "CNM",
+   "deviceName": "DNM",
+   "deviceNickname": "DNN",
+   "fwVersion": "VER",
+   "endTime": "ET",
+   "processData": "PD",
+   "maximumPPM": "MP",
+   "finishPPM": "FP",
+   "resultCode": "RC",
+   "resultDetail": "RD",
+   "course": "COS",
+   "createAt": "CA"
 };
+
+const CMD = {
+   "create": "/create",
+   "findOne": "/findone",
+   "find": "/find",
+   "updateOne": "/updateone",
+   "updateMany": "/updatemany",
+   "deleteOne": "/deleteone",
+   "deleteMany": "/deletemany"
+};
+
 
 
 exports.tokenVerification = async(req, res, next) => {
-    const token = req.body.token;
-    console.log("token: " + token);
+   if (req.method != "POST") {
+      console.log("Wrong request method");
+      throw new Error("The method is not support");
+   }
 
-    try {
-        jwt.verify(token, JWT_SECRET);
-        next();
-    }
-    catch (error) {
-        res.json({
-            result: false,
-            error: ERR_CODE.TOKEN_ERROR,
-        });
-    }
+   const token = req.body.token;
 
+   try {
+      jwt.verify(token, JWT_SECRET);
+      delete req.body.token;
+      next();
+   }
+   catch (error) {
+      res.json({
+         result: false,
+         error: ERR_CODE.TOKEN_ERROR,
+      });
+   }
 };
 
-/// Worker 관련
+async function createDocument(req, res, next, collection) {
+   var Collection = collection;
+   var doc = req.body;
+   var postJob; // 추가 작업용 함수포인터
+
+   switch (collection) {
+      case COLLECTIONS.History:
+         // 장비의 사용횟수 증가
+         postJob = async function() {
+            await Device.where({ _id: doc[HISTORY.deviceID] }).updateOne({ $inc: { UN: 1 } });
+         };
+         break;
+      default:
+         throw new Error("Wrong request");
+   }
+
+   const resResult = (result) => {
+      if (postJob != null) {
+         postJob();
+      }
+      res.json({
+         result: true,
+         data: result._id,
+      });
+   };
+
+   await Collection.create(doc).then(resResult).catch(next);
+}
+
+async function findOneDecument(req, res, next, collection) {
+   console.log("[findOneDecument]");
+   var Collection = collection;
+   var doc = req.body;
+   var postJob; // 추가 작업용 함수포인터
+
+   switch (collection) {
+      case COLLECTIONS.History:
+         break;
+      default:
+         throw new Error("Wrong request");
+   }
+
+   const resResult = (document) => {
+      if (postJob != null) {
+         postJob();
+      }
+      res.json({
+         result: true,
+         data: JSON.stringify(document),
+      });
+   };
+
+   await Collection.findOne(doc).then(resResult).catch(next);
+}
+
+async function findDecuments(req, res, next, collection) {
+   console.log("[findOneDecument]");
+   var Collection = collection;
+
+   var postJob; // 추가 작업용 함수포인터
+   var searchOption = {};
+   var projectOption = {};
+   var startPage = (req.body.SP == null) ? 0 : req.body.SP;
+   var nowPage = (req.body.NOP == null) ? 0 : req.body.NOP;
+
+   switch (collection) {
+      case COLLECTIONS.History:
+         searchOption.CID = req.body.CID;
+         projectOption.PD = false;
+         break;
+      case COLLECTIONS.Worker:
+         searchOption.CID = req.body.CID;
+         break;
+      default:
+         throw new Error("Wrong request");
+   }
+
+   const resResult = (documents) => {
+      if (postJob != null) {
+         postJob();
+      }
+      res.json({
+         result: true,
+         dataList: documents,
+      });
+   };
+
+
+   await Collection.find(searchOption, projectOption).skip(startPage * nowPage).limit(nowPage).sort({ CA: -1 }).then(resResult).catch(next);
+}
+
+async function updateOneDecument(req, res, next, collection) {
+   console.log("[updateOneDecument]");
+   var Collection = collection;
+   var doc = req.body;
+   var postJob; // 추가 작업용 함수포인터
+
+   var _id = doc._id;
+   doc.UA = Date.now();
+   // delete doc._id;
+
+   // switch (collection) {
+   //    case COLLECTIONS.History:
+   //       break;
+   //    case COLLECTIONS.Worker:
+   //       break;
+   //    default:
+   //       throw new Error("Wrong request");
+   // }
+
+   const resResult = (document) => {
+      if (postJob != null) {
+         postJob();
+      }
+      res.json({
+         result: true,
+         data: JSON.stringify(document),
+      });
+   };
+
+
+   await Collection.where({ _id }).updateOne(doc).then(resResult).catch(next);
+}
+
+exports.historyRoot = (req, res, next) => {
+   switch (req.path) {
+      case CMD.create:
+         createDocument(req, res, next, COLLECTIONS.History);
+         break;
+      case CMD.findOne:
+         findOneDecument(req, res, next, COLLECTIONS.History);
+         break;
+      case CMD.find:
+         findDecuments(req, res, next, COLLECTIONS.History);
+         break;
+      // 임시 라우팅, 향후 삭제
+      case "/findOne": // 향후 삭제
+         findOneDecument(req, res, next, COLLECTIONS.History);
+         break;
+      default:
+         next();
+   }
+};
+
+exports.workerRoot = (req, res, next) => {
+   console.log("[workerRoot]");
+   switch (req.path) {
+      case CMD.findOne:
+         findOneDecument(req, res, next, COLLECTIONS.Worker);
+         break;
+      case CMD.find:
+         findDecuments(req, res, next, COLLECTIONS.Worker);
+         break;
+      case CMD.updateOne:
+         updateOneDecument(req, res, next, COLLECTIONS.Worker);
+         break;
+      default:
+         next();
+   }
+};
+
+exports.errorHandler = (err, req, res, next) => {
+   console.log("\n\nError Handler: " + err.message);
+   res.json({
+      result: false,
+      error: ERR_CODE.UNKNOWN,
+      data: err.message,
+   });
+};
+
+
+
 exports.findWorker = async(req, res) => {
-    const EM = req.body.email;
-    const worker = await Worker.findOne({ EM });
-    console.log(worker);
-    res.json({
-        result: (worker != null) ? true : false,
-    });
+   const EM = req.body.email;
+   const worker = await Worker.findOne({ EM });
+   console.log(worker);
+   res.json({
+      result: (worker != null) ? true : false,
+   });
 };
 
 // 로그인 시도
 exports.signIn = async(req, res) => {
-    const { type, id, email } = req.body;
-    if (type == "GOOGLE") {
-        var worker = await Worker.findOne({ "GID": id, "EM": email });
-        // console.log(type, id, email);
-        // console.log(worker);
+   const { type, id, email } = req.body;
+   if (type == "GOOGLE") {
+      var worker = await Worker.findOne({ "GID": id, "EM": email });
+      // console.log(type, id, email);
+      // console.log(worker);
 
-        if (worker != null) {
-            // 토큰 생성
-            const token = jwt.sign({
-                id: worker._id,
-            }, JWT_SECRET, {
-                expiresIn: "1d",
-            });
+      if (worker != null) {
+         // 토큰 생성
+         const token = jwt.sign({
+            id: worker._id,
+         }, JWT_SECRET, {
+            expiresIn: "1d",
+         });
 
-            await Worker.where({ _id: worker._id }).updateOne({ UA: Date.now() });
+         await Worker.where({ _id: worker._id }).updateOne({ UA: Date.now() });
 
-            const companycua = await Company.aggregate([
-                { $match: { "_id": ObjectId(worker.CID) } },
-                { $project: { CUA: "$CUA" } }
-            ], function(err, result) {
-                if (err) throw err;
-            });
-            const carUA = companycua[0].CUA;
+         const companycua = await Company.aggregate([
+            { $match: { "_id": ObjectId(worker.CID) } },
+            { $project: { CUA: "$CUA" } }
+         ], function(err, result) {
+            if (err) throw err;
+         });
+         const carUA = companycua[0].CUA;
 
-            return res.json({
-                result: true,
-                data: JSON.stringify(worker),
-                token,
-                carUA
-            });
+         return res.json({
+            result: true,
+            data: JSON.stringify(worker),
+            token,
+            carUA
+         });
 
 
-        }
-        else {
-            return res.json({
-                result: false,
-                error: ERR_CODE.NO_SUCH_DATA,
-            });
-        }
-    }
-    res.json({
-        result: false,
-        error: ERR_CODE.UNKNOWN,
-    });
+      }
+      else {
+         return res.json({
+            result: false,
+            error: ERR_CODE.NO_SUCH_DATA,
+         });
+      }
+   }
+   res.json({
+      result: false,
+      error: ERR_CODE.UNKNOWN,
+   });
 
 };
 
 // 회원 가입
 exports.signUp = async(req, res) => {
-    try {
-        const { CID, WN, PN, GID, EM, PU } = req.body;
+   try {
+      const { CID, WN, PN, GID, EM, PU } = req.body;
 
-        var result = await Worker.create({ CID, WN, PN, GID, EM, PU });
-        console.log(result);
+      var result = await Worker.create({ CID, WN, PN, GID, EM, PU });
+      console.log(result);
 
-        res.json({
-            result: true,
-        });
-    }
-    catch (exception) {
-        console.log(exception);
-        res.json({
-            result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+      res.json({
+         result: true,
+      });
+   }
+   catch (exception) {
+      console.log(exception);
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
 // 회원 정보 수정
 exports.updateWorkerInfo = async(req, res) => {
-    try {
-        const { _id, WN, PN, AU } = req.body;
+   try {
+      const { _id, WN, PN, AU } = req.body;
 
-        var result = await Worker.where({ _id }).updateOne({ WN, PN, AU, UA: Date.now() });
-        console.log(result);
+      var result = await Worker.where({ _id }).updateOne({ WN, PN, AU, UA: Date.now() });
+      console.log(result);
 
-        res.json({
-            result: true,
-        });
+      res.json({
+         result: true,
+      });
 
-    }
-    catch (exception) {
-        res.json({
-            result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+   }
+   catch (exception) {
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
 // 회원 탈퇴
 exports.withdrawal = async(req, res) => {
-    try {
-        const { _id, EM } = req.body;
+   try {
+      const { _id, EM } = req.body;
 
-        var result = await Worker.remove({ _id, EM });
-        console.log(result);
+      var result = await Worker.remove({ _id, EM });
+      console.log(result);
 
-        res.json({
-            result: true,
-        });
-    }
-    catch (exception) {
-        res.json({
-            result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+      res.json({
+         result: true,
+      });
+   }
+   catch (exception) {
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
 /// 회사 정보 관련
 
 // 회사 검색
 exports.findCompanyByID = async(req, res) => {
-    try {
-        const { _id } = req.body;
+   try {
+      const { _id } = req.body;
 
-        var company = await Company.findOne({ _id });
-        if (company != null) {
-            return res.json({
-                result: true,
-                data: JSON.stringify(company),
-            });
-        }
-        else {
+      var company = await Company.findOne({ _id });
+      if (company != null) {
+         return res.json({
+            result: true,
+            data: JSON.stringify(company),
+         });
+      }
+      else {
 
-            res.json({
-                result: false,
-                error: ERR_CODE.NO_SUCH_DATA,
-            });
-        }
-    }
-    catch (exception) {
-        res.json({
+         res.json({
             result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+            error: ERR_CODE.NO_SUCH_DATA,
+         });
+      }
+   }
+   catch (exception) {
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
 
 // 회사들 검색
 exports.fineCompanies = async(req, res) => {
-    try {
-        const { CNU, CNA } = req.body;
+   try {
+      const { CNU, CNA } = req.body;
 
-        var companies;
-        if (CNU != null) {
-            companies = await Company.find({ CNU }, {
-                NA: 1,
-                CNU: 1,
-                CNA: 1,
-                PN: 1,
-                MN: 1,
-            });
-        }
-        else if (CNA != null) {
-            companies = await Company.find({ CNA: { $regex: CNA, $options: "$i" } }, {
-                NA: 1,
-                CNU: 1,
-                CNA: 1,
-                PN: 1,
-                MN: 1,
-            });
-        }
+      var companies;
+      if (CNU != null) {
+         companies = await Company.find({ CNU }, {
+            NA: 1,
+            CNU: 1,
+            CNA: 1,
+            PN: 1,
+            MN: 1,
+         });
+      }
+      else if (CNA != null) {
+         companies = await Company.find({ CNA: { $regex: CNA, $options: "$i" } }, {
+            NA: 1,
+            CNU: 1,
+            CNA: 1,
+            PN: 1,
+            MN: 1,
+         });
+      }
 
-        console.log(companies.length);
-        if (companies.length >= 1) {
-            return res.json({
-                result: true,
-                dataList: companies,
-            });
-        }
-        else {
+      console.log(companies.length);
+      if (companies.length >= 1) {
+         return res.json({
+            result: true,
+            dataList: companies,
+         });
+      }
+      else {
 
-            res.json({
-                result: false,
-                error: ERR_CODE.NO_SUCH_DATA,
-            });
-        }
-    }
-    catch (exception) {
-        res.json({
+         res.json({
             result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+            error: ERR_CODE.NO_SUCH_DATA,
+         });
+      }
+   }
+   catch (exception) {
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
 // 회사(사업주) 비밀번호 확인
 exports.confirmConpanyPW = async(req, res) => {
-    try {
-        const { CNU, PW } = req.body;
+   try {
+      const { CNU, PW } = req.body;
 
-        var company = await Company.findOne({ _id: CNU });
+      var company = await Company.findOne({ _id: CNU });
 
-        if (company != null) {
-            if (bcrypt.compareSync(PW, company.PW)) {
-                return res.json({
-                    result: true,
-                });
-            }
+      if (company != null) {
+         if (bcrypt.compareSync(PW, company.PW)) {
+            return res.json({
+               result: true,
+            });
+         }
 
-        }
+      }
 
-        return res.json({
-            result: false,
-            error: ERR_CODE.FAIL,
-        });
+      return res.json({
+         result: false,
+         error: ERR_CODE.FAIL,
+      });
 
 
-    }
-    catch (exception) {
-        res.json({
-            result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+   }
+   catch (exception) {
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
 /// 차량 정보 관련
 
 // 차량 등록
 exports.registerCar = async(req, res) => {
-    try {
-        const { CID, CC, CN, SN } = req.body;
+   try {
+      const { CID, CC, CN, SN } = req.body;
 
-        var result = await Car.create({ CID, CC, CN, SN });
-        console.log(result);
-        var ObjectId = Mongoose.Types.ObjectId;
-        // console.log(ObjectId(CID));
-        await Company.where({ "_id": ObjectId(CID) })
-            .updateOne({ "CUA": Date.now() }).setOptions({ runValidators: true })
-            .exec();
-        res.json({
-            result: true,
-        });
-    }
-    catch (exception) {
-        console.log(exception);
-        res.json({
-            result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+      var result = await Car.create({ CID, CC, CN, SN });
+      console.log(result);
+      var ObjectId = Mongoose.Types.ObjectId;
+      // console.log(ObjectId(CID));
+      await Company.where({ "_id": ObjectId(CID) })
+         .updateOne({ "CUA": Date.now() }).setOptions({ runValidators: true })
+         .exec();
+      res.json({
+         result: true,
+      });
+   }
+   catch (exception) {
+      console.log(exception);
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
 // 회사(사업주) 소유의 차량 조회
 exports.findCarByComID = async(req, res) => {
-    try {
-        const { CID } = req.body;
+   try {
+      const { CID } = req.body;
 
-        var cars = await Car.find({ CID });
-        if (cars != null) {
-            return res.json({
-                result: true,
-                dataList: cars,
-            });
-        }
-        else {
+      var cars = await Car.find({ CID });
+      if (cars != null) {
+         return res.json({
+            result: true,
+            dataList: cars,
+         });
+      }
+      else {
 
-            res.json({
-                result: false,
-                error: ERR_CODE.NO_SUCH_DATA,
-            });
-        }
-    }
-    catch (exception) {
-        res.json({
+         res.json({
             result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+            error: ERR_CODE.NO_SUCH_DATA,
+         });
+      }
+   }
+   catch (exception) {
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
 // 차량 정보 수정
 exports.updateCar = async(req, res) => {
-    try {
-        const { _id, CC, CN, SN } = req.body;
-        var result = await Car.where({ _id }).updateOne({ CC, CN, SN, UA: Date.now() });
-        console.log("result : " + result);
-        var ObjectId = Mongoose.Types.ObjectId;
-        var car = await Car.findOne({ "_id": ObjectId(_id) });
-        await Company.where({ "_id": ObjectId(car.CID) })
-            .updateOne({ "CUA": Date.now() }).setOptions({ runValidators: true })
-            .exec();
+   try {
+      const { _id, CC, CN, SN } = req.body;
+      var result = await Car.where({ _id }).updateOne({ CC, CN, SN, UA: Date.now() });
+      console.log("result : " + result);
+      var ObjectId = Mongoose.Types.ObjectId;
+      var car = await Car.findOne({ "_id": ObjectId(_id) });
+      await Company.where({ "_id": ObjectId(car.CID) })
+         .updateOne({ "CUA": Date.now() }).setOptions({ runValidators: true })
+         .exec();
 
-        res.json({
-            result: true,
-        });
+      res.json({
+         result: true,
+      });
 
-    }
-    catch (exception) {
-        res.json({
-            result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+   }
+   catch (exception) {
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
 // 차량 삭제
 exports.deleteCar = async(req, res) => {
-    try {
-        const { _id, CN } = req.body;
+   try {
+      const { _id, CN } = req.body;
 
 
-        var ObjectId = Mongoose.Types.ObjectId;
-        var car = await Car.findOne({ "_id": ObjectId(_id) });
-        await Company.where({ "_id": car.CID })
-            .updateOne({ "CUA": Date.now() }).setOptions({ runValidators: true })
-            .exec();
+      var ObjectId = Mongoose.Types.ObjectId;
+      var car = await Car.findOne({ "_id": ObjectId(_id) });
+      await Company.where({ "_id": car.CID })
+         .updateOne({ "CUA": Date.now() }).setOptions({ runValidators: true })
+         .exec();
 
-        var result = await Car.remove({ _id, CN });
-        console.log("result : " + result);
+      var result = await Car.remove({ _id, CN });
+      console.log("result : " + result);
 
-        res.json({
-            result: true,
-        });
-    }
-    catch (exception) {
-        res.json({
-            result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
-};
-
-exports.historyRoot = async(req, res, next) => {
-    console.log("historyRoot");
-    console.log("req.method   : " + req.method);
-    console.log("req.path: " + req.path);
-    console.log(JSON.stringify(HISTORY));
-    console.log(Object.keys(HISTORY).length);
-    for (var key in HISTORY) {
-        console.log('key:' + key + ' / ' + 'value:' + HISTORY[key]);
-    }
-    if (req.method == "POST" && req.path == "/create") {
-        console.log("to create");
-        createModel(req, res, MODEL_NAME.History);
-    }
-    else {
-        next();
-    }
-};
-
-/// 소독 공정 관련
-exports.createHistory = async(req, res) => {
-    // try {
-    //     console.log(req.body);
-    //     // const { WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD } = req.body;
-    //     // var result = await History.create({ WID, DID, CID, VID, ET, PD, RC, WNM, CNM, DNM, DNN, MP, FP, VER, RD });
-
-    //     var history = new History(req.body);
-    //     var result = await History.create(history);
-
-    //     await Device.where({ _id: history[HISTORY.deviceID] }).update({ $inc: { UN: 1 } });
-
-    //     console.log(result);
-
-    //     res.json({
-    //         result: true,
-    //         data: result._id,
-    //     });
-    // }
-    // catch (exception) {
-    //     console.log(exception);
-    //     res.json({
-    //         result: false,
-    //         error: ERR_CODE.UNKNOWN,
-    //     });
-    // }
-
-    createModel(req, res, MODEL_NAME.History);
+      res.json({
+         result: true,
+      });
+   }
+   catch (exception) {
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
 
+/*************************************
+ * 공정 히스토리 관련
+ *************************************/
 
-async function createModel(req, res, model) {
-    var Model;
-    var doc = req.body;
-    var postJob;
 
-    switch (model) {
-        case MODEL_NAME.History:
-            Model = MODEL.History;
-            postJob = async function() {
-                await Device.where({ _id: doc[HISTORY.deviceID] }).update({ $inc: { UN: 1 } });
-            };
-            break;
-        default:
-            return onError();
-    }
 
-    const onError = (error) => {
-        res.json({
-            result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    };
 
-    const resResult = (result) => {
-        if (postJob != null) {
-            postJob();
-        }
-        res.json({
-            result: true,
-            data: result._id,
-        });
-    };
-
-    await Model.create(doc).then(resResult).catch(onError);
-}
 
 // 히스토리 리스트 조회
 exports.findHistories = async(req, res) => {
-    try {
-        const { CID, SP, NOP } = req.body;
+   try {
+      const { CID, SP, NOP } = req.body;
 
-        var histories = await History.find({ CID }, { PD: false }).skip(SP * NOP).limit(NOP).sort({ CA: -1 });
-        if (histories != null) {
-            return res.json({
-                result: true,
-                dataList: histories,
-            });
-        }
-        else {
-
-            res.json({
-                result: false,
-                error: ERR_CODE.NO_SUCH_DATA,
-            });
-        }
-    }
-    catch (exception) {
-        res.json({
+      var histories = await History.find({ CID }, { PD: false }).skip(SP * NOP).limit(NOP).sort({ CA: -1 });
+      if (histories != null) {
+         return res.json({
+            result: true,
+            dataList: histories,
+         });
+      }
+      else {
+         res.json({
             result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+            error: ERR_CODE.NO_SUCH_DATA,
+         });
+      }
+   }
+   catch (exception) {
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
 // 히스토리 조회
 exports.findHistory = async(req, res) => {
-    try {
-        const { _id } = req.body;
+   console.log("[findHistory]");
+   try {
+      const { _id } = req.body;
 
-        var history = await History.findOne({ _id });
-        if (history != null) {
-            return res.json({
-                result: true,
-                data: JSON.stringify(history),
-            });
-        }
-        else {
+      var history = await History.findOne({ _id });
+      if (history != null) {
+         return res.json({
+            result: true,
+            data: JSON.stringify(history),
+         });
+      }
+      else {
 
-            res.json({
-                result: false,
-                error: ERR_CODE.NO_SUCH_DATA,
-            });
-        }
-    }
-    catch (exception) {
-        res.json({
+         res.json({
             result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+            error: ERR_CODE.NO_SUCH_DATA,
+         });
+      }
+   }
+   catch (exception) {
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
 /// 소독기 장비 관련
 
 exports.registerDevice = async(req, res) => {
-    try {
-        const { CID, MD, MAC, NN, VER } = req.body;
-        const UN = 0;
+   try {
+      const { CID, MD, MAC, NN, VER } = req.body;
+      const UN = 0;
 
-        var result = await Device.create({ CID, MD, MAC, NN, VER, UN });
-        console.log(result);
+      var result = await Device.create({ CID, MD, MAC, NN, VER, UN });
+      console.log(result);
 
-        res.json({
-            result: true,
-        });
-    }
-    catch (exception) {
-        res.json({
-            result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+      res.json({
+         result: true,
+      });
+   }
+   catch (exception) {
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 exports.findDevices = async(req, res) => {
-    try {
-        const { CID } = req.body;
+   try {
+      const { CID } = req.body;
 
-        var devices = await Device.find({ CID });
-        if (devices != null) {
-            return res.json({
-                result: true,
-                dataList: devices,
-            });
-        }
-        else {
-            res.json({
-                result: false,
-                error: ERR_CODE.NO_SUCH_DATA,
-            });
-        }
-    }
-    catch (exception) {
-        res.json({
+      var devices = await Device.find({ CID });
+      if (devices != null) {
+         return res.json({
+            result: true,
+            dataList: devices,
+         });
+      }
+      else {
+         res.json({
             result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+            error: ERR_CODE.NO_SUCH_DATA,
+         });
+      }
+   }
+   catch (exception) {
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
 // 소독기 장비의 닉네임 변경
 exports.updateDevice = async(req, res) => {
-    try {
-        const { _id, NN } = req.body;
+   try {
+      const { _id, NN } = req.body;
 
-        var result = await Device.where({ _id }).updateOne({ NN, UA: Date.now() });
-        console.log(result);
+      var result = await Device.where({ _id }).updateOne({ NN, UA: Date.now() });
+      console.log(result);
 
-        res.json({
-            result: true,
-        });
+      res.json({
+         result: true,
+      });
 
-    }
-    catch (exception) {
-        res.json({
-            result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+   }
+   catch (exception) {
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
 // 소독기 삭제
 exports.deleteDevice = async(req, res) => {
-    try {
-        const { _id, MAC } = req.body;
+   try {
+      const { _id, MAC } = req.body;
 
-        var result = await Device.remove({ _id, MAC });
-        console.log(result);
+      var result = await Device.remove({ _id, MAC });
+      console.log(result);
 
-        res.json({
-            result: true,
-        });
-    }
-    catch (exception) {
-        res.json({
-            result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+      res.json({
+         result: true,
+      });
+   }
+   catch (exception) {
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
 // 소독기 검색
 exports.findOneDevice = async(req, res) => {
-    try {
-        const { MAC, _id } = req.body;
-        var query = new Object();
-        if (MAC != null) query.MAC = MAC;
-        if (_id != null) query._id = _id;
-        console.log(query);
+   try {
+      const { MAC, _id } = req.body;
+      var query = new Object();
+      if (MAC != null) query.MAC = MAC;
+      if (_id != null) query._id = _id;
+      console.log(query);
 
-        const device = await Device.findOne(query);
-        if (device) {
-            res.send({
-                result: true,
-                data: JSON.stringify(device),
-            });
-        }
-        else {
-            res.send({
-                result: false,
-                error: ERR_CODE.NO_SUCH_DATA,
-            });
-        }
-
-    }
-    catch (exception) {
-        console.log(exception);
-        res.send({
+      const device = await Device.findOne(query);
+      if (device) {
+         res.send({
+            result: true,
+            data: JSON.stringify(device),
+         });
+      }
+      else {
+         res.send({
             result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+            error: ERR_CODE.NO_SUCH_DATA,
+         });
+      }
+
+   }
+   catch (exception) {
+      console.log(exception);
+      res.send({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
-/// 히스토리 관련
 
-// exports.root = (req, res) => {
-//     var tz = moment.tz.guess();
-//     console.log(tz);
-//     res.json({
-//         result: "hello",
-//     });
-// };
+
+// 소독기 검색
+exports.findOneDevice = async(req, res) => {
+   try {
+      const { MAC, _id } = req.body;
+      var query = new Object();
+      if (MAC != null) query.MAC = MAC;
+      if (_id != null) query._id = _id;
+      console.log(query);
+
+      const device = await Device.findOne(query);
+      if (device) {
+         res.send({
+            result: true,
+            data: JSON.stringify(device),
+         });
+      }
+      else {
+         res.send({
+            result: false,
+            error: ERR_CODE.NO_SUCH_DATA,
+         });
+      }
+
+   }
+   catch (exception) {
+      console.log(exception);
+      res.send({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
+};
+
+
+
 
 // SMS 관련
 
 exports.registerSMS = async(req, res) => {
-    try {
+   try {
 
-        const { _id, num } = req.body;
+      const { _id, num } = req.body;
 
-        const historyid = _id;
-        const number = num;
+      const historyid = _id;
+      const number = num;
 
-        let apiSecret = process.env.sol_secret;
-        let apiKey = process.env.sol_key;
+      let apiSecret = process.env.sol_secret;
+      let apiKey = process.env.sol_key;
 
-        const moment = require('moment')
-        const nanoidGenerate = require('nanoid/generate')
-        const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32)
-        const HmacSHA256 = require('crypto-js/hmac-sha256')
-        const fs = require('fs')
-        const path = require('path')
+      const moment = require('moment')
+      const nanoidGenerate = require('nanoid/generate')
+      const generate = () => nanoidGenerate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32)
+      const HmacSHA256 = require('crypto-js/hmac-sha256')
+      const fs = require('fs')
+      const path = require('path')
 
-        const date = moment.utc().format()
-        const salt = generate()
-        const hmacData = date + salt
-        const signature = HmacSHA256(hmacData, apiSecret).toString()
-        const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
+      const date = moment.utc().format()
+      const salt = generate()
+      const hmacData = date + salt
+      const signature = HmacSHA256(hmacData, apiSecret).toString()
+      const autori = `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
 
-        var request = require('request');
-
-
-        const historyone = await History.findOne({ '_id': historyid });
-        const companyone = await Company.findOne({ '_id': historyone.CID })
-        var companypoint = companyone.SPO;
-
-        if (companypoint > 0) {
-
-            var options = {
-                headers: {
-                    Authorization: autori,
-                    'Content-Type': 'application/json'
-                },
-                body: {
-                    message: {
-                        to: num,
-                        from: '16443486',
-                        text: '안녕하세요. ' + companyone.CNA + '입니다. 소독이 완료되었습니다. 아래 링크로 확인해주세요 www.cleanoasis.net/publish?HID=' + historyid,
-                        type: "SMS"
-                    },
-                },
-                method: 'POST',
-                json: true,
-                url: 'http://api.solapi.com/messages/v4/send'
-            };
+      var request = require('request');
 
 
-            request(options, function(error, response, body) {
-                if (error) throw error;
-                console.log('result :', body);
-            });
+      const historyone = await History.findOne({ '_id': historyid });
+      const companyone = await Company.findOne({ '_id': historyone.CID })
+      var companypoint = companyone.SPO;
 
-            console.log(companypoint);
-            //  companypoint = companypoint - 20;
-            console.log(companypoint);
+      if (companypoint > 0) {
 
-            const companyone = await Company.where({ '_id': historyone.CID })
-                .updateMany({ "SPO": companypoint }).setOptions({ runValidators: true })
-                .exec();
-        }
+         var options = {
+            headers: {
+               Authorization: autori,
+               'Content-Type': 'application/json'
+            },
+            body: {
+               message: {
+                  to: num,
+                  from: '16443486',
+                  text: '안녕하세요. ' + companyone.CNA + '입니다. 소독이 완료되었습니다. 아래 링크로 확인해주세요 www.cleanoasis.net/publish?HID=' + historyid,
+                  type: "SMS"
+               },
+            },
+            method: 'POST',
+            json: true,
+            url: 'http://api.solapi.com/messages/v4/send'
+         };
 
-        else {
-            res.json({
-                result: false,
-                error: ERR_CODE.UNKNOWN,
-            });
-        }
 
+         request(options, function(error, response, body) {
+            if (error) throw error;
+            console.log('result :', body);
+         });
 
-    }
-    catch (exception) {
-        res.json({
+         console.log(companypoint);
+         //  companypoint = companypoint - 20;
+         console.log(companypoint);
+
+         const companyone = await Company.where({ '_id': historyone.CID })
+            .updateMany({ "SPO": companypoint }).setOptions({ runValidators: true })
+            .exec();
+      }
+
+      else {
+         res.json({
             result: false,
             error: ERR_CODE.UNKNOWN,
-        });
-    }
+         });
+      }
+
+
+   }
+   catch (exception) {
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
 
 exports.registerKAKAO = async(req, res) => {
-    var request = require('request');
-    try {
+   var request = require('request');
+   try {
 
-        const { _id, num } = req.body;
+      const { _id, num } = req.body;
 
-        const historyid = _id;
-        const number = num;
+      const historyid = _id;
+      const number = num;
 
-        let apiSecret = process.env.sol_secret;
-        let apiKey = process.env.sol_key;
+      let apiSecret = process.env.sol_secret;
+      let apiKey = process.env.sol_key;
 
-        const { config, Group, msg } = require('solapi');
-
-
-        const historyone = await History.findOne({ '_id': historyid });
-        var companyone = await Company.findOne({ '_id': historyone.CID });
-        var companypoint = companyone.SPO;
+      const { config, Group, msg } = require('solapi');
 
 
+      const historyone = await History.findOne({ '_id': historyid });
+      var companyone = await Company.findOne({ '_id': historyone.CID });
+      var companypoint = companyone.SPO;
 
-        if (companypoint > 0) {
 
-            config.init({ apiKey, apiSecret })
 
-            var fn = async function send(params = {}) {
-                try {
-                    const response = await Group.sendSimpleMessage(params);
-                    const pointone = await Point.insertMany({
-                        "CID": companyone._id,
-                        "PN": "알림톡 전송",
-                        "PO": 50,
-                        "MID": response.messageId,
-                        "WNM": historyone.WNM,
-                    });
-                    console.log(pointone);
+      if (companypoint > 0) {
 
-                    console.log(companypoint);
-                    companypoint = companypoint - 50;
-                    console.log(companypoint);
+         config.init({ apiKey, apiSecret })
 
-                    await Company.where({ '_id': historyone.CID })
-                        .update({ "SPO": companypoint }).setOptions({ runValidators: true })
-                        .exec();
+         var fn = async function send(params = {}) {
+            try {
+               const response = await Group.sendSimpleMessage(params);
+               const pointone = await Point.insertMany({
+                  "CID": companyone._id,
+                  "PN": "알림톡 전송",
+                  "PO": 50,
+                  "MID": response.messageId,
+                  "WNM": historyone.WNM,
+               });
+               console.log(pointone);
 
-                }
-                catch (e) {
-                    console.log(e);
-                }
+               console.log(companypoint);
+               companypoint = companypoint - 50;
+               console.log(companypoint);
+
+               await Company.where({ '_id': historyone.CID })
+                  .update({ "SPO": companypoint }).setOptions({ runValidators: true })
+                  .exec();
+
             }
-
-            const params = {
-                autoTypeDetect: true,
-                text: companyone.CNA + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
-                to: number, // 수신번호 (받는이)
-                from: '16443486', // 발신번호 (보내는이)
-                type: 'ATA',
-                kakaoOptions: {
-                    pfId: 'KA01PF210319072804501wAicQajTRe4',
-                    templateId: 'KA01TP210319074611283wL0AjgZVdog',
-                    buttons: [{
-                        buttonType: 'WL',
-                        buttonName: '확인하기',
-                        linkMo: process.env.IP + '/publish?cat=1&hid=' + historyid,
-                        linkPc: process.env.IP + '/publish?cat=1&hid=' + historyid
-                    }]
-                }
+            catch (e) {
+               console.log(e);
             }
+         }
 
-            fn(params)
-        }
-        else {
-            res.json({
-                result: false,
-                error: ERR_CODE.NO_POINT,
-            });
-        }
+         const params = {
+            autoTypeDetect: true,
+            text: companyone.CNA + "에서 소독이 완료되었음을 알려드립니다.자세한 사항은 아래 링크에서 확인 가능합니다 (미소)",
+            to: number, // 수신번호 (받는이)
+            from: '16443486', // 발신번호 (보내는이)
+            type: 'ATA',
+            kakaoOptions: {
+               pfId: 'KA01PF210319072804501wAicQajTRe4',
+               templateId: 'KA01TP210319074611283wL0AjgZVdog',
+               buttons: [{
+                  buttonType: 'WL',
+                  buttonName: '확인하기',
+                  linkMo: process.env.IP + '/publish?cat=1&hid=' + historyid,
+                  linkPc: process.env.IP + '/publish?cat=1&hid=' + historyid
+               }]
+            }
+         }
 
-
-    }
-    catch (exception) {
-        res.json({
+         fn(params)
+      }
+      else {
+         res.json({
             result: false,
-            error: ERR_CODE.UNKNOWN,
-        });
-    }
+            error: ERR_CODE.NO_POINT,
+         });
+      }
+
+
+   }
+   catch (exception) {
+      res.json({
+         result: false,
+         error: ERR_CODE.UNKNOWN,
+      });
+   }
 };
