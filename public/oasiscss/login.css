@@ -1,0 +1,26 @@
+input[type="text"], input[type="email"], input[type="password"], select {
+	background: #dee2e6 !important;
+	color: black !important;
+}
+input::placeholder {
+	color: gray !important;
+}
+
+.nav-tabs {
+    background: #2d353c !important;
+}
+
+.nav-tabs > li > a {
+    color: #dee2e6 !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 0 !important;
+}
+
+.nav-tabs .active {
+    background: #348fe2 !important;
+    border: 1px solid #348fe2 !important;
+    border-radius: 0 !important;
+}
+/*#ANA2 {*/
+/*    border: 2px solid red;*/
+/*}*/

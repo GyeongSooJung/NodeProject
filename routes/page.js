@@ -34,6 +34,10 @@ const { msg } = require('solapi');
 let running = false;
 global.running = running;
 
+//반복적으로 사용되는 변수
+const todayStart = moment().format('YYYY-MM-DD');
+const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
+
 //----------------------------------------------------------------------------//
 //                                  기본라우터                                //
 //----------------------------------------------------------------------------//
@@ -302,13 +306,26 @@ router.get('/device_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   const NN = req.query.NN;
   const noticethree = await Notice.find().limit(3).sort({CA : -1});
-   
+  var searchCNU = "";
+  var searchCID = [];
+  
+  // 본사,지점 구분하여 mongoDB 검색용 CNU 생성
+  if(req.decoded.ANU == "000") {
+    searchCNU = req.decoded.CNU.substring(0,10);
+  }
+  else {
+    searchCNU = req.decoded.CNU;
+  }
+  // 생성한 CNU를 통해 company 찾기
+  const companys = await Company.find({ "CNU" : {$regex:searchCNU} });
+  // 찾은 company의 id를 mongoDB 검색용 CID 배열 생성 -> 배열로 생성해야 자동으로 in이 적용됨(or같은 기능)
+  for(var i = 0; i < companys.length; i++) {
+    searchCID[i] = companys[i]._id;
+  }
 
   try {
-    const devices = await Device.find({ "CID": CID });
-    const todayStart = moment().format('YYYY-MM-DD');
-    const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
-    const deviceTodayCount = await Device.countDocuments({ "CID" : CID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
+    const devices = await Device.find({ "CID": searchCID });
+    const deviceTodayCount = await Device.countDocuments({ "CID" : searchCID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
     const deviceCount = devices.length;
 
     res.render('device_list', { company: req.decoded.company, aclist, devices, deviceTodayCount, deviceCount, noticethree });
@@ -331,7 +348,23 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, async function(req, res
   var sortText = "";
   var sortNum = 0;
   var devices = new Object;
+  var searchCNU = "";
+  var searchCID = [];
   
+  // 본사,지점 구분하여 mongoDB 검색용 CNU 생성
+  if(req.decoded.ANU == "000") {
+    searchCNU = req.decoded.CNU.substring(0,10);
+  }
+  else {
+    searchCNU = req.decoded.CNU;
+  }
+  // 생성한 CNU를 통해 company 찾기
+  const companys = await Company.find({ "CNU" : {$regex:searchCNU} });
+  // 찾은 company의 id를 mongoDB 검색용 CID 배열 생성 -> 배열로 생성해야 자동으로 in이 적용됨(or같은 기능)
+  for(var i = 0; i < companys.length; i++) {
+    searchCID[i] = companys[i]._id;
+  }
+  // 정렬 기능
   if(sort.includes('-') == true) {
     sortText = sort.split('-')[0];
     sortNum = 1;
@@ -349,31 +382,31 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, async function(req, res
       }
       else {
         if(search == "MD") {
-          devices = await Device.find({ "CID": CID, "MD" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          devices = await Device.find({ "CID": searchCID, "MD" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "VER") {
-          devices = await Device.find({ "CID": CID, "VER" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          devices = await Device.find({ "CID": searchCID, "VER" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "MAC") {
-          devices = await Device.find({ "CID": CID, "MAC" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          devices = await Device.find({ "CID": searchCID, "MAC" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "NN") {
-          devices = await Device.find({ "CID": CID, "NN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          devices = await Device.find({ "CID": searchCID, "NN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else {
-          devices = await Device.find({ "CID" : CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          devices = await Device.find({ "CID" : searchCID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -386,31 +419,31 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, async function(req, res
       }
       else {
         if (search =="MD") {
-          devices = await Device.find({ "CID": CID, "MD" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          devices = await Device.find({ "CID": searchCID, "MD" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if (search =="VER") {
-          devices = await Device.find({ "CID": CID, "VER" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          devices = await Device.find({ "CID": searchCID, "VER" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if (search =="MAC") {
-          devices = await Device.find({ "CID": CID, "MAC" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          devices = await Device.find({ "CID": searchCID, "MAC" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if (search =="NN") {
-          devices = await Device.find({ "CID": CID, "NN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          devices = await Device.find({ "CID": searchCID, "NN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else {
-          devices = await Device.find({ "CID" : CID }).sort({ [sortText]: sortNum });
+          devices = await Device.find({ "CID" : searchCID }).sort({ [sortText]: sortNum });
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -451,10 +484,26 @@ router.get('/car_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
   const noticethree = await Notice.find().limit(3).sort({CA : -1});
-  const cars = await Car.find({ "CID" : CID });
-  const todayStart = moment().format('YYYY-MM-DD');
-  const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
-  const carTodayCount = await Alarm.countDocuments({ "CID" : CID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
+  
+  var searchCNU = "";
+  var searchCID = [];
+  
+  // 본사,지점 구분하여 mongoDB 검색용 CNU 생성
+  if(req.decoded.ANU == "000") {
+    searchCNU = req.decoded.CNU.substring(0,10);
+  }
+  else {
+    searchCNU = req.decoded.CNU;
+  }
+  // 생성한 CNU를 통해 company 찾기
+  const companys = await Company.find({ "CNU" : {$regex:searchCNU} });
+  // 찾은 company의 id를 mongoDB 검색용 CID 배열 생성 -> 배열로 생성해야 자동으로 in이 적용됨(or같은 기능)
+  for(var i = 0; i < companys.length; i++) {
+    searchCID[i] = companys[i]._id;
+  }
+  
+  const cars = await Car.find({ "CID" : searchCID });
+  const carTodayCount = await Car.countDocuments({ "CID" : searchCID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
   const carCount = cars.length;
   
   res.render('car_list', { company: req.decoded.company, aclist, noticethree, carTodayCount, carCount });
@@ -469,7 +518,23 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, async function(req, res, n
   var sortText = "";
   var sortNum = 0;
   var cars = new Object;
+  var searchCNU = "";
+  var searchCID = [];
   
+  // 본사,지점 구분하여 mongoDB 검색용 CNU 생성
+  if(req.decoded.ANU == "000") {
+    searchCNU = req.decoded.CNU.substring(0,10);
+  }
+  else {
+    searchCNU = req.decoded.CNU;
+  }
+  // 생성한 CNU를 통해 company 찾기
+  const companys = await Company.find({ "CNU" : {$regex:searchCNU} });
+  // 찾은 company의 id를 mongoDB 검색용 CID 배열 생성 -> 배열로 생성해야 자동으로 in이 적용됨(or같은 기능)
+  for(var i = 0; i < companys.length; i++) {
+    searchCID[i] = companys[i]._id;
+  }
+  // 정렬 기능
   if(sort.includes('-') == true) {
     sortText = sort.split('-')[0];
     sortNum = 1;
@@ -482,19 +547,19 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, async function(req, res, n
   try {
     if (searchdate) {
       var searchtext2 = searchdate.split("~");
-      cars = await Car.find({ "CID" : CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+      cars = await Car.find({ "CID" : searchCID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
       if(cars.length == 0) {
         return res.send({ result : "nothing" });
       }
       else {
         if(search == "CN") {
-          cars = await Car.find({ "CID": CID, "CN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          cars = await Car.find({ "CID": searchCID, "CN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(cars.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "CPN") {
-          cars = await Car.find({ "CID": CID, "CPN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          cars = await Car.find({ "CID": searchCID, "CPN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(cars.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -502,19 +567,19 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, async function(req, res, n
       }
     }
     else {
-      cars = await Car.find({ "CID" : CID }).sort({ [sortText]: sortNum });
+      cars = await Car.find({ "CID" : searchCID }).sort({ [sortText]: sortNum });
       if(cars.length == 0) {
         return res.send({ result : "nothing" });
       }
       else {
         if (search =="CN") {
-          cars = await Car.find({ "CID": CID, "CN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          cars = await Car.find({ "CID": searchCID, "CN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
           if(cars.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if (search =="CPN") {
-          cars = await Car.find({ "CID": CID, "CPN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          cars = await Car.find({ "CID": searchCID, "CPN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
           if(cars.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -548,8 +613,22 @@ router.get('/worker_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const aclist = await Worker.find({ "CID" : CID, "AC": false });
   const WN = req.query.WN;
   const noticethree = await Notice.find().limit(3).sort({CA : -1});
-  const todayStart = moment().format('YYYY-MM-DD');
-  const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
+  var searchCNU = "";
+  var searchCID = [];
+  
+  // 본사,지점 구분하여 mongoDB 검색용 CNU 생성
+  if(req.decoded.ANU == "000") {
+    searchCNU = req.decoded.CNU.substring(0,10);
+  }
+  else {
+    searchCNU = req.decoded.CNU;
+  }
+  // 생성한 CNU를 통해 company 찾기
+  const companys = await Company.find({ "CNU" : {$regex:searchCNU} });
+  // 찾은 company의 id를 mongoDB 검색용 CID 배열 생성 -> 배열로 생성해야 자동으로 in이 적용됨(or같은 기능)
+  for(var i = 0; i < companys.length; i++) {
+    searchCID[i] = companys[i]._id;
+  }
   
   if(CID == "5fd6c731a26c914fbad53ebe") {
     const workers = await Worker.find({});
@@ -559,8 +638,8 @@ router.get('/worker_list', isNotLoggedIn, DataSet, async(req, res, next) => {
     res.render('worker_list', { company: req.decoded.company, aclist, noticethree, workers, workerTodayCount, workerCount });
   }
   else {
-    const workers = await Worker.find({ "CID" : CID });
-    const workerTodayCount = await Worker.countDocuments({ "CID" : CID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
+    const workers = await Worker.find({ "CID" : searchCID });
+    const workerTodayCount = await Worker.countDocuments({ "CID" : searchCID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
     const workerCount = workers.length;
   
     res.render('worker_list', { company: req.decoded.company, aclist, noticethree, workers, workerTodayCount, workerCount });
@@ -576,7 +655,23 @@ router.post('/ajax/worker_list', isNotLoggedIn, DataSet, async function(req, res
   var sortText = "";
   var sortNum = 0;
   var workers = new Object;
+  var searchCNU = "";
+  var searchCID = [];
   
+  // 본사,지점 구분하여 mongoDB 검색용 CNU 생성
+  if(req.decoded.ANU == "000") {
+    searchCNU = req.decoded.CNU.substring(0,10);
+  }
+  else {
+    searchCNU = req.decoded.CNU;
+  }
+  // 생성한 CNU를 통해 company 찾기
+  const companys = await Company.find({ "CNU" : {$regex:searchCNU} });
+  // 찾은 company의 id를 mongoDB 검색용 CID 배열 생성 -> 배열로 생성해야 자동으로 in이 적용됨(or같은 기능)
+  for(var i = 0; i < companys.length; i++) {
+    searchCID[i] = companys[i]._id;
+  }
+  // 정렬 기능
   if(sort.includes('-') == true) {
     sortText = sort.split('-')[0];
     sortNum = 1;
@@ -595,7 +690,7 @@ router.post('/ajax/worker_list', isNotLoggedIn, DataSet, async function(req, res
            
         ], function (err,result) {
           if(err) throw err;
-        });
+      });
       var CIDlist = [];
       for (var i = 0; i < franchiseCIDlist.length; i ++) {
         CIDlist.push(String(franchiseCIDlist[i]._id));
@@ -675,25 +770,25 @@ router.post('/ajax/worker_list', isNotLoggedIn, DataSet, async function(req, res
         }
         else {
           if(search == "WN") {
-            workers = await Worker.find({ "CID": CID, "WN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+            workers = await Worker.find({ "CID": searchCID, "WN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
             if(workers.length == 0) {
               return res.send({ result : "nothing"});
             }
           }
           else if(search == "PN") {
-            workers = await Worker.find({ "CID": CID, "PN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+            workers = await Worker.find({ "CID": searchCID, "PN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
             if(workers.length == 0) {
               return res.send({ result : "nothing"});
             }
           }
           else if(search == "EM") {
-            workers = await Worker.find({ "CID": CID, "EM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+            workers = await Worker.find({ "CID": searchCID, "EM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
             if(workers.length == 0) {
               return res.send({ result : "nothing"});
             }
           }
           else {
-            workers = await Worker.find({ "CID" : CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+            workers = await Worker.find({ "CID" : searchCID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
             if(workers.length == 0) {
               return res.send({ result : "nothing"});
             }
@@ -706,25 +801,25 @@ router.post('/ajax/worker_list', isNotLoggedIn, DataSet, async function(req, res
         }
         else {
           if (search =="WN") {
-            workers = await Worker.find({ "CID": CID, "WN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+            workers = await Worker.find({ "CID": searchCID, "WN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
             if(workers.length == 0) {
               return res.send({ result : "nothing"});
             }
           }
           else if (search =="PN") {
-            workers = await Worker.find({ "CID": CID, "PN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+            workers = await Worker.find({ "CID": searchCID, "PN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
             if(workers.length == 0) {
               return res.send({ result : "nothing"});
             }
           }
           else if (search =="EM") {
-            workers = await Worker.find({ "CID": CID, "EM" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+            workers = await Worker.find({ "CID": searchCID, "EM" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
             if(workers.length == 0) {
               return res.send({ result : "nothing"});
             }
           }
           else {
-            workers = await Worker.find({ "CID" : CID }).sort({ [sortText]: sortNum });
+            workers = await Worker.find({ "CID" : searchCID }).sort({ [sortText]: sortNum });
             if(workers.length == 0) {
               return res.send({ result : "nothing"});
             }
@@ -795,10 +890,26 @@ router.get('/history_list', isNotLoggedIn, DataSet, async(req, res, next) => {
     const devices = await Device.find({ "CID": CID });
     const CN = req.query.CN;
     const MD = req.query.MD;
-    const historys = await History.find({ "CID": CID });
-    const todayStart = moment().format('YYYY-MM-DD');
-    const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
-    const historyTodayCount = await History.countDocuments({ "CID" : CID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
+    
+    var searchCNU = "";
+    var searchCID = [];
+    
+    // 본사,지점 구분하여 mongoDB 검색용 CNU 생성
+    if(req.decoded.ANU == "000") {
+      searchCNU = req.decoded.CNU.substring(0,10);
+    }
+    else {
+      searchCNU = req.decoded.CNU;
+    }
+    // 생성한 CNU를 통해 company 찾기
+    const companys = await Company.find({ "CNU" : {$regex:searchCNU} });
+    // 찾은 company의 id를 mongoDB 검색용 CID 배열 생성 -> 배열로 생성해야 자동으로 in이 적용됨(or같은 기능)
+    for(var i = 0; i < companys.length; i++) {
+      searchCID[i] = companys[i]._id;
+    }
+    
+    const historys = await History.find({ "CID": searchCID });
+    const historyTodayCount = await History.countDocuments({ "CID" : searchCID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
     const historyCount = historys.length;
 
     res.render('history_list', { company: req.decoded.company, aclist, noticethree, cars, devices, historys, historyTodayCount, historyCount });
@@ -819,7 +930,24 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
   var sortText = "";
   var sortNum = 0;
   var historys = new Object;
+  var searchCNU = "";
+  var searchCID = [];
   
+  // 본사,지점 구분하여 mongoDB 검색용 CNU 생성
+  if(req.decoded.ANU == "000") {
+    searchCNU = req.decoded.CNU.substring(0,10);
+  }
+  else {
+    searchCNU = req.decoded.CNU;
+  }
+  // 생성한 CNU를 통해 company 찾기
+  const companys = await Company.find({ "CNU" : {$regex:searchCNU} });
+  // 찾은 company의 id를 mongoDB 검색용 CID 배열 생성 -> 배열로 생성해야 자동으로 in이 적용됨(or같은 기능)
+  for(var i = 0; i < companys.length; i++) {
+    searchCID[i] = companys[i]._id.toString();
+  }
+  console.log(searchCID);
+  // 정렬 기능
   if(sort.includes('-') == true) {
     sortText = sort.split('-')[0];
     sortNum = 1;
@@ -838,7 +966,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
       else {
         if(search == "CNM") {
           historys = await History.aggregate([
-            { $match : { "CID" : CID, "CNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
+            { $match : { "CID" : { $in : searchCID }, "CNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
             { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
             { $sort : { [sortText]: sortNum } }
           ]);
@@ -848,7 +976,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
         }
         else if(search == "DNM") {
           historys = await History.aggregate([
-            { $match : { "CID" : CID, "DNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
+            { $match : { "CID" : { $in : searchCID }, "DNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
             { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
             { $sort : { [sortText]: sortNum } }
           ]);
@@ -858,7 +986,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
         }
         else if(search == "WNM") {
           historys = await History.aggregate([
-            { $match : { "CID" : CID, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
+            { $match : { "CID" : { $in : searchCID }, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
             { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
             { $sort : { [sortText]: sortNum } }
           ]);
@@ -868,7 +996,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
         }
         else {
           historys = await History.aggregate([
-            { $match : { "CID" : CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
+            { $match : { "CID" : { $in : searchCID }, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
             { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
             { $sort : { [sortText]: sortNum } }
           ]);
@@ -885,7 +1013,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
       else {
         if (search =="CNM") {
           historys = await History.aggregate([
-            { $match : { "CID" : CID, "CNM" : {$regex:searchtext} } },
+            { $match : { "CID" : { $in : searchCID }, "CNM" : {$regex:searchtext} } },
             { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
             { $sort : { [sortText]: sortNum } }
           ]);
@@ -895,7 +1023,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
         }
         else if (search =="DNM") {
           historys = await History.aggregate([
-            { $match : { "CID" : CID, "DNM" : {$regex:searchtext} } },
+            { $match : { "CID" : { $in : searchCID }, "DNM" : {$regex:searchtext} } },
             { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
             { $sort : { [sortText]: sortNum } }
           ]);
@@ -905,7 +1033,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
         }
         else if (search =="WNM") {
           historys = await History.aggregate([
-            { $match : { "CID" : CID, "WNM" : {$regex:searchtext} } },
+            { $match : { "CID" : { $in : searchCID }, "WNM" : {$regex:searchtext} } },
             { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
             { $sort : { [sortText]: sortNum } }
           ]);
@@ -915,10 +1043,11 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, async function(req, re
         }
         else {
           historys = await History.aggregate([
-            { $match : { "CID" : CID } },
+            { $match : { "CID" : { $in : searchCID } } },
             { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
             { $sort : { [sortText]: sortNum } }
           ]);
+          console.log(historys);
           if(historys.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -1039,10 +1168,25 @@ router.get('/pay_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
   try {
-    const orders = await Order.find({ "CID": CID });
-    const todayStart = moment().format('YYYY-MM-DD');
-    const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
-    const orderTodayCount = await Order.countDocuments({ "CID" : CID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
+    var searchCNU = "";
+    var searchCID = [];
+    
+    // 본사,지점 구분하여 mongoDB 검색용 CNU 생성
+    if(req.decoded.ANU == "000") {
+      searchCNU = req.decoded.CNU.substring(0,10);
+    }
+    else {
+      searchCNU = req.decoded.CNU;
+    }
+    // 생성한 CNU를 통해 company 찾기
+    const companys = await Company.find({ "CNU" : {$regex:searchCNU} });
+    // 찾은 company의 id를 mongoDB 검색용 CID 배열 생성 -> 배열로 생성해야 자동으로 in이 적용됨(or같은 기능)
+    for(var i = 0; i < companys.length; i++) {
+      searchCID[i] = companys[i]._id;
+    }
+    
+    const orders = await Order.find({ "CID": searchCID });
+    const orderTodayCount = await Order.countDocuments({ "CID" : searchCID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
     const orderCount = orders.length;
     
     res.render('pay_list', { company: req.decoded.company, aclist, noticethree, IP, orders, orderTodayCount, orderCount });
@@ -1062,7 +1206,23 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res, n
   var sortText = "";
   var sortNum = 0;
   var orders = new Object;
+  var searchCNU = "";
+  var searchCID = [];
   
+  // 본사,지점 구분하여 mongoDB 검색용 CNU 생성
+  if(req.decoded.ANU == "000") {
+    searchCNU = req.decoded.CNU.substring(0,10);
+  }
+  else {
+    searchCNU = req.decoded.CNU;
+  }
+  // 생성한 CNU를 통해 company 찾기
+  const companys = await Company.find({ "CNU" : {$regex:searchCNU} });
+  // 찾은 company의 id를 mongoDB 검색용 CID 배열 생성 -> 배열로 생성해야 자동으로 in이 적용됨(or같은 기능)
+  for(var i = 0; i < companys.length; i++) {
+    searchCID[i] = companys[i]._id;
+  }
+  // 정렬 기능
   if(sort.includes('-') == true) {
     sortText = sort.split('-')[0];
     sortNum = 1;
@@ -1081,19 +1241,19 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res, n
       }
       else {
         if(search == "MID") {
-          orders = await Order.find({ "CID": CID, "MID" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          orders = await Order.find({ "CID": searchCID, "MID" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(orders.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "GN") {
-          orders = await Order.find({ "CID": CID, "GN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          orders = await Order.find({ "CID": searchCID, "GN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(orders.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else {
-          orders = await Order.find({ "CID" : CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          orders = await Order.find({ "CID" : searchCID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(orders.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -1106,19 +1266,19 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res, n
       }
       else {
         if (search =="MID") {
-          orders = await Order.find({ "CID": CID, "MID" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          orders = await Order.find({ "CID": searchCID, "MID" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
           if(orders.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if (search =="GN") {
-          orders = await Order.find({ "CID": CID, "GN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          orders = await Order.find({ "CID": searchCID, "GN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
           if(orders.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else {
-          orders = await Order.find({ "CID" : CID }).sort({ [sortText]: sortNum });
+          orders = await Order.find({ "CID" : searchCID }).sort({ [sortText]: sortNum });
           if(orders.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -1139,121 +1299,6 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, async function(req, res, n
     console.error(err);
     next(err);
   }
-  // if (search!="") {
-  //   if(search == "CA") {
-  //         var searchtext2 = searchdate.split("~");
-  //         var orders = await Order.find({ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-  //         if(orders.length == 0) 
-  //         res.send({result : "nothing"});
-  //   }
-  //   else {
-  //     if(!searchdate) {
-  //       try{
-  //         if (search =="MID") {
-  //           var orders = await Order.find({ "CID": CID, "MID" : {$regex:searchtext} });
-  //           if(orders.length == 0) 
-  //           res.send({result : "nothing"});
-  //         }
-  //         else if (search =="GN") {
-  //           var orders = await Order.find({ "CID": CID, "GN" : {$regex:searchtext} });
-  //           if(orders.length == 0) 
-  //           res.send({result : "nothing"});
-  //         }
-  //         else if (search =="AM") {
-  //           searchtext = parseInt(searchtext)
-  //           var orders = await Order.find({ "CID": CID, "AM" : searchtext });
-  //           if(orders.length == 0) 
-  //           res.send({result : "nothing"});
-  //         }
-          
-  //       }catch(e) {
-  //         res.send({ result: false });
-  //       }
-  //     }
-  //     else {
-  //       if (search =="MID") {
-  //         var searchtext2 = searchdate.split("~");
-  //           var orders = await Order.find({ "CID": CID, "MID" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-  //           if(orders.length == 0) 
-  //           res.send({result : "nothing"});
-  //         }
-  //         else if (search =="GN") {
-  //           var searchtext2 = searchdate.split("~");
-  //           var orders = await Order.find({ "CID": CID, "GN" : {$regex:searchtext} , "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"}});
-  //           if(orders.length == 0) 
-  //           res.send({result : "nothing"});
-  //         }
-  //         else if (search =="AM") {
-  //           var searchtext2 = searchdate.split("~");
-  //           searchtext = parseInt(searchtext)
-  //           var orders = await Order.find({ "CID": CID, "AM" : searchtext, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} });
-  //           if(orders.length == 0) 
-  //           res.send({result : "nothing"});
-  //         }
-  //     }
-      
-  //   }
-  // }
-  
-  // else {
-  //     var orders = await Order.find({ "CID": CID });
-    
-  //     if(sort == "MID") {
-  //         orders.sort(function (a,b) {
-            
-  //           if(typeof(a.MID) == "object")
-  //           a.MID = JSON.stringify(a.MID);
-  //           return (a.MID[0]).charCodeAt(0) < (b.MID[0]).charCodeAt(0) ? -1 : (a.MID[0]).charCodeAt(0) > (b.MID[0]).charCodeAt(0) ? 1 : 0;
-  //         })
-  //     }
-      
-  //     else if(sort == "MID2") {
-  //         orders.sort(function (a,b) {
-  //           if(typeof(a.MID) == "object")
-  //           a.MID = JSON.stringify(a.MID);
-  //           return (a.MID[0]).charCodeAt(0) > (b.MID[0]).charCodeAt(0) ? -1 : (a.MID[0]).charCodeAt(0) < (b.MID[0]).charCodeAt(0) ? 1 : 0;
-  //         })
-  //     }
-      
-  //     else if(sort == "CA") { 
-  //         var orders = await Order.find({ "CID": CID }).sort({ CA: -1 });
-  //     }
-      
-  //     else if(sort == "CA2"){
-  //         var orders = await Order.find({ "CID": CID }).sort({ CA: 1 });
-  //     }
-  //     else if(sort == "GN") {
-  //         orders.sort(function (a,b) {
-            
-  //           if(typeof(a.GN) == "object")
-  //           a.GN = JSON.stringify(a.GN);
-  //           return (a.GN[0]).charCodeAt(0) < (b.GN[0]).charCodeAt(0) ? -1 : (a.GN[0]).charCodeAt(0) > (b.GN[0]).charCodeAt(0) ? 1 : 0;
-  //         })
-  //     }
-      
-  //     else if(sort == "GN2") {
-  //         orders.sort(function (a,b) {
-  //           if(typeof(a.GN) == "object")
-  //           a.GN = JSON.stringify(a.GN);
-  //           return (a.GN[0]).charCodeAt(0) > (b.GN[0]).charCodeAt(0) ? -1 : (a.GN[0]).charCodeAt(0) < (b.GN[0]).charCodeAt(0) ? 1 : 0;
-  //         })
-  //     }
-  //     else if(sort == "AM") {
-  //         orders.sort(function (a,b) {
-  //           return a.AM < b.AM ? -1 : a.AM > b.AM ? 1 : 0;
-  //         })
-  //     }
-      
-  //     else if(sort == "AM2") {
-  //         orders.sort(function (a,b) {
-  //           return a.AM > b.AM ? -1 : a.AM < b.AM ? 1 : 0;
-  //         })
-  //     }
-  //     else {
-  //       var orders = await Order.find({ "CID": CID }).sort({ CA: -1 });
-        
-  //     }
-  // }
 });
 
 router.post('/ajax/pay_list_detail', isNotLoggedIn, DataSet, async(req, res, next) => {
@@ -1319,10 +1364,25 @@ router.get('/point_list', isNotLoggedIn, DataSet, async(req, res, next) => {
   const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
   try {
-    const points = await Point.find({ "CID": CID });
-    const todayStart = moment().format('YYYY-MM-DD');
-    const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
-    const pointTodayCount = await Point.countDocuments({ "CID" : CID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
+    var searchCNU = "";
+    var searchCID = [];
+    
+    // 본사,지점 구분하여 mongoDB 검색용 CNU 생성
+    if(req.decoded.ANU == "000") {
+      searchCNU = req.decoded.CNU.substring(0,10);
+    }
+    else {
+      searchCNU = req.decoded.CNU;
+    }
+    // 생성한 CNU를 통해 company 찾기
+    const companys = await Company.find({ "CNU" : {$regex:searchCNU} });
+    // 찾은 company의 id를 mongoDB 검색용 CID 배열 생성 -> 배열로 생성해야 자동으로 in이 적용됨(or같은 기능)
+    for(var i = 0; i < companys.length; i++) {
+      searchCID[i] = companys[i]._id;
+    }
+    
+    const points = await Point.find({ "CID": searchCID });
+    const pointTodayCount = await Point.countDocuments({ "CID" : searchCID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
     const pointCount = points.length;
 
     res.render('point_list', { company: req.decoded.company, aclist, noticethree, IP, points, pointTodayCount, pointCount });
@@ -1343,12 +1403,28 @@ router.post('/ajax/point_list', isNotLoggedIn, DataSet, async function(req, res,
   var sortText = "";
   var sortNum = 0;
   var points = new Object;
+  var searchCNU = "";
+  var searchCID = [];
   
   // 스키마 변경 시 삭제예정
   if(search == "pointPN") {
     search = "PN";
   }
   
+  // 본사,지점 구분하여 mongoDB 검색용 CNU 생성
+  if(req.decoded.ANU == "000") {
+    searchCNU = req.decoded.CNU.substring(0,10);
+  }
+  else {
+    searchCNU = req.decoded.CNU;
+  }
+  // 생성한 CNU를 통해 company 찾기
+  const companys = await Company.find({ "CNU" : {$regex:searchCNU} });
+  // 찾은 company의 id를 mongoDB 검색용 CID 배열 생성 -> 배열로 생성해야 자동으로 in이 적용됨(or같은 기능)
+  for(var i = 0; i < companys.length; i++) {
+    searchCID[i] = companys[i]._id;
+  }
+  // 정렬 기능
   if(sort.includes('-') == true) {
     sortText = sort.split('-')[0];
     sortNum = 1;
@@ -1366,19 +1442,19 @@ router.post('/ajax/point_list', isNotLoggedIn, DataSet, async function(req, res,
       }
       else {
         if(search == "PN") {
-          points = await Point.find({ "CID": CID, "PN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          points = await Point.find({ "CID": searchCID, "PN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(points.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "PO") {
-          points = await Point.find({ "CID": CID, "PO" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          points = await Point.find({ "CID": searchCID, "PO" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(points.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else {
-          points = await Point.find({ "CID" : CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          points = await Point.find({ "CID" : searchCID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(points.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -1391,19 +1467,19 @@ router.post('/ajax/point_list', isNotLoggedIn, DataSet, async function(req, res,
       }
       else {
         if (search =="PN") {
-          points = await Point.find({ "CID": CID, "PN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          points = await Point.find({ "CID": searchCID, "PN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
           if(points.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if (search =="PO") {
-          points = await Point.find({ "CID": CID, "PO" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          points = await Point.find({ "CID": searchCID, "PO" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
           if(points.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else {
-          points = await Point.find({ "CID" : CID }).sort({ [sortText]: sortNum });
+          points = await Point.find({ "CID" : searchCID }).sort({ [sortText]: sortNum });
           if(points.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -1682,14 +1758,10 @@ router.get('/sendkko2', isNotLoggedIn, DataSet, async(req, res, next) => {
               linkPc: process.env.IP + '/publish?cat=1&hid=' + historyid
             }]
     }
-  }
+  };
   
-  fn(params)
-
-
-
-
-
+  fn(params);
+  
 });
 
 // 알림톡 리스트
@@ -1810,10 +1882,25 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, async(req, res, next) => {
     }
 
   try {
-    const alarms = await Alarm.find({ "CID": CID });
-    const todayStart = moment().format('YYYY-MM-DD');
-    const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
-    const alarmTodayCount = await Alarm.countDocuments({ "CID" : CID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
+    var searchCNU = "";
+    var searchCID = [];
+    
+    // 본사,지점 구분하여 mongoDB 검색용 CNU 생성
+    if(req.decoded.ANU == "000") {
+      searchCNU = req.decoded.CNU.substring(0,10);
+    }
+    else {
+      searchCNU = req.decoded.CNU;
+    }
+    // 생성한 CNU를 통해 company 찾기
+    const companys = await Company.find({ "CNU" : {$regex:searchCNU} });
+    // 찾은 company의 id를 mongoDB 검색용 CID 배열 생성 -> 배열로 생성해야 자동으로 in이 적용됨(or같은 기능)
+    for(var i = 0; i < companys.length; i++) {
+      searchCID[i] = companys[i]._id;
+    }
+    
+    const alarms = await Alarm.find({ "CID": searchCID });
+    const alarmTodayCount = await Alarm.countDocuments({ "CID" : searchCID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
     const alarmCount = alarms.length;
     res.render('alarmtalk_list', { company: req.decoded.company, aclist, noticethree, alarms, alarmCount, alarmTodayCount });
 
@@ -1834,7 +1921,23 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
   var sortText = "";
   var sortNum = 0;
   var alarms = new Object;
+  var searchCNU = "";
+  var searchCID = [];
   
+  // 본사,지점 구분하여 mongoDB 검색용 CNU 생성
+  if(req.decoded.ANU == "000") {
+    searchCNU = req.decoded.CNU.substring(0,10);
+  }
+  else {
+    searchCNU = req.decoded.CNU;
+  }
+  // 생성한 CNU를 통해 company 찾기
+  const companys = await Company.find({ "CNU" : {$regex:searchCNU} });
+  // 찾은 company의 id를 mongoDB 검색용 CID 배열 생성 -> 배열로 생성해야 자동으로 in이 적용됨(or같은 기능)
+  for(var i = 0; i < companys.length; i++) {
+    searchCID[i] = companys[i]._id;
+  }
+  // 정렬 기능
   if(sort.includes('-') == true) {
     sortText = sort.split('-')[0];
     sortNum = 1;
@@ -1852,19 +1955,19 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
       }
       else {
         if(search == "WNM") {
-          alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          alarms = await Alarm.find({ "CID": searchCID, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "RE") {
-          alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          alarms = await Alarm.find({ "CID": searchCID, "RE" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else {
-          alarms = await Alarm.find({ "CID" : CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          alarms = await Alarm.find({ "CID" : searchCID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -1877,19 +1980,19 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, async function(req, 
       }
       else {
         if (search =="WNM") {
-          alarms = await Alarm.find({ "CID": CID, "WNM" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          alarms = await Alarm.find({ "CID": searchCID, "WNM" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if (search =="RE") {
-          alarms = await Alarm.find({ "CID": CID, "RE" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          alarms = await Alarm.find({ "CID": searchCID, "RE" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else {
-          alarms = await Alarm.find({ "CID" : CID }).sort({ [sortText]: sortNum });
+          alarms = await Alarm.find({ "CID" : searchCID }).sort({ [sortText]: sortNum });
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -2191,20 +2294,180 @@ router.get('/manual', async(req, res, next) => {
 router.get('/ozone_spread', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": CID, "AC": false });
-
+  
   res.render('ozone_spread', { company: req.decoded.company, aclist });
 });
 
-// var {graphqlHTTP} = require('express-graphql');
+//----------------------------------------------------------------------------//
+//                                  Agent Manager                             //
+//----------------------------------------------------------------------------//
 
-// const schema = require('../graphql/schema');
-// const rootValue = require("../graphql/resolvers")
+router.get('/agent_manager', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
 
-// router.get('/graphql', graphqlHTTP({
-//   schema, rootValue, graphiql: true,
-// }), DataSet, async(req, res, next) => {
+  res.render('agent_manager', { company: req.decoded.company, aclist });
+});
+
+router.get('/agent_list', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CID = req.decoded.CID;
+  const aclist = await Worker.find({ "CID": CID, "AC": false });
+
+  res.render('agent_list', { company: req.decoded.company, aclist });
+});
+
+router.post('/ajax/agent_list', isNotLoggedIn, DataSet, async(req, res, next) => {
+  var {data} = req.body;
+  data = JSON.parse(data)
+  const companyone = await Company.findOne({_id : data.CID})
+  var al = companyone.AL; 
+  res.send({al : al})
+})
+
+router.post('/ajax/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
+  var {data} = req.body;
+  data = JSON.parse(data)
+  var ANA = data.ANA;
+  var ANU = data.ANU;
+  var CID = data.CID;
+  var type = data.type;
   
-// });
+  var b_ANA = String(data.b_ANA);
+  var b_ANU = String(data.b_ANU);
+  
+  var jsondata = {};
+  var anaarray = [];
+  var anuarray = [];
+  
+  const companyone = await Company.findOne({_id : CID})
+    var al = companyone.AL;
+    
+    
+    for (var i = 0; i < al.length; i ++) {
+      anaarray.push(String(Object.keys(al[i])))
+      anuarray.push(String(Object.values(al[i])))
+    }
+  
+  if (type == 'join') {
+    
+    if(anaarray.includes(ANA)) {
+      res.send({type : "agent", result : "dupleN"})
+    }
+    else if (anuarray.includes(ANU)) {
+      res.send({type : "agent", result : "dupleC"})
+    }
+    else {
+      jsondata[ANA] = ANU;
+      al.push(jsondata);
+      await Company.where({_id : CID}).updateOne({AL : al})
+      res.send({type : "agent", result : "success"})
+    }
+  }
+  else if (type=='edit') {
+    
+    if(anaarray.includes(ANA)) {
+      if((ANA == b_ANA)) {
+        if(anuarray.includes(ANU)) {
+          if((ANU == b_ANU)) {
+            res.send({type : "agent", result : "successedit"})
+          }
+          else {
+            res.send({type : "agent", result : "dupleC"})
+          }
+        }
+        else {
+          for (var i =0; i < al.length; i ++) {
+            if(Object.keys(al[i]).includes(ANA)) {
+              al[i][ANA] = ANU;
+            }
+          }
+          await Company.where({_id : CID}).updateOne({AL : al})
+          const companyone = await Company.findOne({_id : CID});
+          const agentone = await Company.findOne({ CNU : companyone.CNU.substring(0,10) + b_ANU})
+          if(agentone)
+          await Company.update({ CNU : companyone.CNU.substring(0,10) + b_ANU}, { AL : al, CNU : companyone.CNU.substring(0,10) + ANU, ANA : ANA, ANU : ANU });
+          res.send({type : "agent", result : "successedit"})
+        }
+        
+      }
+      else {
+        res.send({type : "agent", result : "dupleN"})
+      }
+      
+    }
+    else {
+      if (anuarray.includes(ANU)) {
+        
+        if (ANU == b_ANU) {
+          for (var i =0; i < al.length; i ++) {
+            if(Object.values(al[i]).includes(ANU)) {
+              try {
+              al.splice(i,1);
+              jsondata[ANA] = ANU;
+              al.push(jsondata); 
+              
+              await Company.where({_id : CID}).updateOne({AL : al})
+                const companyone = await Company.findOne({_id : CID});
+                const agentone = await Company.findOne({ CNU : companyone.CNU.substring(0,10) + b_ANU})
+                if(agentone)
+                await Company.update({ CNU : companyone.CNU.substring(0,10) + b_ANU}, { AL : al, CNU : companyone.CNU.substring(0,10) + ANU, ANA : ANA, ANU : ANU });
+              }
+              catch(e) {
+                console.log(e)
+              }
+              res.send({type : "agent", result : "successedit"})
+              
+            }
+          }
+          
+        }
+        else {
+          res.send({type : "agent", result : "dupleC"})
+        }
+        
+      }
+      else {
+       
+        try {
+        for (var i =0; i < al.length; i ++) {
+          if(Object.values(al[i])[0] == b_ANU) {
+            console.log(Object.values(al[i]));
+                al.splice(i,1);
+                jsondata[ANA] = ANU;
+                al.push(jsondata)
+                await Company.where({_id : CID}).updateOne({AL : al})
+                const companyone = await Company.findOne({_id : CID});
+                const agentone = await Company.findOne({ CNU : companyone.CNU.substring(0,10) + b_ANU})
+                if(agentone)
+                await Company.update({ CNU : companyone.CNU.substring(0,10) + b_ANU}, { AL : al, CNU : companyone.CNU.substring(0,10) + ANU, ANA : ANA, ANU : ANU });
+                
+                res.send({type : "agent", result : "successedit"})
+
+              }
+        }
+        
+        }
+              catch(e) {
+                console.log(e)
+              }
+        
+      }
+    }
+  }
+  else if (type =='delete') {
+    for (var i =0; i < al.length; i ++) {
+      if(Object.keys(al[i]).includes(b_ANA)) {
+        al.splice(i,1);
+      }
+    }
+    await Company.where({_id : CID}).updateOne({AL : al})
+    await Company.
+    res.send({type : "agent", result : "successdelete"})
+  }
+  
+})
+  
+
 
 
 router.get('/gstest', isNotLoggedIn, DataSet, async(req, res, next) => {

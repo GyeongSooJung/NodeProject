@@ -1,11 +1,57 @@
+// 로그인 시 본사,지점 선택 기능
+$('#CNU2').bind('input', function() {
+	var CNU = document.getElementsByName('CNU2')[0].value;
+	var insertTr = '';
+	$('#ANA2').empty();
+	
+	if(CNU.length == 10) {
+		
+		$.ajax({
+			type: 'POST',
+			url: '/auth/agent',
+			datatype: 'json',
+			data: {
+				CNU : CNU
+			}
+		}).done(function(data) {
+			if(data.result == 'yesAgents') {
+				
+				insertTr += "<option value =''>"+i18nconvert('register_branch_agent_guide')+"</option>";
+				for(var i = 0; i < data.nameList.length; i ++) {
+					insertTr += "<option value ='"+ data.codeList[i] +"/"+ data.nameList[i] +"'>"+ data.nameList[i] +"</option>";
+				}
+				
+				$('#ANA2').append(insertTr);
+				$('#ANA2').css('border', '3.5px solid #348fe2');
+			}
+			else if(data.result == 'fail') {
+				alert(i18nconvert('login_fail'));
+				location.reload();
+			}
+			else {
+				insertTr += "<option value =''>"+i18nconvert('register_branch_agent_guide2')+"</option>";
+				$('#ANA2').append(insertTr);
+				$('#ANA2').css('border', '2px solid red');
+			}
+		});
+	}
+	else {
+		insertTr += "<option value =''>"+i18nconvert('register_branch_agent_guide2')+"</option>";
+		$('#ANA2').append(insertTr);
+		$('#ANA2').css('border', '2px solid red');
+	}
+});
+
 // 로그인 기능
-function loginAjax(companyNumber, password) {
+function loginAjax(companyNumber, agentNumber, agentName, password) {
 	$.ajax({
 		type: 'POST',
 		url: 'auth/login',
 		dataType: 'json',
 		data: {
 			CNU: companyNumber,
+			ANU: agentNumber,
+			ANA: agentName,
 			PW: password
 		}
 	}).done(function(data) {
@@ -14,6 +60,9 @@ function loginAjax(companyNumber, password) {
 		}
 		else if(data.result == 'fail') {
 			alert(i18nconvert('login_error'));
+		}
+		else {
+			alert(i18nconvert('login_fail'));
 		}
 	});
 }

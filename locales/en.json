@@ -95,6 +95,7 @@
 	"login_pw_change" : "Password change is complete.",
 	"login_findpw" : "Your temporary password has been emailed to you.",
 	"login_findpw2" : "Please change your password later for security purposes.",
+	"login_fail": "Login failed.",
 	
 	"find_title": "OASIS | Find Password",
 	"find_no_register" : "This business number is not registered.",
@@ -138,6 +139,11 @@
 	"register_digits_error" : "Please enter the numbers",
 	"register_success": "Sign up is complete.",
 	"register_email_send_fail" : "Email sending failed.",
+	"register_company_agent_kind": "Your company is the",
+	"register_branch_agent_guide": "Please select a branch office",
+	"register_branch_agent_guide2": "There are no branches.",
+	"register_agent_no_exist": "There are no registered branches. Please register a branch in your head office account.",
+	"register_agent_head_need": "There is no registered head office. Please sign up for the head office.",
 	
 	"main_title": "OASIS | Admin",
     "main_point": "point",
@@ -401,5 +407,20 @@
 	"qrcode_generated": "Created QR code",
 	"qrcode_sticker": "Sticker",
 	
-	"manual_title": "OASIS | Manual"
+	"manual_title": "OASIS | Manual",
+	
+	"agent_name" : "Agent Name",
+	"agent_code" : "Agent Code",
+	"agent_manager" : "Agent Manager",
+	"agent_list" : "Agent List",
+	"agent_head": "Head Agent",
+	"agent_branch": "Branch Agent",
+	"agent_register_success" : "The agent has been registered.",
+	"agent_name_duplicated" : "Agent number already exists.",
+	"agent_code_duplicated" : " Agent code already exists.",
+	"agent_edit_success" : "The agent has been modified.",
+	"agent_delete_success" : "The agent has been deleted.",
+	"agent_delete_confirm" : "Are you sure you want to delete the branch? If you need existing data, please move it in advance.",
+	"agent_select" : "Please select an Agent",
+	"agent_three" : "Please write your branch code in three letters.(ex.001)"
 }

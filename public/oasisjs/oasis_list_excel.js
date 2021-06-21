@@ -35,7 +35,6 @@ function _excelDown(fileName, sheetName, Object, thlist, tdkeylist){
     			html +=		"	</thead>";
     			html +=		"	<tbody>";
     			
-    			console.log(Object.array[0][tdkeylist[0]])
     			
     			for (var i = 0; i < Object.array.length; i ++) {
     				html +=		"		<tr>";
@@ -44,6 +43,12 @@ function _excelDown(fileName, sheetName, Object, thlist, tdkeylist){
     				if(tdkeylist[j] == "CA")
     				{
     					html +=	moment(Object.array[i][tdkeylist[j]]).format('YYYY-MM-DD');
+    				}
+    				else if(tdkeylist[j] == "PD") {
+    					if (parseInt(Object.array[i].PD/60)==0)
+							html += ((Object.array[i][tdkeylist[j]])%60)+"s";
+						else 
+							html += parseInt((Object.array[i][tdkeylist[j]])/60)+"m "+(parseInt(parseInt(Object.array[i][tdkeylist[j]])%60))+"s"
     				}
     				else 
     				{

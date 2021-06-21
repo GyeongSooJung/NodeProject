@@ -61,6 +61,8 @@ function checkCNU(companyNumber) {
 		    alert(i18nconvert('register_business_right'));
 		    document.getElementsByName('hideCNU')[0].value = 'true';
 		    document.getElementById('err-msg-cnu').innerHTML = i18nconvert('register_company_cer_success');
+		    $("input[name='CNU']").prop('readonly', true);
+		    $('.agent-select').removeClass('d-none');
 		}
 		else {
 			alert(i18nconvert('register_business_noexist'));
@@ -72,9 +74,68 @@ function checkCNU(companyNumber) {
 			document.getElementsByName("addr2").value = null;
 			document.getElementsByName('hideCNU')[0].value = null;
 			document.getElementById('err-msg-cnu').innerHTML = i18nconvert('register_company_need_cer');
+			$("input[name='CNU']").prop('readonly', false);
+		    $('.agent-select').addClass('d-none');
 		}
 	});
 }
+
+// 본사/지점 선택 기능
+$("input[name='CAK']").change(function() {
+	var CAK = this.value;
+	var insertTr = "";
+	
+	if(CAK == 'branch') {
+		var CNU = document.getElementsByName('CNU')[0].value;
+		$('#ANA').empty();
+		
+		$.ajax({
+			type: 'POST',
+			url: '/company/agent',
+			datatype: 'json',
+			data: {
+				CNU : CNU
+			}
+		}).done(function(data) {
+			if(data.result == 'yesAgents') {
+				$('.agent-box').removeClass('d-none');
+				
+				insertTr += "<option value =''>"+i18nconvert('register_branch_agent_guide')+"</option>";
+				for(var i = 0; i < data.nameList.length; i ++) {
+					insertTr += "<option value ='"+ data.codeList[i] +"/"+ data.nameList[i] +"'>"+ data.nameList[i] +"</option>";
+				}
+				
+				$('#ANA').append(insertTr);
+				$('input[name=CNA]').val(data.agents.CNA);
+				$('#CK').val(data.agents.CK).prop('selected', true);
+			}
+			else if(data.result == 'noAgents') {
+				alert(i18nconvert('register_agent_no_exist'));
+				$('.agent-box').addClass('d-none');
+				$('#ANA').empty();
+				$('input[name=CNA]').val('');
+				$('#CK').val('').prop('selected', true);
+				$("input[name='CAK']:radio[value='head']").prop('checked',true);
+			}
+			else if(data.result == 'noCompany') {
+				alert(i18nconvert('register_agent_head_need'));
+				$('.agent-box').addClass('d-none');
+				$('#ANA').empty();
+				$("input[name='CAK']:radio[value='head']").prop('checked',true);
+			}
+			else {
+				alert(i18nconvert('register_fail'));
+				location.reload();
+			}
+		});
+	}
+	else {
+		$('.agent-box').addClass('d-none');
+		$('#ANA').empty();
+		$('input[name=CNA]').val('');
+		$('#CK').val('').prop('selected', true);
+	}
+});
 
 // 타이머 기능
 var timer;
@@ -159,6 +220,9 @@ function emailCerAjax(cerNum) {
 
 // 폼 submit 시 인증 과정 여부 확인 기능
 function checkForm() {
+	var ANU = "";
+	var ANA = "";
+	
 	if(document.getElementsByName('hideCK')[0].value != 'true') {
 		document.getElementById('err-msg2').innerHTML = i18nconvert('register_auth_need');
 	}
@@ -166,6 +230,33 @@ function checkForm() {
 		document.getElementById('err-msg-cnu').innerHTML = i18nconvert('register_company_need_cer');
 	}
 	else {
+	
+		// var CAK_length = document.getElementsByName('CAK').length;
+		// for(var i = 0; i < CAK_length; i ++) {
+		// 	if(document.getElementsByName('CAK'[i].checked == true)) {
+		// 		if(document.getElementsByName('CAK')[i].value == "head") {
+		// 			alert('hi');
+		// 			ANU = "000";
+		// 			ANA = "본사";
+		// 			break;
+		// 		}
+		// 		else {
+		// 			alert('bye');
+		// 			ANU = document.getElementsByName('ANA')[0].value.split("/")[0];
+		// 			ANA = document.getElementsByName('ANA')[0].value.split("/")[1];
+		// 			break;
+		// 		}
+		// 	}
+		// }
+		if($("input:radio[name='CAK']:checked").val() == "head") {
+			ANU = "000";
+			ANA = "본사";
+		}
+		else {
+			ANU = document.getElementsByName('ANA')[0].value.split("/")[0];
+			ANA = document.getElementsByName('ANA')[0].value.split("/")[1];
+		}
+		
 	    $.ajax({
 		    type: 'POST',
 		    url: '/company/register',
@@ -173,6 +264,8 @@ function checkForm() {
 		    data: {
 		        CNU: document.getElementsByName('CNU')[0].value,
 		        CNA: document.getElementsByName('CNA')[0].value,
+		        ANU: ANU,
+		        ANA: ANA,
 		        CK: document.getElementsByName('CK')[0].value,
 		        addr1: document.getElementsByName('addr1')[0].value,
 		        addr2: document.getElementsByName('addr2')[0].value,

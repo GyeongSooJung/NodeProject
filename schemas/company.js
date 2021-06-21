@@ -7,9 +7,21 @@ const CompanySchema = new Schema({
         type: String,
         required: true,
     },
+    // Agent list
+    AL: {
+        type: [Object],
+    },
+    //Company_Agent_Name
+    ANA: {
+        type: String,
+    },
+    //Company_Agent_Number
+    ANU: {
+        type: String,
+    },
     //Company_Number
     CNU: {
-        type: Number,
+        type: String,
         required: true,
         unique: true
     },

@@ -153,6 +153,7 @@
 					    insertTr += "</form>";
 					    insertTr += "</div>";
 						insertTr += "</td></tr>";
+						console.log($(obj).parents('tr').siblings().find('.edit-btn'))
 						$(obj).parents('tr').after(insertTr);
 					}
 					else {
