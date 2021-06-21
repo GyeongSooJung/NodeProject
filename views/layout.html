@@ -239,6 +239,7 @@
 							<li><a href="/inflow?cat=1">{{__('layout_qrcode_con')}}</a></li>
 						</ul>
 					</li>
+					{% if(company.ANU == "000") %}
 					<li class="has-sub">
 						<a href="javascript:;">
 							<b class="caret"></b>
@@ -250,7 +251,7 @@
 							<!--<li><a href="/agent_list">{{__('agent_list')}}</a></li>-->
 						</ul>
 					</li>
-				
+					{% endif %}
 					
 					<!-- begin sidebar minify button -->
 					
@@ -545,8 +546,8 @@
 	    	else if(string == "agent_three" ) {
 	    		return "{{__('agent_three')}}";
 	    	}
-	    	else if(string == "" ) {
-	    		return "{{__('')}}";
+	    	else if(string == "agent_com" ) {
+	    		return "{{__('agent_com')}}";
 	    	}
 	    	else if(string == "" ) {
 	    		return "{{__('')}}";

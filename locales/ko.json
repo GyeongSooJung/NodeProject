@@ -422,5 +422,6 @@
 	"agent_delete_success" : "지점 삭제가 완료되었습니다.",
 	"agent_delete_confirm" : "지점을 삭제하시겠습니까? 기존 데이터가 필요할 시 미리 옮겨주세요.",
 	"agent_select" : "지점을 선택해주세요",
-	"agent_three" : "지점코드를 세글자로 작성해주세요.(ex.001)"
+	"agent_three" : "지점코드를 세글자로 작성해주세요.(ex.001)",
+	"agent_com" : "000 은 본점의 코드입니다."
 }
