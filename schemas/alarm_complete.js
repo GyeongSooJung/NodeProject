@@ -1,27 +1,7 @@
 const mongoose = require('mongoose');
+const {Alarm_complete} = require('../const/alarm_complete');
 
 const { Schema } = mongoose;
-const AlarmSchema = new Schema({
-    
-    //Message ID
-    MID: {
-        type: String,
-        required: true,
-    },//Company ID
-    CID: {
-        type: String,
-    },//Point Name
-    WNM: {
-        type: String,
-    },//result
-    RE: {
-        type: String,
-    },//Create Time
-    CA: {
-        type: Date,
-        default: Date.now
-    },
-    
-}, { collection: 'Alarm' });
+const AlarmSchema = new Schema( Alarm_complete, { collection: 'Alarm' });
 
 module.exports = mongoose.model('Alarm', AlarmSchema, 'Alarm');

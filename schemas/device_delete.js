@@ -1,36 +1,9 @@
 const mongoose = require('mongoose');
+const {Device_delete} = require('../const/device_delete');
 
 // schema
 const {Schema} = mongoose;
-const device_deleteSchema = new Schema({
-    CID: {
-        type: String,
-    },
-    MD: {
-        type: String,
-    },
-    MAC: {
-        type: String,
-    },
-    VER: {
-        type: String,
-    },
-    NN: {
-        type: String,
-    },
-    CA: {
-        type: Date,
-        default: Date.now
-    },
-    UA: {
-        type: Date,
-        default: Date.now
-    },
-    UT: {
-        type: Number,
-    }
-},
-    {collection : 'device_delete'}
+const device_deleteSchema = new Schema(Device_delete,{collection : 'device_delete'}
 );
 
 // // virtuals(DB에 기록하고 싶지는 않지만 사용하고 사용하고 싶어서)
