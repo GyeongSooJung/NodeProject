@@ -1,6 +1,8 @@
 const NOTICE = {
-    
-    
+    "CID" : "CID",
+    "TI" : "TI",
+    "CO" : "CO",
+    "CA" : "CA",
     schema : {
         //Company ID
         CID: {

@@ -1,4 +1,6 @@
 const PUBLISH = {
+    "PUC" : "PUC",
+    "PUN" : "PUN",
     
     schema : {
         //Publish Category

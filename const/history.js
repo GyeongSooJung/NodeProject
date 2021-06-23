@@ -1,4 +1,21 @@
 const HISTORY = {
+    "WID" : "WID",
+    "DID" : "DID",
+    "CID" : "CID",
+    "VID" : "VID",
+    "WNM" : "WNM",
+    "CNM" : "CNM",
+    "DNM" : "DNM",
+    "DNN" : "DNN",
+    "VER" : "VER",
+    "ET" : "ET",
+    "PD" : "PD",
+    "MP" : "MP",
+    "FP" : "FP",
+    "RC" : "RC",
+    "RD" : "RD",
+    "COS" : "COS",
+    "CA" : "CA",
     schema : {
         WID: {
             type: String,
