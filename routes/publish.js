@@ -4,10 +4,8 @@ const router = express.Router();
 //Module
 const moment = require('moment');
 //Schemas
-const Company = require('../schemas/company');
-const Device = require('../schemas/device');
-const History = require('../schemas/history');
-const Publish = require('../schemas/publish');
+const Schema = require('../schemas/schemas');
+const { Company, Device, History, Publish } = Schema;
 
 // -- Start Code -- //
 

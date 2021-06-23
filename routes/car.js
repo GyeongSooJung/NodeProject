@@ -8,9 +8,8 @@ const xlsx = require('xlsx');
 const path = require('path');
 const Mongoose = require('mongoose');
 //Schemas
-const Car = require('../schemas/car');
-const Cardelete = require('../schemas/car_delete');
-const Company = require('../schemas/company');
+const Schema = require('../schemas/schemas');
+const { Car, Cardelete, Company } = Schema;
 //Middleware
 const { isNotLoggedIn } = require('./middleware');
 

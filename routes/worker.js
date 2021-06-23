@@ -2,8 +2,8 @@
 const express = require('express');
 const router = express.Router();
 //Schemas
-const Worker = require('../schemas/worker');
-const Workerdelete = require('../schemas/worker_delete');
+const Schema = require('../schemas/schemas');
+const { Worker, Workerdelete } = Schema;
 //Middleware
 const { isNotLoggedIn } = require('./middleware');
 

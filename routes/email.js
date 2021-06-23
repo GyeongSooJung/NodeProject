@@ -5,7 +5,8 @@ const router = express.Router();
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 //Schemas
-const Company = require('../schemas/company');
+const Schema = require('../schemas/schemas');
+const { Company } = Schema;
 
 // -- Start Code -- //
 

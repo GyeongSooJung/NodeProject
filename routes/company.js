@@ -7,7 +7,8 @@ const xml2js = require('xml2js'); // xml 파싱 모듈
 const axios = require('axios');
 const request = require('request');
 //Schemas
-const Company = require('../schemas/company');
+const Schema = require('../schemas/schemas');
+const { Company } = Schema;
 
 // -- Start Code -- //
 

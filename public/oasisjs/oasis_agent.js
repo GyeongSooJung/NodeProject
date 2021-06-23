@@ -71,6 +71,9 @@ function agentreroad (Obj) {
 			if($('input[name=ANU2]').val().length != 3) {
 				alert(i18nconvert('agent_three'))
 			}
+			else if($('input[name=ANU2]').val() == "000") {
+				alert(i18nconvert('agent_com'))
+			}
 			else {
 				var data = { ANA :$('input[name=ANA2]').val(), ANU : $('input[name=ANU2]').val(),b_ANA : string.id, b_ANU : string.name, CID : Object.CID, type : "edit" };
 				
@@ -94,8 +97,16 @@ function agentreroad (Obj) {
 	   var formParsley  = $('#agent-form').parsley();
 	   
 		if(formParsley.isValid() == true) {
-			var data = { ANA : document.getElementsByName("ANA")[0].value, ANU : document.getElementsByName("ANU")[0].value, CID : Object.CID, type : "join" };
-			agentajax(data);
+			if(document.getElementsByName("ANU")[0].value.length != 3) {
+				alert(i18nconvert('agent_three'))
+			}
+			else if(document.getElementsByName("ANU")[0].value == "000") {
+				alert(i18nconvert('agent_com'))
+			}
+			else{
+				var data = { ANA : document.getElementsByName("ANA")[0].value, ANU : document.getElementsByName("ANU")[0].value, CID : Object.CID, type : "join" };
+				agentajax(data);
+			}
 		}
 		event.preventDefault();
 	    

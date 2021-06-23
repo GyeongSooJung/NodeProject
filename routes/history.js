@@ -2,7 +2,8 @@
 const express = require('express');
 const router = express.Router();
 //Schemas
-const History = require('../schemas/history');
+const Schema = require('../schemas/schemas');
+const { History } = Schema;
 //Middleware
 const {isNotLoggedIn} = require('./middleware');
 

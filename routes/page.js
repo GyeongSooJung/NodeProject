@@ -1,18 +1,8 @@
 const express = require('express');
 require('dotenv').config();
 //schema
-const Company = require('../schemas/company');
-const Device = require('../schemas/device');
-const Car = require('../schemas/car');
-const Worker = require('../schemas/worker');
-const History = require('../schemas/history');
-const Order = require('../schemas/order');
-const OrderDetail = require('../schemas/order_detail');
-const Publish = require('../schemas/publish');
-const Point = require('../schemas/point');
-const Alarm = require('../schemas/alarm_complete');
-const Notice = require('../schemas/notice');
-const Goods = require('../schemas/goods');
+const Schema = require('../schemas/schemas');
+const { Company, Device, Car, Worker, History, Order, OrderDetail, Publish, Point, Alarm, Notice, Goods } = Schema;
 
 const moment = require('moment');
 const qrcode = require('qrcode');
@@ -1562,7 +1552,7 @@ router.get('/receipt', isNotLoggedIn, DataSet, agentDevide, async(req, res, next
   const getPaymentData = await axios({
     url: 'https://api.iamport.kr/payments/' + imp_uid, // imp_uid 전달
     method: "get", // GET method
-    headers: { "Authorization": access_token } // 인증 토큰 Authorization header에 추가
+    headers: { "Authorization": access_token } // ��증 토큰 Authorization header에 추가
   });
   const paymentData = getPaymentData.data.response; // 조회한 결제 정보
 

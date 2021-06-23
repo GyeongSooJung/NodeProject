@@ -6,11 +6,8 @@ const multiparty = require('multiparty');
 const path = require('path');
 var fs = require('fs');
 
-const Order = require('../schemas/order');
-const OrderDetail = require('../schemas/order_detail');
-const Goods = require('../schemas/goods');
-const Company = require('../schemas/company');
-const GoodsOption = require('../schemas/goods_option');
+const Schema = require('../schemas/schemas');
+const { Order, OrderDetail, Goods, Company, GoodsOption } = Schema;
 
 const { isNotLoggedIn, DataSet } = require('./middleware');
 

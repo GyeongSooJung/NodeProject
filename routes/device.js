@@ -4,8 +4,8 @@ const router = express.Router();
 //Module
 const Mongoose = require('mongoose');
 //Schemas
-const Device = require('../schemas/device');
-const Devicedelete = require('../schemas/device_delete');
+const Schema = require('../schemas/schemas');
+const { Device, Devicedelete } = Schema;
 //Middelware
 const {isNotLoggedIn} = require('./middleware');
 
