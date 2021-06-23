@@ -1,5 +1,10 @@
 const GOODS  = {
-    
+    "GN" : "GN",
+    "GP" : "GP",
+    "GO" : "GO",
+    "GE" : "GE",
+    "GI" : "GI",
+    "CA" : "CA",
     schema : {
         //Goods Name
         GN: {

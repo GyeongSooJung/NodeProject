@@ -11,7 +11,7 @@ const { ALARM_COMPLETE, CAR, CAR_DELETE,
 const { Schema } = mongoose;
 
 const alarmSchema = new Schema(ALARM_COMPLETE.schema, { collection: 'Alarm' });
-const carSchema = new Schema(CAR.schema, { collection: 'Car'});
+const carSchema = new Schema(CAR.schema);
 const car_deleteSchema = new Schema(CAR_DELETE.schema, { collection: 'car_delete'});
 const companySchema = new Schema(COMPANY.schema, { collection: 'Company' });
 const deviceSchema = new Schema( DEVICE.schema, {collection : 'device'});

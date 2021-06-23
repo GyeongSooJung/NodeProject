@@ -569,6 +569,8 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, agentDevide, async functio
     sortNum = -1;
   }
   
+  console.log(sort, search, searchtext, searchdate)
+  
   try {
     if (searchdate) {
       var searchtext2 = searchdate.split("~");
@@ -675,6 +677,8 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, agentDevide, async functio
           }
         }
         else {
+          console.log("@@@")
+          console.log(Car)
           cars = await Car.aggregate([
             { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
             { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },

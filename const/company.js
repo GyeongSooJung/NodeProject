@@ -1,4 +1,26 @@
 const COMPANY = {
+    "NA" : "NA",
+    "AL" : "AL",
+    "ANA" : "ANA",
+    "ANU" : "ANU",
+    "CNU" : "CNU",
+    "CNA" : "CNA",
+    "CK" : "CK",
+    "ADR" : "ADR",
+    "PN" : "PN",
+    "MN" : "MN",
+    "PW" : "PW",
+    "AH" : "AH",
+    "EA" : "EA",
+    "SPO" : "SPO",
+    "POA" : "POA",
+    "VAN" : "VAN",
+    "VAD" : "VAD",
+    "VA" : "VA",
+    "CA" : "CA",
+    "UA" : "UA",
+    "CUA" : "CUA",
+    "RUA" : "RUA",
     
     schema : {
         //Name
