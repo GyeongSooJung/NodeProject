@@ -1,4 +1,12 @@
 const DEVICE_DELETE = {
+    "CID" : "CID",
+    "MD" : "MD",
+    "MAC" : "MAC",
+    "VER" : "VER",
+    "NN" : "NN",
+    "CA" : "CA",
+    "UA" : "UA",
+    "UT" : "UT",
     schema : {
         CID: {
             type: String,

@@ -522,7 +522,6 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, agentDevide, async functio
         carlist[i] = cars[i];
       }
     }
-    
     res.send({ result: true, pagelist : carlist, totalnum : cars.length });
   
   } catch(err) {

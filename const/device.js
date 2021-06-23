@@ -1,4 +1,13 @@
 const DEVICE  = {
+    "CID" : "CID",
+    "MD" : "MD",
+    "MAC" : "MAC",
+    "VER" : "VER",
+    "NN" : "NN",
+    "CA" : "CA",
+    "UA" : "UA",
+    "UT" : "UT",
+    "UN" : "UN",
     schema : {
         CID: {
             type: String,
