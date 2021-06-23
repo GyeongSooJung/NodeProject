@@ -1,4 +1,13 @@
 const ORDER_DETAIL = {
+    "OID" : "OID",
+    "OGN" : "OGN",
+    "OGP" : "OGP",
+    "OOT" : "OOT",
+    "OON" : "OON",
+    "OOP" : "OOP",
+    "OTP" : "OTP",
+    "ONU" : "ONU",
+    "CA" : "CA",
     
     schema : {
         // //Merchant_uid

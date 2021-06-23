@@ -1,4 +1,18 @@
 const ORDER = {
+    "GN" : "",
+    "AM" : "",
+    "CAM" : "",
+    "CID" : "CID",
+    "BN" : "",
+    "BE" : "",
+    "BT" : "",
+    "BA" : "",
+    "MID" : "",
+    "IID" : "",
+    "PAM" : "",
+    "PG" : "",
+    "PS" : "",
+    "CA" : "",
     
     schema : {
         //Goods Name

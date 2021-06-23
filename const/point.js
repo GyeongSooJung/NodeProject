@@ -1,5 +1,11 @@
 const POINT = {
-    
+     "CID" : "CID",
+     "PN" : "PN",
+     "PO" : "PO",
+     "MID" : "MID",
+     "WNM" : "WNM",
+     "CA" : "CA",
+     
     schema : {
         //Company ID
         CID: {

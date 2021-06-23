@@ -1,4 +1,10 @@
 const GOODS_OPTION = {
+    "GID" : "GID",
+    "GNA" : "GNA",
+    "OT" : "OT",
+    "ON" : "PN",
+    "OP" : "OP",
+    "CA" : "CA",
     schema : {
         //Goods ID
         GID: {

@@ -1,4 +1,14 @@
 const WORKER_DELETE = {
+    "CID" : "CID",
+    "WN" : "WN",
+    "PN" : "PN",
+    "GID" : "GID",
+    "EM" : "EM",
+    "PU" : "PU",
+    "CA" : "CA",
+    "UA" : "UA",
+    "AU" : "AU",
+    "AC" : "AC",
     
     schema : {
         CID: { // Company ID
