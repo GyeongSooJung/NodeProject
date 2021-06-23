@@ -2583,6 +2583,7 @@ router.post('/ajax/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
   var b_ANA = String(data.b_ANA);
   var b_ANU = String(data.b_ANU);
   
+  
   var jsondata = {};
   var anaarray = [];
   var anuarray = [];
@@ -2704,12 +2705,13 @@ router.post('/ajax/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
   }
   else if (type =='delete') {
     for (var i =0; i < al.length; i ++) {
+      console.log(b_ANA);
       if(Object.keys(al[i]).includes(b_ANA)) {
         al.splice(i,1);
       }
     }
+    console.log("에이엘"+JSON.stringify(al));
     await Company.where({_id : CID}).updateOne({AL : al})
-    await Company.
     res.send({type : "agent", result : "successdelete"})
   }
   

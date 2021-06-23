@@ -83,10 +83,12 @@ function agentreroad (Obj) {
 		
 	}
 	
-	function agentDelete(Object,string) {
+	function agentDelete(Object,string,string2) {
 		var confirm = window.confirm(i18nconvert('agent_delete_confirm'));
 		if ( confirm ) {
+			console.log(string)
 			var data = {b_ANA : string.id, b_ANU : string.name, CID : Object.CID, type : "delete" };
+			console.log(data)
 			agentajax(data);
 		}
 		
@@ -113,7 +115,7 @@ function agentreroad (Obj) {
 	}
 	
 	function agentajax(data) {
-	    
+	    console.log(data)
 	    $.ajax({
 		        type: 'POST',
 		        url: '/ajax/agent',
