@@ -52,6 +52,7 @@ exports.agentDevide = async(req, res, next) => {
     }
     
     // 사용하기 위해 req에 담아줌
+    req.searchCNU = searchCNU;
     req.searchCID = searchCID;
     
     next();

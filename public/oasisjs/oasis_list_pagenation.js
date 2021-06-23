@@ -87,6 +87,7 @@
 			    	$("#searchdatetext1").val('');
 			    	$("#searchdatetext2").val('');
 			    	$("#memDiv2").empty();
+			    	Object.array = [];
 			    	
 			    	if(Object.name == "Company") {
 						companylist_condition(Object);

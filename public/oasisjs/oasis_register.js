@@ -235,7 +235,6 @@ function checkForm() {
 		// for(var i = 0; i < CAK_length; i ++) {
 		// 	if(document.getElementsByName('CAK'[i].checked == true)) {
 		// 		if(document.getElementsByName('CAK')[i].value == "head") {
-		// 			alert('hi');
 		// 			ANU = "000";
 		// 			ANA = "본사";
 		// 			break;
