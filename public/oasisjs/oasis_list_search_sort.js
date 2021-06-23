@@ -61,4 +61,5 @@
 		Object.searchtext = value;
 		
 		pagereload(Object);
+		document.getElementById('gotolist').classList.remove('d-none');
 	}

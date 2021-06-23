@@ -352,32 +352,80 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, agentDevide, async func
         return res.send({ result : "nothing" });
       }
       else {
-        if(search == "MD") {
-          devices = await Device.find({ "CID": req.searchCID, "MD" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+        if(search == "ANA") {
+          devices = await Device.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { MD : '$MD', VER : '$VER', MAC : '$MAC', NN : '$NN', UN : '$UN', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(devices.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if(search == "MD") {
+          devices = await Device.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "MD" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { MD : '$MD', VER : '$VER', MAC : '$MAC', NN : '$NN', UN : '$UN', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "VER") {
-          devices = await Device.find({ "CID": req.searchCID, "VER" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          devices = await Device.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "VER" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { MD : '$MD', VER : '$VER', MAC : '$MAC', NN : '$NN', UN : '$UN', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "MAC") {
-          devices = await Device.find({ "CID": req.searchCID, "MAC" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          devices = await Device.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "MAC" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { MD : '$MD', VER : '$VER', MAC : '$MAC', NN : '$NN', UN : '$UN', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "NN") {
-          devices = await Device.find({ "CID": req.searchCID, "NN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          devices = await Device.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "NN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { MD : '$MD', VER : '$VER', MAC : '$MAC', NN : '$NN', UN : '$UN', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else {
-          devices = await Device.find({ "CID" : req.searchCID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          devices = await Device.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { MD : '$MD', VER : '$VER', MAC : '$MAC', NN : '$NN', UN : '$UN', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -389,32 +437,80 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, agentDevide, async func
         return res.send({ result : "nothing" });
       }
       else {
-        if (search =="MD") {
-          devices = await Device.find({ "CID": req.searchCID, "MD" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+        if (search =="ANA") {
+          devices = await Device.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext} } },
+            { $project : { MD : '$MD', VER : '$VER', MAC : '$MAC', NN : '$NN', UN : '$UN', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(devices.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if (search =="MD") {
+          devices = await Device.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "MD" : {$regex:searchtext} } },
+            { $project : { MD : '$MD', VER : '$VER', MAC : '$MAC', NN : '$NN', UN : '$UN', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if (search =="VER") {
-          devices = await Device.find({ "CID": req.searchCID, "VER" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          devices = await Device.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "VER" : {$regex:searchtext} } },
+            { $project : { MD : '$MD', VER : '$VER', MAC : '$MAC', NN : '$NN', UN : '$UN', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if (search =="MAC") {
-          devices = await Device.find({ "CID": req.searchCID, "MAC" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          devices = await Device.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "MAC" : {$regex:searchtext} } },
+            { $project : { MD : '$MD', VER : '$VER', MAC : '$MAC', NN : '$NN', UN : '$UN', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if (search =="NN") {
-          devices = await Device.find({ "CID": req.searchCID, "NN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          devices = await Device.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "NN" : {$regex:searchtext} } },
+            { $project : { MD : '$MD', VER : '$VER', MAC : '$MAC', NN : '$NN', UN : '$UN', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else {
-          devices = await Device.find({ "CID" : req.searchCID }).sort({ [sortText]: sortNum });
+          devices = await Device.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID } } },
+            { $project : { MD : '$MD', VER : '$VER', MAC : '$MAC', NN : '$NN', UN : '$UN', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(devices.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -429,7 +525,7 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, agentDevide, async func
       }
     }
     
-    res.send({ result: true, pagelist : devicelist, totalnum : devices.length});
+    res.send({ result: true, pagelist : devicelist });
   
   } catch(err) {
     console.error(err);
@@ -486,19 +582,58 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, agentDevide, async functio
   try {
     if (searchdate) {
       var searchtext2 = searchdate.split("~");
-      cars = await Car.find({ "CID" : req.searchCID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
       if(cars.length == 0) {
         return res.send({ result : "nothing" });
       }
       else {
-        if(search == "CN") {
-          cars = await Car.find({ "CID": req.searchCID, "CN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+        if(search == "ANA") {
+          cars = await Car.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { CN : '$CN', CPN : '$CPN', CA : '$CA', ANA : '$ANA.ANA'}},
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(cars.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if(search == "CN") {
+          cars = await Car.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "CN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { CN : '$CN', CPN : '$CPN', CA : '$CA', ANA : '$ANA.ANA'}},
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(cars.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "CPN") {
-          cars = await Car.find({ "CID": req.searchCID, "CPN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          cars = await Car.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "CPN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { CN : '$CN', CPN : '$CPN', CA : '$CA', ANA : '$ANA.ANA'}},
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(cars.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else {
+          cars = await Car.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { CN : '$CN', CPN : '$CPN', CA : '$CA', ANA : '$ANA.ANA'}},
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(cars.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -506,21 +641,60 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, agentDevide, async functio
       }
     }
     else {
-      cars = await Car.find({ "CID" : req.searchCID }).sort({ [sortText]: sortNum });
       if(cars.length == 0) {
         return res.send({ result : "nothing" });
       }
       else {
-        if (search =="CN") {
-          cars = await Car.find({ "CID": req.searchCID, "CN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+        if(search == "ANA") {
+          cars = await Car.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext} } },
+            { $project : { CN : '$CN', CPN : '$CPN', CA : '$CA', ANA : '$ANA.ANA'}},
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(cars.length == 0) {
+            return res.send({ result : "nothing" });
+          }
+        }
+        else if (search =="CN") {
+          cars = await Car.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "CN" : {$regex:searchtext} } },
+            { $project : { CN : '$CN', CPN : '$CPN', CA : '$CA', ANA : '$ANA.ANA'}},
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(cars.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if (search =="CPN") {
-          cars = await Car.find({ "CID": req.searchCID, "CPN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          cars = await Car.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "CPN" : {$regex:searchtext} } },
+            { $project : { CN : '$CN', CPN : '$CPN', CA : '$CA', ANA : '$ANA.ANA'}},
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(cars.length == 0) {
             return res.send({ result : "nothing"});
+          }
+        }
+        else {
+          cars = await Car.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID } } },
+            { $project : { CN : '$CN', CPN : '$CPN', CA : '$CA', ANA : '$ANA.ANA'}},
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(cars.length == 0) {
+            return res.send({ result : "nothing" });
           }
         }
       }
@@ -533,7 +707,7 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, agentDevide, async functio
       }
     }
     
-    res.send({ result: true, pagelist : carlist, totalnum : cars.length });
+    res.send({ result: true, pagelist : carlist });
   
   } catch(err) {
     console.error(err);
@@ -678,25 +852,53 @@ router.post('/ajax/worker_list', isNotLoggedIn, DataSet, agentDevide, async func
         }
         else {
           if(search == "WN") {
-            workers = await Worker.find({ "CID": req.searchCID, "WN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+            workers = await Worker.aggregate([
+              { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+              { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+              { $unwind : "$ANA" },
+              { $match : { "CID" : { $in : req.searchCID }, "WN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+              { $project : { WN : '$WN', PN : '$PN', EM : '$EM', PU : '$PU', AU : '$AU', AC : '$AC', CA : '$CA', ANA : '$ANA.ANA'} },
+              { $sort : { [sortText]: sortNum } }
+            ]);
             if(workers.length == 0) {
               return res.send({ result : "nothing"});
             }
           }
           else if(search == "PN") {
-            workers = await Worker.find({ "CID": req.searchCID, "PN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+            workers = await Worker.aggregate([
+              { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+              { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+              { $unwind : "$ANA" },
+              { $match : { "CID" : { $in : req.searchCID }, "PN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+              { $project : { WN : '$WN', PN : '$PN', EM : '$EM', PU : '$PU', AU : '$AU', AC : '$AC', CA : '$CA', ANA : '$ANA.ANA'} },
+              { $sort : { [sortText]: sortNum } }
+            ]);
             if(workers.length == 0) {
               return res.send({ result : "nothing"});
             }
           }
           else if(search == "EM") {
-            workers = await Worker.find({ "CID": req.searchCID, "EM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+            workers = await Worker.aggregate([
+              { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+              { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+              { $unwind : "$ANA" },
+              { $match : { "CID" : { $in : req.searchCID }, "EM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+              { $project : { WN : '$WN', PN : '$PN', EM : '$EM', PU : '$PU', AU : '$AU', AC : '$AC', CA : '$CA', ANA : '$ANA.ANA'} },
+              { $sort : { [sortText]: sortNum } }
+            ]);
             if(workers.length == 0) {
               return res.send({ result : "nothing"});
             }
           }
           else {
-            workers = await Worker.find({ "CID" : req.searchCID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+            workers = await Worker.aggregate([
+              { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+              { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+              { $unwind : "$ANA" },
+              { $match : { "CID" : { $in : req.searchCID }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+              { $project : { WN : '$WN', PN : '$PN', EM : '$EM', PU : '$PU', AU : '$AU', AC : '$AC', CA : '$CA', ANA : '$ANA.ANA'} },
+              { $sort : { [sortText]: sortNum } }
+            ]);
             if(workers.length == 0) {
               return res.send({ result : "nothing"});
             }
@@ -708,26 +910,67 @@ router.post('/ajax/worker_list', isNotLoggedIn, DataSet, agentDevide, async func
           return res.send({ result : "nothing" });
         }
         else {
-          if (search =="WN") {
-            workers = await Worker.find({ "CID": req.searchCID, "WN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          if (search =="ANA") {
+            workers = await Worker.aggregate([
+              { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+              { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+              { $unwind : "$ANA" },
+              { $match : { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext} } },
+              { $project : { WN : '$WN', PN : '$PN', EM : '$EM', PU : '$PU', AU : '$AU', AC : '$AC', CA : '$CA', ANA : '$ANA.ANA'} },
+              { $sort : { [sortText]: sortNum } }
+            ]);
+            if(workers.length == 0) {
+              return res.send({ result : "nothing"});
+            }
+          }
+          else if (search =="WN") {
+            workers = await Worker.aggregate([
+              { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+              { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+              { $unwind : "$ANA" },
+              { $match : { "CID" : { $in : req.searchCID }, "WN" : {$regex:searchtext} } },
+              { $project : { WN : '$WN', PN : '$PN', EM : '$EM', PU : '$PU', AU : '$AU', AC : '$AC', CA : '$CA', ANA : '$ANA.ANA'} },
+              { $sort : { [sortText]: sortNum } }
+            ]);
             if(workers.length == 0) {
               return res.send({ result : "nothing"});
             }
           }
           else if (search =="PN") {
-            workers = await Worker.find({ "CID": req.searchCID, "PN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+            workers = await Worker.aggregate([
+              { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+              { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+              { $unwind : "$ANA" },
+              { $match : { "CID" : { $in : req.searchCID }, "PN" : {$regex:searchtext} } },
+              { $project : { WN : '$WN', PN : '$PN', EM : '$EM', PU : '$PU', AU : '$AU', AC : '$AC', CA : '$CA', ANA : '$ANA.ANA'} },
+              { $sort : { [sortText]: sortNum } }
+            ]);
             if(workers.length == 0) {
               return res.send({ result : "nothing"});
             }
           }
           else if (search =="EM") {
-            workers = await Worker.find({ "CID": req.searchCID, "EM" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+            workers = await Worker.aggregate([
+              { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+              { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+              { $unwind : "$ANA" },
+              { $match : { "CID" : { $in : req.searchCID }, "EM" : {$regex:searchtext} } },
+              { $project : { WN : '$WN', PN : '$PN', EM : '$EM', PU : '$PU', AU : '$AU', AC : '$AC', CA : '$CA', ANA : '$ANA.ANA'} },
+              { $sort : { [sortText]: sortNum } }
+            ]);
             if(workers.length == 0) {
               return res.send({ result : "nothing"});
             }
           }
           else {
-            workers = await Worker.find({ "CID" : req.searchCID }).sort({ [sortText]: sortNum });
+            workers = await Worker.aggregate([
+              { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+              { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+              { $unwind : "$ANA" },
+              { $match : { "CID" : { $in : req.searchCID } } },
+              { $project : { WN : '$WN', PN : '$PN', EM : '$EM', PU : '$PU', AU : '$AU', AC : '$AC', CA : '$CA', ANA : '$ANA.ANA'} },
+              { $sort : { [sortText]: sortNum } }
+            ]);
             if(workers.length == 0) {
               return res.send({ result : "nothing"});
             }
@@ -839,10 +1082,26 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, agentDevide, async fun
         return res.send({ result : "nothing" });
       }
       else {
-        if(search == "CNM") {
+        if(search == "ANA") {
           historys = await History.aggregate([
-            { $match : { "CID" : { $in : req.searchCID }, "CNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
-            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM", ANA : '$ANA.ANA' } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(historys.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if(search == "CNM") {
+          historys = await History.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "CNM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM", ANA : '$ANA.ANA' } },
             { $sort : { [sortText]: sortNum } }
           ]);
           if(historys.length == 0) {
@@ -851,8 +1110,11 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, agentDevide, async fun
         }
         else if(search == "DNM") {
           historys = await History.aggregate([
-            { $match : { "CID" : { $in : req.searchCID }, "DNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
-            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "DNM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM", ANA : '$ANA.ANA' } },
             { $sort : { [sortText]: sortNum } }
           ]);
           if(historys.length == 0) {
@@ -861,8 +1123,11 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, agentDevide, async fun
         }
         else if(search == "WNM") {
           historys = await History.aggregate([
-            { $match : { "CID" : { $in : req.searchCID }, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
-            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "WNM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM", ANA : '$ANA.ANA' } },
             { $sort : { [sortText]: sortNum } }
           ]);
           if(historys.length == 0) {
@@ -871,8 +1136,11 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, agentDevide, async fun
         }
         else {
           historys = await History.aggregate([
-            { $match : { "CID" : { $in : req.searchCID }, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} } },
-            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM", ANA : '$ANA.ANA' } },
             { $sort : { [sortText]: sortNum } }
           ]);
           if(historys.length == 0) {
@@ -886,10 +1154,26 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, agentDevide, async fun
         return res.send({ result : "nothing" });
       }
       else {
-        if (search =="CNM") {
+        if (search =="ANA") {
           historys = await History.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext} } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM", ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(historys.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if (search =="CNM") {
+          historys = await History.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
             { $match : { "CID" : { $in : req.searchCID }, "CNM" : {$regex:searchtext} } },
-            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM", ANA : '$ANA.ANA'} },
             { $sort : { [sortText]: sortNum } }
           ]);
           if(historys.length == 0) {
@@ -898,8 +1182,11 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, agentDevide, async fun
         }
         else if (search =="DNM") {
           historys = await History.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
             { $match : { "CID" : { $in : req.searchCID }, "DNM" : {$regex:searchtext} } },
-            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM", ANA : '$ANA.ANA'} },
             { $sort : { [sortText]: sortNum } }
           ]);
           if(historys.length == 0) {
@@ -908,8 +1195,11 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, agentDevide, async fun
         }
         else if (search =="WNM") {
           historys = await History.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
             { $match : { "CID" : { $in : req.searchCID }, "WNM" : {$regex:searchtext} } },
-            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM", ANA : '$ANA.ANA'} },
             { $sort : { [sortText]: sortNum } }
           ]);
           if(historys.length == 0) {
@@ -918,11 +1208,13 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, agentDevide, async fun
         }
         else {
           historys = await History.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
             { $match : { "CID" : { $in : req.searchCID } } },
-            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM" } },
+            { $project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM", ANA : '$ANA.ANA'} },
             { $sort : { [sortText]: sortNum } }
           ]);
-          console.log(historys);
           if(historys.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -1083,20 +1375,67 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, agentDevide, async functio
         return res.send({ result : "nothing" });
       }
       else {
-        if(search == "MID") {
-          orders = await Order.find({ "CID": req.searchCID, "MID" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+        if(search == "ANA") {
+          orders = await Order.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { MID : "$MID", GN : "$GN", AM : "$AM", CA : "$CA", ANA : '$ANA.ANA' } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(orders.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if(search == "MID") {
+          orders = await Order.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "MID" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { MID : "$MID", GN : "$GN", AM : "$AM", CA : "$CA", ANA : '$ANA.ANA' } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(orders.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "GN") {
-          orders = await Order.find({ "CID": req.searchCID, "GN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          orders = await Order.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "GN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { MID : "$MID", GN : "$GN", AM : "$AM", CA : "$CA", ANA : '$ANA.ANA' } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(orders.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if(search == "AM") {
+          orders = await Order.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } }, strAM : { $convert: { input: '$AM', to : 'string', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "strAM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { MID : "$MID", GN : "$GN", AM : "$AM", strAM : "$strAM", CA : "$CA", ANA : '$ANA.ANA' } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(orders.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else {
-          orders = await Order.find({ "CID" : req.searchCID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          orders = await Order.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { MID : "$MID", GN : "$GN", AM : "$AM", CA : "$CA", ANA : '$ANA.ANA' } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(orders.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -1108,20 +1447,68 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, agentDevide, async functio
         return res.send({ result : "nothing" });
       }
       else {
-        if (search =="MID") {
-          orders = await Order.find({ "CID": req.searchCID, "MID" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+        if (search =="ANA") {
+          orders = await Order.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext} } },
+            { $project : { MID : "$MID", GN : "$GN", AM : "$AM", CA : "$CA", ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(orders.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if (search =="MID") {
+          orders = await Order.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "MID" : {$regex:searchtext} } },
+            { $project : { MID : "$MID", GN : "$GN", AM : "$AM", CA : "$CA", ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(orders.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if (search =="GN") {
-          orders = await Order.find({ "CID": req.searchCID, "GN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          orders = await Order.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "GN" : {$regex:searchtext} } },
+            { $project : { MID : "$MID", GN : "$GN", AM : "$AM", CA : "$CA", ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(orders.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if (search =="AM") {
+          orders = await Order.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } }, strAM : { $convert: { input: '$AM', to : 'string', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "strAM" : {$regex:searchtext} } },
+            { $project : { MID : "$MID", GN : "$GN", AM : "$AM", strAM : "$strAM", CA : "$CA", ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          console.log(orders);
           if(orders.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else {
-          orders = await Order.find({ "CID" : req.searchCID }).sort({ [sortText]: sortNum });
+          orders = await Order.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID } } },
+            { $project : { MID : "$MID", GN : "$GN", AM : "$AM", CA : "$CA", ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(orders.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -1252,20 +1639,54 @@ router.post('/ajax/point_list', isNotLoggedIn, DataSet, agentDevide, async funct
         return res.send({ result : "nothing" });
       }
       else {
-        if(search == "PN") {
-          points = await Point.find({ "CID": req.searchCID, "PN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+        if(search == "ANA") {
+          points = await Point.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { PN : '$PN', PO : '$PO', CA : '$CA', ANA : '$ANA.ANA' } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(points.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if(search == "PN") {
+          points = await Point.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "PN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { PN : '$PN', PO : '$PO', CA : '$CA', ANA : '$ANA.ANA' } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(points.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "PO") {
-          points = await Point.find({ "CID": req.searchCID, "PO" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          points = await Point.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } }, strPO : { $convert: { input: '$PO', to : 'string', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "strPO" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { PN : '$PN', PO : '$PO', strPO : '$strPO', CA : '$CA', ANA : '$ANA.ANA' } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(points.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else {
-          points = await Point.find({ "CID" : req.searchCID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          points = await Point.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { PN : '$PN', PO : '$PO', CA : '$CA', ANA : '$ANA.ANA' } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(points.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -1277,20 +1698,55 @@ router.post('/ajax/point_list', isNotLoggedIn, DataSet, agentDevide, async funct
         return res.send({ result : "nothing" });
       }
       else {
-        if (search =="PN") {
-          points = await Point.find({ "CID": req.searchCID, "PN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+        if (search =="ANA") {
+          points = await Point.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext} } },
+            { $project : { PN : '$PN', PO : '$PO', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(points.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if (search =="PN") {
+          points = await Point.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "PN" : {$regex:searchtext} } },
+            { $project : { PN : '$PN', PO : '$PO', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(points.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if (search =="PO") {
-          points = await Point.find({ "CID": req.searchCID, "PO" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          points = await Point.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } }, strPO : { $convert: { input: '$PO', to : 'string', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "strPO" : {$regex:searchtext} } },
+            { $project : { PN : '$PN', PO : '$PO', strPO : '$strPO', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(points.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else {
-          points = await Point.find({ "CID" : req.searchCID }).sort({ [sortText]: sortNum });
+          points = await Point.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID } } },
+            { $project : { PN : '$PN', PO : '$PO', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          console.log(points);
           if(points.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -1734,20 +2190,54 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, agentDevide, async f
         return res.send({ result : "nothing" });
       }
       else {
-        if(search == "WNM") {
-          alarms = await Alarm.find({ "CID": req.searchCID, "WNM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+        if(search == "ANA") {
+          alarms = await Alarm.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { WNM : '$WNM', RE : '$RE', CA : '$CA', ANA : '$ANA.ANA' } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(alarms.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if(search == "WNM") {
+          alarms = await Alarm.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "WNM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { WNM : '$WNM', RE : '$RE', CA : '$CA', ANA : '$ANA.ANA' } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "RE") {
-          alarms = await Alarm.find({ "CID": req.searchCID, "RE" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          alarms = await Alarm.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "RE" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { WNM : '$WNM', RE : '$RE', CA : '$CA', ANA : '$ANA.ANA' } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else {
-          alarms = await Alarm.find({ "CID" : req.searchCID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} }).sort({ [sortText]: sortNum });
+          alarms = await Alarm.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
+            { $project : { WNM : '$WNM', RE : '$RE', CA : '$CA', ANA : '$ANA.ANA' } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -1759,20 +2249,54 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, agentDevide, async f
         return res.send({ result : "nothing" });
       }
       else {
-        if (search =="WNM") {
-          alarms = await Alarm.find({ "CID": req.searchCID, "WNM" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+        if (search =="ANA") {
+          alarms = await Alarm.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext} } },
+            { $project : { WNM : '$WNM', RE : '$RE', CA : '$CA', ANA : '$ANA.ANA' } },
+            { $sort : { [sortText]: sortNum } }
+          ]);
+          if(alarms.length == 0) {
+            return res.send({ result : "nothing"});
+          }
+        }
+        else if (search =="WNM") {
+          alarms = await Alarm.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "WNM" : {$regex:searchtext} } },
+            { $project : { WNM : '$WNM', RE : '$RE', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if (search =="RE") {
-          alarms = await Alarm.find({ "CID": req.searchCID, "RE" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+          alarms = await Alarm.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID }, "RE" : {$regex:searchtext} } },
+            { $project : { WNM : '$WNM', RE : '$RE', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else {
-          alarms = await Alarm.find({ "CID" : req.searchCID }).sort({ [sortText]: sortNum });
+          alarms = await Alarm.aggregate([
+            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
+            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
+            { $unwind : "$ANA" },
+            { $match : { "CID" : { $in : req.searchCID } } },
+            { $project : { WNM : '$WNM', RE : '$RE', CA : '$CA', ANA : '$ANA.ANA'} },
+            { $sort : { [sortText]: sortNum } }
+          ]);
           if(alarms.length == 0) {
             return res.send({ result : "nothing"});
           }
