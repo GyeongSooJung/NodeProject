@@ -79,6 +79,7 @@
 		Object.name = "Device";
 		Object.url = "/ajax/device_list";
 		Object.CID = $(obj).attr('name');
+		alert(Object.CID);
 		
 		pagereload(Object);
 	}

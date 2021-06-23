@@ -187,51 +187,51 @@ router.get('/company_list', isNotLoggedIn, DataSet, agentDevide, async(req, res,
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": req.searchCID, "AC": false });
 
-  const DEVICE = req.query.DEVICE;
-  const CAR = req.query.CAR;
-  const WORKER = req.query.WORKER;
-  const HISTORY = req.query.HISTORY;
+  // const DEVICE = req.query.DEVICE;
+  // const CAR = req.query.CAR;
+  // const WORKER = req.query.WORKER;
+  // const HISTORY = req.query.HISTORY;
   const noticethree = await Notice.find().limit(3).sort({CA : -1});
 
-  if (DEVICE) {
-    const companyone = await Company.findOne({ "_id": DEVICE });
+  // if (DEVICE) {
+  //   const companyone = await Company.findOne({ "_id": DEVICE });
     
-    const devices = await Device.find({ "CID": DEVICE });
+  //   const devices = await Device.find({ "CID": DEVICE });
 
-    res.render('company_list', { company: req.decoded.company, companyone, aclist, noticethree, devices });
-  }
-  else if (CAR) {
-    const companyone = await Company.findOne({ "_id": CAR });
+  //   res.render('company_list', { company: req.decoded.company, companyone, aclist, noticethree, devices });
+  // }
+  // else if (CAR) {
+  //   const companyone = await Company.findOne({ "_id": CAR });
     
-    const cars = await Car.find({ "CID": CAR });
+  //   const cars = await Car.find({ "CID": CAR });
 
-    res.render('company_list', { company: req.decoded.company, companyone, aclist, noticethree, cars });
-  }
-  else if (WORKER) {
-    const companyone = await Company.findOne({ "_id": WORKER });
+  //   res.render('company_list', { company: req.decoded.company, companyone, aclist, noticethree, cars });
+  // }
+  // else if (WORKER) {
+  //   const companyone = await Company.findOne({ "_id": WORKER });
 
-    const workers = await Worker.find({ "CID": WORKER });
+  //   const workers = await Worker.find({ "CID": WORKER });
 
-    res.render('company_list', { company: req.decoded.company, companyone, aclist, noticethree, workers });
-  }
-  else if (HISTORY) {
-    const companyone = await Company.findOne({ "_id": HISTORY });
+  //   res.render('company_list', { company: req.decoded.company, companyone, aclist, noticethree, workers });
+  // }
+  // else if (HISTORY) {
+  //   const companyone = await Company.findOne({ "_id": HISTORY });
     
-    const historys = await History.find({ "CID": HISTORY });
+  //   const historys = await History.find({ "CID": HISTORY });
 
-    res.render('company_list', { company: req.decoded.company, companyone, aclist, noticethree, historys });
-  }
-  else {
+  //   res.render('company_list', { company: req.decoded.company, companyone, aclist, noticethree, historys });
+  // }
+  // else {
     const companys = await Company.find({ "AH": false });
 
     res.render('company_list', { company: req.decoded.company, companys, aclist, noticethree });
-  }
+  // }
 });
 
 router.post('/ajax/company_list', isNotLoggedIn, DataSet, async(req, res, nex) => {
   const CID = req.body.CID;
   const companylist = await Company.find({});
-  res.send({ result: true, pagelist : companylist, totalnum : companylist.length});
+  res.send({ result: true, pagelist : companylist });
   
 });
 
@@ -976,7 +976,7 @@ router.post('/ajax/worker_list', isNotLoggedIn, DataSet, agentDevide, async func
       }
     }
     
-    res.send({ result: true, pagelist : workerlist, totalnum : workers.length});
+    res.send({ result: true, pagelist : workerlist });
     
   } catch(err) {
     console.error(err);
@@ -1221,7 +1221,7 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, agentDevide, async fun
     
     console.log(historylist);
     
-    res.send({ result: true, pagelist : historylist, totalnum : historys.length});
+    res.send({ result: true, pagelist : historylist });
     
   } catch(err) {
     console.error(err);
@@ -1513,7 +1513,7 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, agentDevide, async functio
       }
     }
     
-    res.send({ result: true, pagelist : orderlist, totalnum : orders.length});
+    res.send({ result: true, pagelist : orderlist });
     
   } catch(err) {
     console.error(err);
@@ -1751,7 +1751,7 @@ router.post('/ajax/point_list', isNotLoggedIn, DataSet, agentDevide, async funct
       }
     }
     
-    res.send({ result: true, pagelist : pointlist, totalnum : points.length});
+    res.send({ result: true, pagelist : pointlist });
   
   } catch(err) {
     console.error(err);
@@ -2301,7 +2301,7 @@ router.post('/ajax/alarmtalk_list', isNotLoggedIn, DataSet, agentDevide, async f
       }
     }
     
-    return res.send({ result: true, pagelist : alarmlist, totalnum : alarms.length});
+    return res.send({ result: true, pagelist : alarmlist });
     
   } catch(err) {
     console.error(err);
@@ -2423,7 +2423,7 @@ router.post('/ajax/notice_list', isNotLoggedIn, DataSet, agentDevide, async func
       noticelist[i] = notices[i];
     }
   }
-  res.send({ result: true, pagelist : noticelist, totalnum : notices.length});
+  res.send({ result: true, pagelist : noticelist });
  
 });
 
