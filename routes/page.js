@@ -325,6 +325,14 @@ router.post('/ajax/device_list', isNotLoggedIn, DataSet, agentDevide, async func
   var sortNum = 0;
   var devices = new Object;
   
+  // company list에서 접속한 것인지 확인
+  if(CID.includes("#") == true) {
+    req.searchCID = [CID.split("#")[0]]; // '#' 을 잘라낸 뒤 문자열을 배열에 담음($in은 배열만 가능하기 때문)
+  }
+  else {
+    req.searchCID = req.searchCID; // 기존 middleware에서 받아온 본사,지점 CID 그대로 다시 담음
+  }
+  
   // 정렬 기능
   if(sort.includes('-') == true) {
     sortText = sort.split('-')[0];
@@ -559,6 +567,14 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, agentDevide, async functio
   var sortNum = 0;
   var cars = new Object;
   
+  // company list에서 접속한 것인지 확인
+  if(CID.includes("#") == true) {
+    req.searchCID = [CID.split("#")[0]]; // '#' 을 잘라낸 뒤 문자열을 배열에 담음($in은 배열만 가능하기 때문)
+  }
+  else {
+    req.searchCID = req.searchCID; // 기존 middleware에서 받아온 본사,지점 CID 그대로 다시 담음
+  }
+  
   // 정렬 기능
   if(sort.includes('-') == true) {
     sortText = sort.split('-')[0];
@@ -746,6 +762,14 @@ router.post('/ajax/worker_list', isNotLoggedIn, DataSet, agentDevide, async func
   var sortText = "";
   var sortNum = 0;
   var workers = new Object;
+  
+  // company list에서 접속한 것인지 확인
+  if(CID.includes("#") == true) {
+    req.searchCID = [CID.split("#")[0]]; // '#' 을 잘라낸 뒤 문자열을 배열에 담음($in은 배열만 가능하기 때문)
+  }
+  else {
+    req.searchCID = req.searchCID; // 기존 middleware에서 받아온 본사,지점 CID 그대로 다시 담음
+  }
   
   // 정렬 기능
   if(sort.includes('-') == true) {
@@ -1058,6 +1082,14 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, agentDevide, async fun
   var sortText = "";
   var sortNum = 0;
   var historys = new Object;
+  
+  // company list에서 접속한 것인지 확인
+  if(CID.includes("#") == true) {
+    req.searchCID = [CID.split("#")[0]]; // '#' 을 잘라낸 뒤 문자열을 배열에 담음($in은 배열만 가능하기 때문)
+  }
+  else {
+    req.searchCID = req.searchCID; // 기존 middleware에서 받아온 본사,지점 CID 그대로 다시 담음
+  }
   
   // 정렬 기능
   if(sort.includes('-') == true) {

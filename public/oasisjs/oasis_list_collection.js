@@ -68,6 +68,9 @@
     
     
     // 사업자 리스트에서 조회 기능
+    // company list에서 접속한 경우 구분하기 위해 CID에 '#' 추가
+    // why? 리스트 출력이 기존 CID를 바로 받아오는 것에서 CNU를 통해 본사/지점을 구분한 뒤,
+    //		이를 CID 배열로 바꾸고 검색하기 때문에 기존 CID 검색은 로그인한 계정만 나옴.
 	
 	function company_gotolist(Object) {
 	   	Object.name = "Company";
@@ -78,8 +81,7 @@
 		refresh(Object);
 		Object.name = "Device";
 		Object.url = "/ajax/device_list";
-		Object.CID = $(obj).attr('name');
-		alert(Object.CID);
+		Object.CID = $(obj).attr('name')+"#";
 		
 		pagereload(Object);
 	}
@@ -88,8 +90,7 @@
 		refresh(Object);
 		Object.name = "Car";
 		Object.url = "/ajax/car_list";
-		Object.CID = $(obj).attr('name');
-		// console.log("먼저"+Object.array);
+		Object.CID = $(obj).attr('name')+"#";
 		
 		pagereload(Object);
 	}
@@ -98,7 +99,7 @@
 		refresh(Object);
 		Object.name = "Worker";
 		Object.url = "/ajax/worker_list";
-		Object.CID = $(obj).attr('name');
+		Object.CID = $(obj).attr('name')+"#";
 		
 		pagereload(Object)
 	}
@@ -107,7 +108,7 @@
 		refresh(Object);
 		Object.name = "History";
 		Object.url = "/ajax/history_list";
-		Object.CID = $(obj).attr('name');
+		Object.CID = $(obj).attr('name')+"#";
 		
 		pagereload(Object);
 	}
