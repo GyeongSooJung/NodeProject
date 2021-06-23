@@ -1,12 +1,9 @@
 const bcrypt = require('bcrypt');
 
-const Worker = require('../../schemas/worker');
-const Company = require('../../schemas/company');
-const Car = require('../../schemas/car');
-const History = require('../../schemas/history');
-const Point = require('../../schemas/point');
+const Schema = require('../../schemas/schemas');
+const { Worker, Company, Car, History, Point, Device } = Schema;
+
 var moment = require('moment');
-const Device = require('../../schemas/device');
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = "OASIS";

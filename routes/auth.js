@@ -6,10 +6,8 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const secretObj = require("../config/jwt");
 //Schemas
-const Company = require('../schemas/company');
-const Device = require('../schemas/device');
-const Car = require('../schemas/car');
-const Worker = require('../schemas/worker');
+const Schema = require('../schemas/schemas');
+const { Company, Device, Car, Worker } = Schema;
 //Middleware
 const { isNotLoggedIn } = require('./middleware');
 

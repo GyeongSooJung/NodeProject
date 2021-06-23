@@ -2,7 +2,8 @@
 const express = require('express');
 const router = express.Router();
 //Schemas
-const Company = require('../schemas/company');
+const Schema = require('../schemas/schemas');
+const { Company } = Schema;
 //Middleware
 const { isNotLoggedIn, DataSet } = require('./middleware');
 

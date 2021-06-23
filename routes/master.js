@@ -4,14 +4,8 @@ const router = express.Router();
 //Module
 var moment = require('moment');
 //Schemas
-const Company = require('../schemas/company');
-const Device = require('../schemas/device');
-const Devicedelete = require('../schemas/device_delete');
-const Car = require('../schemas/car');
-const Cardelete = require('../schemas/car_delete');
-const Worker = require('../schemas/worker');
-const Workerdelete = require('../schemas/worker_delete');
-const History = require('../schemas/history');
+const Schema = require('../schemas/schemas');
+const { Company, Device, Devicedelete, Car, Cardelete, Worker, Workerdelete, History } = Schema;
 //Middleware
 const { isNotLoggedIn } = require('./middleware');
 

@@ -1,10 +1,6 @@
 const SocketIO = require('socket.io');
-const Company = require('./schemas/company');
-const Device = require('./schemas/device');
-const Car = require('./schemas/car');
-const Worker = require('./schemas/worker');
-const History = require('./schemas/history');
-const Publish = require('./schemas/publish');
+const Schema = require('./schemas/schemas')
+const {Company, Device, Car, Worker, History, Publish} = Schema;
 const jwt = require('jsonwebtoken');
 const secretObj = require("./config/jwt");
 

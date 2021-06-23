@@ -4,7 +4,8 @@ const router = express.Router();
 //Module
 const bcrypt = require('bcrypt');
 //Schemas
-const Company = require('../schemas/company');
+const Schema = require('../schemas/schemas');
+const { Company } = Schema;
 //Middleware
 const { isNotLoggedIn, DataSet } = require('./middleware');
 

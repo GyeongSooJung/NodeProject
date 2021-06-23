@@ -1,21 +1,24 @@
-const Notice = {
+const NOTICE = {
     
-    //Company ID
-    CID: {
-        type: String,
-        required: true,
-    },//Title
-    TI: {
-        type: String,
-    },//Contents
-    CO: {
-        type: String,
-    },//Create Time
-    CA: {
-        type: Date,
-        default: Date.now
-    },
+    
+    schema : {
+        //Company ID
+        CID: {
+            type: String,
+            required: true,
+        },//Title
+        TI: {
+            type: String,
+        },//Contents
+        CO: {
+            type: String,
+        },//Create Time
+        CA: {
+            type: Date,
+            default: Date.now
+        },
+    }
     
 }
 
-exports.Notice = Notice;
+exports.NOTICE = NOTICE;
