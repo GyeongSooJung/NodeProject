@@ -71,8 +71,6 @@ exports.modelQuery = async (query,doc,collection,option) => {
             return one;
         }
         
-        var one = await Collection.aggregate(aggregatearray);
-        return one;
     }
     
     else if ( query == QUERY.Find) {
@@ -134,14 +132,13 @@ exports.modelQuery = async (query,doc,collection,option) => {
             return one;
         }
         
-        one = await Collection.findOne(doc);
-        return one;
     }
     
     else if ( query == QUERY.Update) {
         
         switch (collection) {
             case COLLECTION_NAME.Alarm : 
+                
                 break;
             case COLLECTION_NAME.Car :
                 break;
@@ -164,10 +161,9 @@ exports.modelQuery = async (query,doc,collection,option) => {
             return one;
         }
         
-        one = await Collection.Update(doc);
-        return one;
         
     }
+    
     else if ( query == QUERY.Remove) {
         
         switch (collection) {
@@ -194,8 +190,6 @@ exports.modelQuery = async (query,doc,collection,option) => {
             return one;
         }
         
-        one = await Collection.Remove(doc);
-        return one;
         
     }
 };
