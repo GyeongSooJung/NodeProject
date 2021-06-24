@@ -4,6 +4,9 @@ require('dotenv').config();
 const Schema = require('../schemas/schemas');
 const { Company, Device, Car, Worker, History, Order, OrderDetail, Publish, Point, Alarm, Notice, Goods } = Schema;
 
+const {modelQuery} = require('../schemas/query')
+const {COLLECTION_NAME, QUERY} = require('../const/consts');
+
 const moment = require('moment');
 const qrcode = require('qrcode');
 const session = require('express-session');
@@ -547,7 +550,7 @@ router.get('/car_join', isNotLoggedIn, DataSet, agentDevide, async(req, res, nex
 router.get('/car_list', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
   const CID = req.decoded.CID;
   const aclist = await Worker.find({ "CID": req.searchCID, "AC": false });
-  const noticethree = await Notice.find().limit(3).sort({CA : -1});
+  const noticethree = await modelQuery(QUERY.Find,{},COLLECTION_NAME.Notice,{sort : {CA : -1}, limit : 3})
   
   const cars = await Car.find({ "CID" : req.searchCID });
   const carTodayCount = await Car.countDocuments({ "CID" : req.searchCID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } });
@@ -585,6 +588,16 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, agentDevide, async functio
   }
   
   try {
+    
+    var json = {
+      addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } ,
+      lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } ,
+      unwind : "$ANA",
+      match : {},
+      project : { CN : '$CN', CPN : '$CPN', CA : '$CA', ANA : '$ANA.ANA' },
+      sort : { [sortText]: sortNum }
+    }
+    
     if (searchdate) {
       var searchtext2 = searchdate.split("~");
       if(cars.length == 0) {
@@ -592,32 +605,21 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, agentDevide, async functio
       }
       else {
         if(search == "ANA") {
-          cars = await Car.aggregate([
-            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
-            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
-            { $unwind : "$ANA" },
-            { $match : { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
-            { $project : { CN : '$CN', CPN : '$CPN', CA : '$CA', ANA : '$ANA.ANA'}},
-            { $sort : { [sortText]: sortNum } }
-          ]);
+          json.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          cars = await modelQuery(QUERY.Aggregate,json,COLLECTION_NAME.Car,{});
           if(cars.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "CN") {
-          cars = await Car.aggregate([
-            { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
-            { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
-            { $unwind : "$ANA" },
-            { $match : { "CID" : { $in : req.searchCID }, "CN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } },
-            { $project : { CN : '$CN', CPN : '$CPN', CA : '$CA', ANA : '$ANA.ANA'}},
-            { $sort : { [sortText]: sortNum } }
-          ]);
+          json.match = { "CID" : { $in : req.searchCID }, "CN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          cars = await modelQuery(QUERY.Aggregate,json,COLLECTION_NAME.Car,{});
           if(cars.length == 0) {
             return res.send({ result : "nothing"});
           }
         }
         else if(search == "CPN") {
+          json.match = { "CID" : { $in : req.searchCID }, "CPN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } }
           cars = await Car.aggregate([
             { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
             { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },

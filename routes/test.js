@@ -10,21 +10,17 @@ const Mongoose = require('mongoose');
 
 const {findOneDocument} = require('../schemas/query');
 
-
-//Middleware
-const { isNotLoggedIn } = require('./middleware');
   
 const Schema = require("../schemas/schemas");
-
 const {schemaSelect} = require('../schemas/schemas');
-
 const {COLLECTION_NAME} = require('../const/consts');
 
-router.get('/gstest', isNotLoggedIn, async(req, res, next) => {
+router.get('/gstest', async(req, res, next) => {
     try{
-        console.log(findOneDocument)
-        var data = { "Car" : "Car" }
-        findOneDocument(data,COLLECTION_NAME.Car);
+        var data = { "CID" : "5fd6c731a26c914fbad53ebe" };
+        const one = await findOneDocument(data,COLLECTION_NAME.Car,{sort : true})
+        
+       console.log(one)
         
     
     

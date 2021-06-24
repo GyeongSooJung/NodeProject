@@ -15,6 +15,7 @@ const {PUBLISH} = require('../const/publish');
 const {WORKER} = require('../const/worker');
 const {WORKER_DELETE} = require('../const/worker_delete');
 const {COLLECTION_NAME} = require('../const/collection_name');
+const {QUERY} = require('../const/query');
 
 exports.CAR = CAR;
 exports.ALARM_COMPLETE = ALARM_COMPLETE;
@@ -33,3 +34,4 @@ exports.PUBLISH = PUBLISH;
 exports.WORKER = WORKER;
 exports.WORKER_DELETE = WORKER_DELETE;
 exports.COLLECTION_NAME = COLLECTION_NAME;
+exports.QUERY = QUERY;
