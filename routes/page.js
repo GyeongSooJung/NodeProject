@@ -73,7 +73,6 @@ router.get('/address', (req, res) => {
 router.post('/address', (req, res) => {
   const juso = process.env.juso;
   const locals = req.body;
-  console.log(locals.inputYn);
   
   res.render('address_pop', {juso, locals});
 });
@@ -585,8 +584,6 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, agentDevide, async functio
     sortNum = -1;
   }
   
-  console.log(sort, search, searchtext, searchdate)
-  
   try {
     if (searchdate) {
       var searchtext2 = searchdate.split("~");
@@ -693,8 +690,6 @@ router.post('/ajax/car_list', isNotLoggedIn, DataSet, agentDevide, async functio
           }
         }
         else {
-          console.log("@@@")
-          console.log(Car)
           cars = await Car.aggregate([
             { $addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } },
             { $lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } },
@@ -1255,8 +1250,6 @@ router.post('/ajax/history_list', isNotLoggedIn, DataSet, agentDevide, async fun
       }
     }
     
-    console.log(historylist);
-    
     res.send({ result: true, pagelist : historylist });
     
   } catch(err) {
@@ -1521,7 +1514,6 @@ router.post('/ajax/pay_list', isNotLoggedIn, DataSet, agentDevide, async functio
             { $project : { MID : "$MID", GN : "$GN", AM : "$AM", strAM : "$strAM", CA : "$CA", ANA : '$ANA.ANA'} },
             { $sort : { [sortText]: sortNum } }
           ]);
-          console.log(orders);
           if(orders.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -1772,7 +1764,6 @@ router.post('/ajax/point_list', isNotLoggedIn, DataSet, agentDevide, async funct
             { $project : { PN : '$PN', PO : '$PO', CA : '$CA', ANA : '$ANA.ANA'} },
             { $sort : { [sortText]: sortNum } }
           ]);
-          console.log(points);
           if(points.length == 0) {
             return res.send({ result : "nothing"});
           }
@@ -2495,21 +2486,22 @@ router.get('/notice_pop', isNotLoggedIn, DataSet, agentDevide, async(req, res, n
   const aclist = await Worker.find({ "CID": req.searchCID, "AC": false });
   
   const noticeid = req.query.noticeid;
-  const noticeone = await Notice.find({_id : noticeid});
+  const noticeone = await Notice.findOne({_id : noticeid});
+  console.log(noticeone);
   
   res.render('notice_pop',{company: req.decoded.company, aclist, noticeone, moment});
-  
-  
 });
 
 router.post('/ajax/notice_detail', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;
   
   const noticeid = req.body.noticeid;
+  console.log("노티스"+noticeid);
   
   try {
     
     const noticedetail = await Notice.find({_id : noticeid});
+    console.log("디테일"+noticedetail);
     
     res.send({result : true, noticedetail : noticedetail});
   } catch(err) {
@@ -2588,134 +2580,123 @@ router.post('/ajax/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
   var anaarray = [];
   var anuarray = [];
   
-  const companyone = await Company.findOne({_id : CID});
-    var al = companyone.AL;
-    
-    
-    for (var i = 0; i < al.length; i ++) {
-      anaarray.push(String(Object.keys(al[i])));
-      anuarray.push(String(Object.values(al[i])));
-    }
+  try {
   
-  if (type == 'join') {
+    const companyone = await Company.findOne({_id : CID});
+      var al = companyone.AL;
+      
+      
+      for (var i = 0; i < al.length; i ++) {
+        anaarray.push(String(Object.keys(al[i])));
+        anuarray.push(String(Object.values(al[i])));
+      }
     
-    if(anaarray.includes(ANA)) {
-      res.send({type : "agent", result : "dupleN"})
-    }
-    else if (anuarray.includes(ANU)) {
-      res.send({type : "agent", result : "dupleC"})
-    }
-    else {
-      jsondata[ANA] = ANU;
-      al.push(jsondata);
-      await Company.where({_id : CID}).updateOne({AL : al})
-      res.send({type : "agent", result : "success"})
-    }
-  }
-  else if (type=='edit') {
-    
-    if(anaarray.includes(ANA)) {
-      if((ANA == b_ANA)) {
-        if(anuarray.includes(ANU)) {
-          if((ANU == b_ANU)) {
-            res.send({type : "agent", result : "successedit"})
-          }
-          else {
-            res.send({type : "agent", result : "dupleC"})
-          }
-        }
-        else {
-          for (var i =0; i < al.length; i ++) {
-            if(Object.keys(al[i]).includes(ANA)) {
-              al[i][ANA] = ANU;
-            }
-          }
-          await Company.where({_id : CID}).updateOne({AL : al})
-          const companyone = await Company.findOne({_id : CID});
-          const agentone = await Company.findOne({ CNU : companyone.CNU.substring(0,10) + b_ANU})
-          if(agentone)
-          await Company.update({ CNU : companyone.CNU.substring(0,10) + b_ANU}, { AL : al, CNU : companyone.CNU.substring(0,10) + ANU, ANA : ANA, ANU : ANU });
-          res.send({type : "agent", result : "successedit"})
-        }
-        
+    if (type == 'join') {
+      
+      if(anaarray.includes(ANA)) {
+        res.send({type : "agent", result : "dupleN"});
+      }
+      else if (anuarray.includes(ANU)) {
+        res.send({type : "agent", result : "dupleC"});
       }
       else {
-        res.send({type : "agent", result : "dupleN"})
+        jsondata[ANA] = ANU;
+        al.push(jsondata);
+        await Company.where({_id : CID}).updateOne({AL : al});
+        res.send({type : "agent", result : "success"});
       }
-      
     }
-    else {
-      if (anuarray.includes(ANU)) {
-        
-        if (ANU == b_ANU) {
-          for (var i =0; i < al.length; i ++) {
-            if(Object.values(al[i]).includes(ANU)) {
-              try {
-              al.splice(i,1);
-              jsondata[ANA] = ANU;
-              al.push(jsondata); 
-              
-              await Company.where({_id : CID}).updateOne({AL : al})
-                const companyone = await Company.findOne({_id : CID});
-                const agentone = await Company.findOne({ CNU : companyone.CNU.substring(0,10) + b_ANU})
-                if(agentone)
-                await Company.update({ CNU : companyone.CNU.substring(0,10) + b_ANU}, { AL : al, CNU : companyone.CNU.substring(0,10) + ANU, ANA : ANA, ANU : ANU });
-              }
-              catch(e) {
-                console.log(e)
-              }
-              res.send({type : "agent", result : "successedit"})
-              
+    else if (type =='edit') {
+      
+      if(anaarray.includes(ANA)) {
+        if((ANA == b_ANA)) {
+          if(anuarray.includes(ANU)) {
+            if((ANU == b_ANU)) {
+              res.send({type : "agent", result : "successedit"});
             }
+            else {
+              res.send({type : "agent", result : "dupleC"});
+            }
+          }
+          else {
+            for (var i =0; i < al.length; i ++) {
+              if(Object.keys(al[i]).includes(ANA)) {
+                al[i][ANA] = ANU;
+              }
+            }
+            await Company.where({_id : CID}).updateOne({AL : al});
+            const companyone = await Company.findOne({_id : CID});
+            const agentone = await Company.findOne({ CNU : companyone.CNU.substring(0,10) + b_ANU});
+            if(agentone)
+            await Company.update({ CNU : companyone.CNU.substring(0,10) + b_ANU}, { AL : al, CNU : companyone.CNU.substring(0,10) + ANU, ANA : ANA, ANU : ANU });
+            res.send({type : "agent", result : "successedit"});
           }
           
         }
         else {
-          res.send({type : "agent", result : "dupleC"})
+          res.send({type : "agent", result : "dupleN"});
         }
         
       }
       else {
-       
-        try {
-        for (var i =0; i < al.length; i ++) {
-          if(Object.values(al[i])[0] == b_ANU) {
-            console.log(Object.values(al[i]));
+        if (anuarray.includes(ANU)) {
+          if (ANU == b_ANU) {
+            for (var i =0; i < al.length; i ++) {
+              if(Object.values(al[i]).includes(ANU)) {
                 al.splice(i,1);
                 jsondata[ANA] = ANU;
-                al.push(jsondata)
-                await Company.where({_id : CID}).updateOne({AL : al})
+                al.push(jsondata); 
+                
+                await Company.where({_id : CID}).updateOne({AL : al});
                 const companyone = await Company.findOne({_id : CID});
-                const agentone = await Company.findOne({ CNU : companyone.CNU.substring(0,10) + b_ANU})
+                const agentone = await Company.findOne({ CNU : companyone.CNU.substring(0,10) + b_ANU});
                 if(agentone)
                 await Company.update({ CNU : companyone.CNU.substring(0,10) + b_ANU}, { AL : al, CNU : companyone.CNU.substring(0,10) + ANU, ANA : ANA, ANU : ANU });
                 
-                res.send({type : "agent", result : "successedit"})
-
+                res.send({type : "agent", result : "successedit"});
               }
+            }
+            
+          }
+          else {
+            res.send({type : "agent", result : "dupleC"});
+          }
         }
-        
-        }
-              catch(e) {
-                console.log(e)
-              }
-        
-      }
-    }
-  }
-  else if (type =='delete') {
-    for (var i =0; i < al.length; i ++) {
-      console.log(b_ANA);
-      if(Object.keys(al[i]).includes(b_ANA)) {
-        al.splice(i,1);
-      }
-    }
-    console.log("에이엘"+JSON.stringify(al));
-    await Company.where({_id : CID}).updateOne({AL : al})
-    res.send({type : "agent", result : "successdelete"})
-  }
+        else {
+          for (var i =0; i < al.length; i ++) {
+            if(Object.values(al[i])[0] == b_ANU) {
+              al.splice(i,1);
+              jsondata[ANA] = ANU;
+              al.push(jsondata);
+              await Company.where({_id : CID}).updateOne({AL : al});
+              const companyone = await Company.findOne({_id : CID});
+              const agentone = await Company.findOne({ CNU : companyone.CNU.substring(0,10) + b_ANU});
+              if(agentone)
+              await Company.update({ CNU : companyone.CNU.substring(0,10) + b_ANU}, { AL : al, CNU : companyone.CNU.substring(0,10) + ANU, ANA : ANA, ANU : ANU });
+              
+              res.send({type : "agent", result : "successedit"});
   
-})
+            }
+          }
+        }
+      }
+    }
+    else if (type =='delete') {
+      for (var i =0; i < al.length; i ++) {
+        if(Object.keys(al[i]).includes(b_ANA)) {
+          al.splice(i,1);
+        }
+      }
+      
+      await Company.where({_id : CID}).updateOne({AL : al});
+      
+      res.send({type : "agent", result : "successdelete"});
+    }
+  } catch(err) {
+    console.error(err);
+    next(err);
+  }
+});
   
 
 

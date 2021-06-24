@@ -15,7 +15,6 @@ const { Company } = Schema;
 // 회원가입
 router.post('/register', async (req, res, next) => {
   const { CNU, CNA, ANU, ANA, CK, addr1, addr2, PN, NA, MN, PW, EA, CEA } = req.body;
-  console.log("씨에케"+ANA+"/"+ANU);
   const ADR = addr1+addr2;
   const hashAuth = req.cookies.hashAuth;
   

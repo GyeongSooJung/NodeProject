@@ -26,7 +26,7 @@ window.addEventListener('load', function() {
 
 // 공지사항 팝업
 function noticepop(obj) {
-   var noticeid = $(obj).attr('name');
+	var noticeid = $(obj).attr('name');
     if (noticeid)
     window.open("/notice_pop?noticeid="+noticeid,"pop","width=620, height=700, scrollbars=yes, resizable=yes"); 
     else {

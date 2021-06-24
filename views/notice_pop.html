@@ -20,16 +20,15 @@
        
           <div id="content" class="content">
               <div class="invoice">
-                    <div class="invoice-company">
-                       <span class="pull-right hidden-print">
-                          {{moment(noticeone[0].CA).format('YYYY-MM-DD')}}
-                       </span>
-                       <img src="../assets/img/oasis.png" width="160" height="70">
-                       
-                       <div>{{noticeone[0].TI}}</div>
+                    <div class="invoice-company d-flex justify-content-between align-items-center">
+                       <img src="../assets/img/oasis.png" class="w-25">
+                       <div class="pull-right hidden-print text-center w-25">
+                          {{moment(noticeone.CA).format('YYYY-MM-DD')}}
+                       </div>
                     </div>
-                  <div class="invoice-content">
-                  </div>
+                    <div class="h3 mb-3">{{noticeone.TI}}</div>
+                    <hr>
+                    <div class="invoice-content mt-3"></div>
               </div>
           </div>
    </div>
@@ -37,33 +36,38 @@
    
    <!--Begin Script-->
    <script>
-    $(document).ready(function() {
-       var insertTr = ""
-       {% for notice in noticeone %}
+    // $(document).ready(function() {
+    //   var insertTr = ""
        
-	    var noticeid = '{{notice._id}}'
-	    console.log(noticeid);
-	    $.ajax({
-    		url: "/ajax/notice_detail",
-            type: "POST",
-            async: false,
-            dataType: 'json',
-            data: {
-                noticeid : noticeid 
-            }
-        }).done(function (data) { 
-            if(data.result == true) {
-                console.log(data.noticedetail[0])
-                $(".invoice-content").empty();
-                var insertTr = "";
-        	    insertTr += "<div>" +data.noticedetail[0].CO + "</div>"
-        	    $(".invoice-content").append(insertTr);
-        	    console.log(insertTr)
-            }
+	   // var noticeid = '{{notice._id}}'
+	   // alert(noticeid);
+	   // console.log(noticeid);
+	   // $.ajax({
+    // 		url: "/ajax/notice_detail",
+    //         type: "POST",
+    //         async: false,
+    //         dataType: 'json',
+    //         data: {
+    //             noticeid : noticeid 
+    //         }
+    //     }).done(function (data) { 
+    //         if(data.result == true) {
+    //             console.log(data.noticedetail[0])
+    //             $(".invoice-content").empty();
+    //             var insertTr = "";
+    //     	    insertTr += "<div>" +data.noticedetail[0].CO + "</div>"
+    //     	    $(".invoice-content").append(insertTr);
+    //     	    console.log(insertTr)
+    //         }
             
-        })
-        {% endfor %}
-    });
+    //     })
+    // });
+    $(document).ready(function() {
+        var insertTr = "";
+        $(".invoice-content").empty();
+        insertTr += "<div>"+"{{noticeone.CO}}"+"</div>";
+        $(".invoice-content").append(insertTr);
+    })
    </script>
    <!--End Script-->
    <!-- ================== BEGIN BASE JS ================== -->

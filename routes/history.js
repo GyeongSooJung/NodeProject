@@ -14,7 +14,6 @@ router.post('/ajax/history_deleteone', isNotLoggedIn, async (req, res, next) => 
   var select = req.body["select"];
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
-  console.log(select);
   
   try {
     await History.remove({ "_id" : select.split(' ') });
