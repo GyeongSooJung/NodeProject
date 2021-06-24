@@ -2483,16 +2483,16 @@ router.post('/ajax/notice_write', isNotLoggedIn, DataSet, async(req, res, next) 
 });
 
 // 공지사항 팝업
-router.get('/notice_pop', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await Worker.find({ "CID": req.searchCID, "AC": false });
+// router.get('/notice_pop', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
+//   const CID = req.decoded.CID;
+//   const aclist = await Worker.find({ "CID": req.searchCID, "AC": false });
   
-  const noticeid = req.query.noticeid;
-  const noticeone = await Notice.findOne({_id : noticeid});
-  console.log(noticeone);
+//   const noticeid = req.query.noticeid;
+//   const noticeone = await Notice.findOne({_id : noticeid});
+//   console.log(noticeone);
   
-  res.render('notice_pop',{company: req.decoded.company, aclist, noticeone, moment});
-});
+//   res.render('notice_pop',{company: req.decoded.company, aclist, noticeone, moment});
+// });
 
 router.post('/ajax/notice_detail', isNotLoggedIn, DataSet, async(req, res, next) => {
   const CID = req.decoded.CID;

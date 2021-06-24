@@ -20,6 +20,7 @@
 	<link href="../assets/img/favicon.png" rel="icon">
 </head>
 <body>
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 	<!--오아시스 제이쿼리 자바스크립트-->
 	<script src="../oasisjs/oasisjquery.js"></script>
@@ -56,7 +57,10 @@
 						<ul class="rolling position-relative mb-0">
 							{% for notice in noticethree %}
 							<li class="height-20 mb-0">
-								<a href="#" onclick="noticepop(this)" name="{{notice._id}}">{{notice.TI}}</a>
+								<!--<a href="javascript:;" onclick="noticepop(this)" name="{{notice._id}}">{{notice.TI}}</a>-->
+								<a href="javascript:;" onclick="noticepop(this)" name="{{notice._id}}" data-toggle="modal" data-target="#notice-modal">
+									{{notice.TI}}
+								</a>
 							</li>
 							{% endfor %}
 						</ul>
@@ -274,20 +278,51 @@
 		<!-- end scroll to top btn -->
 	</div>
 	<!-- end page container -->
+	
+	<!-- Modal -->
+	<div class="modal fade" id="notice-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header py-2">
+					<div class="modal-title" id="exampleModalLongTitle">
+						<img src="../assets/img/oasis.png" class="width-100">
+					</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body py-3">
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="d-flex align-items-center text-primary">
+							<i class="fa fa-lg fa-volume-up mr-2 mb-0"></i>
+							<h5 class="mb-0">공지사항</h5>
+						</div>
+						<div class="notice-date"></div>
+					</div>
+					<hr class="bg-primary">
+					<div class="notice-body bg-light py-2 px-2">
+					</div>
+				</div>
+				<div class="modal-footer py-2">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('close')}}</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<!--Begin Script-->
-	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+	<!--<script src="http://code.jquery.com/jquery-1.10.2.js"></script>-->
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
 	    var searcherror = function () {
 	    	return alert("{{__('search_error')}}");
-	    }
+	    };
 	    var choiceerror = function () {
 	    	return alert("{{__('choice_error')}}");
-	    }
+	    };
 	    var i18nconvert = function (string) {
 	    	if(string == "ANA") {
-	    		return "{{__('agent_branch')}}"
+	    		return "{{__('agent_branch')}}";
 	    	}
 	    	else if(string == "CN" ) {
 	    		return "{{__('car_number')}}";
