@@ -1,50 +1,37 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose; 
 
 const { ALARM_COMPLETE, CAR, CAR_DELETE,
         COMPANY, DEVICE, DEVICE_DELETE,
         GOODS, GOODS_OPTION, HISTORY,
         NOTICE, ORDER, ORDER_DETAIL,
-        POINT, PUBLISH, WORKER, WORKER_DELETE
-      } = require('../const/consts');
+        POINT, PUBLISH, WORKER, WORKER_DELETE,
+        COLLECTION_NAME
+      } = require('../const/consts'); //consts 파일들
       
-const COLLECTION_NAME = {
-    "Alarm" : "Alarm",
-    "Car" : "Car",
-    "Cardelete" : "Cardelete",
-    "Company" : "Company",
-    "Device" : "Device",
-    "Devicedelete" : "Devicedelete",
-    "Goods" : "Goods",
-    "GoodsOption" : "GoodsOption",
-    "History" : "History",
-    "Notice" : "Notice",
-    "Order" : "Order",
-    "OrderDetail" : "OrderDetail",
-    "Point" : "Point",
-    "Publish" : "Publish",
-    "Worker" : "Worker",
-    "Workerdelete" : "Workerdelete",
-}
-
-const { Schema } = mongoose;      
+const Schemas = require('./schemas')
 
 const { Alarm, Car, Cardelete, Company,
        Device, Devicedelete, Goods, GoodsOption,
        History, Notice, Order, OrderDetail,
-       Point, Publish, Worker, Workerdelete } = Schema;
+       Point, Publish, Worker, Workerdelete
+       } = Schemas; // 몽구스 model 파일들
       
       
-exports.findOneDocument = async (req,res,next,collection) => {
-    var Collection = collection;
-    var doc = req.body;
+exports.findOneDocument = async (doc,collection) => {
+    var Collection = Schemas[collection];
+    var doc = doc;
     var postJob;
+    
     console.log(collection)
-    var COLLECTIONS = Schema[collection];
-    console.log(COLLECTIONS);
+    console.log(Collection)
+    console.log(doc)
+    
+    
     switch (collection) {
-        case COLLECTIONS.Alarm : 
+        case COLLECTION_NAME.Alarm : 
             break;
-        case COLLECTIONS.Car :
+        case COLLECTION_NAME.Car :
             break;
     }
     
@@ -52,11 +39,15 @@ exports.findOneDocument = async (req,res,next,collection) => {
       if (postJob != null) {
          postJob();
       }
-      res.json({
-         result: true,
-         data: JSON.stringify(document),
-      });
-   };
+    //   res.json({
+    //      result: true,
+    //      data: JSON.stringify(document),
+    //   });
+  };
    
-   await Collection.findOne(doc).then(resResult).catch(next);
+//   await Collection.findOne(doc).then(resResult).catch(next);
 };
+
+exports.queryoption = () => {
+    
+}
