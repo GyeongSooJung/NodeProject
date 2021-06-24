@@ -17,11 +17,14 @@ const { isNotLoggedIn } = require('./middleware');
 const Schema = require("../schemas/schemas");
 
 const {schemaSelect} = require('../schemas/schemas');
-  
+
+const {COLLECTION_NAME} = require('../const/consts');
+
 router.get('/gstest', isNotLoggedIn, async(req, res, next) => {
     try{
         console.log(findOneDocument)
-        findOneDocument(req,res,next,'Car');
+        var data = { "Car" : "Car" }
+        findOneDocument(data,COLLECTION_NAME.Car);
         
     
     

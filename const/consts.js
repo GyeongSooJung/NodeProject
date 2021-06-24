@@ -14,6 +14,7 @@ const {POINT} = require('../const/point');
 const {PUBLISH} = require('../const/publish');
 const {WORKER} = require('../const/worker');
 const {WORKER_DELETE} = require('../const/worker_delete');
+const {COLLECTION_NAME} = require('../const/collection_name');
 
 exports.CAR = CAR;
 exports.ALARM_COMPLETE = ALARM_COMPLETE;
@@ -31,3 +32,4 @@ exports.POINT = POINT;
 exports.PUBLISH = PUBLISH;
 exports.WORKER = WORKER;
 exports.WORKER_DELETE = WORKER_DELETE;
+exports.COLLECTION_NAME = COLLECTION_NAME;
