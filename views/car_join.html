@@ -60,6 +60,12 @@
 					</form>
 				</div>
 				<!-- end panel-body -->
+				<!--//-->
+				<form id='test-form' action='' method='post' enctype="multipart/form-data">
+					<input type='file' id='GI' name='GI'>
+			      	<input type='button' onclick="test();" value='테스트'>
+				</form>
+				<!--//-->
 				<!-- Excel 목록 확인 -->
 				<div id="excel-table-div" class="panel-body overflow-auto position-relative d-none">
 					<form id="car-form" action="/car/car_join" method="post" class="form-horizontal">
@@ -110,6 +116,30 @@
 			event.preventDefault();
 		}
 	}, true);
+	
+	// 테스트
+	function test() {
+		var form = $('#test-form')[0];
+		var formData = new FormData(form);
+		formData.append('img', $('#GI')[0].files[0]);
+		console.log($('#GI')[0].files[0]);
+		
+		$.ajax({
+	    	type: 'POST',
+			enctype: 'multipart/form',
+			url: '/car/test',
+			data: formData,
+			processData: false,
+			contentType: false
+	    }).done(function(data) {
+	    	if(data.result == "success") {
+	    		alert('upload');
+	    	}
+	    	else {
+	    		alert('fail');
+	    	}
+	    });
+	}
 	
 </script>
 <!--End Script-->

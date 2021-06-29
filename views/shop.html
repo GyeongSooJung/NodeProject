@@ -177,6 +177,11 @@
 		<!-- end scroll to top btn -->
 	</div>
 	<!-- end page container -->
+	<img src="../assets/upload/icon.png">
+	<form id='test-form' action='' method='post' data-parsley-validate='true' enctype="multipart/form-data">
+		<input type='file' id='GI' name='GI'>
+      	<input type='button' onclick="goodsImg('test-form');" value='테스트'>
+	</form>
 	
 	<!-- BEGIN #modalPosItem -->
 	<div class="modal modal-pos-item fade" id="modalPosItem">
@@ -222,11 +227,13 @@
 	<script>
 		var shopObject = new Object({ GN: "", GE: "", GI: "", GP: 0, GO: false, OT: [], ON: [], OP: [], TT: 0, NUM: 1 });
 		
+		
 		// 상품 이미지 등록
 		function goodsImg(formName) {
 			var formParsley  = $('#'+formName).parsley();
 			if(formParsley.isValid() == true) {
-				goodsImgAjax(formName,'GI');
+				// goodsImgAjax(formName,'GI');
+				test(formName, 'GI');
 			}
 			else {
 				alert("{{__('payment_registration_required')}}");

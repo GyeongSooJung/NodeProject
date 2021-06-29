@@ -13,7 +13,39 @@ const { Car, Cardelete, Company } = Schema;
 //Middleware
 const { isNotLoggedIn } = require('./middleware');
 
+const fs = require('fs');
+const multer = require('multer');
+const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_accessKeyId,
+  secretAccessKey: process.env.AWS_secretAccessKey,
+  region: 'ap-southeast-1'
+});
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: ''
+  })
+})
+// const upload = multer({
+//     storage: multer.diskStorage({
+//         destination: function (req, file, cb) {
+//             cb(null, 'test/');
+//         },
+//         filename: function(req, file, cb) {
+//             cb(null, `${Date.now()}__${file.originalname}`);
+//         }
+//     }),
+// });
+
 // -- Start Code -- //
+
+//테스트
+router.post('/test', upload.single('GI'), (req, res) => {
+  console.log("@@@");
+  res.send({ result : 'success' });
+});
 
 //자동차 등록
   // 수기 입력(하나씩) 차량 등록
