@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
 const secretObj = require("../config/jwt");
-const Schema = require('../schemas/schemas');
-const { Company } = Schema;
-
+const {modelQuery} = require('../schemas/query')
+const {COLLECTION_NAME, QUERY} = require('../const/consts');
 exports.isLoggedIn = (req, res, next) => {
   try {
     req.decoded = jwt.verify(req.cookies.token, secretObj.secret);
@@ -24,7 +23,7 @@ exports.isNotLoggedIn = (req, res, next) => {
 exports.DataSet = async(req,res,next)=>{
   try {
     const CID = await req.decoded.CID;
-    req.decoded.company  = await Company.findOne({"_id" : CID});
+    req.decoded.company  = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{"_id" : CID},{});
     next();
   } catch(err){
     console.error(err);
@@ -44,7 +43,7 @@ exports.agentDevide = async(req, res, next) => {
       searchCNU = req.decoded.CNU;
     }
     // 생성한 CNU를 통해 company 찾기
-    const companys = await Company.find({ "CNU" : {$regex:searchCNU} });
+    const companys = await modelQuery(QUERY.Find,COLLECTION_NAME.Company,{ "CNU" : {$regex:searchCNU} },{});
     
     // 찾은 company의 id를 mongoDB 검색용 CID 배열 생성 -> 배열로 생성해야 자동으로 in이 적용됨(or같은 기능)
     for(var i = 0; i < companys.length; i++) {

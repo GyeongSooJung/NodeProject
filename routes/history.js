@@ -2,8 +2,8 @@
 const express = require('express');
 const router = express.Router();
 //Schemas
-const Schema = require('../schemas/schemas');
-const { History } = Schema;
+const {modelQuery} = require('../schemas/query')
+const {COLLECTION_NAME, QUERY} = require('../const/consts');
 //Middleware
 const {isNotLoggedIn} = require('./middleware');
 
@@ -16,7 +16,7 @@ router.post('/ajax/history_deleteone', isNotLoggedIn, async (req, res, next) => 
   const CNU = req.decoded.CNU;
   
   try {
-    await History.remove({ "_id" : select.split(' ') });
+    await modelQuery(QUERY.Remove,COLLECTION_NAME.History,{ "_id" : select.split(' ') },{});
     
     res.send({ result : 'success' });
     
@@ -37,12 +37,12 @@ router.post('/ajax/history_delete', isNotLoggedIn, async (req, res, next) => {
     }
     else {
       if(typeof(select) == 'string') {
-        await History.remove({ "_id" : select });
+        await modelQuery(QUERY.Remove,COLLECTION_NAME.History,{ "_id" : select },{});
         
       }
       else {
         for(var i = 0; i < select.length; i ++) {
-          await History.remove({ "_id" : select[i] });
+          await modelQuery(QUERY.Remove,COLLECTION_NAME.History,{ "_id" : select[i] },{});
         }
       }
       return res.send({ result : 'success' });

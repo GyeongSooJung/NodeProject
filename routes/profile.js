@@ -4,8 +4,8 @@ const router = express.Router();
 //Module
 const bcrypt = require('bcrypt');
 //Schemas
-const Schema = require('../schemas/schemas');
-const { Company } = Schema;
+const {modelQuery} = require('../schemas/query')
+const {COLLECTION_NAME, QUERY} = require('../const/consts');
 //Middleware
 const { isNotLoggedIn, DataSet } = require('./middleware');
 
@@ -17,15 +17,15 @@ router.post('/editInfo', isNotLoggedIn, DataSet, async(req, res, next) => {
    
   try {
       if (bcrypt.compareSync(PW, company.PW)) {
-         const companyone = await Company.findOne({ "EA" : EA });
+         const companyone = await modelQuery(QUERY.Findone,{ "EA" : EA },{});
          if(!companyone) {
-            await Company.where({ "_id" : company._id }).update({$set : { "CNA" : CNA, "NA" : NA, "EA" : EA, "MN" : MN, "PN" : PN, "UA" : Date.now() }});
+            await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { "_id" : company._id }, update : { "CNA" : CNA, "NA" : NA, "EA" : EA, "MN" : MN, "PN" : PN, "UA" : Date.now() }},{});
             
             return res.send({ result : 'success', company : company });
          }
          else {
             if(EA == REA) {
-               await Company.where({ "_id" : company._id }).update({$set : { "CNA" : CNA, "NA" : NA, "EA" : EA, "MN" : MN, "PN" : PN, "UA" : Date.now() }});
+               await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { "_id" : company._id }, update : { "CNA" : CNA, "NA" : NA, "EA" : EA, "MN" : MN, "PN" : PN, "UA" : Date.now() }},{});
             
                return res.send({ result : 'success', company : company });
             }
@@ -68,7 +68,7 @@ router.post('/editPw', isNotLoggedIn, DataSet, async(req, res, next) => {
   try {
       if (bcrypt.compareSync(PW, company.PW)) {
          const hashchPW = await bcrypt.hash(CPW, 12);
-         await Company.where({ "_id" : company._id }).update({$set : { "PW" : hashchPW, "UA" : Date.now() }});
+         await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { "_id" : company._id }, update : { "PW" : hashchPW, "UA" : Date.now() }},{});
          await res.cookie("token", req.cookies,{expiresIn:0});
          
          return res.send({ result : 'success' });

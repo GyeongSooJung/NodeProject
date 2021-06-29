@@ -5,8 +5,8 @@ const router = express.Router();
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 //Schemas
-const Schema = require('../schemas/schemas');
-const { Company } = Schema;
+const {modelQuery} = require('../schemas/query')
+const {COLLECTION_NAME, QUERY} = require('../const/consts');
 
 // -- Start Code -- //
 
@@ -27,7 +27,7 @@ router.post('/checkCNU', async(req, res, next) => {
     const CNU = req.body.CNU;
     
     try {
-        const exCNU = await Company.findOne({ "CNU" : CNU });
+        const exCNU = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ "CNU" : CNU },{});
 
         if(!exCNU) {
             return res.send({ result : 'fail' });
@@ -64,7 +64,7 @@ router.post('/send', async(req, res, next) => {
     const { EA, CNU } = req.body;
     
     try {
-        const exEA = await Company.where({ "CNU" : CNU }).findOne({ "EA" : EA });
+        const exEA = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company, {where : { "CNU" : CNU }, find : { "EA" : EA }});
         
         if(!exEA) {
             return res.send({ result : 'wrong' });
@@ -72,7 +72,6 @@ router.post('/send', async(req, res, next) => {
         else {
             let authNum = Math.random().toString().substr(2,6);
             const hashAuth = await bcrypt.hash(authNum, 12);
-            console.log("어쓰"+authNum);
             res.cookie('hashAuth', hashAuth,{
                 maxAge: 300000
             });
@@ -190,7 +189,7 @@ router.post('/findPW', async(req, res, next) => {
         });
         
         const hashPW = await bcrypt.hash(randomPW, 12);
-        await Company.updateOne({ "CNU" : CNU, "EA" : EA }, { $set: { "PW" : hashPW }});
+        await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : { "CNU" : CNU, "EA" : EA }, update : { "PW" : hashPW }});
         
         return res.send({ result : "success" });
         

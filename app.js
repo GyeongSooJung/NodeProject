@@ -28,6 +28,7 @@ const findRouter = require('./routes/find');
 const inflowRouter = require('./routes/inflow');
 const publishRouter = require('./routes/publish');
 const shopRouter = require('./routes/shop');
+const ajaxRouter = require('./routes/ajax')
 const testRouter = require('./routes/test');
 //----------------------------------------
 
@@ -79,6 +80,7 @@ app.use('/mobile', mobileRouter);
 app.use('/inflow', inflowRouter);
 app.use('/publish', publishRouter);
 app.use('/shop', shopRouter);
+app.use('/ajax', ajaxRouter);
 app.use('/test', testRouter);
 
 app.use(function(req, res, next) {
