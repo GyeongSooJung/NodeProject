@@ -17,13 +17,14 @@ const { Alarm, Car, Cardelete, Company,
        Point, Publish, Worker, Workerdelete
        } = Schemas; // 몽구스 model 파일들
 
-exports.modelQuery = async (query,doc,collection,option) => {
+exports.modelQuery = async (query,collection,doc,option) => {
     
     var doc = doc;
     
     var Collection = Schemas[collection];
     var option = option;
     var one;
+    
     
     
     
@@ -56,8 +57,10 @@ exports.modelQuery = async (query,doc,collection,option) => {
             if (doc.sort) {
                 aggregatearray.push({$sort : doc.sort});
             }
+            if (doc.limit) {
+                aggregatearray.push({$limit : doc.limit});
+            }
         }
-        
         if (Object.keys(option).length != 0) {
             if (option.limit) {
                 
@@ -67,13 +70,14 @@ exports.modelQuery = async (query,doc,collection,option) => {
             }
         }
         else {
-            var one = await Collection.aggregate(aggregatearray);
+            var one = await Collection.aggregate([aggregatearray]);
             return one;
+            
         }
         
     }
     
-    else if ( query == QUERY.Find) {
+    else if ( query == QUERY.Create) {
         
         switch (collection) {
             case COLLECTION_NAME.Alarm : 
@@ -99,14 +103,14 @@ exports.modelQuery = async (query,doc,collection,option) => {
             return one;
         }
         else {
-            one = await Collection.find(doc);
+            one = await Collection.create(doc);
             return one;
         }
         
         
     }
     
-    else if ( query == QUERY.Findone) {
+    else if ( query == QUERY.InsertMany) {
         
         switch (collection) {
             case COLLECTION_NAME.Alarm : 
@@ -120,17 +124,93 @@ exports.modelQuery = async (query,doc,collection,option) => {
         }
         
         if (Object.keys(option).length != 0) {
-            if (option.limit) {
-                
+            if (option.limit && option.sort) {
+                one = await Collection.find(doc).limit(option.limit).sort(option.sort);
             }
-            if (option.sort) {
-                
+            else if (option.limit) {
+                one = await Collection.find(doc).limit(option.limit);
+            }
+            else if (option.sort) {
+                one = await Collection.find(doc).sort(option.sort);
+            }
+            return one;
+        }
+        else {
+            one = await Collection.InsertMany(doc);
+            return one;
+        }
+        
+        
+    }
+    
+    else if ( query == QUERY.Find) {
+        
+        switch (collection) {
+            case COLLECTION_NAME.Alarm : 
+                break;
+            case COLLECTION_NAME.Car :
+                break;
+        }
+        
+        if(doc != undefined) {
+            var where = doc.where;
+            var findone = doc.find;
+            
+        }
+        
+        if (Object.keys(option).length != 0) {
+            if (option.limit && option.sort) {
+                one = await Collection.find(doc).limit(option.limit).sort(option.sort);
+            }
+            else if (option.limit) {
+                one = await Collection.find(doc).limit(option.limit);
+            }
+            else if (option.sort) {
+                one = await Collection.find(doc).sort(option.sort);
             }
         }
         else {
-            one = await Collection.findOne(doc);
-            return one;
+            one = await Collection.find(doc);
         }
+        return one;
+    }
+    
+    else if ( query == QUERY.Findone) {
+        
+        switch (collection) {
+            case COLLECTION_NAME.Alarm : 
+                break;
+            case COLLECTION_NAME.Car :
+                break;
+        }
+        
+        if(doc != undefined) {
+            var where = doc.where;
+            var find = doc.find;
+        }
+        
+        if (Object.keys(option).length != 0) {
+            if (option.limit && option.sort) {
+                one = await Collection.findOne(doc).limit(option.limit).sort(option.sort);
+            }
+            else if (option.limit) {
+                one = await Collection.findOne(doc).limit(option.limit);
+            }
+            else if (option.sort) {
+                one = await Collection.findOne(doc).sort(option.sort);
+            }
+            
+        }
+        else {
+            if(where && find){
+                Collection.where(where).findOne(find);
+            }
+            else{
+            one = await Collection.findOne(doc);
+            }
+            
+        }
+        return one;
         
     }
     
@@ -145,7 +225,8 @@ exports.modelQuery = async (query,doc,collection,option) => {
         }
         
         if(doc != undefined) {
-            
+            var where = doc.where;
+            var update = doc.update;
         }
         
         if (Object.keys(option).length != 0) {
@@ -157,11 +238,65 @@ exports.modelQuery = async (query,doc,collection,option) => {
             }
         }
         else {
-            one = await Collection.Update(doc);
+            one = await Collection.where(where).update(update).setOptions({ runValidators: true }).exec();
             return one;
         }
+    }
+    
+    else if ( query == QUERY.Updateone) {
         
+        switch (collection) {
+            case COLLECTION_NAME.Alarm : 
+                break;
+            case COLLECTION_NAME.Car :
+                break;
+        }
         
+        if(doc != undefined) {
+            var where = doc.where;
+            var update = doc.update;
+        }
+        
+        if (Object.keys(option).length != 0) {
+            if (option.limit) {
+                
+            }
+            if (option.sort) {
+                
+            }
+        }
+        else {
+            one = await Collection.where(where).updateOne(update);
+            return one;
+        }
+    }
+    
+    else if ( query == QUERY.Updateupsert) {
+        
+        switch (collection) {
+            case COLLECTION_NAME.Alarm : 
+                break;
+            case COLLECTION_NAME.Car :
+                break;
+        }
+        
+        if(doc != undefined) {
+            var where = doc.where;
+            var update = doc.update;
+        }
+        
+        if (Object.keys(option).length != 0) {
+            if (option.limit) {
+                
+            }
+            if (option.sort) {
+                
+            }
+        }
+        else {
+            one = await Collection.update(where,update,{upsert : true});
+            return one;
+        }
     }
     
     else if ( query == QUERY.Remove) {
@@ -186,10 +321,66 @@ exports.modelQuery = async (query,doc,collection,option) => {
             }
         }
         else {
-            one = await Collection.Remove(doc);
+            one = await Collection.remove(doc);
             return one;
         }
         
         
+    }
+    
+    else if ( query == QUERY.Count) {
+        
+        switch (collection) {
+            case COLLECTION_NAME.Alarm : 
+                break;
+            case COLLECTION_NAME.Car :
+                break;
+        }
+        
+        if(doc != undefined) {
+            
+        }
+        
+        if (Object.keys(option).length != 0) {
+            if (option.limit) {
+                
+            }
+            if (option.sort) {
+                
+            }
+        }
+        else {
+            one = await Collection.count(doc);
+            return one;
+        }
+        
+        
+    }
+    
+    else if ( query == QUERY.CountDoc) {
+        
+        switch (collection) {
+            case COLLECTION_NAME.Alarm : 
+                break;
+            case COLLECTION_NAME.Car :
+                break;
+        }
+        
+        if(doc != undefined) {
+            
+        }
+        
+        if (Object.keys(option).length != 0) {
+            if (option.limit) {
+                
+            }
+            if (option.sort) {
+                
+            }
+        }
+        else {
+            one = await Collection.countDocuments(doc);
+            return one;
+        }
     }
 };

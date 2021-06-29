@@ -5,8 +5,8 @@ const router = express.Router();
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 //Schemas
-const Schema = require('../schemas/schemas');
-const { Company } = Schema;
+const {modelQuery} = require('../schemas/query')
+const {COLLECTION_NAME, QUERY} = require('../const/consts');
 
 // -- Start Code -- //
 
@@ -26,7 +26,7 @@ const smtpTransport = nodemailer.createTransport({
 router.post('/send', async (req, res, next) => {
   const reademailaddress = req.body.EA;
   
-  const exEA = await Company.findOne({ "EA" : reademailaddress });
+  const exEA = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ "EA" : reademailaddress },{});
   try {
     // 이메일이 중복됐을 때
     if(exEA) {

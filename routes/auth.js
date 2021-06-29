@@ -6,8 +6,8 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const secretObj = require("../config/jwt");
 //Schemas
-const Schema = require('../schemas/schemas');
-const { Company, Device, Car, Worker } = Schema;
+const {modelQuery} = require('../schemas/query')
+const {COLLECTION_NAME, QUERY} = require('../const/consts');
 //Middleware
 const { isNotLoggedIn } = require('./middleware');
 
@@ -18,7 +18,7 @@ router.post('/agent', async (req, res, next) => {
   const CNU = req.body.CNU;
   
   try {
-    const agents = await Company.findOne({ "CNU" : CNU+"000" });
+    const agents = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ "CNU" : CNU+"000" },{});
     if(agents) {
       var nameList = [];
       var codeList = [];
@@ -50,7 +50,7 @@ router.post('/agent', async (req, res, next) => {
 router.post("/login", async(req, res, next) => {
   const {CNU, ANU, ANA, PW} = req.body;
   try {
-    const company = await Company.findOne({ "CNU" : CNU+ANU, "ANA" : ANA, "ANU" : ANU }); // CNU에 맞는 데이터 찾아오기
+    const company = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ "CNU" : CNU+ANU, "ANA" : ANA, "ANU" : ANU },{});// CNU에 맞는 데이터 찾아오기
     if(company) {
       //bcrypt 암호화된 PW와 입력 PW 비교
       if(bcrypt.compareSync(PW, company.PW) ){
@@ -92,10 +92,10 @@ router.get("/withdrawal", isNotLoggedIn, async function(req, res, next){
   const CNU = req.decoded.CNU;
   
   try {
-    await Company.remove({"_id": CID});
-    await Car.remove({"CID" : CID});
-    await Device.remove({"CID" : CID});
-    await Worker.remove({"CID" : CID});
+    await modelQuery(QUERY.Remove,COLLECTION_NAME.Company,{"_id": CID},{});
+    await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{"CID": CID},{});
+    await modelQuery(QUERY.Remove,COLLECTION_NAME.Device,{"CID": CID},{});
+    await modelQuery(QUERY.Remove,COLLECTION_NAME.Worker,{"CID": CID},{});
 
     await res.cookie("token", req.cookies, { expiresIn : 0 });
     
