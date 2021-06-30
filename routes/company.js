@@ -24,7 +24,7 @@ router.post('/register', async (req, res, next) => {
     if(!companyEA && !companyCNU) {
       if(bcrypt.compareSync(CEA, hashAuth)) {
         const hashPW = await bcrypt.hash(PW, 12);
-          await modelQuery(QUERY.Create,COLLECTION_NAME,{
+          await modelQuery(QUERY.Create,COLLECTION_NAME.Company,{
             CNU : CNU+ANU,
             CNA,
             ANU,

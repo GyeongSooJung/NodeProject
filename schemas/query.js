@@ -24,8 +24,18 @@ exports.modelQuery = async (query,collection,doc,option) => {
     var Collection = Schemas[collection];
     var option = option;
     var one;
+    var postJob; // 임의로 지정해줄 수도 있고, option으로 받아올 수도 있음 (부가적인 함수)
     
+    if(option.postJob) {
+        postJob = option.postJob;
+    }
     
+    var resResult = (result) => { //함수가 끝나고 실행되는 콜백함수
+      if (postJob != null) {
+         postJob();
+      }
+      return result;
+    };
     
     
     if ( query == QUERY.Aggregate) {
@@ -70,10 +80,10 @@ exports.modelQuery = async (query,collection,doc,option) => {
             }
         }
         else {
-            var one = await Collection.aggregate([aggregatearray]);
-            return one;
-            
+            var one = await Collection.aggregate([aggregatearray]).then(resResult);
         }
+        
+        return one;
         
     }
     
@@ -91,22 +101,14 @@ exports.modelQuery = async (query,collection,doc,option) => {
         }
         
         if (Object.keys(option).length != 0) {
-            if (option.limit && option.sort) {
-                one = await Collection.find(doc).limit(option.limit).sort(option.sort);
-            }
-            else if (option.limit) {
-                one = await Collection.find(doc).limit(option.limit);
-            }
-            else if (option.sort) {
-                one = await Collection.find(doc).sort(option.sort);
-            }
-            return one;
-        }
-        else {
-            one = await Collection.create(doc);
-            return one;
+        
         }
         
+        else {
+            one = await Collection.create(doc).then(resResult);
+        }
+        
+        return one;
         
     }
     
@@ -124,23 +126,14 @@ exports.modelQuery = async (query,collection,doc,option) => {
         }
         
         if (Object.keys(option).length != 0) {
-            if (option.limit && option.sort) {
-                one = await Collection.find(doc).limit(option.limit).sort(option.sort);
-            }
-            else if (option.limit) {
-                one = await Collection.find(doc).limit(option.limit);
-            }
-            else if (option.sort) {
-                one = await Collection.find(doc).sort(option.sort);
-            }
-            return one;
+            
         }
+        
         else {
-            one = await Collection.InsertMany(doc);
-            return one;
+            one = await Collection.InsertMany(doc).then(resResult);
         }
         
-        
+        return one;
     }
     
     else if ( query == QUERY.Find) {
@@ -153,25 +146,72 @@ exports.modelQuery = async (query,collection,doc,option) => {
         }
         
         if(doc != undefined) {
-            var where = doc.where;
-            var findone = doc.find;
-            
+            if(doc.searchOption && doc.projectOption) {
+                var searchOption = doc.searchOption;
+                var projectOption = doc.projectOption;
+                
+                if (Object.keys(option).length != 0) {
+                    if(option.skip && option.limit && option.sort) {
+                        one = await Collection.find(searchOption,projectOption).skip(option.skip).limit(option.limit).sort(option.sort).then(resResult);   
+                    }
+                    else if(!option.skip && option.limit && option.sort) {
+                        one = await Collection.find(searchOption,projectOption).limit(option.limit).sort(option.sort).then(resResult);   
+                    }
+                    else if(option.skip && !option.limit && option.sort) {
+                        one = await Collection.find(searchOption,projectOption).skip(option.skip).sort(option.sort).then(resResult);     
+                    }
+                    else if(option.skip && option.limit && !option.sort) {
+                        one = await Collection.find(searchOption,projectOption).skip(option.skip).limit(option.limit).then(resResult);     
+                    }
+                    else if(!option.skip && !option.limit && option.sort) {
+                        one = await Collection.find(searchOption,projectOption).sort(option.sort).then(resResult);     
+                    }
+                    else if(option.skip && !option.limit && !option.sort) {
+                        one = await Collection.find(searchOption,projectOption).skip(option.skip).then(resResult);       
+                    }
+                    else if(!option.skip && option.limit && !option.sort) {
+                        one = await Collection.find(searchOption,projectOption).limit(option.limit).then(resResult);     
+                    }
+                }
+                else {
+                    one = await Collection.find(searchOption,projectOption).then(resResult);
+                
+                }
+            }
+            else {
+                if (Object.keys(option).length != 0) {
+                    if(option.skip && option.limit && option.sort) {
+                        one = await Collection.find(doc).skip(option.skip).limit(option.limit).sort(option.sort).then(resResult);   
+                    }
+                    else if(!option.skip && option.limit && option.sort) {
+                        one = await Collection.find(doc).limit(option.limit).sort(option.sort).then(resResult);   
+                    }
+                    else if(option.skip && !option.limit && option.sort) {
+                        one = await Collection.find(doc).skip(option.skip).sort(option.sort).then(resResult);     
+                    }
+                    else if(option.skip && option.limit && !option.sort) {
+                        one = await Collection.find(doc).skip(option.skip).limit(option.limit).then(resResult);     
+                    }
+                    else if(!option.skip && !option.limit && option.sort) {
+                        one = await Collection.find(doc).sort(option.sort).then(resResult);     
+                    }
+                    else if(option.skip && !option.limit && !option.sort) {
+                        one = await Collection.find(doc).skip(option.skip).then(resResult);       
+                    }
+                    else if(!option.skip && option.limit && !option.sort) {
+                        one = await Collection.find(doc).limit(option.limit).then(resResult);     
+                    }
+                }
+                else {
+                    one = await Collection.find(doc).then(resResult);
+                
+                }
+            }
         }
         
-        if (Object.keys(option).length != 0) {
-            if (option.limit && option.sort) {
-                one = await Collection.find(doc).limit(option.limit).sort(option.sort);
-            }
-            else if (option.limit) {
-                one = await Collection.find(doc).limit(option.limit);
-            }
-            else if (option.sort) {
-                one = await Collection.find(doc).sort(option.sort);
-            }
-        }
-        else {
-            one = await Collection.find(doc);
-        }
+        
+        
+        
         return one;
     }
     
@@ -185,30 +225,67 @@ exports.modelQuery = async (query,collection,doc,option) => {
         }
         
         if(doc != undefined) {
-            var where = doc.where;
-            var find = doc.find;
-        }
-        
-        if (Object.keys(option).length != 0) {
-            if (option.limit && option.sort) {
-                one = await Collection.findOne(doc).limit(option.limit).sort(option.sort);
+            if(doc.searchOption && doc.projectOption) {
+                var searchOption = doc.searchOption;
+                var projectOption = doc.projectOption;
+                
+                if (Object.keys(option).length != 0) {
+                    if(option.skip && option.limit && option.sort) {
+                        one = await Collection.findOne(searchOption,projectOption).skip(option.skip).limit(option.limit).sort(option.sort).then(resResult);   
+                    }
+                    else if(!option.skip && option.limit && option.sort) {
+                        one = await Collection.findOne(searchOption,projectOption).limit(option.limit).sort(option.sort).then(resResult);   
+                    }
+                    else if(option.skip && !option.limit && option.sort) {
+                        one = await Collection.findOne(searchOption,projectOption).skip(option.skip).sort(option.sort).then(resResult);     
+                    }
+                    else if(option.skip && option.limit && !option.sort) {
+                        one = await Collection.findOne(searchOption,projectOption).skip(option.skip).limit(option.limit).then(resResult);     
+                    }
+                    else if(!option.skip && !option.limit && option.sort) {
+                        one = await Collection.findOne(searchOption,projectOption).sort(option.sort).then(resResult);     
+                    }
+                    else if(option.skip && !option.limit && !option.sort) {
+                        one = await Collection.findOne(searchOption,projectOption).skip(option.skip).then(resResult);       
+                    }
+                    else if(!option.skip && option.limit && !option.sort) {
+                        one = await Collection.findOne(searchOption,projectOption).limit(option.limit).then(resResult);     
+                    }
+                }
+                else {
+                    one = await Collection.findOne(searchOption,projectOption).then(resResult);
+                
+                }
             }
-            else if (option.limit) {
-                one = await Collection.findOne(doc).limit(option.limit);
+            else {
+                if (Object.keys(option).length != 0) {
+                    if(option.skip && option.limit && option.sort) {
+                        one = await Collection.findOne(doc).skip(option.skip).limit(option.limit).sort(option.sort).then(resResult);   
+                    }
+                    else if(!option.skip && option.limit && option.sort) {
+                        one = await Collection.findOne(doc).limit(option.limit).sort(option.sort).then(resResult);   
+                    }
+                    else if(option.skip && !option.limit && option.sort) {
+                        one = await Collection.findOne(doc).skip(option.skip).sort(option.sort).then(resResult);     
+                    }
+                    else if(option.skip && option.limit && !option.sort) {
+                        one = await Collection.findOne(doc).skip(option.skip).limit(option.limit).then(resResult);     
+                    }
+                    else if(!option.skip && !option.limit && option.sort) {
+                        one = await Collection.findOne(doc).sort(option.sort).then(resResult);     
+                    }
+                    else if(option.skip && !option.limit && !option.sort) {
+                        one = await Collection.findOne(doc).skip(option.skip).then(resResult);       
+                    }
+                    else if(!option.skip && option.limit && !option.sort) {
+                        one = await Collection.findOne(doc).limit(option.limit).then(resResult);     
+                    }
+                }
+                else {
+                    one = await Collection.findOne(doc).then(resResult);
+                
+                }
             }
-            else if (option.sort) {
-                one = await Collection.findOne(doc).sort(option.sort);
-            }
-            
-        }
-        else {
-            if(where && find){
-                Collection.where(where).findOne(find);
-            }
-            else{
-            one = await Collection.findOne(doc);
-            }
-            
         }
         return one;
         
@@ -238,9 +315,10 @@ exports.modelQuery = async (query,collection,doc,option) => {
             }
         }
         else {
-            one = await Collection.where(where).update(update).setOptions({ runValidators: true }).exec();
-            return one;
+            one = await Collection.where(where).update(update).setOptions({ runValidators: true }).exec().then(resResult);
         }
+        
+        return one;
     }
     
     else if ( query == QUERY.Updateone) {
@@ -266,9 +344,10 @@ exports.modelQuery = async (query,collection,doc,option) => {
             }
         }
         else {
-            one = await Collection.where(where).updateOne(update);
-            return one;
+            one = await Collection.where(where).updateOne(update).then(resResult);
         }
+        
+        return one;
     }
     
     else if ( query == QUERY.Updateupsert) {
@@ -294,9 +373,10 @@ exports.modelQuery = async (query,collection,doc,option) => {
             }
         }
         else {
-            one = await Collection.update(where,update,{upsert : true});
-            return one;
+            one = await Collection.update(where,update,{upsert : true}).then(resResult);
         }
+        
+        return one;
     }
     
     else if ( query == QUERY.Remove) {
@@ -321,11 +401,10 @@ exports.modelQuery = async (query,collection,doc,option) => {
             }
         }
         else {
-            one = await Collection.remove(doc);
-            return one;
+            one = await Collection.remove(doc).then(resResult);
         }
         
-        
+        return one;
     }
     
     else if ( query == QUERY.Count) {
@@ -350,11 +429,10 @@ exports.modelQuery = async (query,collection,doc,option) => {
             }
         }
         else {
-            one = await Collection.count(doc);
-            return one;
+            one = await Collection.count(doc).then(resResult);
         }
         
-        
+        return one;
     }
     
     else if ( query == QUERY.CountDoc) {
@@ -379,8 +457,9 @@ exports.modelQuery = async (query,collection,doc,option) => {
             }
         }
         else {
-            one = await Collection.countDocuments(doc);
-            return one;
+            one = await Collection.countDocuments(doc).then(resResult);
         }
+        
+        return one;
     }
 };
