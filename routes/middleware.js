@@ -2,6 +2,29 @@ const jwt = require('jsonwebtoken');
 const secretObj = require("../config/jwt");
 const {modelQuery} = require('../schemas/query')
 const {COLLECTION_NAME, QUERY} = require('../const/consts');
+
+// const multer = require('multer');
+// const multerS3 = require('multer-s3');
+// const AWS = require('aws-sdk');
+// const s3 = new AWS.S3({
+//   accessKeyId: process.env.AWS_accessKeyId,
+//   secretAccessKey: process.env.AWS_secretAccessKey,
+//   region: 'ap-southeast-1'
+// });
+// let upload = multer({
+//   storage: multerS3({
+//     s3: s3,
+//     contentType: multerS3.AUTO_CONTENT_TYPE,
+//     bucket: 'goods-img',
+//     acl: 'public-read',
+//     key: (req, file, cb) => {
+//       console.log("$$$"+JSON.stringify(file));
+//       cb(null, file.originalname)
+//     },
+//   }),
+//   limits: { fileSize: 5 * 1024 * 1024 },
+// });
+
 exports.isLoggedIn = (req, res, next) => {
   try {
     req.decoded = jwt.verify(req.cookies.token, secretObj.secret);
@@ -59,3 +82,5 @@ exports.agentDevide = async(req, res, next) => {
     console.error(err);
   }
 };
+
+// exports.upload = multer(upload);

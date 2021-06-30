@@ -152,51 +152,29 @@ $(document).on('click', '.edit-option-detail', function() {
 });
 
 // 상품 이미지 ajax
-// function goodsImgAjax(formName, img) {
-// 	var form = $('#'+formName)[0];
-//     var formData = new FormData(form);
-//     formData.append('img', $('#'+img)[0].files[0]);
-    
-//     $.ajax({
-//     	type: 'post',
-// 		url: '/shop/goodsImg',
-// 		data: formData,
-// 		enctype: 'multipart/form',
-// 		processData: false,
-// 		contentType: false
-//     }).done(function(data) {
-//     	if(data.result == "success") {
-// 			$("input[name=GIurl").eq(0).val(data.imgUrl);
-// 			// goodsJoinAjax();
-// 		}
-// 		else if(data.result == "sendNull") {
-// 			// goodsJoinAjax();
-// 		}
-// 		else {
-// 			alert(i18nconvert("payment_img_fail"));
-// 		}
-//     });
-// }
-function test(formName, img) {
+function goodsImgAjax(formName, img) {
 	var form = $('#'+formName)[0];
-	var formData = new FormData(form);
-	formData.append('img', $('#'+img)[0].files[0]);
-	console.log($('#'+img)[0].files[0]);
-	
-	$.ajax({
-    	type: 'POST',
-		enctype: 'multipart/form',
+    var formData = new FormData(form);
+    formData.append('img', $('#'+img)[0].files[0]);
+    
+    $.ajax({
+    	type: 'post',
 		url: '/shop/goodsImg',
 		data: formData,
+		enctype: 'multipart/form',
 		processData: false,
 		contentType: false
     }).done(function(data) {
     	if(data.result == "success") {
-    		alert('upload');
-    	}
-    	else {
-    		alert('fail');
-    	}
+			$("input[name=GIurl").eq(0).val(data.imgUrl);
+			goodsJoinAjax();
+		}
+		else if(data.result == "sendNull") {
+			goodsJoinAjax();
+		}
+		else {
+			alert(i18nconvert("payment_img_fail"));
+		}
     });
 }
 

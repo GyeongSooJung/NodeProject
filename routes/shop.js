@@ -13,102 +13,78 @@ const { Order, OrderDetail, Goods, Company, GoodsOption } = Schema;
 const { isNotLoggedIn, DataSet } = require('./middleware');
 
 const fs = require('fs');
-const multer = require('multer');
-const upload = multer({
-    storage: multer.diskStorage({
-        destination: function (req, file, cb) {
-            cb(null, 'test/');
-        },
-        filename: function(req, file, cb) {
-            cb(null, `${Date.now()}__${file.originalname}`);
-        }
-    }),
-});
-
-// 쇼핑몰 이미지등록
-// router.post('/goodsImg', isNotLoggedIn, DataSet, async(req, res, next) => {
-//     try {
-//         const form = new multiparty.Form({
-//             autoFiles: true,
-//         });
-//         form.on('file', async (name, file) => {
-//             const extname = path.extname(file.path); //확장자명
-//             const fileName = path.basename(file.path); //전체경로
-            
-//             if (extname == "") {
-//                 return res.send({ result : 'sendNull' });
-//             }
-//             else {
-//                 // 무료 호스팅 이미지에 업로드
-//                 const options = {
-//                     apiKey: process.env.imgBB,
-//                     imagePath: file.path,
-//                     name: fileName,
-//                 };
-                
-//                 imgbbUploader(options)
-//                     .then((response) => res.send({ result : "success", imgUrl: response.url}))
-//                     .catch((error) => console.error(error));
-//             }
-//         });
-//         form.on('close', () => {});
- 
-//         form.parse(req);
-        
-//     } catch(err) {
-//         res.send({ result : "fail" });
-//         console.error(err);
-//         next(err);
+// const multer = require('multer');
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, 'test/');
+//     },
+//     filename: function(req, file, cb) {
+//         cb(null, `${Date.now()}__${file.originalname}`);
 //     }
 // });
+// const upload = multer({
+//     storage: storage
+// }).single('GI');
 
-router.post('/goodsImg', upload.single('GI'), (req, res) => {
+// 쇼핑몰 이미지등록
+router.post('/goodsImg', isNotLoggedIn, DataSet, async(req, res, next) => {
     try {
-        console.log("@@@");
-        console.log(req.file);
+        const form = new multiparty.Form({
+            autoFiles: true,
+        });
+        form.on('file', async (name, file) => {
+            const extname = path.extname(file.path); //확장자명
+            const fileName = path.basename(file.path); //전체경로
+            
+            if (extname == "") {
+                return res.send({ result : 'sendNull' });
+            }
+            else {
+                // 무료 호스팅 이미지에 업로드
+                const options = {
+                    apiKey: process.env.imgBB,
+                    imagePath: file.path,
+                    name: fileName,
+                };
+                
+                imgbbUploader(options)
+                    .then((response) => res.send({ result : "success", imgUrl: response.url}))
+                    .catch((error) => console.error(error));
+            }
+        });
+        form.on('close', () => {});
+ 
+        form.parse(req);
+        
     } catch(err) {
+        res.send({ result : "fail" });
         console.error(err);
+        next(err);
     }
 });
 
-// router.post('/goodsImg',(req,res) => {
-//     try{
-//         multer.diskStorage({
-//             destination: function (req, file, cb) {
-//                 cb(null, 'public/assets/upload/');
-//             },
-//             filename: (req, file, cb) => {
-//                 var fileName = file.originalname; // 파일 이름입니다.
-//                 var mimeType;
-//                 console.log(file+"/"+cb);
-//                 switch (file.mimetype) { // 파일 타입을 거릅니다.
-//                     case 'image/jpeg':
-//                         mimeType = 'jpg';
-//                         break;
-//                     case 'image/png':
-//                         mimeType = 'png';
-//                         break;
-//                     case 'image/gif':
-//                         mimeType = 'gif';
-//                         break;
-//                     case 'image/bmp':
-//                         mimeType = 'bmp';
-//                         break;
-//                     default:
-//                         mimeType = 'jpg';
-//                     	break;
-//     		}
-//     		cb(null, fileName + '.' + mimeType); // 파일 이름 + 파일 타입 형태로 이름을 바꿉니다.
-//     	}
-//     });
+// 테스트
+router.post('/test', async (req, res) => {
     
-//     multer().single('image');
-//     console.log(multer);
-//     }
-//     catch(err) {
-//         console.log(err+"$$$");
-//     }
-// });
+    try {
+        await upload(req, res, (err) => {
+            console.log("@@@@")
+            if(err) {
+                
+                console.log(err)
+            }
+            else {
+                console.log(req.file);
+                res.send('test');
+                
+        }
+    })
+    
+    } catch(err) {
+        console.log(err)
+    }
+});
+
 
 // 쇼핑몰 상품등록
 router.post('/goodsJoin', isNotLoggedIn, DataSet, async(req, res, next) => {

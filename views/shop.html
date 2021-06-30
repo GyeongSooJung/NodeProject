@@ -177,11 +177,13 @@
 		<!-- end scroll to top btn -->
 	</div>
 	<!-- end page container -->
-	<img src="../assets/upload/icon.png">
-	<form id='test-form' action='' method='post' data-parsley-validate='true' enctype="multipart/form-data">
-		<input type='file' id='GI' name='GI'>
-      	<input type='button' onclick="goodsImg('test-form');" value='테스트'>
-	</form>
+	
+	<!--//-->
+	<!--<form id='test-form' action='' method='post' enctype="multipart/form-data">-->
+	<!--	<input type='file' id='GI' name='GI'>-->
+ <!--     	<input type='button' onclick="test();" value='테스트'>-->
+	<!--</form>-->
+	<!--//-->
 	
 	<!-- BEGIN #modalPosItem -->
 	<div class="modal modal-pos-item fade" id="modalPosItem">
@@ -227,13 +229,36 @@
 	<script>
 		var shopObject = new Object({ GN: "", GE: "", GI: "", GP: 0, GO: false, OT: [], ON: [], OP: [], TT: 0, NUM: 1 });
 		
+		// 테스트
+		function test() {
+			var form = $('#test-form')[0];
+			var formData = new FormData(form);
+			formData.append('img', $('#GI')[0].files[0]);
+			console.log($('#GI')[0].files[0]);
+			
+			$.ajax({
+		    	type: 'POST',
+				enctype: 'multipart/form',
+				url: '/shop/test',
+				data: formData,
+				processData: false,
+				contentType: false
+		    }).done(function(data) {
+		    	console.log(data)
+		    	if(data.result == "success") {
+		    		alert('upload');
+		    	}
+		    	else {
+		    		alert('fail');
+		    	}
+		    });
+		}
 		
 		// 상품 이미지 등록
 		function goodsImg(formName) {
 			var formParsley  = $('#'+formName).parsley();
 			if(formParsley.isValid() == true) {
-				// goodsImgAjax(formName,'GI');
-				test(formName, 'GI');
+				goodsImgAjax(formName,'GI');
 			}
 			else {
 				alert("{{__('payment_registration_required')}}");
