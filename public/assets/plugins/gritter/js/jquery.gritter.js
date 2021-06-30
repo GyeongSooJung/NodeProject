@@ -9,6 +9,7 @@
  * Version: 1.7.4
  */
 
+
 (function($){
  	
 	/**
@@ -78,7 +79,6 @@
 		_item_count: 0,
 		_is_setup: 0,
 		_tpl_close: '<a class="gritter-close" href="#" tabindex="1">Close Notification</a>',
-		_tpl_close_today: '<a class="girtter-close" href="#" tabindex="1">Close Notification</a><input type="checkbox" name="today" value="today" />오늘 하루 그만보기',
 		_tpl_title: '<span class="gritter-title">[[title]]</span>',
 		_tpl_item: '<div id="gritter-item-[[number]]" class="gritter-item-wrapper [[item_class]]" style="display:none" role="alert"><div class="gritter-top"></div><div class="gritter-item">[[close]][[image]]<div class="[[class_name]]">[[title]]<p>[[text]]</p></div><div style="clear:both"></div></div><div class="gritter-bottom"></div></div>',
 		_tpl_wrap: '<div id="gritter-notice-wrapper"></div>',
@@ -277,7 +277,7 @@
 			}
 			
 		},
-		
+    
 		/**
 		* Remove a specific notification based on an ID
 		* @param {Integer} unique_id The ID used to delete a specific notification
@@ -286,6 +286,18 @@
 		* @param {Boolean} unbind_events If we clicked on the (X) we set this to true to unbind mouseenter/mouseleave
 		*/
 		removeSpecific: function(unique_id, params, e, unbind_events){
+			
+			// 24시간 기준 쿠키 설정
+			var setCookie = function (cname, cvalue, exdays) {
+			    var todayDate = new Date();
+			    todayDate.setTime(todayDate.getTime() + (exdays*24*60*60*1000));    
+			    var expires = "expires=" + todayDate.toUTCString();
+			    document.cookie = cname + "=" + cvalue + "; " + expires;
+			}
+			
+			if($("input:checkbox[name=today]").is(":checked")==true) {
+				setCookie("close","Y",1);
+			}
 			
 			if(!e){
 				var e = $('#gritter-item-' + unique_id);

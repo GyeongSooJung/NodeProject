@@ -167,6 +167,7 @@
 	"main_gritter_body1": "If there are not enough points, SMS will not be sent.",
 	"main_gritter_body2": "Charge points to continue using the service.",
 	"main_gritter_btn": "Charging points",
+	"main_gritter_no_today": "Stop watching today",
     
     "layout_modify" : "Modify Profile",
     "layout_setting": "Setting",

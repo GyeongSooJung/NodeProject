@@ -167,6 +167,7 @@
 	"main_gritter_body1": "포인트가 부족하면 알림톡이 전송되지 않습니다.",
 	"main_gritter_body2": "포인트를 충전하여 서비스를 계속 이용하세요.",
 	"main_gritter_btn": "포인트 충전",
+	"main_gritter_no_today": "오늘 하루 그만보기",
 	
 	"layout_modify": "프로필 수정",
 	"layout_setting": "설정",

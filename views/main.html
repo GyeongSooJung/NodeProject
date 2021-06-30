@@ -183,22 +183,20 @@
 <script>
 	// 그리터(말풍선 알람) 기능
 	$(document).ready(function(){
-		// 기준 포인트 이하 시 알람 발생(gritter 사용)
-		if(parseInt("{{company.SPO}}") <= parseInt("{{company.POA}}")) {
+		// 기준 포인트 이하 시 && 오늘 하루 그만보기 쿠키 없을 시 => 알람 발생(gritter 사용)
+		if( (parseInt("{{company.SPO}}") <= parseInt("{{company.POA}}")) && (getCookie('close') != 'Y') ) {
 	        $.gritter.add({
 	            // (string | mandatory) the heading of the notification
 	            title: "{{__('main_gritter_title')}}",
 	            // (string | mandatory) the text inside the notification
 	            text: "<p class='mt-3 mb-0'>{{__('main_gritter_body1')}}<br>\
 	            	{{__('main_gritter_body2')}}</p>\
-	            	<a href='/shop' class='btn btn-purple btn-block py-1 mt-2'><span class='small'>{{__('main_gritter_btn')}}</span></a>",
-	            // text: "<p class='mt-3 mb-0'>{{__('main_gritter_body1')}}<br>\
-	            // 	{{__('main_gritter_body2')}}</p>\
-	            // 	<a href='/shop' class='btn btn-purple btn-block py-1 mt-2'><span class='small'>{{__('main_gritter_btn')}}</span></a>\
-	            // 	<div class='d-flex align-items-center mt-2'>\
-		           // 	<input type='checkbox' class='mr-1' name='today' value='today'>\
-		           // 	<p>오늘 하루 그만보기</p>\
-	            // 	</div>",
+	            	<a href='/shop' class='btn btn-purple btn-block py-1 mt-2'><span class='small'>{{__('main_gritter_btn')}}</span></a>\
+	            	<hr class='my-2 bg-gray'>\
+	            	<div class='d-flex align-items-center'>\
+		            	<input type='checkbox' class='mr-1' name='today' value='today'>\
+		            	<p class='mb-0'><small>{{__('main_gritter_no_today')}}</small></p>\
+	            	</div>",
 	        	image: "../assets/img/oasis_coin.png",
 	            sticky: true
 	        });
