@@ -62,7 +62,7 @@ router.post('/device_list', isNotLoggedIn, DataSet, agentDevide, async function(
     }
     else {
       if (searchdate) {
-      var searchtext2 = searchdate.split("~");
+        var searchtext2 = searchdate.split("~");
         if(search == "ANA") {
           doc.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
@@ -81,8 +81,8 @@ router.post('/device_list', isNotLoggedIn, DataSet, agentDevide, async function(
         else {
           doc.match = { "CID" : { $in : req.searchCID }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
-    }
-    else {
+      }
+      else {
         if (search =="ANA") {
           doc.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext} };
         }

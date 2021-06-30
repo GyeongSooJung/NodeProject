@@ -78,6 +78,7 @@
 		_item_count: 0,
 		_is_setup: 0,
 		_tpl_close: '<a class="gritter-close" href="#" tabindex="1">Close Notification</a>',
+		_tpl_close_today: '<a class="girtter-close" href="#" tabindex="1">Close Notification</a><input type="checkbox" name="today" value="today" />오늘 하루 그만보기',
 		_tpl_title: '<span class="gritter-title">[[title]]</span>',
 		_tpl_item: '<div id="gritter-item-[[number]]" class="gritter-item-wrapper [[item_class]]" style="display:none" role="alert"><div class="gritter-top"></div><div class="gritter-item">[[close]][[image]]<div class="[[class_name]]">[[title]]<p>[[text]]</p></div><div style="clear:both"></div></div><div class="gritter-bottom"></div></div>',
 		_tpl_wrap: '<div id="gritter-notice-wrapper"></div>',

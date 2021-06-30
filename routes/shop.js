@@ -64,26 +64,26 @@ router.post('/goodsImg', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 // 테스트
-router.post('/test', async (req, res) => {
+// router.post('/test', async (req, res) => {
     
-    try {
-        await upload(req, res, (err) => {
-            console.log("@@@@")
-            if(err) {
+//     try {
+//         await upload(req, res, (err) => {
+//             console.log("@@@@")
+//             if(err) {
                 
-                console.log(err)
-            }
-            else {
-                console.log(req.file);
-                res.send('test');
+//                 console.log(err)
+//             }
+//             else {
+//                 console.log(req.file);
+//                 res.send('test');
                 
-        }
-    })
+//         }
+//     })
     
-    } catch(err) {
-        console.log(err)
-    }
-});
+//     } catch(err) {
+//         console.log(err)
+//     }
+// });
 
 
 // 쇼핑몰 상품등록

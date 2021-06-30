@@ -375,7 +375,6 @@ async function modalReload(Object) {
 		sum += await parseInt(Object.OP[i]);
 	}
 	Object.TT = await (Object.TT + sum) * Object.NUM;
-	console.log(Object.GP+"/"+Object.OP+"/"+Object.TT+"/"+Object.NUM);
 	
 	$(".modal-price").html(Object.TT);
 	$("input[name=count]").val(Object.NUM);
@@ -495,6 +494,16 @@ function showCart() {
 				<div class='price'>"+totalSum+"</div>\
 					<input type='hidden' id='TS' name='TS' value='"+totalSum+"' />\
 			");
+			
+			// 반응형 - 장바구니에 담긴 상품 개수 표시
+			if(data.cart.length != 0) {
+				$('.cart-goods-num').removeClass('d-none');
+				$('.cart-goods-num').html(data.cart.length);
+			}
+			else {
+				$('.cart-goods-num').addClass('d-none');
+				$('.cart-goods-num').empty();
+			}
 		}
 		else {
 			alert(i18nconvert('payment_shop_err'));
