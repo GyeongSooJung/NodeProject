@@ -322,7 +322,6 @@ exports.modelQuery = async (query,collection,doc,option) => {
     }
     
     else if ( query == QUERY.Updatemany) {
-        
         switch (collection) {
             case COLLECTION_NAME.Alarm : 
                 
@@ -334,7 +333,6 @@ exports.modelQuery = async (query,collection,doc,option) => {
         if(doc != undefined) {
             var where = doc.where;
             var update = doc.update;
-            console.log("@@@"+update);
         }
         
         if (Object.keys(option).length != 0) {

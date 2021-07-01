@@ -849,18 +849,15 @@ router.post('/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
           }
         }
         await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : {_id : CID},update : {AL : al}},{});
-        console.log(exANU);
+        
         const agentone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ CNU : companyone.CNU.substring(0,10) + exANU},{});
-        console.log(agentone);
+        // 해당 지점으로 가입된 계정이 있을 경우, ANA와 AL 변경
         if(agentone) {
-          // 해당 지점은 ANA와 AL 변경, 그 외 지점들은 AL 변경
           await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : { CNU : companyone.CNU.substring(0,10) + exANU} , update : { AL : al, ANA : ANA }},{});
-          await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { CNU : {$regex:companyone.CNU.substring(0,10)} } , update : { AL : al }},{});
         }
-        else {
-          // 없을 경우, 그 외 지점들 AL 변경
-          await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { CNU : {$regex:companyone.CNU.substring(0,10)} } , update : { AL : al }},{});
-        }
+        // 그 외 지점들 AL 변경
+        await modelQuery(QUERY.Updatemany,COLLECTION_NAME.Company,{where : { CNU : {$regex:companyone.CNU.substring(0,10)} } , update : { AL : al }},{});
+        
         res.send({type : "agent", result : "successedit"});
       }
     }
@@ -872,37 +869,38 @@ router.post('/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
         }
       }
       const agentone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ CNU : companyone.CNU.substring(0,10) + exANU},{});
-      console.log(agentone);
       //있으면 해당 지점 삭제 및 해당 지점 CID에 해당하는 데이터 전부 삭제
+        // 임시 저장 db에 생성
       if(agentone) {
-        const agentcar = modelQuery(QUERY.find,COLLECTION_NAME.Car,{ CID : agentone._id });
+        const agentcar = await modelQuery(QUERY.Find,COLLECTION_NAME.Car,{ "CID" : agentone._id },{});
         if(agentcar) {
           for(var i = 0; i < agentcar.length; i ++) {
-            await modelQuery(QUERY.Create,COLLECTION_NAME.Car,{ CID : agentcar[i]._id, CC : agentcar[i].CC, CN : agentcar[i].CN, CPN : agentcar[i].CPN, SN : agentcar[i].SN  })
+            await modelQuery(QUERY.Create,COLLECTION_NAME.Cardelete,{ CID : agentcar[i]._id, CC : agentcar[i].CC, CN : agentcar[i].CN, CPN : agentcar[i].CPN, SN : agentcar[i].SN  },{})
           }
         }
-        const agentdevice = modelQuery(QUERY.find,COLLECTION_NAME.Device,{ CID : agentone._id });
+        const agentdevice = await modelQuery(QUERY.Find,COLLECTION_NAME.Device,{ CID : agentone._id },{});
         if(agentdevice) {
           for(var i = 0; i < agentdevice.length; i ++) {
-            await modelQuery(QUERY.Create,COLLECTION_NAME.Device,{ CID : agentdevice[i]._id, MD : agentdevice[i].MD, MAC : agentdevice[i].MAC, VER : agentdevice[i].VER, NN : agentdevice[i].NN, UT : agentdevice[i].UT  })
+            await modelQuery(QUERY.Create,COLLECTION_NAME.Devicedelete,{ CID : agentdevice[i]._id, MD : agentdevice[i].MD, MAC : agentdevice[i].MAC, VER : agentdevice[i].VER, NN : agentdevice[i].NN, UT : agentdevice[i].UT  },{})
           }
         }
-        const agentworker = modelQuery(QUERY.find,COLLECTION_NAME.Worker,{ CID : agentone._id });
+        const agentworker = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ CID : agentone._id },{});
         if(agentworker) {
-          for(var i = 0; i < agentdevice.length; i ++) {
-            await modelQuery(QUERY.Create,COLLECTION_NAME.Worker,{ CID : agentworker[i]._id, WN : agentworker[i].WN, PN : agentworker[i].PN, GID : agentworker[i].GID, EM : agentworker[i].EM, PU : agentworker[i].PU, AU : agentworker[i].AU, AC : agentworker[i].AC })
+          for(var i = 0; i < agentworker.length; i ++) {
+            await modelQuery(QUERY.Create,COLLECTION_NAME.Workerdelete,{ CID : agentworker[i]._id, WN : agentworker[i].WN, PN : agentworker[i].PN, GID : agentworker[i].GID, EM : agentworker[i].EM, PU : agentworker[i].PU, AU : agentworker[i].AU, AC : agentworker[i].AC },{})
           }
         }
-        
-        await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{ CID : agentone._id });
-        await modelQuery(QUERY.Remove,COLLECTION_NAME.Device,{ CID : agentone._id });
-        await modelQuery(QUERY.Remove,COLLECTION_NAME.Worker,{ CID : agentone._id });
+        // 삭제
+        await modelQuery(QUERY.Remove,COLLECTION_NAME.Company,{ _id : agentone._id },{});
+        await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{ CID : agentone._id },{});
+        await modelQuery(QUERY.Remove,COLLECTION_NAME.Device,{ CID : agentone._id },{});
+        await modelQuery(QUERY.Remove,COLLECTION_NAME.Worker,{ CID : agentone._id },{});
       }
+      
       //기본적으로 본사 리스트 수정 및 해당 지점들 AL 다 변경
-      else {
-        await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : {_id : CID},update : {AL : al}},{});
-        await modelQuery(QUERY.Updatemany,COLLECTION_NAME.Company,{where : { CNU : {$regex:companyone.CNU.substring(0,10)} } , update : { AL : al }},{});
-      }
+      await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : {_id : CID},update : {AL : al}},{});
+      await modelQuery(QUERY.Updatemany,COLLECTION_NAME.Company,{where : { CNU : {$regex:companyone.CNU.substring(0,10)} },update : { AL : al }},{});
+      
       res.send({type : "agent", result : "successdelete"});
     }
   } catch(err) {

@@ -9,6 +9,9 @@ function agentreroad (Obj) {
 		        }
 		    }).done(function(data) {
 		    	$("#agentlist").empty();
+		    	$("input[name=ANA]").val('');
+		    	$("#category2").empty();
+		    	$("#category2").append(i18nconvert('agent_select'));
 		    	
 		    	var allist = data.al;
 		    	
@@ -59,30 +62,15 @@ function agentreroad (Obj) {
 	}
 	
 	function agentEdit(Object,string) {
-			// console.log($('input[name=ANA2]').val())
-			
-			// if($('input[name=ANU2]').val().length != 3) {
-			// 	alert(i18nconvert('agent_three'))
-			// }
-			// else if($('input[name=ANU2]').val() == "000") {
-			// 	alert(i18nconvert('agent_com'))
-			// }
-			// else {
-			console.log(string+"/"+string.name);
-			var data = { ANA :$('input[name=ANA2]').val(), b_ANA : string.id, CID : Object.CID, type : "edit" };
-			
-			agentajax(data);
-			// }
+		var data = { ANA :$('input[name=ANA2]').val(), b_ANA : string.id, CID : Object.CID, type : "edit" };
 		
-		
+		agentajax(data);
 	}
 	
 	function agentDelete(Object,string,string2) {
 		var confirm = window.confirm(i18nconvert('agent_delete_confirm'));
 		if ( confirm ) {
-			console.log(string)
 			var data = {b_ANA : string.id, CID : Object.CID, type : "delete" };
-			console.log(data)
 			agentajax(data);
 		}
 		
@@ -93,23 +81,14 @@ function agentreroad (Obj) {
 	   var formParsley  = $('#agent-form').parsley();
 	   
 		if(formParsley.isValid() == true) {
-			// if(document.getElementsByName("ANU")[0].value.length != 3) {
-			// 	alert(i18nconvert('agent_three'))
-			// }
-			// else if(document.getElementsByName("ANU")[0].value == "000") {
-			// 	alert(i18nconvert('agent_com'))
-			// }
-			// else{
-				var data = { ANA : document.getElementsByName("ANA")[0].value, CID : Object.CID, type : "join" };
-				agentajax(data);
-			// }
+			var data = { ANA : document.getElementsByName("ANA")[0].value, CID : Object.CID, type : "join" };
+			agentajax(data);
 		}
 		event.preventDefault();
 	    
 	}
 	
 	function agentajax(data) {
-	    console.log(data)
 	    $.ajax({
 		        type: 'POST',
 		        url: '/ajax/agent',
