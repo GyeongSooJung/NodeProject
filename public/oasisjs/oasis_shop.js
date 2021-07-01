@@ -357,7 +357,7 @@ function cartNumCount(math, num) {
 			ON : document.getElementsByName('ON')[num].value,
 		}
 	}).done(function(data) {
-		if(result.status == 'success') {
+		if(data.result == 'success') {
 			showCart();
 		}
 		else {
