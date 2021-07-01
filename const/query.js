@@ -10,7 +10,8 @@ const QUERY = {
     Updateupsert : "updateupsert",
     Remove : "remove",
     Count : "count",
-    CountDoc : "countdoc"
+    CountDoc : "countdoc",
+    Distinct : "distinct"
     
 }
 

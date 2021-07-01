@@ -462,4 +462,33 @@ exports.modelQuery = async (query,collection,doc,option) => {
         
         return one;
     }
+    
+    else if ( query == QUERY.Distinct) {
+        
+        switch (collection) {
+            case COLLECTION_NAME.Alarm : 
+                break;
+            case COLLECTION_NAME.Car :
+                break;
+        }
+        
+        if(doc != undefined) {
+            var where = doc.where;
+            var distinct = doc.distinct;
+        }
+        
+        if (Object.keys(option).length != 0) {
+            if (option.limit) {
+                
+            }
+            if (option.sort) {
+                
+            }
+        }
+        else {
+            one = await Collection.where(where).distinct(distinct).then(resResult);
+        }
+        
+        return one;
+    }
 };

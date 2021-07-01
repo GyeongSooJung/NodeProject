@@ -7,8 +7,8 @@ const path = require('path');
 const imgbbUploader = require("imgbb-uploader");
 const multiparty = require('multiparty');
 //Schemas
-const Schema = require('../schemas/schemas');
-const { Order, OrderDetail, Goods, Company, GoodsOption } = Schema;
+const {modelQuery} = require('../schemas/query')
+const {COLLECTION_NAME, QUERY} = require('../const/consts');
 //Middleware
 const { isNotLoggedIn, DataSet } = require('./middleware');
 
@@ -96,54 +96,54 @@ router.post('/goodsJoin', isNotLoggedIn, DataSet, async(req, res, next) => {
         var jsonON = JSON.parse(ON);
         var jsonOP = JSON.parse(OP);
         
-        const exGoods = await Goods.findOne({ "GN" : GN });
+        const exGoods = await modelQuery(QUERY.Findone,COLLECTION_NAME.Goods,{ "GN" : GN },{});
         if(exGoods) {
             return res.send({ result : "exist" });
         }
         else {
             if(OT) {
-                await Goods.create({
+                await modelQuery(QUERY.Create,COLLECTION_NAME.Goods,{
                     GN : GN,
                     GP : GP,
                     GE : GE,
                     GI : GI,
                     GO : true
-                });
+                },{});
                 
-                const newGoods = await Goods.findOne({ "GN" : GN });
+                const newGoods = await modelQuery(QUERY.Findone,COLLECTION_NAME.Goods,{ "GN" : GN },{});
                 if(typeof(OT) == "string") {
                     for(var j = 0; j < jsonON[0].length; j++) {
-                        await GoodsOption.create({
+                        await modelQuery(QUERY.Create,COLLECTION_NAME.GoodsOption,{
                             GID : newGoods._id,
                             GNA : newGoods.GN,
                             OT : OT,
                             ON : jsonON[0][j],
                             OP : jsonOP[0][j]
-                        });
+                        },{});
                     }
                 }
                 else {
                     for(var i = 0; i < OT.length; i++) {
                         for(var j = 0; j < jsonON[i].length; j++) {
-                            await GoodsOption.create({
+                            await modelQuery(QUERY.Create,COLLECTION_NAME.GoodsOption,{
                                 GID : newGoods._id,
                                 GNA : newGoods.GN,
                                 OT : OT[i],
                                 ON : jsonON[i][j],
                                 OP : jsonOP[i][j]
-                            });
+                            },{});
                         }
                     }
                 }
             }
             else {
-                await Goods.create({
+                await modelQuery(QUERY.Create,COLLECTION_NAME.Goods,{
                     GN : GN,
                     GP : GP,
                     GE : GE,
                     GI : GI,
                     GO : false
-                });
+                },{});
             }
             
             return res.send({ result : 'success' });
@@ -160,10 +160,10 @@ router.post('/modal', isNotLoggedIn, DataSet, async(req, res, next) => {
     const { GN } = req.body;
     
     try {
-        const goods = await Goods.findOne({ "GN" : GN });
+        const goods = await modelQuery(QUERY.Findone,COLLECTION_NAME.Goods,{ "GN" : GN },{});
         if(goods.GO == true) {
-            const option = await GoodsOption.find({ "GID" : goods._id });
-            const optionType = await GoodsOption.where({ "GID" : goods._id }).distinct("OT");
+            const option = await modelQuery(QUERY.Find,COLLECTION_NAME.GoodsOption,{ "GID" : goods._id },{});
+            const optionType = await modelQuery(QUERY.Distinct,COLLECTION_NAME.GoodsOption,{where : { "GID" : goods._id },distinct : "OT"},{});
             
             return res.send({ result : 'option', goods : goods, option : option, optionType : optionType });
         }
@@ -242,7 +242,6 @@ router.post('/showCart', isNotLoggedIn, DataSet, async(req, res, next) => {
 // 쇼핑몰 장바구니에서 수량 변경
 router.post('/cartNum', isNotLoggedIn, DataSet, async(req, res, next) => {
     const { MATH, GN, ON } = req.body;
-    
     try {
         var cartCookie = req.cookies.shop;
         var findCookie = cartCookie.find(function(e) {
@@ -401,24 +400,38 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
         for(var i = 0; i < goodsJson.length; i++) {
             
             if(goodsJson[i].ON == "undefined") {
-                var noOptionone = await Goods.aggregate([
-                    {
-                        $lookup: {
+                // var noOptionone = await Goods.aggregate([
+                //     {
+                //         $lookup: {
+                //             from: "Goods_Option",
+                //             localField: "GN",
+                //             foreignField: "GNA",
+                //             as: "option"
+                //         }
+                //     },
+                //     {
+                //         $unwind: {
+                //             path: "$option",
+                //             preserveNullAndEmptyArrays: true
+                //         }
+                //     },
+                //     { $match: { "GN" : goodsJson[i].GN } },
+                //     { $project: { "_id" : 0, "index" : goodsJson[i].index, "GN" : 1, "GP" : 1, "option.ON" : 1, "option.OP" : 1, "NUM" : goodsJson[i].NUM } }
+                // ]);
+                var noOptionone = await modelQuery(QUERY.Aggregate,COLLECTION_NAME.Goods,{
+                    lookup : {
                             from: "Goods_Option",
                             localField: "GN",
                             foreignField: "GNA",
                             as: "option"
-                        }
-                    },
-                    {
-                        $unwind: {
+                        },
+                    unwind : {
                             path: "$option",
                             preserveNullAndEmptyArrays: true
-                        }
-                    },
-                    { $match: { "GN" : goodsJson[i].GN } },
-                    { $project: { "_id" : 0, "index" : goodsJson[i].index, "GN" : 1, "GP" : 1, "option.ON" : 1, "option.OP" : 1, "NUM" : goodsJson[i].NUM } }
-                ]);
+                        },
+                    match : { "GN" : goodsJson[i].GN },
+                    project : { "_id" : 0, "index" : goodsJson[i].index, "GN" : 1, "GP" : 1, "option.ON" : 1, "option.OP" : 1, "NUM" : goodsJson[i].NUM }
+                },{});
                 a++;
                 
                 noOptionGoods[a] = noOptionone;
@@ -427,24 +440,38 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
             else {
                 option = goodsJson[i].ON.split(",");
                 for(var j = 0; j < option.length; j++) {
-                    var yesOptionone  = await Goods.aggregate([
-                        {
-                            $lookup: {
-                                from: "Goods_Option",
-                                localField: "GN",
-                                foreignField: "GNA",
-                                as: "option"
-                            }
+                    // var yesOptionone  = await Goods.aggregate([
+                    //     {
+                    //         $lookup: {
+                    //             from: "Goods_Option",
+                    //             localField: "GN",
+                    //             foreignField: "GNA",
+                    //             as: "option"
+                    //         }
+                    //     },
+                    //     {
+                    //         $unwind: {
+                    //             path: "$option",
+                    //             preserveNullAndEmptyArrays: true
+                    //         }
+                    //     },
+                    //     { $match: { "GN" : goodsJson[i].GN, "option.ON" : option[j] } },
+                    //     { $project: { "_id" : 0, "index" : goodsJson[i].index, "GN" : 1, "GP" : 1, "option.OT" : 1, "option.ON" : 1, "option.OP" : 1, "NUM" : goodsJson[i].NUM } }
+                    // ]);
+                    var yesOptionone = await modelQuery(QUERY.Aggregate,COLLECTION_NAME.Goods,{
+                    lookup : {
+                            from: "Goods_Option",
+                            localField: "GN",
+                            foreignField: "GNA",
+                            as: "option"
                         },
-                        {
-                            $unwind: {
-                                path: "$option",
-                                preserveNullAndEmptyArrays: true
-                            }
+                    unwind : {
+                            path: "$option",
+                            preserveNullAndEmptyArrays: true
                         },
-                        { $match: { "GN" : goodsJson[i].GN, "option.ON" : option[j] } },
-                        { $project: { "_id" : 0, "index" : goodsJson[i].index, "GN" : 1, "GP" : 1, "option.OT" : 1, "option.ON" : 1, "option.OP" : 1, "NUM" : goodsJson[i].NUM } }
-                    ]);
+                    match : { "GN" : goodsJson[i].GN, "option.ON" : option[j] },
+                    project : { "_id" : 0, "index" : goodsJson[i].index, "GN" : 1, "GP" : 1, "option.OT" : 1, "option.ON" : 1, "option.OP" : 1, "NUM" : goodsJson[i].NUM }
+                },{});
                     b++;
                     yesOptionGoods[b] = yesOptionone;
                     dbGoods.push(yesOptionone);
@@ -508,7 +535,21 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
                     //     res.send({ status: "vbankIssued", message: "가상계좌 발급 성공" });
                     //     break;
                     case "paid": // 결제 완료
-                        await Order.create({
+                        // await Order.create({
+                        //     GN : paymentData.name,
+                        //     AM : paymentData.amount,
+                        //     CID: company._id,
+                        //     BN : paymentData.buyer_name,
+                        //     BE : paymentData.buyer_email,
+                        //     BT : paymentData.buyer_tel,
+                        //     BA : paymentData.buyer_addr,
+                        //     MID : merchant_uid,
+                        //     IID : imp_uid,
+                        //     PAM : paymentData.pay_method,
+                        //     PG : paymentData.pg_provider,
+                        //     PS : paymentData.status,
+                        // });
+                        await modelQuery(QUERY.Create,COLLECTION_NAME.Order,{
                             GN : paymentData.name,
                             AM : paymentData.amount,
                             CID: company._id,
@@ -521,19 +562,36 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
                             PAM : paymentData.pay_method,
                             PG : paymentData.pg_provider,
                             PS : paymentData.status,
-                        }); // DB에 결제 정보 저장 - 포괄적인 구매 정보(이니시스와 연동을 위해)
+                        },{});// DB에 결제 정보 저장 - 포괄적인 구매 정보(이니시스와 연동을 위해)
                         for(var i = 0; i < addOrderDB.length; i ++) {
                             if(!addOrderDB[i].ON) {
-                                await OrderDetail.create({
+                                // await OrderDetail.create({
+                                //     OID : merchant_uid,
+                                //     OGN : addOrderDB[i].GN,
+                                //     OGP : addOrderDB[i].GP,
+                                //     OTP : addOrderDB[i].SUM,
+                                //     ONU : addOrderDB[i].NUM,
+                                // });
+                                await modelQuery(QUERY.Create,COLLECTION_NAME.OrderDetail,{
                                     OID : merchant_uid,
                                     OGN : addOrderDB[i].GN,
                                     OGP : addOrderDB[i].GP,
                                     OTP : addOrderDB[i].SUM,
                                     ONU : addOrderDB[i].NUM,
-                                });
+                                },{});
                             }
                             else {
-                                await OrderDetail.create({
+                                // await OrderDetail.create({
+                                //     OID : merchant_uid,
+                                //     OGN : addOrderDB[i].GN,
+                                //     OGP : addOrderDB[i].GP,
+                                //     OOT : addOrderDB[i].OT,
+                                //     OON : addOrderDB[i].ON,
+                                //     OOP : addOrderDB[i].OP,
+                                //     OTP : addOrderDB[i].SUM,
+                                //     ONU : addOrderDB[i].NUM,
+                                // });
+                                await modelQuery(QUERY.Create,COLLECTION_NAME.OrderDetail,{
                                     OID : merchant_uid,
                                     OGN : addOrderDB[i].GN,
                                     OGP : addOrderDB[i].GP,
@@ -542,11 +600,11 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
                                     OOP : addOrderDB[i].OP,
                                     OTP : addOrderDB[i].SUM,
                                     ONU : addOrderDB[i].NUM,
-                                });
+                                },{});
                             }
                         };
                         if(point) {
-                            await Company.update({"_id" : company._id}, {$inc : { SPO : point }});
+                            await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : {"_id" : company._id}, update : {$inc : { SPO : point }}},{});
                         }
                         res.clearCookie('shop');
                         res.send({ result : "success", message : "일반 결제 성공" });
@@ -655,24 +713,38 @@ router.post("/iamport-webhook", isNotLoggedIn, DataSet, async(req, res, next) =>
         for(var i = 0; i < goodsJson.length; i++) {
             
             if(goodsJson[i].ON == "undefined") {
-                var noOptionone = await Goods.aggregate([
-                    {
-                        $lookup: {
+                // var noOptionone = await Goods.aggregate([
+                //     {
+                //         $lookup: {
+                //             from: "Goods_Option",
+                //             localField: "GN",
+                //             foreignField: "GNA",
+                //             as: "option"
+                //         }
+                //     },
+                //     {
+                //         $unwind: {
+                //             path: "$option",
+                //             preserveNullAndEmptyArrays: true
+                //         }
+                //     },
+                //     { $match: { "GN" : goodsJson[i].GN } },
+                //     { $project: { "_id" : 0, "index" : goodsJson[i].index, "GN" : 1, "GP" : 1, "option.ON" : 1, "option.OP" : 1, "NUM" : goodsJson[i].NUM } }
+                // ]);
+                var noOptionone = await modelQuery(QUERY.Aggregate,COLLECTION_NAME.Goods,{
+                    lookup : {
                             from: "Goods_Option",
                             localField: "GN",
                             foreignField: "GNA",
                             as: "option"
-                        }
-                    },
-                    {
-                        $unwind: {
+                        },
+                    unwind : {
                             path: "$option",
                             preserveNullAndEmptyArrays: true
-                        }
-                    },
-                    { $match: { "GN" : goodsJson[i].GN } },
-                    { $project: { "_id" : 0, "index" : goodsJson[i].index, "GN" : 1, "GP" : 1, "option.ON" : 1, "option.OP" : 1, "NUM" : goodsJson[i].NUM } }
-                ]);
+                        },
+                    match : { "GN" : goodsJson[i].GN },
+                    project : { "_id" : 0, "index" : goodsJson[i].index, "GN" : 1, "GP" : 1, "option.ON" : 1, "option.OP" : 1, "NUM" : goodsJson[i].NUM }
+                },{});
                 a++;
                 
                 noOptionGoods[a] = noOptionone;
@@ -681,24 +753,38 @@ router.post("/iamport-webhook", isNotLoggedIn, DataSet, async(req, res, next) =>
             else {
                 option = goodsJson[i].ON.split(",");
                 for(var j = 0; j < option.length; j++) {
-                    var yesOptionone  = await Goods.aggregate([
-                        {
-                            $lookup: {
-                                from: "Goods_Option",
-                                localField: "GN",
-                                foreignField: "GNA",
-                                as: "option"
-                            }
+                    // var yesOptionone  = await Goods.aggregate([
+                    //     {
+                    //         $lookup: {
+                    //             from: "Goods_Option",
+                    //             localField: "GN",
+                    //             foreignField: "GNA",
+                    //             as: "option"
+                    //         }
+                    //     },
+                    //     {
+                    //         $unwind: {
+                    //             path: "$option",
+                    //             preserveNullAndEmptyArrays: true
+                    //         }
+                    //     },
+                    //     { $match: { "GN" : goodsJson[i].GN, "option.ON" : option[j] } },
+                    //     { $project: { "_id" : 0, "index" : goodsJson[i].index, "GN" : 1, "GP" : 1, "option.OT" : 1, "option.ON" : 1, "option.OP" : 1, "NUM" : goodsJson[i].NUM } }
+                    // ]);
+                    var yesOptionone = await modelQuery(QUERY.Aggregate,COLLECTION_NAME.Goods,{
+                    lookup : {
+                            from: "Goods_Option",
+                            localField: "GN",
+                            foreignField: "GNA",
+                            as: "option"
                         },
-                        {
-                            $unwind: {
-                                path: "$option",
-                                preserveNullAndEmptyArrays: true
-                            }
+                    unwind : {
+                            path: "$option",
+                            preserveNullAndEmptyArrays: true
                         },
-                        { $match: { "GN" : goodsJson[i].GN, "option.ON" : option[j] } },
-                        { $project: { "_id" : 0, "index" : goodsJson[i].index, "GN" : 1, "GP" : 1, "option.OT" : 1, "option.ON" : 1, "option.OP" : 1, "NUM" : goodsJson[i].NUM } }
-                    ]);
+                    match : { "GN" : goodsJson[i].GN, "option.ON" : option[j] },
+                    project : { "_id" : 0, "index" : goodsJson[i].index, "GN" : 1, "GP" : 1, "option.OT" : 1, "option.ON" : 1, "option.OP" : 1, "NUM" : goodsJson[i].NUM }
+                },{});
                     b++;
                     yesOptionGoods[b] = yesOptionone;
                     dbGoods.push(yesOptionone);
@@ -762,7 +848,21 @@ router.post("/iamport-webhook", isNotLoggedIn, DataSet, async(req, res, next) =>
                     //     res.send({ status: "vbankIssued", message: "가상계좌 발급 성공" });
                     //     break;
                     case "paid": // 결제 완료
-                        await Order.create({
+                        // await Order.create({
+                        //     GN : paymentData.name,
+                        //     AM : paymentData.amount,
+                        //     CID: company._id,
+                        //     BN : paymentData.buyer_name,
+                        //     BE : paymentData.buyer_email,
+                        //     BT : paymentData.buyer_tel,
+                        //     BA : paymentData.buyer_addr,
+                        //     MID : merchant_uid,
+                        //     IID : imp_uid,
+                        //     PAM : paymentData.pay_method,
+                        //     PG : paymentData.pg_provider,
+                        //     PS : paymentData.status,
+                        // });
+                        await modelQuery(QUERY.Create,COLLECTION_NAME.Order,{
                             GN : paymentData.name,
                             AM : paymentData.amount,
                             CID: company._id,
@@ -775,19 +875,19 @@ router.post("/iamport-webhook", isNotLoggedIn, DataSet, async(req, res, next) =>
                             PAM : paymentData.pay_method,
                             PG : paymentData.pg_provider,
                             PS : paymentData.status,
-                        }); // DB에 결제 정보 저장 - 포괄적인 구매 정보(이니시스와 연동을 위해)
+                        },{})// DB에 결제 정보 저장 - 포괄적인 구매 정보(이니시스와 연동을 위해)
                         for(var i = 0; i < addOrderDB.length; i ++) {
                             if(!addOrderDB[i].ON) {
-                                await OrderDetail.create({
+                                await modelQuery(QUERY.Create,COLLECTION_NAME.OrderDetail,{
                                     OID : merchant_uid,
                                     OGN : addOrderDB[i].GN,
                                     OGP : addOrderDB[i].GP,
                                     OTP : addOrderDB[i].SUM,
                                     ONU : addOrderDB[i].NUM,
-                                });
+                                },{});
                             }
                             else {
-                                await OrderDetail.create({
+                                await modelQuery(QUERY.Create,COLLECTION_NAME.OrderDetail,{
                                     OID : merchant_uid,
                                     OGN : addOrderDB[i].GN,
                                     OGP : addOrderDB[i].GP,
@@ -796,11 +896,11 @@ router.post("/iamport-webhook", isNotLoggedIn, DataSet, async(req, res, next) =>
                                     OOP : addOrderDB[i].OP,
                                     OTP : addOrderDB[i].SUM,
                                     ONU : addOrderDB[i].NUM,
-                                });
+                                },{});
                             }
                         };
                         if(point) {
-                            await Company.update({"_id" : company._id}, {$inc : { SPO : point }});
+                            await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : {"_id" : company._id}, update : {$inc : { SPO : point }}},{});
                         }
                         res.clearCookie('shop');
                         res.send({ result : "success", message : "일반 결제 성공" });
