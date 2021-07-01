@@ -777,7 +777,6 @@ router.post('/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
   var {data} = req.body;
   data = JSON.parse(data);
   var ANA = data.ANA;
-  var ANU = data.ANU;
   var CID = data.CID;
   var type = data.type;
   
@@ -788,15 +787,32 @@ router.post('/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
   var jsondata = {};
   var anaarray = [];
   var anuarray = [];
+  var maxANU = 0;
+  var plusANU = 0;
+  var ANU = "";
+  var zero = "0";
+  // 숫자 앞에 0 붙이는 함수
+  function fillZero(width, str){
+    ANU = str.length >= width ? str:new Array(width-str.length+1).join('0')+str;//남는 길이만큼 0으로 채움
+    return ANU;
+  }
   
   try {
     const companyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{_id : CID},{});
       var al = companyone.AL;
       
-      
       for (var i = 0; i < al.length; i ++) {
         anaarray.push(String(Object.keys(al[i])));
         anuarray.push(String(Object.values(al[i])));
+      }
+      maxANU = Math.max.apply(null, anuarray);
+      plusANU = maxANU+1;
+      
+      if(plusANU.toString().length <= 3) {
+        fillZero(3,plusANU.toString());
+      }
+      else {
+        return res.send({ type : "agent", result : "overNum" });
       }
     
     if (type == 'join') {
@@ -815,89 +831,78 @@ router.post('/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
       }
     }
     else if (type =='edit') {
-      
       if(anaarray.includes(ANA)) {
         if((ANA == b_ANA)) {
-          if(anuarray.includes(ANU)) {
-            if((ANU == b_ANU)) {
-              res.send({type : "agent", result : "successedit"});
-            }
-            else {
-              res.send({type : "agent", result : "dupleC"});
-            }
-          }
-          else {
-            for (var i =0; i < al.length; i ++) {
-              if(Object.keys(al[i]).includes(ANA)) {
-                al[i][ANA] = ANU;
-              }
-            }
-            await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : {_id : CID},update : {AL : al}},{});
-            const companyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{_id : CID},{});
-            const agentone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ CNU : companyone.CNU.substring(0,10) + b_ANU},{});
-            if(agentone)
-            await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { CNU : companyone.CNU.substring(0,10) + b_ANU} , update : { AL : al, CNU : companyone.CNU.substring(0,10) + ANU, ANA : ANA, ANU : ANU }},{});
-            res.send({type : "agent", result : "successedit"});
-          }
-          
+          res.send({ type : "agent", result : "successedit" });
         }
         else {
-          res.send({type : "agent", result : "dupleN"});
+          res.send({ type : "agent", result : "dupleN"});
         }
-        
       }
       else {
-        if (anuarray.includes(ANU)) {
-          if (ANU == b_ANU) {
-            for (var i =0; i < al.length; i ++) {
-              if(Object.values(al[i]).includes(ANU)) {
-                al.splice(i,1);
-                jsondata[ANA] = ANU;
-                al.push(jsondata); 
-                
-                await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : {_id : CID},update : {AL : al}},{});
-                const companyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{_id : CID},{});
-                const agentone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ CNU : companyone.CNU.substring(0,10) + b_ANU},{});
-                if(agentone)
-                await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { CNU : companyone.CNU.substring(0,10) + b_ANU} , update : { AL : al, CNU : companyone.CNU.substring(0,10) + ANU, ANA : ANA, ANU : ANU }},{});
-                
-                res.send({type : "agent", result : "successedit"});
-              }
-            }
-            
+        for (var i = 0; i < al.length; i ++) {
+          if(Object.keys(al[i]).includes(b_ANA)) {
+            var exANU = Object.values(al[i]);
+            al.splice(i,1);
+            var editAL = { [ANA] : exANU[0] };
+            al.push(editAL);
           }
-          else {
-            res.send({type : "agent", result : "dupleC"});
-          }
+        }
+        await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : {_id : CID},update : {AL : al}},{});
+        console.log(exANU);
+        const agentone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ CNU : companyone.CNU.substring(0,10) + exANU},{});
+        console.log(agentone);
+        if(agentone) {
+          // 해당 지점은 ANA와 AL 변경, 그 외 지점들은 AL 변경
+          await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : { CNU : companyone.CNU.substring(0,10) + exANU} , update : { AL : al, ANA : ANA }},{});
+          await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { CNU : {$regex:companyone.CNU.substring(0,10)} } , update : { AL : al }},{});
         }
         else {
-          for (var i =0; i < al.length; i ++) {
-            if(Object.values(al[i])[0] == b_ANU) {
-              al.splice(i,1);
-              jsondata[ANA] = ANU;
-              al.push(jsondata);
-              await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : {_id : CID},update : {AL : al}},{});
-              const companyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{_id : CID},{});
-              const agentone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ CNU : companyone.CNU.substring(0,10) + b_ANU},{});
-              if(agentone)
-              await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { CNU : companyone.CNU.substring(0,10) + b_ANU} , update : { AL : al, CNU : companyone.CNU.substring(0,10) + ANU, ANA : ANA, ANU : ANU }},{});
-              
-              res.send({type : "agent", result : "successedit"});
-  
-            }
-          }
+          // 없을 경우, 그 외 지점들 AL 변경
+          await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { CNU : {$regex:companyone.CNU.substring(0,10)} } , update : { AL : al }},{});
         }
+        res.send({type : "agent", result : "successedit"});
       }
     }
     else if (type =='delete') {
       for (var i =0; i < al.length; i ++) {
         if(Object.keys(al[i]).includes(b_ANA)) {
+          var exANU = Object.values(al[i]);
           al.splice(i,1);
         }
       }
-      
-      await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : {_id : CID},update : {AL : al}},{});
-      
+      const agentone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ CNU : companyone.CNU.substring(0,10) + exANU},{});
+      console.log(agentone);
+      //있으면 해당 지점 삭제 및 해당 지점 CID에 해당하는 데이터 전부 삭제
+      if(agentone) {
+        const agentcar = modelQuery(QUERY.find,COLLECTION_NAME.Car,{ CID : agentone._id });
+        if(agentcar) {
+          for(var i = 0; i < agentcar.length; i ++) {
+            await modelQuery(QUERY.Create,COLLECTION_NAME.Car,{ CID : agentcar[i]._id, CC : agentcar[i].CC, CN : agentcar[i].CN, CPN : agentcar[i].CPN, SN : agentcar[i].SN  })
+          }
+        }
+        const agentdevice = modelQuery(QUERY.find,COLLECTION_NAME.Device,{ CID : agentone._id });
+        if(agentdevice) {
+          for(var i = 0; i < agentdevice.length; i ++) {
+            await modelQuery(QUERY.Create,COLLECTION_NAME.Device,{ CID : agentdevice[i]._id, MD : agentdevice[i].MD, MAC : agentdevice[i].MAC, VER : agentdevice[i].VER, NN : agentdevice[i].NN, UT : agentdevice[i].UT  })
+          }
+        }
+        const agentworker = modelQuery(QUERY.find,COLLECTION_NAME.Worker,{ CID : agentone._id });
+        if(agentworker) {
+          for(var i = 0; i < agentdevice.length; i ++) {
+            await modelQuery(QUERY.Create,COLLECTION_NAME.Worker,{ CID : agentworker[i]._id, WN : agentworker[i].WN, PN : agentworker[i].PN, GID : agentworker[i].GID, EM : agentworker[i].EM, PU : agentworker[i].PU, AU : agentworker[i].AU, AC : agentworker[i].AC })
+          }
+        }
+        
+        await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{ CID : agentone._id });
+        await modelQuery(QUERY.Remove,COLLECTION_NAME.Device,{ CID : agentone._id });
+        await modelQuery(QUERY.Remove,COLLECTION_NAME.Worker,{ CID : agentone._id });
+      }
+      //기본적으로 본사 리스트 수정 및 해당 지점들 AL 다 변경
+      else {
+        await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : {_id : CID},update : {AL : al}},{});
+        await modelQuery(QUERY.Updatemany,COLLECTION_NAME.Company,{where : { CNU : {$regex:companyone.CNU.substring(0,10)} } , update : { AL : al }},{});
+      }
       res.send({type : "agent", result : "successdelete"});
     }
   } catch(err) {

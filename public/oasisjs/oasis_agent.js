@@ -19,7 +19,8 @@ function agentreroad (Obj) {
 		    	})
 		    	
 		    	
-		    	var insertTr = ""
+		    	var insertTr = "";
+		    	insertTr += "<li><a href='javascript:;' class='text-black' style='cursor:default'>본사<span class='pull-right'>000</span></a></li>"
 			    for (var i = 0; i < allist.length; i ++) {
 			        insertTr += "<li><a href='javascript:;' onclick='agenteditview(this)' id='"+Object.keys(allist[i])[0]+"' name='"+ Object.values(allist[i])[0]+"' class ='edit-btn'> "+String(Object.keys(allist[i])[0])+" <span class='pull-right'>"+ Object.values(allist[i])[0]+"</span></a></li>"
 			    }
@@ -47,14 +48,6 @@ function agentreroad (Obj) {
 	    insertTr += "    			<input class='col-sm-5 form-control' type='String' id='ANA2' name='ANA2'  placeholder='' data-parsley-required='true' data-parsley-error-message='{{__('required_detail')}}' data-parsley-trim-value='true' />"
 	    insertTr += "		</div>"
 		insertTr += "	</div>"
-		insertTr += "	<div class='form-group row m-b-15'>"
-	    insertTr += "		<label class='col-md-4 col-sm-5 col-form-label font-weight-bold' for='GI'>"+i18nconvert('agent_code')+" :</label>"
-	    insertTr += "		<div class='d-flex col-md-8 col-sm-8'>"
-	    insertTr += "    			<input class='col-sm-4 form-control' type='String'  placeholder='"+$(obj).attr('name')+"' data-parsley-required='true' data-parsley-error-message='{{__('required_detail')}}' data-parsley-trim-value='true' readonly/>"
-	    insertTr += "               <i class='ml-3 mr-3 mt-2 fas fa-lg fa-fw  fa-arrow-right'></i>"
-	    insertTr += "    			<input class='col-sm-4 form-control' type='String'  id='ANU2' name='ANU2'  placeholder='' data-parsley-length='[3, 3]' data-parsley-required='true' data-parsley-error-message='{{__('required_detail')}}' data-parsley-trim-value='true' />"	    
-	    insertTr += "		</div>"
-		insertTr += "	</div>"
 		insertTr += "	<div class='d-flex'>"
 		insertTr += "<a href='javascript:;' class='ml-5 btn btn-primary width-80' onclick='agentEdit(agentObject,"+$(obj).attr('id')+")'>"+i18nconvert('modify')+"</a>";
 		insertTr += "<a href='javascript:;' class='ml-5 btn btn-primary width-80' onclick='agentDelete(agentObject,"+$(obj).attr('id')+")'>"+i18nconvert('delete')+"</a>";
@@ -68,17 +61,18 @@ function agentreroad (Obj) {
 	function agentEdit(Object,string) {
 			// console.log($('input[name=ANA2]').val())
 			
-			if($('input[name=ANU2]').val().length != 3) {
-				alert(i18nconvert('agent_three'))
-			}
-			else if($('input[name=ANU2]').val() == "000") {
-				alert(i18nconvert('agent_com'))
-			}
-			else {
-				var data = { ANA :$('input[name=ANA2]').val(), ANU : $('input[name=ANU2]').val(),b_ANA : string.id, b_ANU : string.name, CID : Object.CID, type : "edit" };
-				
-				agentajax(data);
-			}
+			// if($('input[name=ANU2]').val().length != 3) {
+			// 	alert(i18nconvert('agent_three'))
+			// }
+			// else if($('input[name=ANU2]').val() == "000") {
+			// 	alert(i18nconvert('agent_com'))
+			// }
+			// else {
+			console.log(string+"/"+string.name);
+			var data = { ANA :$('input[name=ANA2]').val(), b_ANA : string.id, CID : Object.CID, type : "edit" };
+			
+			agentajax(data);
+			// }
 		
 		
 	}
@@ -87,7 +81,7 @@ function agentreroad (Obj) {
 		var confirm = window.confirm(i18nconvert('agent_delete_confirm'));
 		if ( confirm ) {
 			console.log(string)
-			var data = {b_ANA : string.id, b_ANU : string.name, CID : Object.CID, type : "delete" };
+			var data = {b_ANA : string.id, CID : Object.CID, type : "delete" };
 			console.log(data)
 			agentajax(data);
 		}
@@ -99,16 +93,16 @@ function agentreroad (Obj) {
 	   var formParsley  = $('#agent-form').parsley();
 	   
 		if(formParsley.isValid() == true) {
-			if(document.getElementsByName("ANU")[0].value.length != 3) {
-				alert(i18nconvert('agent_three'))
-			}
-			else if(document.getElementsByName("ANU")[0].value == "000") {
-				alert(i18nconvert('agent_com'))
-			}
-			else{
-				var data = { ANA : document.getElementsByName("ANA")[0].value, ANU : document.getElementsByName("ANU")[0].value, CID : Object.CID, type : "join" };
+			// if(document.getElementsByName("ANU")[0].value.length != 3) {
+			// 	alert(i18nconvert('agent_three'))
+			// }
+			// else if(document.getElementsByName("ANU")[0].value == "000") {
+			// 	alert(i18nconvert('agent_com'))
+			// }
+			// else{
+				var data = { ANA : document.getElementsByName("ANA")[0].value, CID : Object.CID, type : "join" };
 				agentajax(data);
-			}
+			// }
 		}
 		event.preventDefault();
 	    
@@ -142,6 +136,9 @@ function agentreroad (Obj) {
 				}
 				else if(data.result == 'dupleC') {
 					alert(i18nconvert('agent_code_duplicated'));
+				}
+				else if(data.result == 'overNum') {
+					alert(i18nconvert('agent_code_num_over'));
 				}
 		    });
 	    

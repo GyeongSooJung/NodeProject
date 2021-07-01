@@ -424,5 +424,6 @@
 	"agent_delete_confirm" : "Are you sure you want to delete the branch? If you need existing data, please move it in advance.",
 	"agent_select" : "Please select an Agent",
 	"agent_three" : "Please write your branch code in three letters.(ex.001)",
-	"agent_com" : "000 is the code for the main branch."
+	"agent_com" : "000 is the code for the main branch.",
+	"agent_code_num_over" : "You have exceeded the number of points that can be created."
 }

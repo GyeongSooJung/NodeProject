@@ -321,6 +321,37 @@ exports.modelQuery = async (query,collection,doc,option) => {
         return one;
     }
     
+    else if ( query == QUERY.Updatemany) {
+        
+        switch (collection) {
+            case COLLECTION_NAME.Alarm : 
+                
+                break;
+            case COLLECTION_NAME.Car :
+                break;
+        }
+        
+        if(doc != undefined) {
+            var where = doc.where;
+            var update = doc.update;
+            console.log("@@@"+update);
+        }
+        
+        if (Object.keys(option).length != 0) {
+            if (option.limit) {
+                
+            }
+            if (option.sort) {
+                
+            }
+        }
+        else {
+            one = await Collection.where(where).updateMany(update).setOptions({ runValidators: true }).exec().then(resResult);
+        }
+        
+        return one;
+    }
+    
     else if ( query == QUERY.Updateone) {
         
         switch (collection) {

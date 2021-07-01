@@ -6,12 +6,13 @@ const QUERY = {
     Find : "find",
     Findone : "findone",
     Update : "update",
+    Updatemany : "updatemany",
     Updateone : "updateone",
     Updateupsert : "updateupsert",
     Remove : "remove",
     Count : "count",
     CountDoc : "countdoc"
     
-}
+};
 
 exports.QUERY = QUERY;
