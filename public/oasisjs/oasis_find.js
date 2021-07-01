@@ -1,5 +1,7 @@
 // 비밀번호 찾기 ajax
 function checkAjax(companyNumber) {
+    var companyNumber = companyNumber.substr(0.10);
+    console.log(companyNumber)
     $.ajax({
         type: 'POST',
         url: '/find/checkCNU',

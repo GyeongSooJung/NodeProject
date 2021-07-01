@@ -15,7 +15,7 @@ router.post('/point', isNotLoggedIn, DataSet, async(req, res, next) => {
     const { POA } = req.body;
     
     try {
-        await modelQuery(QUERY.Update,COLLECTION_NAME,{where : { "_id" : company._id },update : { "POA" : POA }},{});
+        await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { "_id" : company._id },update : { "POA" : POA }},{});
         return res.send({ result : 'success' });
     } catch(err) {
         res.send({ result : 'fail' });

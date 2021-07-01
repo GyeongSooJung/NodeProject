@@ -64,7 +64,7 @@ router.post('/send', async(req, res, next) => {
     const { EA, CNU } = req.body;
     
     try {
-        const exEA = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company, {where : { "CNU" : CNU }, find : { "EA" : EA }});
+        const exEA = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company, {where : { "CNU" : CNU }, find : { "EA" : EA }},{});
         
         if(!exEA) {
             return res.send({ result : 'wrong' });
@@ -189,7 +189,7 @@ router.post('/findPW', async(req, res, next) => {
         });
         
         const hashPW = await bcrypt.hash(randomPW, 12);
-        await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : { "CNU" : CNU, "EA" : EA }, update : { "PW" : hashPW }});
+        await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : { "CNU" : CNU, "EA" : EA }, update : { "PW" : hashPW }},{});
         
         return res.send({ result : "success" });
         

@@ -918,7 +918,7 @@ router.post('/notice_list', isNotLoggedIn, DataSet, agentDevide, async function(
   if(search != "") {
     if(search == "CA") {
       var searchtext2 = searchdate.split("~");
-      var notices = await modelQuery(QUERY.Find,COLLECTION_NAME,{ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} },{});
+      var notices = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} },{});
       if(notices.length == 0) 
       res.send({ result : "nothing" });
     }
@@ -926,7 +926,7 @@ router.post('/notice_list', isNotLoggedIn, DataSet, agentDevide, async function(
       if(!searchdate) {
         try {
           if(search == "TI") {
-            var notices = await modelQuery(QUERY.Find,COLLECTION_NAME,{ "CID": CID, "TI" : {$regex:searchtext} },{});
+            var notices = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{ "CID": CID, "TI" : {$regex:searchtext} },{});
             if(notices.length == 0) 
             res.send({result : "nothing"});
           }
