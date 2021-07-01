@@ -6,6 +6,7 @@ const QUERY = {
     Find : "find",
     Findone : "findone",
     Update : "update",
+    Updatemany : "updatemany",
     Updateone : "updateone",
     Updateupsert : "updateupsert",
     Remove : "remove",
@@ -13,6 +14,6 @@ const QUERY = {
     CountDoc : "countdoc",
     Distinct : "distinct"
     
-}
+};
 
 exports.QUERY = QUERY;

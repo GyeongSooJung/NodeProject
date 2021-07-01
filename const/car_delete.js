@@ -2,6 +2,7 @@ const CAR_DELETE = {
   "CID" : "CID",
   "CC" : "CC",
   "CN" : "CN",
+  "CPN" : "CPN",
   "SN" : "SN",
   "CA" : "CA",
   "UA" : "UA",
@@ -14,6 +15,9 @@ const CAR_DELETE = {
       type: Number,
     },
     CN: {
+      type: String,
+    },
+    CPN: {
       type: String,
     },
     SN: {
