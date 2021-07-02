@@ -12,6 +12,15 @@
     line-height : 1.5;
 }
 
+/*find*/
+.select-agent {
+    background: #dee2e6 !important;
+	color: black !important;
+}
+.select-agent::placeholder {
+	color: gray !important;
+}
+
 /*profile*/
 .inputbox {
 	position: relative !important;

@@ -100,6 +100,7 @@
 	"find_title": "OASIS | Find Password",
 	"find_no_register" : "This business number is not registered.",
 	"find_enter" : "Please enter your business number.",
+	"find_enter2" : "Please select a branch",
 	"find_email_error" : "Email is not the same as the subscription information.",
 	"find_pw_fail": "Password retrieval failed.",
 	

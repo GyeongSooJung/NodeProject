@@ -1,7 +1,49 @@
+// 본사, 지점 표시 ajax
+function agentAjax(companyNumber) {
+    $.ajax({
+        type: 'POST',
+        url: '/find/agent',
+        dataType: 'json',
+        data: {
+            CNU: companyNumber
+        }
+    }).done(function(data) {
+        var insertTr = "";
+        
+        if(data.result == 'yesAgents') {
+			$('.agent-box').removeClass('d-none');
+			
+			insertTr += "<option value =''>"+i18nconvert('register_branch_agent_guide')+"</option>";
+			insertTr += "<option value = '000/본사'>본사</option>";
+			for(var i = 0; i < data.nameList.length; i ++) {
+				insertTr += "<option value ='"+ data.codeList[i] +"/"+ data.nameList[i] +"'>"+ data.nameList[i] +"</option>";
+			}
+			
+			$('#ANA').append(insertTr);
+			$('#CNU').attr('readonly', true);
+			$('#CNU').removeClass('w-70 mr-2');
+			$('.cnu-btn').addClass('d-none');
+		}
+		else if(data.result == 'noAgents') {
+			$('.agent-box').removeClass('d-none');
+			
+			insertTr += "<option value =''>"+i18nconvert('register_branch_agent_guide')+"</option>";
+			insertTr += "<option value = '000/본사'>본사</option>";
+			
+			$('#ANA').append(insertTr);
+			$('#CNU').attr('readonly', true);
+			$('#CNU').removeClass('w-70 mr-2');
+			$('.cnu-btn').addClass('d-none');
+		}
+		else {
+			alert(i18nconvert('find_no_register'));
+			location.reload();
+		}
+    });
+}
+
 // 비밀번호 찾기 ajax
 function checkAjax(companyNumber) {
-    var companyNumber = companyNumber.substr(0.10);
-    console.log(companyNumber)
     $.ajax({
         type: 'POST',
         url: '/find/checkCNU',
@@ -9,21 +51,15 @@ function checkAjax(companyNumber) {
         data: {
             CNU: companyNumber
         }
-        // success: function(result) {
-        //     if (result.status == 'fail') {
-        //         alert(i18nconvert("find_no_register"));
-        //     }
-        //     else if (result.status == 'success') {
-        //         document.getElementById('emailbox').classList.remove('d-none');
-        //         document.getElementsByName('CNU')[0].readOnly = true;
-        //         document.getElementById('exEmail').innerHTML = "Your Email : " + "<span class='h5'>" + result.mask + "</span>";
-        //     }
-        // }
     }).done(function(data) {
         if (data.result == 'success') {
             document.getElementById('emailbox').classList.remove('d-none');
             document.getElementsByName('CNU')[0].readOnly = true;
             document.getElementById('exEmail').innerHTML = "Your Email : " + "<span class='h5'>" + data.mask + "</span>";
+            
+            $("#ANA").not(":selected").attr("disabled", "disabled");
+            $('#ANA').removeClass('w-70 mr-2');
+            $('.agent-btn').addClass('d-none');
         }
         else {
             alert(i18nconvert("find_no_register"));
@@ -116,8 +152,8 @@ function emailCerAjax(companyNumber, email, cerNum) {
 }
 
 // 임시 비밀번호 생성 ajax
-function tempPw(companyNumber, email) {
-    var CNU = document.getElementsByName(companyNumber)[0].value;
+function tempPw(companyNumber, agentNumber, email) {
+    var CNU = document.getElementsByName(companyNumber)[0].value + document.getElementById(agentNumber).value.split("/")[0];
     var EA = document.getElementsByName(email)[0].value;
     
     $.ajax({

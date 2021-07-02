@@ -24,7 +24,7 @@
 			$("#memDiv1").append(insertTr);
 			insertTr = ""
 			
-			for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+			for (var i = (parseInt(Object.postNum) * parseInt(Object.page)); i < (parseInt(Object.postNum) * parseInt(Object.page)) + parseInt(Object.postNum); i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
 				if(Object.array.length != 0) {
 					if(Object.array[i]) {
 						
@@ -290,7 +290,7 @@
 		insertTr = "";
 		
 		
-		for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+		for (var i = (parseInt(Object.postNum) * parseInt(Object.page)); i < (parseInt(Object.postNum) * parseInt(Object.page)) + parseInt(Object.postNum); i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
 			if(Object.array.length != 0) {	  
 				if(Object.array[i]) {
 					insertTr += "<tr>";
@@ -395,7 +395,7 @@
 		
 			insertTr = "";
 			
-			for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+			for (var i = (parseInt(Object.postNum) * parseInt(Object.page)); i < (parseInt(Object.postNum) * parseInt(Object.page)) + parseInt(Object.postNum); i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
 				if(Object.array.length != 0) {
 					if(Object.array[i]) {
 						
@@ -514,7 +514,7 @@
 			$("#memDiv1").append(insertTr);
 			insertTr = "";
 			
-			for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+			for (var i = (parseInt(Object.postNum) * parseInt(Object.page)); i < (parseInt(Object.postNum) * parseInt(Object.page)) + parseInt(Object.postNum); i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
 				if(Object.array.length != 0) {
 					if(Object.array[i]) {
 						insertTr += "<tr>";
@@ -549,7 +549,7 @@
 							insertTr += "unchecked/>";
 						insertTr += "</td>";
 						insertTr += "<td>";
-						insertTr += "<input type='button' value='"+i18nconvert("delete")+"' onclick=delete_one(this,'/worker/worker_delete') class='btn btn-sm btn-white width-60' name ='"+ Object.array[i].EM +"'></td> ";
+						insertTr += "<input type='button' value='"+i18nconvert("delete")+"' onclick=delete_one(this,'/worker/ajax/worker_deleteone') class='btn btn-sm btn-white width-60' name ='"+ Object.array[i].EM +"'></td> ";
 						insertTr += "</td>";
 						insertTr += "</tr>";
 						num -= indexcount;
@@ -636,7 +636,7 @@
 		$("#memDiv1").append(insertTr);
 		insertTr = "";
 		
-		for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+		for (var i = (parseInt(Object.postNum) * parseInt(Object.page)); i < (parseInt(Object.postNum) * parseInt(Object.page)) + parseInt(Object.postNum); i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
 			if(Object.array.length != 0) {
 				if(Object.array[i]) {
 					insertTr += "<tr>";
@@ -738,7 +738,7 @@
      	$("#memDiv1").append(insertTr);
 		insertTr = "";
 		
-		for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+		for (var i = (parseInt(Object.postNum) * parseInt(Object.page)); i < (parseInt(Object.postNum) * parseInt(Object.page)) + parseInt(Object.postNum); i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
 			if(Object.array.length != 0) {
 				if(Object.array[i]) {
 				       
@@ -800,7 +800,7 @@
 							$(obj).data('type', 'hide');
 							$(obj).parents('tr').after("\
 								<tr class='tr-detail'>\
-									<td colspan='6'>\
+									<td colspan='7'>\
 										<table class='table table-bordered table-td-valign-middle text-center table-active'>\
 											<tr class='detail-head font-weight-bold table-secondary'>\
 												<td>"+i18nconvert("GN")+"</td>\
@@ -911,7 +911,7 @@
 		insertTr = "";
 		
     	
-		for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+		for (var i = (parseInt(Object.postNum) * parseInt(Object.page)); i < (parseInt(Object.postNum) * parseInt(Object.page)) + parseInt(Object.postNum); i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
 			if(Object.array.length != 0) {
 				if(Object.array[i]) {
 				  insertTr += "<tr>";
@@ -992,7 +992,7 @@
      	$("#memDiv1").append(insertTr);
 		insertTr = "";
 		
-		for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+		for (var i = (parseInt(Object.postNum) * parseInt(Object.page)); i < (parseInt(Object.postNum) * parseInt(Object.page)) + parseInt(Object.postNum); i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
 			if(Object.array.length != 0) {	
 	     	   if(Object.array[i]) {
 	     	      
@@ -1037,16 +1037,16 @@
      	
      	insertTr += "<tr>";
 		insertTr += "<th width='2.5%'></th>";
-		insertTr += "<th width='60.5%' name='TI'>"+i18nconvert("notice_contents")+"<a href='javascript:sortpage(pagingObject,TI,[TI,CA]);' name = 'TI'><i id = 'TI' class=' float-right mx-1 fas fa-lg fa-fw m-t-3 ";
-		if(Object.sort == "TI2")
+		insertTr += "<th width='60.5%' name='TI'>"+i18nconvert("notice_title")+"<a href='javascript:sortList(pagingObject,TI);' name = 'TI'><i id = 'TI' class=' float-right mx-1 fas fa-lg fa-fw m-t-3 ";
+		if(Object.sort == "TI-2")
 			insertTr += "fa-sort-up'></a></i></th>";
 		else if(Object.sort == "TI")
 			insertTr += "fa-sort-down'></a></i></th>";
 		else 
 			insertTr += "fa-sort'></a></i></th>";
 			
-		insertTr += "	<th width='24%' name='CA'>"+i18nconvert("notice_date")+"<a href='javascript:sortpage(pagingObject,CA,[TI,CA]);' name = 'CA'><i id = 'CA' class='float-right mx-1 fas fa-lg fa-fw m-t-3 ";
-		if(Object.sort == "CA2")
+		insertTr += "	<th width='24%' name='CA'>"+i18nconvert("notice_date")+"<a href='javascript:sortList(pagingObject,CA);' name = 'CA'><i id = 'CA' class='float-right mx-1 fas fa-lg fa-fw m-t-3 ";
+		if(Object.sort == "CA-2")
 			insertTr += "fa-sort-up'></a></i></th>";
 		else if(Object.sort == "CA")
 			insertTr += "fa-sort-down'></a></i></th>";
@@ -1057,11 +1057,11 @@
      	$("#memDiv1").append(insertTr);
      	
 		insertTr = "";
-		for (var i = (Object.postNum * Object.page) ; i < (Object.postNum * Object.page) + Object.postNum ; i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
+		for (var i = (parseInt(Object.postNum) * parseInt(Object.page)); i < (parseInt(Object.postNum) * parseInt(Object.page)) + parseInt(Object.postNum); i ++) { // 현재 페이지의 번호에 맞는 리스트 뽑아서 출력 (0 ~ 9, 10 ~ 19)
 			if(Object.array.length != 0) {	
 	     	   if(Object.array[i]) {
 	     	      
-				  insertTr += "<tr>";
+				  insertTr += "<tr onclick='noticepop(this)' name='"+Object.array[i]._id+"' data-toggle='modal' data-target='#notice-modal' style='cursor:pointer'>";
 				  insertTr += "<td class='font-weight-bold'>"+(num - (Object.page*10)) +" </td>";
 				  insertTr += "<td>"+ Object.array[i].TI +"</td><td>";
 				  if ( (moment(Object.array[i].CA).format('DD')) == moment().format('DD') )

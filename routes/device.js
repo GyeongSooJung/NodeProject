@@ -59,12 +59,11 @@ router.post('/ajax/device_list_edit1', isNotLoggedIn, async(req, res, next) => {
 
 // 수정 - 데이터 수정
 router.post('/ajax/device_list_edit2', isNotLoggedIn, async(req, res, next) => {
-  const { VER, NN, CID, device_id } = req.body;
+  const { NN, CID, device_id } = req.body;
   
   try{
     await modelQuery(QUERY.Update,COLLECTION_NAME.Device,{where : {"_id" : device_id}, update : {
         "CID" : CID,
-        "VER" : String(VER),
         "NN" : NN,
       }},{});
         

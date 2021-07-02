@@ -83,16 +83,10 @@
 							
 						</tbody>
 					</table>
-					{% if(company.AH == true) %}
 					<div class="d-flex justify-content-between align-item-center">
 						<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="delete_check('/history/ajax/history_delete');">
 						<div id="pagebox" class=" justify-content-around align-item-center"></div>
 					</div>
-					{% else %}
-					<div class="d-flex justify-content-center align-item-center">
-						<div id="pagebox" class=" justify-content-around align-item-center"></div>
-					</div>
-					{% endif %}
 				</form>
 			</div>
 		</div>

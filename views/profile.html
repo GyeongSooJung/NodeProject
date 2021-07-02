@@ -56,11 +56,19 @@
 							<table class="table table-borderless table-th-valign-middle w-50 mx-auto my-2">
 								<tr>
 									<th>{{__('business_number')}}</th>
-									<td>{{company.CNU}}</td>
+									<td>
+										<script>
+											document.write("{{company.CNU}}".substr(0,10))
+										</script>
+									</td>
 								</tr>
 								<tr>
 									<th>{{__('profile_company_name')}}</th>
 									<td><input type="text" id="CNA" name="CNA"  class="form-control form-control-sm" value="{{company.CNA}}" data-parsley-error-message="{{__('required_detail')}}" required /></td>
+								</tr>
+								<tr>
+									<th>{{__('agent_name')}}</th>
+									<td>{{company.ANA}}</td>
 								</tr>
 								<tr>
 									<th>{{__('profile_company_ceo_name')}}</th>

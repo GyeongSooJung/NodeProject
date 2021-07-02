@@ -243,6 +243,7 @@ router.post('/ajax/car_deleteone', isNotLoggedIn, async (req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
+  
   try {
     const carone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select.split(' ') },{});
     await modelQuery(QUERY.Create,COLLECTION_NAME.Cardelete,{
@@ -279,7 +280,7 @@ router.post('/ajax/car_delete', isNotLoggedIn ,async (req, res, next) => {
                 "CN" : carone.CN,
                 "CPN" : carone.CPN,
             },{});
-            await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select });
+            await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select },{});
           }
           else {
              for(var i = 0; i < select.length; i++){

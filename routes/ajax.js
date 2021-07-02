@@ -506,7 +506,7 @@ router.post('/pay_list', isNotLoggedIn, DataSet, agentDevide, async function(req
             lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } ,
             unwind : "$ANA",
             match : {},
-            project : { MID : "$MID", GN : "$GN", AM : "$AM", CA : "$CA", ANA : '$ANA.ANA' },
+            project : { MID : "$MID", IID : "$IID", GN : "$GN", AM : "$AM", CA : "$CA", ANA : '$ANA.ANA' },
             sort : { [sortText]: sortNum }
           }
     
@@ -666,7 +666,6 @@ router.post('/point_list', isNotLoggedIn, DataSet, agentDevide, async function(r
         pointlist[i] = points[i];
       }
     }
-    
     res.send({ result: true, pagelist : pointlist });
   
   } catch(err) {
@@ -713,7 +712,7 @@ router.post('/alarmtalk_list', isNotLoggedIn, DataSet, agentDevide, async functi
     }
     else {
       if (searchdate) {
-      var searchtext2 = searchdate.split("~");
+        var searchtext2 = searchdate.split("~");
         if(search == "ANA") {
           doc.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
@@ -826,7 +825,8 @@ router.post('/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
       else {
         jsondata[ANA] = ANU;
         al.push(jsondata);
-        await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : {_id : CID}, update : {AL : al}},{})
+        await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : {_id : CID}, update : {AL : al}},{});
+        await modelQuery(QUERY.Updatemany,COLLECTION_NAME.Company,{where : { CNU : {$regex:companyone.CNU.substring(0,10)} } , update : { AL : al }},{});
         res.send({type : "agent", result : "success"});
       }
     }
@@ -910,108 +910,67 @@ router.post('/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
 });
 
 //notice_list
-router.post('/notice_list', isNotLoggedIn, DataSet, agentDevide, async function(req, res) {
+router.post('/notice_list', isNotLoggedIn, DataSet, agentDevide, async function(req, res, next) {
   const CID = req.decoded.CID;
   
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
   var searchdate = req.body.searchdate;
+  var sortText = "";
+  var sortNum = 0;
+  var notices = new Object;
   
-  if(search != "") {
-    if(search == "CA") {
-      var searchtext2 = searchdate.split("~");
-      var notices = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{ "CID": CID, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} },{});
-      if(notices.length == 0) 
-      res.send({ result : "nothing" });
+  // 정렬 기능
+  if(sort.includes('-') == true) {
+    sortText = sort.split('-')[0];
+    sortNum = 1;
+  }
+  else {
+    sortText = sort;
+    sortNum = -1;
+  }
+  
+  try {
+    
+    if(notices.length == 0) {
+      return res.send({ result : "nothing" });
     }
     else {
-      if(!searchdate) {
-        try {
-          if(search == "TI") {
-            var notices = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{ "CID": CID, "TI" : {$regex:searchtext} },{});
-            if(notices.length == 0) 
-            res.send({result : "nothing"});
-          }
-        } catch(e) {
-          res.send({ result: false });
+      if (searchdate) {
+        var searchtext2 = searchdate.split("~");
+        if(search == "TI") {
+          notices = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{ "TI" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } },{ sort : { [sortText]: sortNum } });
+        }
+        else {
+          notices = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{ "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } },{ sort : { [sortText]: sortNum } });
         }
       }
       else {
-        try {
-          if(search == "TI") {
-            var notices = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{ "CID": CID, "TI" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z",$lt:searchtext2[1]+"T23:59:59.999Z"} },{});
-            if(notices.length == 0) 
-            res.send({result : "nothing"});
-          }
-        } catch(e) {
-          res.send({ result: false });
+        if (search =="TI") {
+          notices = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{ "TI" : {$regex:searchtext} },{ sort : { [sortText]: sortNum } });
+        }
+        else {
+          notices = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{ sort : { [sortText]: sortNum } });
         }
       }
     }
+    
+    if(notices.length == 0) {
+      return res.send({ result : "nothing"});
+    }
+    
+    var noticelist = [];
+    if(notices.length) {
+      for(var i = 0; i < notices.length; i ++) {
+        noticelist[i] = notices[i];
+      }
+    }
+    res.send({ result: true, pagelist : noticelist });
+  } catch(err) {
+    console.error(err);
+    next(err);
   }
-  else {
-    var notices = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{ "CID": CID },{});
-    
-    if(sort == "TI") {
-        notices.sort(function (a,b) {
-          var ax = [], bx = [];
-          a = JSON.stringify(a.TI);
-          b = JSON.stringify(b.TI);
-        
-          a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
-          b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
-          
-          while(ax.length && bx.length) {
-              var an = ax.shift();
-              var bn = bx.shift();
-              var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
-              if(nn) return nn;
-          }
-      
-          return ax.length - bx.length;
-        });
-    }
-    
-    else if(sort == "TI2") {
-                  notices.sort(function (a,b) {
-          var ax = [], bx = [];
-          a = JSON.stringify(a.TI);
-          b = JSON.stringify(b.TI);
-        
-          a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
-          b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
-          
-          while(ax.length && bx.length) {
-              var an = bx.shift();
-              var bn = ax.shift();
-              var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
-              if(nn) return nn;
-          }
-      
-          return ax.length - bx.length;
-        });
-    }
-    
-    else if(sort == "CA") { 
-      var notices = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{ "CID": CID },{sort : { CA: -1 }});
-    }
-    
-    else if(sort == "CA2"){
-      var notices = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{ "CID": CID },{sort : { CA: 1 }});
-    }
-    else {
-      var notices = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{ "CID": CID },{sort : { CA: -1 }});
-    }
-  }
-  
-  var noticelist = [];
-  if(notices.length) {
-    for(var i = 0; i < notices.length; i ++) {
-      noticelist[i] = notices[i];
-    }
-  }
-  res.send({ result: true, pagelist : noticelist });
  
 });
 

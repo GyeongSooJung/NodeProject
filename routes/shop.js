@@ -194,6 +194,7 @@ router.post('/addCart', isNotLoggedIn, DataSet, async(req, res, next) => {
         cart["ON"] = ON;
         cart["OP"] = OP;
         cart["NUM"] = NUM;
+        cart["CNU"] = req.decoded.company.CNU;
         
         if(req.cookies.shop) {
             var exCart = req.cookies.shop;
@@ -229,7 +230,7 @@ router.post('/showCart', isNotLoggedIn, DataSet, async(req, res, next) => {
     var cartCookie = req.cookies.shop;
     
     try {
-        res.send({ result : 'success', cart : cartCookie });
+        res.send({ result : 'success', cart : cartCookie, company : req.decoded.company.CNU });
         
     } catch(err) {
         res.send({ result : 'fail' });

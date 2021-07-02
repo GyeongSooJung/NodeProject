@@ -100,6 +100,7 @@
 	"find_title": "OASIS | 비밀번호 찾기",
 	"find_no_register": "가입되지 않은 사업자번호입니다.",
 	"find_enter": "사업자 번호를 입력해주세요.",
+	"find_enter2" : "지점을 선택해주세요.",
 	"find_email_error": "이메일이 가입된 정보와 다릅니다.",
 	"find_pw_fail": "비밀번호 찾기가 실패했습니다.",
 	

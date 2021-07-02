@@ -43,9 +43,9 @@
                                  {{HOME}}/inflow?cat={{cat}}
                              </td>
                              <td>
-                                 <button class="btn btn-primary width-160" onclick="qrPOP('qr','100','100');">100 x 100</button>
-                                 <button class="btn btn-primary width-160" onclick="qrPOP('qr','200','200');">200 x 200</button>
-                                 <button class="btn btn-primary width-160" onclick="qrPOP('qr','300','300');">300 x 300</button>
+                                 <button class="btn btn-primary width-160" onclick="qrPOP('qr','38','38');">1cm x 1cm</button>
+                                 <button class="btn btn-primary width-160" onclick="qrPOP('qr','113','113');">3cm x 3cm</button>
+                                 <button class="btn btn-primary width-160" onclick="qrPOP('qr','189','189');">5cm x 5cm</button>
                                  <button class="btn btn-primary width-160" onclick="qrPOP('st', '104', '104');">{{__('qrcode_sticker')}}</button>
                              </td>
                          </tr>
@@ -93,15 +93,15 @@
        var pw = 0;
        var ph = 0;
        
-       if(width == 100) {
+       if(width <= 100) {
           pw = 400;
           ph = 300;
        }
-       else if(width == 200) {
+       else if(width <= 200) {
           pw = 500;
           ph = 400;
        }
-       else if(width == 300) {
+       else if(width <= 300) {
           pw = 600;
           ph = 500;
        }

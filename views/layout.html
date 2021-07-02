@@ -57,7 +57,6 @@
 						<ul class="rolling position-relative mb-0">
 							{% for notice in noticethree %}
 							<li class="height-20 mb-0">
-								<!--<a href="javascript:;" onclick="noticepop(this)" name="{{notice._id}}">{{notice.TI}}</a>-->
 								<a href="javascript:;" onclick="noticepop(this)" name="{{notice._id}}" data-toggle="modal" data-target="#notice-modal">
 									{{notice.TI}}
 								</a>
@@ -391,7 +390,7 @@
 	    		return "{{__('payment_sender')}}";
 	    	}
 	    	else if(string == "TI" ) {
-	    		return "{{__('notice_contents')}}";
+	    		return "{{__('notice_title')}}";
 	    	}
 	    	else if(string == "RE" ) {
 	    		return "{{__('payment_result')}}";
@@ -512,6 +511,9 @@
 	    	else if(string == "layout_signout_confirm") {
 	    		return "{{__('layout_signout_confirm')}}"
 	    	}
+	    	else if(string == "notice_title") {
+	    		return "{{__('notice_title')}}"
+	    	}
 	    	else if(string == "notice_contents") {
 	    		return "{{__('notice_contents')}}"
 	    	}
@@ -618,6 +620,7 @@
 	<script src="../oasisjs/oasis_auth.js"></script>
 	<script src="../oasisjs/oasis_worker_auth.js"></script>
 	<script src="../oasisjs/oasis_agent.js"></script>
+	<script src="../oasisjs/oasis_popup.js"></script>
 	<!--End Script-->
 {% block script %}
 {% endblock %}

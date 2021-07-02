@@ -129,16 +129,10 @@
 						$(obj).removeData().type;
 						$(obj).data('type', 'hide');
 						insertTr += "<tr class='tr-edit'>";
-						insertTr += "<td colspan='9'>";
+						insertTr += "<td colspan='10'>";
 						
 						insertTr += "<div class='panel-body'>";
 					    insertTr += "<form id='device-edit-form' action='' method='post' class='form-horizontal' data-parsley-validate='true' name='device-form' onsubmit='deviceEdit();'>";
-					    insertTr += "<div class='form-group row m-b-15'>";
-					    insertTr += "<label class='col-md-4 col-sm-4 col-form-label' for='VER'>"+i18nconvert("VER")+" <span class='text-danger'>*</span> :</label>";
-					    insertTr += "<div class='col-md-8 col-sm-8'>";
-					    insertTr += "<input class='form-control' id='VER' type='text' name = 'VER' placeholder='"+i18nconvert("device_edit_version_enter")+"' data-parsley-required='true' data-parsley-error-message='{{__('required_detail')}}' />";
-					    insertTr += "</div>";
-					    insertTr += "</div>";
 					    insertTr += "<div class='form-group row m-b-15'>";
 					    insertTr += "<label class='col-md-4 col-sm-4 col-form-label' for='NN'>"+i18nconvert("NN")+" :</label></label>";
 					    insertTr += "<div class='col-md-8 col-sm-8'>";
@@ -181,7 +175,6 @@
 			url: '/device/ajax/device_list_edit2',
 			dataType: 'json',
 			data: {
-				VER : $('#device-edit-form [name="VER"]').val(),
 				NN : $('#device-edit-form [name="NN"]').val(),
 				CID : Object.CID,
 				device_id : $('#device-edit-form [name="device_id"]').val()

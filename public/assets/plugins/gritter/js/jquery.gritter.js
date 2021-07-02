@@ -296,7 +296,8 @@
 			}
 			
 			if($("input:checkbox[name=today]").is(":checked")==true) {
-				setCookie("close","Y",1);
+				var company = $("input:checkbox[name=today]").val();
+				setCookie("close/"+company,"Y/"+company,1);
 			}
 			
 			if(!e){

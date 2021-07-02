@@ -372,8 +372,7 @@
 	
 	// 페이지 개수 지정
 	function selectpage(Object, jsondata) {
-        if(Object.postNum != jsondata.option)
-		{
+        if(Object.postNum != jsondata.option) {
 			Object.postNum = jsondata.option
 			pagereload(Object);
 		}

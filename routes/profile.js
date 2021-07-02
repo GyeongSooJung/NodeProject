@@ -17,15 +17,15 @@ router.post('/editInfo', isNotLoggedIn, DataSet, async(req, res, next) => {
    
   try {
       if (bcrypt.compareSync(PW, company.PW)) {
-         const companyone = await modelQuery(QUERY.Findone,{ "EA" : EA },{});
+         const companyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ "EA" : EA },{});
          if(!companyone) {
-            await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { "_id" : company._id }, update : { "CNA" : CNA, "NA" : NA, "EA" : EA, "MN" : MN, "PN" : PN, "UA" : Date.now() }},{});
+            await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : { "_id" : company._id }, update : { "CNA" : CNA, "NA" : NA, "EA" : EA, "MN" : MN, "PN" : PN, "UA" : Date.now() }},{});
             
             return res.send({ result : 'success', company : company });
          }
          else {
             if(EA == REA) {
-               await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { "_id" : company._id }, update : { "CNA" : CNA, "NA" : NA, "EA" : EA, "MN" : MN, "PN" : PN, "UA" : Date.now() }},{});
+               await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : { "_id" : company._id }, update : { "CNA" : CNA, "NA" : NA, "EA" : EA, "MN" : MN, "PN" : PN, "UA" : Date.now() }},{});
             
                return res.send({ result : 'success', company : company });
             }
