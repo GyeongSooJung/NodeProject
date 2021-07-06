@@ -4,14 +4,8 @@ const router = express.Router();
 //Module
 var moment = require('moment');
 //Schemas
-const Company = require('../schemas/company');
-const Device = require('../schemas/device');
-const Devicedelete = require('../schemas/device_delete');
-const Car = require('../schemas/car');
-const Cardelete = require('../schemas/car_delete');
-const Worker = require('../schemas/worker');
-const Workerdelete = require('../schemas/worker_delete');
-const History = require('../schemas/history');
+const {modelQuery} = require('../schemas/query')
+const {COLLECTION_NAME, QUERY} = require('../const/consts');
 //Middleware
 const { isNotLoggedIn } = require('./middleware');
 
@@ -23,30 +17,30 @@ router.post('/ajax/delete_one', isNotLoggedIn, async (req, res, next) => {
     
     try {
         if(division == "device") {
-            const deviceone = await Device.findOne({ "CID" : CID, "MAC" : select });
-            await Devicedelete.create({
+            const deviceone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Device,{ "CID" : CID, "MAC" : select },{});
+            await modelQuery(QUERY.Create,COLLECTION_NAME.Devicedelete,{
                 "CID" : deviceone.CID,
                 "MD" : deviceone.MD,
                 "VER" : deviceone.VER,
                 "NN" : deviceone.NN,
                 "MAC" : deviceone.MAC
-            });
-            await Device.remove({ "CID" : CID, "MAC" : select });
+            },{});
+            await modelQuery(QUERY.Remove,COLLECTION_NAME.Device,{ "CID" : CID, "MAC" : select },{});
             return res.send({ result : 'success' });
         }
         else if(division == "car") {
-            const carone = await Car.findOne({ "CID" : CID, "CN" : select });
-            await Cardelete.create({
+            const carone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select },{});
+            await modelQuery(QUERY.Create,COLLECTION_NAME.Cardelete,{
                 "CID" : carone.CID,
                 "CC" : carone.CC,
                 "CPN" : carone.CPN,
-            });
-            await Car.remove({ "CID" : CID, "CN" : select });
+            },{});
+            await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select },{});
             return res.send({ result : 'success' });
         }
         else if(division == "worker") {
-            const workerone = await Worker.findOne({ "CID" : CID, "EM" : select });
-            await Workerdelete.create({
+            const workerone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Worker,{ "CID" : CID, "EM" : select },{});
+            await modelQuery(QUERY.Create,COLLECTION_NAME.Workerdelete,{
                 "CID" : workerone.CID,
                 "WN" : workerone.WN,
                 "PN" : workerone.PN,
@@ -55,12 +49,12 @@ router.post('/ajax/delete_one', isNotLoggedIn, async (req, res, next) => {
                 "PU" : workerone.PU,
                 "AU" : workerone.AU,
                 "AC" :workerone.AC
-            });
-            await Worker.remove({ "CID" : CID, "EM" : select });
+            },{});
+            await modelQuery(QUERY.Remove,COLLECTION_NAME.Worker,{ "CID" : CID, "EM" : select },{});
             return res.send({ result : 'success' });
         }
         else if(division == "history") {
-            await History.remove({ "CID" : CID, "_id" : select });
+            await modelQuery(QUERY.Remove,COLLECTION_NAME.History,{ "CID" : CID, "_id" : select },{});
             return res.send({ result : 'success' });
         }
     } catch (err) {
@@ -75,7 +69,7 @@ router.post('/ajax/delete_check', isNotLoggedIn, async (req, res, next) => {
     var select = req.body["select[]"];
     const { division, CID } = req.body;
     const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
-    const listCompany = await Company.findOne({ "_id" : CID });
+    const listCompany = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ "_id" : CID },{});
     const listCNU = listCompany.CNU;
     
     if(!select) {
@@ -84,61 +78,59 @@ router.post('/ajax/delete_check', isNotLoggedIn, async (req, res, next) => {
     else {
         if(division == 'device') {
             if(typeof(select) == 'string') {
-                const deviceone = await Device.findOne({ "CID" : CID, "MAC" : select});
-                await Devicedelete.create({
+                const deviceone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Device,{ "CID" : CID, "MAC" : select},{});
+                await modelQuery(QUERY.Create,COLLECTION_NAME.Devicedelete,{
                     "CID" : deviceone.CID,
                     "MD" : deviceone.MD,
                     "VER" : deviceone.VER,
                     "NN" : deviceone.NN,
                     "MAC" : deviceone.MAC
-                });
-                await Device.remove({ "CID" : CID, "MAC" : select });
+                },{});
+                await modelQuery(QUERY.Remove,COLLECTION_NAME.Device,{ "CID" : CID, "MAC" : select },{});
             }
             else {
                 for(var i = 0; i < select.length; i ++) {
-                    var deviceone = await Device.findOne({ "CID" : CID, "MAC" : select[i]});   
-                    await Devicedelete.create({
+                    const deviceone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Device,{ "CID" : CID, "MAC" : select[i]},{});
+                    await modelQuery(QUERY.Create,COLLECTION_NAME.Devicedelete,{
                         "CID" : deviceone.CID,
                         "MD" : deviceone.MD,
                         "VER" : deviceone.VER,
                         "NN" : deviceone.NN,
                         "MAC" : deviceone.MAC
-                    });
-                    await Device.remove({ "CID" : CID, "MAC" : select[i] });
+                    },{});
+                    await modelQuery(QUERY.Remove,COLLECTION_NAME.Device,{ "CID" : CID, "MAC" : select[i] },{});
                 }
             }
             return res.send({ result : 'success' });
         }
         else if(division == 'car') {
             if (typeof(select) == 'string') {
-                const carone = await Car.findOne({ "CID" : CID, "CN" : select });
-                await Cardelete.create({
+                const carone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select },{});
+                await modelQuery(QUERY.Create,COLLECTION_NAME.Cardelete,{
                     "CID" : carone.CID,
                     "CN" : carone.CN,
                     "CPN" : carone.CPN,
-                });
-                await Car.remove({ "CID" : CID, "CN" : select });
+                },{});
+                await modelQuery(QUERY.History,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select },{});
             }
             else {
                 for(var i = 0; i < select.length; i++) {
-                    var carone = await Car.findOne({ "CID" : CID, "CN" : select[i] });  
-                    await Cardelete.create({
+                    var carone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select[i] },{});
+                    await modelQuery(QUERY.Create,COLLECTION_NAME.Cardelete,{
                         "CID" : carone.CID,
                         "CN" : carone.CN,
                         "CPN" : carone.CPN,
-                    });
-                    await Car.remove({ "CID" : CID, "CN" : select[i] });
+                    },{});
+                    await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select[i] },{});
                 }
             }
-            await Company.where({"CNU" : listCNU})
-                .update({ "CUA" : CUA }).setOptions({runValidators : true})
-                .exec();
+                await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : {"CNU" : listCNU}, update : { "CUA" : CUA }},{});
             return res.send({ result : 'success' });
         }
         else if(division == 'worker') {
             if(typeof(select) == 'string') {
-                const workerone = await Worker.findOne({ "CID" : CID, "EM" : select });
-                await Workerdelete.create({
+                const workerone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Worker,{ "CID" : CID, "EM" : select },{});
+                await modelQuery(QUERY.Create,COLLECTION_NAME.Workerdelete,{
                     "CID" : workerone.CID,
                     "WN" : workerone.WN,
                     "PN" : workerone.PN,
@@ -147,13 +139,13 @@ router.post('/ajax/delete_check', isNotLoggedIn, async (req, res, next) => {
                     "PU" : workerone.PU,
                     "AU" : workerone.AU,
                     "AC" :workerone.AC
-                });
-                await Worker.remove({ "CID" : CID,  "EM" : select });
+                },{});
+                await modelQuery(QUERY.Remove,COLLECTION_NAME.Worker,{ "CID" : CID,  "EM" : select },{});
             }
             else {
-                for(var i=0; i < select.length; i++){
-                    const workerone = await Worker.findOne({ "CID" : CID, "EM" : select[i] });
-                    await Workerdelete.create({
+                for(var i=0; i < select.length; i++){   
+                    const workerone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Worker,{ "CID" : CID, "EM" : select[i] },{});
+                    await modelQuery(QUERY.Create,COLLECTION_NAME.Workerdelete,{
                         "CID" : workerone.CID,
                         "WN" : workerone.WN,
                         "PN" : workerone.PN,
@@ -162,19 +154,19 @@ router.post('/ajax/delete_check', isNotLoggedIn, async (req, res, next) => {
                         "PU" : workerone.PU,
                         "AU" : workerone.AU,
                         "AC" :workerone.AC
-                    });
-                    await Worker.remove({ "CID" : CID,  "EM" : select[i] });                
+                    },{});
+                    await modelQuery(QUERY.Remove,COLLECTION_NAME.Worker,{ "CID" : CID,  "EM" : select[i] },{});
                 }
             }
             return res.send({ result : 'success' });
         }
         else if(division == 'history') {
             if(typeof(select) == 'string') {
-                await History.remove({ "CID" : CID,  "_id" : select });
+                await modelQuery(QUERY.Remove,COLLECTION_NAME.History,{ "CID" : CID,  "_id" : select },{});
             }
             else {
                 for(var i=0; i < select.length; i++) {
-                    await History.remove({ "CID" : CID,  "_id" : select[i] });
+                    await modelQuery(QUERY.Remove,COLLECTION_NAME.History,{ "CID" : CID,  "_id" : select[i] },{});
                 }
             }
             return res.send({ result : 'success' });

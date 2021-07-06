@@ -1,12 +1,13 @@
 const bcrypt = require('bcrypt');
 
-const Worker = require('../../schemas/worker');
-const Company = require('../../schemas/company');
-const Car = require('../../schemas/car');
-const History = require('../../schemas/history');
-const Point = require('../../schemas/point');
+const Schema = require('../../schemas/schemas');
+const { History,Device,Worker } = Schema;
+
+const {modelQuery} = require('../../schemas/query')
+const {COLLECTION_NAME, QUERY} = require('../../const/consts');
+const {COLLECTIONS} = require("../../schemas/schemas")
+
 var moment = require('moment');
-const Device = require('../../schemas/device');
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = "OASIS";
@@ -24,14 +25,14 @@ const ERR_CODE = {
    NO_POINT: "NO_POINT",
 };
 
-const COLLECTION_NAME = {
-   "History": "History",
-   "Worker": "Worker",
-};
-const COLLECTIONS = {
-   "History": History,
-   "Worker": Worker,
-};
+// const COLLECTION_NAME = {
+//    "History": "History",
+//    "Worker": "Worker",
+// };
+// const COLLECTIONS = {
+//    "History": History,
+//    "Worker": Worker,
+// };
 
 
 
@@ -89,15 +90,17 @@ exports.tokenVerification = async(req, res, next) => {
 };
 
 async function createDocument(req, res, next, collection) {
+   console.log("[createDocument]");
    var Collection = collection;
    var doc = req.body;
    var postJob; // 추가 작업용 함수포인터
 
+   
    switch (collection) {
       case COLLECTIONS.History:
          // 장비의 사용횟수 증가
          postJob = async function() {
-            await Device.where({ _id: doc[HISTORY.deviceID] }).updateOne({ $inc: { UN: 1 } });
+            await modelQuery(QUERY.Updateone,COLLECTIONS.Device,{where : { _id: doc[HISTORY.deviceID] }, update : { $inc: { UN: 1 } }},{});
          };
          break;
       default:
@@ -105,16 +108,38 @@ async function createDocument(req, res, next, collection) {
    }
 
    const resResult = (result) => {
-      if (postJob != null) {
-         postJob();
-      }
       res.json({
          result: true,
          data: result._id,
       });
    };
+   
+   await modelQuery(QUERY.Create,Collection,doc,{postJob : postJob}).then(resResult).catch(next); 
+   
+   // 기존코드
+   // switch (collection) {
+   //    case COLLECTIONS.History:
+   //       // 장비의 사용횟수 증가
+   //       postJob = async function() {
+   //          await Device.where({ _id: doc[HISTORY.deviceID] }).updateOne({ $inc: { UN: 1 } });
+   //       };
+   //       break;
+   //    default:
+   //       throw new Error("Wrong request");
+   // }
 
-   await Collection.create(doc).then(resResult).catch(next);
+   // const resResult = (result) => {
+   //    if (postJob != null) {
+   //       postJob();
+   //    }
+   //    res.json({
+   //       result: true,
+   //       data: result._id,
+   //    });
+   // };
+
+   // await Collection.create(doc).then(resResult).catch(next);
+
 }
 
 async function findOneDecument(req, res, next, collection) {
@@ -131,16 +156,27 @@ async function findOneDecument(req, res, next, collection) {
    }
 
    const resResult = (document) => {
-      if (postJob != null) {
-         postJob();
-      }
       res.json({
          result: true,
          data: JSON.stringify(document),
       });
    };
 
-   await Collection.findOne(doc).then(resResult).catch(next);
+   await modelQuery(QUERY.Findone,Collection,doc,{postJob : postJob}).then(resResult).catch(next); 
+   
+   // 기존코드
+   // const resResult = (document) => {
+   //    if (postJob != null) {
+   //       postJob();
+   //    }
+   //    res.json({
+   //       result: true,
+   //       data: JSON.stringify(document),
+   //    });
+   // };
+
+   // await Collection.findOne(doc).then(resResult).catch(next);
+
 }
 
 async function findDecuments(req, res, next, collection) {
@@ -166,17 +202,30 @@ async function findDecuments(req, res, next, collection) {
    }
 
    const resResult = (documents) => {
-      if (postJob != null) {
-         postJob();
-      }
       res.json({
          result: true,
          dataList: documents,
       });
    };
 
+   await modelQuery(QUERY.Find,Collection,{searchOption : searchOption, projectOption : projectOption},{skip : startPage * nowPage, limit : nowPage , sort : { CA: -1 }})
+   .then(resResult).catch(next);
+   
+   // 기존코드
+   // const resResult = (documents) => {
+   //    if (postJob != null) {
+   //       postJob();
+   //    }
+   //    res.json({
+   //       result: true,
+   //       dataList: documents,
+   //    });
+   // };
 
-   await Collection.find(searchOption, projectOption).skip(startPage * nowPage).limit(nowPage).sort({ CA: -1 }).then(resResult).catch(next);
+
+   // await Collection.find(searchOption, projectOption).skip(startPage * nowPage).limit(nowPage).sort({ CA: -1 }).then(resResult).catch(next);
+
+
 }
 
 async function updateOneDecument(req, res, next, collection) {
@@ -208,8 +257,11 @@ async function updateOneDecument(req, res, next, collection) {
       });
    };
 
+   await modelQuery(QUERY.Updateone,Collection,{where : { _id }, update : doc},{}).then(resResult).catch(next);
+   
+   // 기존코드
+   // await Collection.where({ _id }).updateOne(doc).then(resResult).catch(next);
 
-   await Collection.where({ _id }).updateOne(doc).then(resResult).catch(next);
 }
 
 exports.historyRoot = (req, res, next) => {

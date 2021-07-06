@@ -4,11 +4,8 @@ const router = express.Router();
 //Module
 const moment = require('moment');
 //Schemas
-const Company = require('../schemas/company');
-const Device = require('../schemas/device');
-const History = require('../schemas/history');
-const Publish = require('../schemas/publish');
-
+const {modelQuery} = require('../schemas/query')
+const {COLLECTION_NAME, QUERY} = require('../const/consts');
 // -- Start Code -- //
 
 //Mobile QR Code Page
@@ -22,12 +19,13 @@ router.get('/', async (req, res, next) => {
   
   try {
     if(HID){
-      const historyone = await History.findOne({"_id" : HID});
+      
+      const historyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.History,{"_id" : HID},{});
       if(historyone) {
-        await Publish.update({"PUC" : cat}, {$inc : {"PUN" : 1}}, {upsert: true});
+        await modelQuery(QUERY.Updateupsert,COLLECTION_NAME.Publish,{where : {"PUC" : cat}, update : {$inc : {"PUN" : 1}}});
         
-        const companyone = await Company.findOne({"_id" : historyone.CID});
-        const deviceone = await Device.findOne({"_id" : historyone.DID});
+        const companyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{"_id" : historyone.CID},{});
+        const deviceone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Device,{"_id" : historyone.DID},{});
         const history_array = await historyone.PD;
         
         const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
@@ -40,13 +38,13 @@ router.get('/', async (req, res, next) => {
       }
     }
     else {
-      const historyone = await History.findOne({"CNM" : CN}).sort({"ET" : -1}).limit(1);
+      const historyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.History,{"CNM" : CN},{sort : {"ET" : -1}, limit : 1})
     
       if(historyone) { //historyone.RC == 1
-        await Publish.update({"PUC" : cat}, {$inc : {"PUN" : 1}}, {upsert: true});
+        await modelQuery(QUERY.Updateupsert,COLLECTION_NAME.Publish,{where : {"PUC" : cat},update :{$inc : {"PUN" : 1}}},{});
         
-        const companyone = await Company.findOne({"_id" : historyone.CID});
-        const deviceone = await Device.findOne({"_id" : historyone.DID});
+        const companyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{"_id" : historyone.CID},{});
+        const deviceone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Device,{"_id" : historyone.DID},{});
         const history_array = await historyone.PD;
         
         const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
@@ -70,8 +68,8 @@ router.get('/brand', async (req, res, next) => {
   const HID = req.query.hid;
   const cat = req.query.cat;
   
-  const historyone = await History.findOne({"_id" : HID});
-  const companyone = await Company.findOne({"_id" : historyone.CID});
+  const historyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.History,{"_id" : HID},{})
+  const companyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{"_id" : historyone.CID},{});
   
   res.render('publish_brand', {CN, HID, cat, companyone});
 });

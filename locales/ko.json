@@ -100,6 +100,7 @@
 	"find_title": "OASIS | 비밀번호 찾기",
 	"find_no_register": "가입되지 않은 사업자번호입니다.",
 	"find_enter": "사업자 번호를 입력해주세요.",
+	"find_enter2" : "지점을 선택해주세요.",
 	"find_email_error": "이메일이 가입된 정보와 다릅니다.",
 	"find_pw_fail": "비밀번호 찾기가 실패했습니다.",
 	
@@ -167,6 +168,7 @@
 	"main_gritter_body1": "포인트가 부족하면 알림톡이 전송되지 않습니다.",
 	"main_gritter_body2": "포인트를 충전하여 서비스를 계속 이용하세요.",
 	"main_gritter_btn": "포인트 충전",
+	"main_gritter_no_today": "오늘 하루 그만보기",
 	
 	"layout_modify": "프로필 수정",
 	"layout_setting": "설정",
@@ -422,5 +424,7 @@
 	"agent_delete_success" : "지점 삭제가 완료되었습니다.",
 	"agent_delete_confirm" : "지점을 삭제하시겠습니까? 기존 데이터가 필요할 시 미리 옮겨주세요.",
 	"agent_select" : "지점을 선택해주세요",
-	"agent_three" : "지점코드를 세글자로 작성해주세요.(ex.001)"
+	"agent_three" : "지점코드를 세글자로 작성해주세요.(ex.001)",
+	"agent_com" : "000 은 본점의 코드입니다.",
+	"agent_code_num_over" : "생성 가능한 지점 수를 넘어섰습니다."
 }

@@ -9,6 +9,7 @@
  * Version: 1.7.4
  */
 
+
 (function($){
  	
 	/**
@@ -276,7 +277,7 @@
 			}
 			
 		},
-		
+    
 		/**
 		* Remove a specific notification based on an ID
 		* @param {Integer} unique_id The ID used to delete a specific notification
@@ -285,6 +286,19 @@
 		* @param {Boolean} unbind_events If we clicked on the (X) we set this to true to unbind mouseenter/mouseleave
 		*/
 		removeSpecific: function(unique_id, params, e, unbind_events){
+			
+			// 24시간 기준 쿠키 설정
+			var setCookie = function (cname, cvalue, exdays) {
+			    var todayDate = new Date();
+			    todayDate.setTime(todayDate.getTime() + (exdays*24*60*60*1000));    
+			    var expires = "expires=" + todayDate.toUTCString();
+			    document.cookie = cname + "=" + cvalue + "; " + expires;
+			}
+			
+			if($("input:checkbox[name=today]").is(":checked")==true) {
+				var company = $("input:checkbox[name=today]").val();
+				setCookie("close/"+company,"Y/"+company,1);
+			}
 			
 			if(!e){
 				var e = $('#gritter-item-' + unique_id);

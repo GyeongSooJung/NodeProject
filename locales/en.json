@@ -100,6 +100,7 @@
 	"find_title": "OASIS | Find Password",
 	"find_no_register" : "This business number is not registered.",
 	"find_enter" : "Please enter your business number.",
+	"find_enter2" : "Please select a branch",
 	"find_email_error" : "Email is not the same as the subscription information.",
 	"find_pw_fail": "Password retrieval failed.",
 	
@@ -167,6 +168,7 @@
 	"main_gritter_body1": "If there are not enough points, SMS will not be sent.",
 	"main_gritter_body2": "Charge points to continue using the service.",
 	"main_gritter_btn": "Charging points",
+	"main_gritter_no_today": "Stop watching today",
     
     "layout_modify" : "Modify Profile",
     "layout_setting": "Setting",
@@ -422,5 +424,7 @@
 	"agent_delete_success" : "The agent has been deleted.",
 	"agent_delete_confirm" : "Are you sure you want to delete the branch? If you need existing data, please move it in advance.",
 	"agent_select" : "Please select an Agent",
-	"agent_three" : "Please write your branch code in three letters.(ex.001)"
+	"agent_three" : "Please write your branch code in three letters.(ex.001)",
+	"agent_com" : "000 is the code for the main branch.",
+	"agent_code_num_over" : "You have exceeded the number of points that can be created."
 }

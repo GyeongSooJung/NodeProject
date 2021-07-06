@@ -5,7 +5,8 @@ const router = express.Router();
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 //Schemas
-const Company = require('../schemas/company');
+const {modelQuery} = require('../schemas/query')
+const {COLLECTION_NAME, QUERY} = require('../const/consts');
 
 // -- Start Code -- //
 
@@ -21,12 +22,45 @@ const smtpTransport = nodemailer.createTransport({
     }
 });
 
+// 본사, 지점 확인
+router.post('/agent', async (req, res, next) => {
+  const CNU = req.body.CNU;
+  
+  try {
+    const agents = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ "CNU" : CNU+"000" },{});
+    if(agents) {
+      var nameList = [];
+      var codeList = [];
+      
+      for(var i = 0; i < agents.AL.length; i++) {
+        nameList[i] = Object.keys(agents.AL[i]).toString();
+        codeList[i] = Object.values(agents.AL[i]).toString();
+      }
+      
+      if(agents.AL.length != 0) {
+        return res.send({ result : 'yesAgents', agents : agents, nameList : nameList, codeList : codeList });
+      }
+      else {
+        return res.send({ result : 'noAgents' });
+      }
+    }
+    else {
+      return res.send({ result : 'fail' });
+    }
+    
+  } catch(err) {
+    res.send({ result : 'fail' });
+    console.error(err);
+    next(err);
+  }
+});
+
 // 사업자 번호 검증
 router.post('/checkCNU', async(req, res, next) => {
     const CNU = req.body.CNU;
     
     try {
-        const exCNU = await Company.findOne({ "CNU" : CNU });
+        const exCNU = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ "CNU" : CNU },{});
 
         if(!exCNU) {
             return res.send({ result : 'fail' });
@@ -61,9 +95,11 @@ router.post('/checkCNU', async(req, res, next) => {
 // 이메일 전송
 router.post('/send', async(req, res, next) => {
     const { EA, CNU } = req.body;
+    console.log(EA+"/"+CNU);
     
     try {
-        const exEA = await Company.where({ "CNU" : CNU }).findOne({ "EA" : EA });
+        const exEA = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company, { "CNU" : CNU , "EA" : EA },{});
+        console.log(exEA);
         
         if(!exEA) {
             return res.send({ result : 'wrong' });
@@ -71,7 +107,7 @@ router.post('/send', async(req, res, next) => {
         else {
             let authNum = Math.random().toString().substr(2,6);
             const hashAuth = await bcrypt.hash(authNum, 12);
-            console.log("어쓰"+authNum);
+            console.log(authNum);
             res.cookie('hashAuth', hashAuth,{
                 maxAge: 300000
             });
@@ -189,7 +225,7 @@ router.post('/findPW', async(req, res, next) => {
         });
         
         const hashPW = await bcrypt.hash(randomPW, 12);
-        await Company.updateOne({ "CNU" : CNU, "EA" : EA }, { $set: { "PW" : hashPW }});
+        await modelQuery(QUERY.Updateone,COLLECTION_NAME.Company,{where : { "CNU" : CNU, "EA" : EA }, update : { "PW" : hashPW }},{});
         
         return res.send({ result : "success" });
         

@@ -35,14 +35,15 @@
 								&nbsp;&nbsp;~&nbsp;&nbsp;
 								<input type="date" id = "searchdatetext2" class ="form-control form-control-sm" placeholder ="" />
 						</div>
-	   				<div class="d-flex justify-content-between align-items-center">
+	   					<div class="d-flex justify-content-between align-items-center">
 							<div class ="mr-2">
-		            		<div class="btn-group m-r-5">
+		            			<div class="btn-group m-r-5">
 									<a id="searchoption" href="javascript:;" class="btn btn-sm btn-white">{{__('search')}}</a>
 									<a href="#" data-toggle="dropdown" class="btn btn-sm btn-white dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
 									<div class="dropdown-menu dropdown-menu-right">
-										<a href="javascript:searchoption('CN',pagingObject,{CN : 'CN',CPN : 'CPN'});" class="dropdown-item">{{__('car_number')}}</a>
-										<a href="javascript:searchoption('CPN',pagingObject,{CN : 'CN',CPN : 'CPN'});" class="dropdown-item">{{__('car_customer_phone')}}</a>
+										<a href="javascript:searchoption('ANA',pagingObject,{ANA : 'ANA',CN : 'CN',CPN : 'CPN'});" class="dropdown-item">{{__('agent_branch')}}</a>
+										<a href="javascript:searchoption('CN',pagingObject,{ANA : 'ANA',CN : 'CN',CPN : 'CPN'});" class="dropdown-item">{{__('car_number')}}</a>
+										<a href="javascript:searchoption('CPN',pagingObject,{ANA : 'ANA',CN : 'CN',CPN : 'CPN'});" class="dropdown-item">{{__('car_customer_phone')}}</a>
 									</div>
 								</div>
 							</div>
@@ -109,7 +110,7 @@
 	// 검색기능
 	$(document).ready(function() {
 		
-		pagereload(pagingObject,  i18nconvert); // 첫 화면 페이지 로드
+		pagereload(pagingObject); // 첫 화면 페이지 로드
 		$('#selectpage').click(function() {
 			selectpage(pagingObject,{
 				option : $('#selectpage option:selected').val()

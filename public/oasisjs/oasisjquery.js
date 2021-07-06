@@ -1,4 +1,16 @@
 
+    // 쿠키 가져오기
+    var getCookie = function (cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1);
+            if (c.indexOf(name) != -1) return c.substring(name.length,c.length);
+        }
+        return "";
+    }
+
     //리스트 시간 출력
     function Timefunction(time) {
     	var cca = Date.UTC();

@@ -2,7 +2,8 @@
 const express = require('express');
 const router = express.Router();
 //Schemas
-const Company = require('../schemas/company');
+const {modelQuery} = require('../schemas/query')
+const {COLLECTION_NAME, QUERY} = require('../const/consts');
 //Middleware
 const { isNotLoggedIn, DataSet } = require('./middleware');
 
@@ -14,7 +15,7 @@ router.post('/point', isNotLoggedIn, DataSet, async(req, res, next) => {
     const { POA } = req.body;
     
     try {
-        await Company.update({ "_id" : company._id }, { "POA" : POA });
+        await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { "_id" : company._id },update : { "POA" : POA }},{});
         return res.send({ result : 'success' });
     } catch(err) {
         res.send({ result : 'fail' });

@@ -1,11 +1,7 @@
 window.addEventListener('load', function() {
 	// 언어 변경시 국기 변환 기능
 	// 쿠키 언어 찾기
-	var cookie = document.cookie;
-	var startIndexOf = cookie.indexOf('lang=');
-	var endIndexOf = cookie.indexOf(';',startIndexOf);
-	if(endIndexOf == -1)endIndexOf = cookie.length; //맨끝일경우;가 없으므로 맨마지막자리를 가져온다.
-	var lang = cookie.substring(startIndexOf+'lang='.length, endIndexOf);
+	var lang = getCookie('lang');
 	
 	// 현재 페이지 찾기
 	var path = document.location.pathname.toString();
@@ -18,8 +14,6 @@ window.addEventListener('load', function() {
 	var quote3 = document.getElementById('quote3');
 	var oasis_flow = document.getElementById('oasis_flow');
 	var personalModal = document.getElementById('personalModal');
-	// console.log("쿠키"+cookie);
-	// console.log("언어"+lang);
 	
 	if(lang == 'ko') {
 		if (cut[1] == 'register') {

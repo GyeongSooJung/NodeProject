@@ -38,9 +38,10 @@
 							<a id="searchoption" href="javascript:;" class="btn btn-sm btn-white">{{__('search')}}</a>
 							<a href="#" data-toggle="dropdown" class="btn btn-sm btn-white dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
 							<div class="dropdown-menu dropdown-menu-right">
-								<a href="javascript:searchoption('CNM',pagingObject,{CNM : 'CNM',DNM : 'DNM',WNM : 'WNM'});" class="dropdown-item">{{__('car_number')}}</a>
-								<a href="javascript:searchoption('DNM',pagingObject,{CNM : 'CNM',DNM : 'DNM',WNM : 'WNM'});" class="dropdown-item">{{__('device_model')}}</a>
-								<a href="javascript:searchoption('WNM',pagingObject,{CNM : 'CNM',DNM : 'DNM',WNM : 'WNM'});" class="dropdown-item">{{__('worker')}}</a>
+								<a href="javascript:searchoption('ANA',pagingObject,{ANA : 'ANA',CNM : 'CNM',DNM : 'DNM',WNM : 'WNM'});" class="dropdown-item">{{__('agent_branch')}}</a>
+								<a href="javascript:searchoption('CNM',pagingObject,{ANA : 'ANA',CNM : 'CNM',DNM : 'DNM',WNM : 'WNM'});" class="dropdown-item">{{__('car_number')}}</a>
+								<a href="javascript:searchoption('DNM',pagingObject,{ANA : 'ANA',CNM : 'CNM',DNM : 'DNM',WNM : 'WNM'});" class="dropdown-item">{{__('device_model')}}</a>
+								<a href="javascript:searchoption('WNM',pagingObject,{ANA : 'ANA',CNM : 'CNM',DNM : 'DNM',WNM : 'WNM'});" class="dropdown-item">{{__('worker')}}</a>
 							</div>
 						</div>
 					</div>
@@ -82,16 +83,10 @@
 							
 						</tbody>
 					</table>
-					{% if(company.AH == true) %}
 					<div class="d-flex justify-content-between align-item-center">
 						<input class="btn btn-primary" type='button' value="{{__('delete_selection')}}" onclick="delete_check('/history/ajax/history_delete');">
 						<div id="pagebox" class=" justify-content-around align-item-center"></div>
 					</div>
-					{% else %}
-					<div class="d-flex justify-content-center align-item-center">
-						<div id="pagebox" class=" justify-content-around align-item-center"></div>
-					</div>
-					{% endif %}
 				</form>
 			</div>
 		</div>

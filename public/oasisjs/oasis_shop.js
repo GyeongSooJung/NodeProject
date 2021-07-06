@@ -357,7 +357,7 @@ function cartNumCount(math, num) {
 			ON : document.getElementsByName('ON')[num].value,
 		}
 	}).done(function(data) {
-		if(result.status == 'success') {
+		if(data.result == 'success') {
 			showCart();
 		}
 		else {
@@ -375,7 +375,6 @@ async function modalReload(Object) {
 		sum += await parseInt(Object.OP[i]);
 	}
 	Object.TT = await (Object.TT + sum) * Object.NUM;
-	console.log(Object.GP+"/"+Object.OP+"/"+Object.TT+"/"+Object.NUM);
 	
 	$(".modal-price").html(Object.TT);
 	$("input[name=count]").val(Object.NUM);
@@ -450,41 +449,43 @@ function showCart() {
 				else {
 					cartImg = "<div class='img' style='background-image: url("+data.cart[i].GI+")'></div>"
 				}
-		    	$(".pos-table").append("\
-			    	<div class='row pos-table-row'>\
-						<div class='col-9'>\
-							<div class='pos-product-thumb'>\
-								"+cartImg+"\
-								<div class='info'>\
-										<input type='hidden' id='index' name='index' value='"+i+"' />\
-									<div class='title'>"+data.cart[i].GN+"</div>\
-										<input type='hidden' id='GN' name='GN' value='"+data.cart[i].GN+"' />\
-									<div class='single-price'>"+data.cart[i].GP+"</div>\
-										<input type='hidden' id='GP' name='GP' value='"+data.cart[i].GP+"' />\
-									<div class='desc'>"+cartON+"</div>\
-										<input type='hidden' id='OT' name='OT' value='"+data.cart[i].OT+"' />\
-										<input type='hidden' id='ON' name='ON' value='"+data.cart[i].ON+"' />\
-										<input type='hidden' id='OP' name='OP' value='"+data.cart[i].OP+"' />\
-									<div class='input-group qty'>\
-										<div class='input-group-append'>\
-											<button class='btn btn-default list-count-btn' onclick=cartNumCount('minus','"+i+"');><i class='fa fa-minus'></i></button>\
-										</div>\
-										<input type='text' class='form-control' name='list-count' value='"+data.cart[i].NUM+"' />\
-										<div class='input-group-prepend'>\
-											<button class='btn btn-default list-count-btn' onclick=cartNumCount('plus','"+i+"');><i class='fa fa-plus'></i></button>\
+				if(data.cart[i].CNU == data.company) {
+			    	$(".pos-table").append("\
+				    	<div class='row pos-table-row'>\
+							<div class='col-9'>\
+								<div class='pos-product-thumb'>\
+									"+cartImg+"\
+									<div class='info'>\
+											<input type='hidden' id='index' name='index' value='"+i+"' />\
+										<div class='title'>"+data.cart[i].GN+"</div>\
+											<input type='hidden' id='GN' name='GN' value='"+data.cart[i].GN+"' />\
+										<div class='single-price'>"+data.cart[i].GP+"</div>\
+											<input type='hidden' id='GP' name='GP' value='"+data.cart[i].GP+"' />\
+										<div class='desc'>"+cartON+"</div>\
+											<input type='hidden' id='OT' name='OT' value='"+data.cart[i].OT+"' />\
+											<input type='hidden' id='ON' name='ON' value='"+data.cart[i].ON+"' />\
+											<input type='hidden' id='OP' name='OP' value='"+data.cart[i].OP+"' />\
+										<div class='input-group qty'>\
+											<div class='input-group-append'>\
+												<button class='btn btn-default list-count-btn' onclick=cartNumCount('minus','"+i+"');><i class='fa fa-minus'></i></button>\
+											</div>\
+											<input type='text' class='form-control' name='list-count' value='"+data.cart[i].NUM+"' />\
+											<div class='input-group-prepend'>\
+												<button class='btn btn-default list-count-btn' onclick=cartNumCount('plus','"+i+"');><i class='fa fa-plus'></i></button>\
+											</div>\
 										</div>\
 									</div>\
 								</div>\
 							</div>\
+							<div class='col-3 d-flex flex-column justify-content-between align-items-end'>\
+								<div class='align-middle text-gray list-remove-btn' onclick=cartDelete(this,'one'); data-num='"+i+"' style='cursor: pointer'>\
+				    				<i class='fas fa-lg fa-times m-2 p-2'></i>\
+				    			</div>\
+				    			<div class='total-price mb-1'>Price : <b>"+data.cart[i].TT+"</b></div>\
+							</div>\
 						</div>\
-						<div class='col-3 d-flex flex-column justify-content-between align-items-end'>\
-							<div class='align-middle text-gray list-remove-btn' onclick=cartDelete(this,'one'); data-num='"+i+"' style='cursor: pointer'>\
-			    				<i class='fas fa-lg fa-times m-2 p-2'></i>\
-			    			</div>\
-			    			<div class='total-price mb-1'>Price : <b>"+data.cart[i].TT+"</b></div>\
-						</div>\
-					</div>\
-		    	");
+			    	");
+				}
 			}
 			var totalSum = 0;
 			for(var i = 0; i < data.cart.length; i++) {
@@ -495,6 +496,16 @@ function showCart() {
 				<div class='price'>"+totalSum+"</div>\
 					<input type='hidden' id='TS' name='TS' value='"+totalSum+"' />\
 			");
+			
+			// 반응형 - 장바구니에 담긴 상품 개수 표시
+			if(data.cart.length != 0) {
+				$('.cart-goods-num').removeClass('d-none');
+				$('.cart-goods-num').html(data.cart.length);
+			}
+			else {
+				$('.cart-goods-num').addClass('d-none');
+				$('.cart-goods-num').empty();
+			}
 		}
 		else {
 			alert(i18nconvert('payment_shop_err'));

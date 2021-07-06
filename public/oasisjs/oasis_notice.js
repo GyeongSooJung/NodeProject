@@ -24,14 +24,32 @@ window.addEventListener('load', function() {
 	});
 });
 
-// 공지사항 팝업
 function noticepop(obj) {
-   var noticeid = $(obj).attr('name');
-    if (noticeid)
-    window.open("/notice_pop?noticeid="+noticeid,"pop","width=620, height=700, scrollbars=yes, resizable=yes"); 
-    else {
-        alert("{{__('purchase_failed')}}");
-    }   
+	var noticeid = $(obj).attr('name');
+	$(".notice-body").empty();
+	$(".notice-date").empty();
+	
+	if (noticeid) {
+		$.ajax({
+			type: 'POST',
+			url: '/ajax/notice_detail',
+			dataType: 'json',
+			data: {
+				noticeid : noticeid
+			}
+		}).done(function(data) {
+			if(data.result == true) {
+				var insertTr = "";
+                insertTr += "<div class='text-center h5 mt-2 mb-3'>["+data.noticedetail[0].TI+"]</div>";
+        	    insertTr += "<div class='text-center'>" +data.noticedetail[0].CO + "</div>";
+        	    $(".notice-body").append(insertTr);
+        	    $(".notice-date").append("<h6 class='mb-0'>"+moment(data.noticedetail[0].CA).format('YYYY-MM-DD')+"</h6>");
+			}
+		})
+	}
+	else {
+		alert("{{__('purchase_failed')}}");
+	}
 }
 
 // 공지사항 작성

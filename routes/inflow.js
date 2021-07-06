@@ -30,14 +30,11 @@ router.get('/', async(req, res, next) => {
 // 바로 넘어갈 경우
 // router.get('/mobile_con', async(req, res, next) => {
 //   var cn = req.query.cn;
-//   console.log(cn);
-//   console.log(req.body.cn+"dddddddddddddd");
   
 //   try {
 //     if(cn) {
 //       const exCN = await Car.findOne({"CN" : cn});
 //       if(exCN) {
-//           console.log('af1313a');
 //           return res.redirect('qrcode/QR?CN='+cn);
 //       }
 //       else {

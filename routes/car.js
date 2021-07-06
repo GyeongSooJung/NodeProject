@@ -8,9 +8,8 @@ const xlsx = require('xlsx');
 const path = require('path');
 const Mongoose = require('mongoose');
 //Schemas
-const Car = require('../schemas/car');
-const Cardelete = require('../schemas/car_delete');
-const Company = require('../schemas/company');
+const {modelQuery} = require('../schemas/query')
+const {COLLECTION_NAME, QUERY} = require('../const/consts');
 //Middleware
 const { isNotLoggedIn } = require('./middleware');
 
@@ -28,21 +27,19 @@ router.post('/car_join', isNotLoggedIn, async (req, res, next) => {
     // 차량번호 정규식
     var check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
     // 업체에 등록된 차량
-    const exCar = await Car.findOne({ "CID" : CID, "CN" :  jsonData.CN });
+    const exCar = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CID" : CID, "CN" :  jsonData.CN },{});
       
     if(jsonData.CN.length >= 7 && jsonData.CN.length <= 8) {
       if(check.test(jsonData.CN) == true) {
         if(!exCar) {
-          await Car.create({
+          await modelQuery(QUERY.Create,COLLECTION_NAME.Car,{
             "CID" : CID,
             "CN" : jsonData.CN,
             "CPN" : jsonData.CPN
-          });
+          },{});
           
           const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
-          await Company.where({ "CNU" : CNU })
-            .update({ "CUA" : CUA }).setOptions({runValidators : true})
-            .exec();
+          await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { "CNU" : CNU }, update : { "CUA" : CUA }},{});
             
           return res.send({ result : 'success', type : 'car' });
         }
@@ -117,12 +114,10 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
     
     // 엑셀 데이터 DB에 upsert방식(없으면 insert, 있으면 update)으로 넣기
     for(var h = 0; h < excelCN.length; h++) {
-      await Car.update({ "CID" : CID, "CN" : excelCN[h] }, { "CID" : CID, "CN" : excelCN[h], "CPN" : excelCPN[h], "CA" : current }, { upsert : true });
+      await modelQuery(QUERY.Updateupsert,COLLECTION_NAME.Car,{where : { "CID" : CID, "CN" : excelCN[h] }, update : { "CID" : CID, "CN" : excelCN[h], "CPN" : excelCPN[h], "CA" : current }});
     }
     
-    await Company.where({"CNU" : CNU})
-      .update({ "CUA" : CUA }).setOptions({runValidators : true})
-      .exec();
+    await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : {"CNU" : CNU}, update : { "CUA" : CUA }},{});
     
     return res.send({ result : 'success', type : 'car' });
     
@@ -190,7 +185,7 @@ router.post('/ajax/car_list_edit1', isNotLoggedIn, async(req, res, next) => {
   const { car_id } = req.body;
   
   var ObjectId = Mongoose.Types.ObjectId;
-  const carone = await Car.find({ _id : ObjectId(car_id) });
+  const carone = await modelQuery(QUERY.Find,COLLECTION_NAME.Car,{ _id : ObjectId(car_id) },{});
   
   res.send({ result : "success", carone : carone });
 });
@@ -199,7 +194,7 @@ router.post('/ajax/car_list_edit1', isNotLoggedIn, async(req, res, next) => {
 router.post('/ajax/car_list_edit2', isNotLoggedIn, async(req, res, next) => {
   const { CN, CPN, CID, car_id } = req.body;
   
-  const exCar = await Car.findOne({ "CID" : CID, "CN" :  CN });
+  const exCar = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CID" : CID, "CN" :  CN },{});
   const check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
   const numCheck = /^[0-9]*$/;
   try{
@@ -211,18 +206,12 @@ router.post('/ajax/car_list_edit2', isNotLoggedIn, async(req, res, next) => {
           if(numCheck.test(CPN) == true) {
             const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
             
-            await Car.where({ "_id" : car_id })
-              .updateOne({
+            await modelQuery(QUERY.Update,COLLECTION_NAME.Car, {where : { "_id" : car_id } , update : {
                 "CID" : CID,
                 "CN" : CN,
                 "CPN" : CPN,
-              }).setOptions({runValidators : true})
-              .exec();
-            await Company.where({ "_id" : CID })
-              .updateOne({
-                "CUA" : CUA
-              }).setOptions({runValidators : true})
-              .exec();
+              }},{});
+              await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { "_id" : CID }, update : {"CUA" : CUA}},{});
               
             return res.send({ result : "success" });
           }
@@ -254,17 +243,16 @@ router.post('/ajax/car_deleteone', isNotLoggedIn, async (req, res, next) => {
   const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
+  
   try {
-    const carone = await Car.findOne({ "CID" : CID, "CN" : select.split(' ') });
-    await Cardelete.create({
+    const carone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select.split(' ') },{});
+    await modelQuery(QUERY.Create,COLLECTION_NAME.Cardelete,{
       "CID" : carone.CID,
       "CC" : carone.CC,
       "CPN" : carone.CPN,
-    });
-    await Car.remove({ "CID" : CID, "CN" : select.split(' ') });
-    await Company.where({"CNU" : CNU})
-      .update({ "CUA" : CUA }).setOptions({runValidators : true})
-      .exec();
+    },{});
+    await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select.split(' ') },{});
+    await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : {"CNU" : CNU}, update : { "CUA" : CUA }},{});
       
     res.send({ result : 'success' });
   } catch (err) {
@@ -286,29 +274,27 @@ router.post('/ajax/car_delete', isNotLoggedIn ,async (req, res, next) => {
         }
         else {
           if (typeof(select) == 'string') {
-            const carone = await Car.findOne({ "CID" : CID, "CN" : select });
-            await Cardelete.create({
+            const carone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select },{});
+            await modelQuery(QUERY.Create,COLLECTION_NAME.Cardelete,{
                 "CID" : carone.CID,
                 "CN" : carone.CN,
                 "CPN" : carone.CPN,
-            });
-            await Car.remove({ "CID" : CID, "CN" : select });
+            },{});
+            await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select },{});
           }
           else {
              for(var i = 0; i < select.length; i++){
-               var carone = await Car.findOne({ "CID" : CID, "CN" : select[i] });  
-                 await Cardelete.create({
+                var carone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select[i] },{});
+                await modelQuery(QUERY.Create,COLLECTION_NAME.Cardelete,{
                     "CID" : carone.CID,
                     "CN" : carone.CN,
                     "CPN" : carone.CPN,
-                });
-                await Car.remove({ "CID" : CID, "CN" : select[i] });
+                },{});
+                await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select[i] },{});
              }
           }
           
-          await Company.where({ "CNU" : CNU })
-            .update({ "CUA" : CUA }).setOptions({runValidators : true})
-            .exec();
+          await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { "CNU" : CNU }, update : { "CUA" : CUA }},{});
             
           res.send({ result : 'success' });
         }

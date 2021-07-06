@@ -166,7 +166,7 @@
 					<path fill-rule="evenodd" d="M14 5H2v9a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V5zM1 4v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4H1z"/>
 					<path d="M8 1.5A2.5 2.5 0 0 0 5.5 4h-1a3.5 3.5 0 1 1 7 0h-1A2.5 2.5 0 0 0 8 1.5z"/>
 				</svg>
-				<span class="badge">5</span>
+				<span class="badge cart-goods-num d-none"></span>
 			</a>
 			<!-- END pos-mobile-sidebar-toggler -->
 		</div>
@@ -177,6 +177,13 @@
 		<!-- end scroll to top btn -->
 	</div>
 	<!-- end page container -->
+	
+	<!--//-->
+	<!--<form id='test-form' action='' method='post' enctype="multipart/form-data">-->
+	<!--	<input type='file' id='GI' name='GI'>-->
+ <!--     	<input type='button' onclick="test();" value='테스트'>-->
+	<!--</form>-->
+	<!--//-->
 	
 	<!-- BEGIN #modalPosItem -->
 	<div class="modal modal-pos-item fade" id="modalPosItem">
@@ -221,6 +228,31 @@
 	<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 	<script>
 		var shopObject = new Object({ GN: "", GE: "", GI: "", GP: 0, GO: false, OT: [], ON: [], OP: [], TT: 0, NUM: 1 });
+		
+		// 테스트
+		function test() {
+			var form = $('#test-form')[0];
+			var formData = new FormData(form);
+			formData.append('img', $('#GI')[0].files[0]);
+			console.log($('#GI')[0].files[0]);
+			
+			$.ajax({
+		    	type: 'POST',
+				enctype: 'multipart/form',
+				url: '/shop/test',
+				data: formData,
+				processData: false,
+				contentType: false
+		    }).done(function(data) {
+		    	console.log(data)
+		    	if(data.result == "success") {
+		    		alert('upload');
+		    	}
+		    	else {
+		    		alert('fail');
+		    	}
+		    });
+		}
 		
 		// 상품 이미지 등록
 		function goodsImg(formName) {

@@ -7,25 +7,24 @@ const xml2js = require('xml2js'); // xml 파싱 모듈
 const axios = require('axios');
 const request = require('request');
 //Schemas
-const Company = require('../schemas/company');
-
+const {modelQuery} = require('../schemas/query')
+const {COLLECTION_NAME, QUERY} = require('../const/consts');
 // -- Start Code -- //
 
 // 회원가입
 router.post('/register', async (req, res, next) => {
   const { CNU, CNA, ANU, ANA, CK, addr1, addr2, PN, NA, MN, PW, EA, CEA } = req.body;
-  console.log("씨에케"+ANA+"/"+ANU);
   const ADR = addr1+addr2;
   const hashAuth = req.cookies.hashAuth;
   
   try {
-    const companyEA = await Company.findOne({ "EA" : EA });
-    const companyCNU = await Company.findOne({ "CNU" : CNU });
+    const companyEA = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ "EA" : EA },{});
+    const companyCNU = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ "CNU" : CNU },{});
     
     if(!companyEA && !companyCNU) {
       if(bcrypt.compareSync(CEA, hashAuth)) {
         const hashPW = await bcrypt.hash(PW, 12);
-          await Company.create({
+          await modelQuery(QUERY.Create,COLLECTION_NAME.Company,{
             CNU : CNU+ANU,
             CNA,
             ANU,
@@ -37,7 +36,7 @@ router.post('/register', async (req, res, next) => {
             MN,
             PW : hashPW,
             EA
-          });
+          },{});
           return res.send({ result : 'success' });
       }
       else {
@@ -161,7 +160,7 @@ router.post('/agent', async (req, res, next) => {
   const CNU = req.body.CNU;
   
   try {
-    const agents = await Company.findOne({ "CNU" : CNU+"000" });
+    const agents = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ "CNU" : CNU+"000" },{});
     if(agents) {
       var nameList = [];
       var codeList = [];
