@@ -1,11 +1,11 @@
 const bcrypt = require('bcrypt');
 
 const Schema = require('../../schemas/schemas');
-const { History,Device,Worker } = Schema;
+const { History, Device, Worker, Company, Car } = Schema;
 
-const {modelQuery} = require('../../schemas/query')
-const {COLLECTION_NAME, QUERY} = require('../../const/consts');
-const {COLLECTIONS} = require("../../schemas/schemas")
+const { modelQuery } = require('../../schemas/query');
+const { COLLECTION_NAME, QUERY } = require('../../const/consts');
+const { COLLECTIONS } = require("../../schemas/schemas");
 
 var moment = require('moment');
 const jwt = require('jsonwebtoken');
@@ -95,12 +95,12 @@ async function createDocument(req, res, next, collection) {
    var doc = req.body;
    var postJob; // 추가 작업용 함수포인터
 
-   
+
    switch (collection) {
       case COLLECTIONS.History:
          // 장비의 사용횟수 증가
          postJob = async function() {
-            await modelQuery(QUERY.Updateone,COLLECTIONS.Device,{where : { _id: doc[HISTORY.deviceID] }, update : { $inc: { UN: 1 } }},{});
+            await modelQuery(QUERY.Updateone, COLLECTIONS.Device, { where: { _id: doc[HISTORY.deviceID] }, update: { $inc: { UN: 1 } } }, {});
          };
          break;
       default:
@@ -113,9 +113,9 @@ async function createDocument(req, res, next, collection) {
          data: result._id,
       });
    };
-   
-   await modelQuery(QUERY.Create,Collection,doc,{postJob : postJob}).then(resResult).catch(next); 
-   
+
+   await modelQuery(QUERY.Create, Collection, doc, { postJob: postJob }).then(resResult).catch(next);
+
    // 기존코드
    // switch (collection) {
    //    case COLLECTIONS.History:
@@ -162,8 +162,8 @@ async function findOneDecument(req, res, next, collection) {
       });
    };
 
-   await modelQuery(QUERY.Findone,Collection,doc,{postJob : postJob}).then(resResult).catch(next); 
-   
+   await modelQuery(QUERY.Findone, Collection, doc, { postJob: postJob }).then(resResult).catch(next);
+
    // 기존코드
    // const resResult = (document) => {
    //    if (postJob != null) {
@@ -208,9 +208,9 @@ async function findDecuments(req, res, next, collection) {
       });
    };
 
-   await modelQuery(QUERY.Find,Collection,{searchOption : searchOption, projectOption : projectOption},{skip : startPage * nowPage, limit : nowPage , sort : { CA: -1 }})
-   .then(resResult).catch(next);
-   
+   await modelQuery(QUERY.Find, Collection, { searchOption: searchOption, projectOption: projectOption }, { skip: startPage * nowPage, limit: nowPage, sort: { CA: -1 } })
+      .then(resResult).catch(next);
+
    // 기존코드
    // const resResult = (documents) => {
    //    if (postJob != null) {
@@ -257,8 +257,8 @@ async function updateOneDecument(req, res, next, collection) {
       });
    };
 
-   await modelQuery(QUERY.Updateone,Collection,{where : { _id }, update : doc},{}).then(resResult).catch(next);
-   
+   await modelQuery(QUERY.Updateone, Collection, { where: { _id }, update: doc }, {}).then(resResult).catch(next);
+
    // 기존코드
    // await Collection.where({ _id }).updateOne(doc).then(resResult).catch(next);
 
@@ -275,7 +275,7 @@ exports.historyRoot = (req, res, next) => {
       case CMD.find:
          findDecuments(req, res, next, COLLECTIONS.History);
          break;
-      // 임시 라우팅, 향후 삭제
+         // 임시 라우팅, 향후 삭제
       case "/findOne": // 향후 삭제
          findOneDecument(req, res, next, COLLECTIONS.History);
          break;
@@ -325,9 +325,9 @@ exports.findWorker = async(req, res) => {
 exports.signIn = async(req, res) => {
    const { type, id, email } = req.body;
    if (type == "GOOGLE") {
-      var worker = await Worker.findOne({ "GID": id, "EM": email });
-      // console.log(type, id, email);
-      // console.log(worker);
+      // var worker = await Worker.findOne({ "GID": id, "EM": email });
+
+      var worker = await Worker.findOneAndUpdate({ "GID": id, "EM": email }, { UA: Date.now() }, { new: true });
 
       if (worker != null) {
          // 토큰 생성
@@ -336,8 +336,6 @@ exports.signIn = async(req, res) => {
          }, JWT_SECRET, {
             expiresIn: "1d",
          });
-
-         await Worker.where({ _id: worker._id }).updateOne({ UA: Date.now() });
 
          const companycua = await Company.aggregate([
             { $match: { "_id": ObjectId(worker.CID) } },

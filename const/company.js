@@ -70,7 +70,7 @@ const COMPANY = {
         PW: {
             type: String,
             required: true,
-        },
+        },//MK_Admin_authorization
         AH: {
             type: Boolean,
             required: true,
