@@ -83,4 +83,21 @@ exports.agentDevide = async(req, res, next) => {
   }
 };
 
+exports.browserCheck = async(req, res, next) => {
+  try {
+    var browser = navigator.userAgent.toLowerCase();
+    if(browser.indexOf('chrome') > -1) {
+      console.log('chrome');
+      next();
+    }
+    else {
+      console.log('no chrome');
+      res.render('browser_error');
+    }
+  } catch(err) {
+    console.error(err);
+    next(err);
+  }
+}
+
 // exports.upload = multer(upload);
