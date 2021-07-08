@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 
 const Schema = require('../../schemas/schemas');
 const { History, Device, Worker, Company, Car } = Schema;
+console.log(History, Schema)
 
 const { modelQuery } = require('../../schemas/query');
 const { COLLECTION_NAME, QUERY } = require('../../const/consts');
@@ -181,7 +182,8 @@ async function findOneDecument(req, res, next, collection) {
 
 async function findDecuments(req, res, next, collection) {
    console.log("[findOneDecument]");
-   var Collection = collection;
+   // var Collection = collection;
+   console.log(String(collection));
 
    var postJob; // 추가 작업용 함수포인터
    var searchOption = {};
@@ -190,7 +192,7 @@ async function findDecuments(req, res, next, collection) {
    var nowPage = (req.body.NOP == null) ? 0 : req.body.NOP;
 
    switch (collection) {
-      case COLLECTIONS.History:
+      case History:
          searchOption.CID = req.body.CID;
          projectOption.PD = false;
          break;
@@ -207,8 +209,8 @@ async function findDecuments(req, res, next, collection) {
          dataList: documents,
       });
    };
-
-   await modelQuery(QUERY.Find, Collection, { searchOption: searchOption, projectOption: projectOption }, { skip: startPage * nowPage, limit: nowPage, sort: { CA: -1 } })
+   console.log(QUERY.Find,collection);
+   await modelQuery(QUERY.Find, COLLECTION_NAME.History, { searchOption: searchOption, projectOption: projectOption }, { skip: startPage * nowPage, limit: nowPage, sort: { CA: -1 } })
       .then(resResult).catch(next);
 
    // 기존코드
@@ -265,6 +267,7 @@ async function updateOneDecument(req, res, next, collection) {
 }
 
 exports.historyRoot = (req, res, next) => {
+   console.log("historyRoot");
    switch (req.path) {
       case CMD.create:
          createDocument(req, res, next, COLLECTIONS.History);
@@ -273,7 +276,7 @@ exports.historyRoot = (req, res, next) => {
          findOneDecument(req, res, next, COLLECTIONS.History);
          break;
       case CMD.find:
-         findDecuments(req, res, next, COLLECTIONS.History);
+         findDecuments(req, res, next, History);
          break;
          // 임시 라우팅, 향후 삭제
       case "/findOne": // 향후 삭제
@@ -328,6 +331,55 @@ exports.signIn = async(req, res) => {
       // var worker = await Worker.findOne({ "GID": id, "EM": email });
 
       var worker = await Worker.findOneAndUpdate({ "GID": id, "EM": email }, { UA: Date.now() }, { new: true });
+      // var worker = await Worker.findAndModify({
+      //    query: { "GID": id, "EM": email },
+      //    update: { UA: Date.now() },
+      //    upsert: false,
+      //    new: true
+      // });
+
+      var test = await Worker.aggregate([{
+            $match: { "_id": ObjectId("603495f9704af4696069c4ef") }
+         },
+         { "$addFields": { "comObjId": { "$toObjectId": "$CID" } } },
+         {
+            $lookup: {
+               from: "worker",
+               localField: "_id",
+               foreignField: "_id",
+               as: "worker"
+            }
+         },
+         { "$unwind": "$worker" },
+         {
+            $lookup: {
+               from: "Company",
+               localField: "comObjId",
+               foreignField: "_id",
+               as: "company"
+            }
+         },
+         { "$unwind": "$company" },
+         {
+            $lookup: {
+               from: "cars",
+               localField: "CID",
+               foreignField: "CID",
+               as: "cars"
+            }
+         },
+         {
+            $lookup: {
+               from: "device",
+               localField: "CID",
+               foreignField: "CID",
+               as: "devices"
+            }
+         },
+      ]);
+
+      // console.log(JSON.stringify(test,2));
+
 
       if (worker != null) {
          // 토큰 생성
@@ -337,19 +389,19 @@ exports.signIn = async(req, res) => {
             expiresIn: "1d",
          });
 
-         const companycua = await Company.aggregate([
-            { $match: { "_id": ObjectId(worker.CID) } },
-            { $project: { CUA: "$CUA" } }
-         ], function(err, result) {
-            if (err) throw err;
-         });
-         const carUA = companycua[0].CUA;
+         // const companycua = await Company.aggregate([
+         //    { $match: { "_id": ObjectId(worker.CID) } },
+         //    { $project: { CUA: "$CUA" } }
+         // ], function(err, result) {
+         //    if (err) throw err;
+         // });
+         // const carUA = companycua[0].CUA;
 
          return res.json({
             result: true,
-            data: JSON.stringify(worker),
+            data: JSON.stringify(test[0]),
             token,
-            carUA
+            // carUA
          });
 
 
