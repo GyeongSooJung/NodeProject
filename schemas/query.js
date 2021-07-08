@@ -18,10 +18,10 @@ const { Alarm, Car, Cardelete, Company,
        } = Schemas; // 몽구스 model 파일들
 
 exports.modelQuery = async (query,collection,doc,option) => {
-    
     var doc = doc;
     
     var Collection = Schemas[collection];
+    
     var option = option;
     var one;
     var postJob; // 임의로 지정해줄 수도 있고, option으로 받아올 수도 있음 (부가적인 함수)

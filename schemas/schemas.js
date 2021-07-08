@@ -11,21 +11,21 @@ const { ALARM_COMPLETE, CAR, CAR_DELETE,
 const { Schema } = mongoose;
 
 const alarmSchema = new Schema(ALARM_COMPLETE.schema, { collection: 'Alarm' });
-const carSchema = new Schema(CAR.schema);
-const car_deleteSchema = new Schema(CAR_DELETE.schema, { collection: 'car_delete'});
+const carSchema = new Schema(CAR.schema, { collection: 'Car' });
+const car_deleteSchema = new Schema(CAR_DELETE.schema, { collection: 'Cardelete'});
 const companySchema = new Schema(COMPANY.schema, { collection: 'Company' });
-const deviceSchema = new Schema( DEVICE.schema, {collection : 'device'});
-const device_deleteSchema = new Schema(DEVICE_DELETE.schema,{collection : 'device_delete'});
+const deviceSchema = new Schema( DEVICE.schema, {collection : 'Device'});
+const device_deleteSchema = new Schema(DEVICE_DELETE.schema,{collection : 'Devicedelete'});
 const goodsSchema = new Schema(GOODS.schema, { collection: 'Goods' });
-const goods_OptionSchema = new Schema(GOODS_OPTION.schema, { collection: 'Goods_Option' });
-const historySchema = new Schema(HISTORY.schema, { collection: 'history' });
+const goods_OptionSchema = new Schema(GOODS_OPTION.schema, { collection: 'GoodsOption' });
+const historySchema = new Schema(HISTORY.schema, { collection: 'History' });
 const noticeSchema = new Schema(NOTICE.schema, { collection: 'Notice' });
 const OrderSchema = new Schema(ORDER.schema, { collection: 'Order' });
-const Order_DetailSchema = new Schema(ORDER_DETAIL.schema, { collection: 'Order_Detail' });
+const Order_DetailSchema = new Schema(ORDER_DETAIL.schema, { collection: 'OrderDetail' });
 const pointSchema = new Schema(POINT.schema, { collection: 'Point' });
 const publishSchema = new Schema(PUBLISH.schema, { collection: 'Publish' });
-const workerSchema = new Schema(WORKER.schema, { collection: 'worker' });
-const worker_deleteSchema = new Schema(WORKER_DELETE.schema, { collection: 'worker_delete' });
+const workerSchema = new Schema(WORKER.schema, { collection: 'Worker' });
+const worker_deleteSchema = new Schema(WORKER_DELETE.schema, { collection: 'Workerdelete' });
 
 const Alarm = mongoose.model('Alarm',alarmSchema);
 const Car = mongoose.model('Car',carSchema);
