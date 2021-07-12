@@ -45,9 +45,16 @@ const {
 
 exports.modelQuery = async(query, collection, doc, option) => {
 
+<<<<<<< HEAD
+=======
+exports.modelQuery = async (query,collection,doc,option) => {
+>>>>>>> 9b0c51c86758e4e17727028e25881807455bc522
     var doc = doc;
 
     var Collection = Schemas[collection];
+    
+    // console.log(Collection.prototype.schema.options.collection);
+    
     var option = option;
     var one;
     var postJob; // 임의로 지정해줄 수도 있고, option으로 받아올 수도 있음 (부가적인 함수)
