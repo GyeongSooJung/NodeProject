@@ -190,7 +190,7 @@ async function findDecuments(req, res, next, collection) {
    var projectOption = {};
    var startPage = (req.body.SP == null) ? 0 : req.body.SP;
    var nowPage = (req.body.NOP == null) ? 0 : req.body.NOP;
-
+   var Collection = collection.prototype.schema.options.collection;
    switch (collection) {
       case History:
          searchOption.CID = req.body.CID;
@@ -210,7 +210,7 @@ async function findDecuments(req, res, next, collection) {
       });
    };
    console.log(QUERY.Find,collection);
-   await modelQuery(QUERY.Find, COLLECTION_NAME.History, { searchOption: searchOption, projectOption: projectOption }, { skip: startPage * nowPage, limit: nowPage, sort: { CA: -1 } })
+   await modelQuery(QUERY.Find, Collection, { searchOption: searchOption, projectOption: projectOption }, { skip: startPage * nowPage, limit: nowPage, sort: { CA: -1 } })
       .then(resResult).catch(next);
 
    // 기존코드
