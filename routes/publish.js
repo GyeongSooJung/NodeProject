@@ -22,7 +22,7 @@ router.get('/', async (req, res, next) => {
       
       const historyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.History,{"_id" : HID},{});
       if(historyone) {
-        await modelQuery(QUERY.Updateupsert,COLLECTION_NAME.Publish,{where : {"PUC" : cat}, update : {$inc : {"PUN" : 1}}});
+        await modelQuery(QUERY.Updateupsert,COLLECTION_NAME.Publish,{where : {"PUC" : cat}, update : {$inc : {"PUN" : 1}}},{});
         
         const companyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{"_id" : historyone.CID},{});
         const deviceone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Device,{"_id" : historyone.DID},{});
