@@ -2,17 +2,11 @@ const bcrypt = require('bcrypt');
 
 const Schema = require('../../schemas/schemas');
 const { History, Device, Worker, Company, Car } = Schema;
-console.log(History, Schema)
-
 const { modelQuery } = require('../../schemas/query');
 const { COLLECTION_NAME, QUERY } = require('../../const/consts');
-const { COLLECTIONS } = require("../../schemas/schemas");
 
-var moment = require('moment');
 const jwt = require('jsonwebtoken');
-
 const JWT_SECRET = "OASIS";
-
 const { config, Group } = require('solapi');
 
 const Mongoose = require('mongoose');
@@ -75,7 +69,11 @@ exports.tokenVerification = async(req, res, next) => {
       throw new Error("The method is not support");
    }
 
-   const token = req.body.token;
+   // 향후 바디에서 토큰을 제거하고 해더 토큰을 사용
+   var token = req.body.token;
+   if (token == null) {
+      token = req.headers.token;
+   }
 
    try {
       jwt.verify(token, JWT_SECRET);
@@ -92,7 +90,7 @@ exports.tokenVerification = async(req, res, next) => {
 
 async function createDocument(req, res, next, collection) {
    console.log("[createDocument]");
-   var Collection = collection;
+   const Collection = collection;
    var doc = req.body;
    var postJob; // 추가 작업용 함수포인터
 
@@ -116,6 +114,7 @@ async function createDocument(req, res, next, collection) {
    };
 
    await modelQuery(QUERY.Create, Collection, doc, { postJob: postJob }).then(resResult).catch(next);
+
 
    // 기존코드
    // switch (collection) {
@@ -145,39 +144,28 @@ async function createDocument(req, res, next, collection) {
 
 async function findOneDecument(req, res, next, collection) {
    console.log("[findOneDecument]");
-   var Collection = collection;
+   var Collection = collection.prototype.schema.options.collection;
    var doc = req.body;
-   var postJob; // 추가 작업용 함수포인터
+   console.log(doc);
+
 
    switch (collection) {
-      case COLLECTIONS.History:
+      case History:
          break;
       default:
          throw new Error("Wrong request");
    }
 
    const resResult = (document) => {
+      console.log("hi");
+      console.log(document);
       res.json({
          result: true,
          data: JSON.stringify(document),
       });
    };
 
-   await modelQuery(QUERY.Findone, Collection, doc, { postJob: postJob }).then(resResult).catch(next);
-
-   // 기존코드
-   // const resResult = (document) => {
-   //    if (postJob != null) {
-   //       postJob();
-   //    }
-   //    res.json({
-   //       result: true,
-   //       data: JSON.stringify(document),
-   //    });
-   // };
-
-   // await Collection.findOne(doc).then(resResult).catch(next);
-
+   await modelQuery(QUERY.Findone, Collection, doc, {}).then(resResult).catch(next);
 }
 
 async function findDecuments(req, res, next, collection) {
@@ -209,7 +197,7 @@ async function findDecuments(req, res, next, collection) {
          dataList: documents,
       });
    };
-   console.log(QUERY.Find,collection);
+
    await modelQuery(QUERY.Find, Collection, { searchOption: searchOption, projectOption: projectOption }, { skip: startPage * nowPage, limit: nowPage, sort: { CA: -1 } })
       .then(resResult).catch(next);
 
@@ -232,7 +220,9 @@ async function findDecuments(req, res, next, collection) {
 
 async function updateOneDecument(req, res, next, collection) {
    console.log("[updateOneDecument]");
-   var Collection = collection;
+   // var Collection = collection;
+   var Collection = collection.prototype.schema.options.collection;
+   console.log(Collection);
    var doc = req.body;
    var postJob; // 추가 작업용 함수포인터
 
@@ -249,6 +239,12 @@ async function updateOneDecument(req, res, next, collection) {
    //       throw new Error("Wrong request");
    // }
 
+   const resUpdateOne = (document) => {
+
+   };
+
+
+
    const resResult = (document) => {
       if (postJob != null) {
          postJob();
@@ -259,7 +255,10 @@ async function updateOneDecument(req, res, next, collection) {
       });
    };
 
-   await modelQuery(QUERY.Updateone, Collection, { where: { _id }, update: doc }, {}).then(resResult).catch(next);
+   // await modelQuery(QUERY.Updateone, Collection, { where: { _id }, update: doc }, {}).then(resResult).catch(next);
+   await modelQuery(QUERY.Updateone, Collection, { where: { _id }, update: doc }, {}).catch(next);
+   await modelQuery(QUERY.Findone, Collection, { _id }, {}).then(resResult).catch(next);
+
 
    // 기존코드
    // await Collection.where({ _id }).updateOne(doc).then(resResult).catch(next);
@@ -270,17 +269,17 @@ exports.historyRoot = (req, res, next) => {
    console.log("historyRoot");
    switch (req.path) {
       case CMD.create:
-         createDocument(req, res, next, COLLECTIONS.History);
+         createDocument(req, res, next, History);
          break;
       case CMD.findOne:
-         findOneDecument(req, res, next, COLLECTIONS.History);
+         findOneDecument(req, res, next, History);
          break;
       case CMD.find:
          findDecuments(req, res, next, History);
          break;
          // 임시 라우팅, 향후 삭제
       case "/findOne": // 향후 삭제
-         findOneDecument(req, res, next, COLLECTIONS.History);
+         findOneDecument(req, res, next, History);
          break;
       default:
          next();
@@ -291,13 +290,13 @@ exports.workerRoot = (req, res, next) => {
    console.log("[workerRoot]");
    switch (req.path) {
       case CMD.findOne:
-         findOneDecument(req, res, next, COLLECTIONS.Worker);
+         findOneDecument(req, res, next, Worker);
          break;
       case CMD.find:
-         findDecuments(req, res, next, COLLECTIONS.Worker);
+         findDecuments(req, res, next, Worker);
          break;
       case CMD.updateOne:
-         updateOneDecument(req, res, next, COLLECTIONS.Worker);
+         updateOneDecument(req, res, next, Worker);
          break;
       default:
          next();
@@ -328,23 +327,17 @@ exports.findWorker = async(req, res) => {
 exports.signIn = async(req, res) => {
    const { type, id, email } = req.body;
    if (type == "GOOGLE") {
-      // var worker = await Worker.findOne({ "GID": id, "EM": email });
 
       var worker = await Worker.findOneAndUpdate({ "GID": id, "EM": email }, { UA: Date.now() }, { new: true });
-      // var worker = await Worker.findAndModify({
-      //    query: { "GID": id, "EM": email },
-      //    update: { UA: Date.now() },
-      //    upsert: false,
-      //    new: true
-      // });
 
-      var test = await Worker.aggregate([{
+
+      var resource = await Worker.aggregate([{
             $match: { "_id": ObjectId("603495f9704af4696069c4ef") }
          },
          { "$addFields": { "comObjId": { "$toObjectId": "$CID" } } },
          {
             $lookup: {
-               from: "worker",
+               from: COLLECTION_NAME.Worker,
                localField: "_id",
                foreignField: "_id",
                as: "worker"
@@ -353,7 +346,7 @@ exports.signIn = async(req, res) => {
          { "$unwind": "$worker" },
          {
             $lookup: {
-               from: "Company",
+               from: COLLECTION_NAME.Company,
                localField: "comObjId",
                foreignField: "_id",
                as: "company"
@@ -362,7 +355,7 @@ exports.signIn = async(req, res) => {
          { "$unwind": "$company" },
          {
             $lookup: {
-               from: "cars",
+               from: COLLECTION_NAME.Car,
                localField: "CID",
                foreignField: "CID",
                as: "cars"
@@ -370,16 +363,13 @@ exports.signIn = async(req, res) => {
          },
          {
             $lookup: {
-               from: "device",
+               from: COLLECTION_NAME.Device,
                localField: "CID",
                foreignField: "CID",
                as: "devices"
             }
          },
       ]);
-
-      // console.log(JSON.stringify(test,2));
-
 
       if (worker != null) {
          // 토큰 생성
@@ -389,17 +379,9 @@ exports.signIn = async(req, res) => {
             expiresIn: "1d",
          });
 
-         // const companycua = await Company.aggregate([
-         //    { $match: { "_id": ObjectId(worker.CID) } },
-         //    { $project: { CUA: "$CUA" } }
-         // ], function(err, result) {
-         //    if (err) throw err;
-         // });
-         // const carUA = companycua[0].CUA;
-
          return res.json({
             result: true,
-            data: JSON.stringify(test[0]),
+            data: JSON.stringify(resource[0]),
             token,
             // carUA
          });
