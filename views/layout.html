@@ -39,61 +39,78 @@
 	<!-- begin #page-container -->
 	<div id="page-container" class="page-container fade page-sidebar-fixed page-header-fixed">
 		<!-- begin #header -->
-		<div id="header" class="header navbar-default">
+		<div id="header" class="header navbar-default boxShadow">
 			<!-- begin navbar-header -->
 			<div class="navbar-header">
-				<a href="/main" class="navbar-brand ml-3"><img src="../assets/img/oasis.png"></a>
-				<button type="button" class="navbar-toggle" data-click="sidebar-toggled">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
+				<h3 class="mb-0">{{page_title}}</h3>
 			</div>
-			<div class="navbar-nav navbar-right">
-				{% if noticethree %}
-				<div class="d-flex justify-content-center align-items-center font-weight-bold">
-					<p class="width-80 mb-0 height-20">{{__('notice_list')}} &nbsp;:&nbsp;</p>
-					<div class="notice overflow-hidden height-20">
-						<ul class="rolling position-relative mb-0">
-							{% for notice in noticethree %}
-							<li class="height-20 mb-0">
-								<a href="javascript:;" onclick="noticepop(this)" name="{{notice._id}}" data-toggle="modal" data-target="#notice-modal">
-									{{notice.TI}}
-								</a>
-							</li>
-							{% endfor %}
-						</ul>
-					</div>
-				</div>
-				{% else %}
-				{% endif %}
-			</div>
+			<!--<div class="navbar-nav navbar-right">-->
+			<!--	{% if noticethree %}-->
+			<!--	<div class="d-flex justify-content-center align-items-center font-weight-bold">-->
+			<!--		<p class="width-80 mb-0 height-20">{{__('notice_list')}} &nbsp;:&nbsp;</p>-->
+			<!--		<div class="notice overflow-hidden height-20">-->
+			<!--			<ul class="rolling position-relative mb-0">-->
+			<!--				{% for notice in noticethree %}-->
+			<!--				<li class="height-20 mb-0">-->
+			<!--					<a href="javascript:;" onclick="noticepop(this)" name="{{notice._id}}" data-toggle="modal" data-target="#notice-modal">-->
+			<!--						{{notice.TI}}-->
+			<!--					</a>-->
+			<!--				</li>-->
+			<!--				{% endfor %}-->
+			<!--			</ul>-->
+			<!--		</div>-->
+			<!--	</div>-->
+			<!--	{% else %}-->
+			<!--	{% endif %}-->
+			<!--</div>-->
 			<!-- end navbar-header -->
 			<!-- begin header-nav -->
-			<ul class="navbar-nav navbar-right">
+			<ul class="navbar-nav navbar-right d-flex align-items-center">
 				<li class="dropdown navbar-user">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<span class="d-md-inline font-weight-bold">{{company.CNA}}({{company.ANA}})</span>
-						<span class="font-weight-bold text-info">({{__('main_point')}} : <span id="pointbox" class="text-primary">{{company.SPO}} p</span>)</span>
-						<b class="caret"></b>
+						<div class="d-flex justify-content-center align-items-center">
+							<div class="icon-circle">
+								<i class="fa fa-user"></i>
+							</div>
+							<div class="line-height-none ml-2">
+								<p class="mb-0 font-weight-bold company-p">{{company.CNA}}({{company.ANA}})</p>
+								<p class="mb-0 font-weight-bold">
+									<span class="ceo-p">{{company.NA}}</span>
+									<span> 대표님</span>
+								</p>
+							</div>
+						</div>
+						<!--<span class="font-weight-bold text-info">({{__('main_point')}} : <span id="pointbox" class="text-primary">{{company.SPO}} p</span>)</span>-->
 					</a>
 					<div class="dropdown-menu dropdown-menu-right">
 						<a href="/profile" class="dropdown-item">{{__('layout_modify')}}</a>
 						<a href="/setting" class="dropdown-item">{{__('layout_setting')}}</a>
 						<div class="dropdown-divider"></div>
 						<a href="/shop" class="dropdown-item">{{__('layout_payment_point_purchase')}}</a>
-						<a href="javascript:logout(i18nconvert)" class="dropdown-item">{{__('layout_signout')}}</a>
-						<a href="javascript:withdrawal(i18nconvert)" class="dropdown-item">{{__('layout_withdrawal')}}</a>
 					</div>
+				</li>
+				<li class="navbar-user notice-bell">
+					<a href="#">
+						<i class="far fa-bell"></i>
+						{% if (aclist.length >= 1) %}
+						<div class="red-point"></div>
+						{% else %}
+						{% endif %}
+					</a>
 				</li>
 				<li class="dropdown navbar-user d-flex justify-content-around align-items-center">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<img class="flag select-flag" src="https://lipis.github.io/flag-icon-css/flags/4x3/kr.svg" alt="Select Language Flag">
+						<i class="fa fa-globe"></i>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right">
 						<a href="/ko" class="dropdown-item d-flex justify-content-start align-items-center"><img class="flag" src="https://lipis.github.io/flag-icon-css/flags/4x3/kr.svg" alt="South Korea Flag">{{__('lang_kr')}}</a>
 						<a href="/en" class="dropdown-item d-flex justify-content-start align-items-center"><img class="flag" src="https://lipis.github.io/flag-icon-css/flags/4x3/us.svg" alt="United States of America Flag">{{__('lang_en')}}</a>
 					</div>
+				</li>
+				<li class="navbar-user">
+					<a href="javascript:logout(i18nconvert)">
+						<i class="fas fa-sign-out-alt"></i>
+					</a>
 				</li>
 			</ul>
 			<!-- end header-nav -->
@@ -101,12 +118,24 @@
 		<!-- end #header -->
 		
 		<!-- begin #sidebar -->
-		<div id="sidebar" class="sidebar">
+		<div id="sidebar" class="sidebar custom-side-bar">
 			<!-- begin sidebar scrollbar -->
 			<div id="active-menu" data-scrollbar="true" data-height="100%">
 				<ul class="nav">
-				<li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>
+					<li>
+						<a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify">
+							<i class="fa fa-angle-double-left"></i>
+						</a>
+					</li>
 					<li class="has-sub">
+						<a href="/main" class="custom-sidebar-logo">
+							<img src="../assets/img/oasis_logo.png" class="" width="35px" height="35px">
+							<span class="custom-sidebar-logo-span line-height-none">
+								<p class="mb-0">오아시스<br>관리자 시스템</p>
+							</span>
+						</a>
+					</li>
+					<li class="has-sub mt-3">
 						<a href="/notice_list">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-fw m-r-10 fa-volume-up"></i>
@@ -166,7 +195,7 @@
 						<a href="javascript:;">
 							<b class="caret"></b>
 							<i class="fas fa-lg fa-fw m-r-10 fa-qrcode"></i>
-							<span> {{__('agent_manager')}} </span> 
+							<span> {{__('agent_manager')}} </span>
 						</a>
 						<ul class="sub-menu">
 							<li><a href="/agent_manager">{{__('agent_manager')}}</a></li>
@@ -203,18 +232,18 @@
 							<i class="fas fa-lg fa-fw m-r-10 fa-user"></i>
 							<span> {{__('worker')}}
 								
-								{% if (aclist.length >= 1) %}
-								<span class="label label-theme">NEW</span>
-								{% else %}
-								{% endif %}
+								<!--{% if (aclist.length >= 1) %}-->
+								<!--<span class="label label-theme">NEW</span>-->
+								<!--{% else %}-->
+								<!--{% endif %}-->
 							</span>
 						</a>
 						<ul class="sub-menu">
 							<li><a href="/worker_list">{{__('layout_worker_list')}}
-							{% if aclist.length >=1 %}
-							<span class="label label-theme">{{ aclist.length }}</span>
-							{% else %}
-							{% endif %}
+							<!--{% if aclist.length >=1 %}-->
+							<!--<span class="label label-theme">{{ aclist.length }}</span>-->
+							<!--{% else %}-->
+							<!--{% endif %}-->
 							</a></li>
 						</ul>
 					</li>
@@ -591,6 +620,9 @@
 	    	}
 	    	else if(string == "agent_com" ) {
 	    		return "{{__('agent_com')}}";
+	    	}
+	    	else if(string == "dashboard") {
+	    		return "{{__('main_dashboard')}}";
 	    	}
 	    	else if(string == "" ) {
 	    		return "{{__('')}}";

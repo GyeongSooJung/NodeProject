@@ -211,6 +211,7 @@
 	"profile_pw_success": "비밀번호가 변경되었습니다.",
 	"profile_form_error": "형식에 맞게 입력해주세요.",
 	"profile_fail": "프로필 수정에 실패했습니다.",
+	"profile_withdrawal": "탈퇴하기",
 	
 	"setting_point": "포인트 설정",
 	"setting_send_available": "전송 가능한 알림톡 수",

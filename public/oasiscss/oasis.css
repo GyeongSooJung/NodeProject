@@ -1,16 +1,90 @@
+/*all*/
+.boxShadow {
+    box-shadow: 1px 1px 3px 1px #dadce0 !important;
+}
+
+.line-height-none {
+    line-height: 1.2;
+}
+
 /*flag*/
 .flag {
     width: 18px !important;
     height: 18px !important;
 }
 
+/*icon-circle*/
+.icon-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #d4d7da;
+}
+.icon-circle i {
+    color: #9fa6ac;
+}
+
 /*layout*/
-.rolling {
-    list-style : none;
+body {
+    background-color: #EEFBFF;
 }
-.rolling li {
-    line-height : 1.5;
+.header {
+    height: 70px !important;
 }
+.navbar-header {
+    margin-left: 250px !important;
+}
+.company-p {
+    color: #9fa6ac;
+    font-size: 0.95em;
+}
+.ceo-p {
+    font-size: 1.1em;
+    font-weight: border !important;
+}
+.custom-side-bar {
+    z-index: 1030 !important;
+    background-color: #222d3d;
+    padding-top: 15px !important;
+}
+.custom-sidebar-logo {
+    margin-left: -7px;
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+}
+.custom-sidebar-logo-span {
+    color: white !important;
+    padding-top: 5.5px;
+    margin-left: 10px;
+}
+.sidebar-minify-btn {
+    padding: 0 !important;
+}
+.navbar-nav i {
+    font-size: 1.5em !important;
+}
+.notice-bell {
+    position: relative !important;
+}
+.red-point {
+    position: absolute;
+    top: 13px;
+    left: 28px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: red;
+}
+/*.rolling {*/
+/*    list-style : none;*/
+/*}*/
+/*.rolling li {*/
+/*    line-height : 1.5;*/
+/*}*/
 
 /*find*/
 .select-agent {

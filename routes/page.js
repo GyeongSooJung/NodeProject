@@ -170,10 +170,10 @@ router.get('/main', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) =
   const history_array = await (historys.reverse())[0];
   if (history_array) {
     const recent_history = history_array.PD;
-    res.render('main', { company: req.decoded.company, aclist, noticethree,  devices, cars, workers, historys, recent_history, history_array, history_count, HOME, psum });
+    res.render('main', { page_title: "main_dashboard", company: req.decoded.company, aclist, noticethree,  devices, cars, workers, historys, recent_history, history_array, history_count, HOME, psum });
   }
   else {
-    res.render('main', { company: req.decoded.company, aclist, noticethree,  devices, cars, workers, historys, history_array, history_count, HOME, psum });
+    res.render('main', { page_title: "main_dashboard", company: req.decoded.company, aclist, noticethree,  devices, cars, workers, historys, history_array, history_count, HOME, psum });
   }
 
 });

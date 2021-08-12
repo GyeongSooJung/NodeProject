@@ -211,6 +211,7 @@
     "profile_pw_success" : "Your password has been changed.",
     "profile_form_error" : "Please enter it according to the format.",
     "profile_fail": "Failed to edit profile.",
+	"profile_withdrawal": "Do Withdrawl",
     
     "setting_point": "Setting Point",
     "setting_send_available": "Number of SMS Notification Available to Send",

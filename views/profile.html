@@ -92,6 +92,10 @@
 									<th>{{__('profile_password_now')}}</th>
 									<td><input type="password" id="PW" name="PW" class="form-control form-control-sm" data-parsley-error-message="{{__('required_detail')}}" required /></td>
 								</tr>
+								<tr>
+									<th>{{__('layout_withdrawal')}}</th>
+									<td><button onclick="withdrawal(i18nconvert)" class="btn btn-danger">{{__('profile_withdrawal')}}</button></td>
+								</tr>
 							</table>
 							<p class="text-center mt-3 m-b-0">
 								<input type="submit" class="btn btn-primary width-150" value="{{__('profile_password_submit')}}" />

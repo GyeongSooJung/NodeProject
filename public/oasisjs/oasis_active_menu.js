@@ -14,5 +14,12 @@ window.addEventListener('load', function() {
 	if (cut[1] == 'pay_confirm') {
 		cut[1] = 'shop';
 	}
+	if (cut[1] == 'main') {
+		cut[1] = '';
+	}
 	$('#active-menu').find('a[href="' + '/' + cut[1] + '"]').parents('li').addClass('active');
 });
+
+// $(".sidebar-minify-btn").click(function() {
+// 	$(this).find("i").toggleClass("fa-angle-left fa-angle-right")
+// });
