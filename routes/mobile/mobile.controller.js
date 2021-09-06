@@ -52,7 +52,8 @@ const HISTORY = {
 };
 
 const CMD = {
-   "create": "/create",
+   // "create": "/create",
+   "insertOne": "/insertone",
    "findOne": "/findone",
    "find": "/find",
    "updateOne": "/updateone",
@@ -88,32 +89,41 @@ exports.tokenVerification = async(req, res, next) => {
    }
 };
 
-async function createDocument(req, res, next, collection) {
-   console.log("[createDocument]");
-   const Collection = collection;
+async function insertOneDocument(req, res, next, collection) {
+   console.log("[insertOneDocument]");
+   var Collection = collection.prototype.schema.options.collection;
    var doc = req.body;
+   doc.CA = Date.now();
+   delete doc._id;
    var postJob; // 추가 작업용 함수포인터
 
 
    switch (collection) {
-      case COLLECTIONS.History:
+      case History:
          // 장비의 사용횟수 증가
          postJob = async function() {
-            await modelQuery(QUERY.Updateone, COLLECTIONS.Device, { where: { _id: doc[HISTORY.deviceID] }, update: { $inc: { UN: 1 } } }, {});
+            await Device.where({ _id: doc[HISTORY.deviceID] }).updateOne({ $inc: { UN: 1 } });
          };
+         break;
+      case Car:
+         break;
+      case Device:
          break;
       default:
          throw new Error("Wrong request");
    }
 
    const resResult = (result) => {
+      if (postJob != null) {
+         postJob();
+      }
       res.json({
          result: true,
          data: result._id,
       });
    };
 
-   await modelQuery(QUERY.Create, Collection, doc, { postJob: postJob }).then(resResult).catch(next);
+   await modelQuery(QUERY.Create, Collection, doc, {}).then(resResult).catch(next);
 
 
    // 기존코드
@@ -146,8 +156,6 @@ async function findOneDecument(req, res, next, collection) {
    console.log("[findOneDecument]");
    var Collection = collection.prototype.schema.options.collection;
    var doc = req.body;
-   console.log(doc);
-
 
    switch (collection) {
       case History:
@@ -157,8 +165,6 @@ async function findOneDecument(req, res, next, collection) {
    }
 
    const resResult = (document) => {
-      console.log("hi");
-      console.log(document);
       res.json({
          result: true,
          data: JSON.stringify(document),
@@ -169,9 +175,7 @@ async function findOneDecument(req, res, next, collection) {
 }
 
 async function findDecuments(req, res, next, collection) {
-   console.log("[findOneDecument]");
-   // var Collection = collection;
-   console.log(String(collection));
+   console.log("[findDecuments]");
 
    var postJob; // 추가 작업용 함수포인터
    var searchOption = {};
@@ -184,7 +188,10 @@ async function findDecuments(req, res, next, collection) {
          searchOption.CID = req.body.CID;
          projectOption.PD = false;
          break;
-      case COLLECTIONS.Worker:
+      case Worker:
+         searchOption.CID = req.body.CID;
+         break;
+      case Car:
          searchOption.CID = req.body.CID;
          break;
       default:
@@ -224,26 +231,12 @@ async function updateOneDecument(req, res, next, collection) {
    var Collection = collection.prototype.schema.options.collection;
    console.log(Collection);
    var doc = req.body;
+   console.log(doc);
    var postJob; // 추가 작업용 함수포인터
-
    var _id = doc._id;
    doc.UA = Date.now();
-   // delete doc._id;
-
-   // switch (collection) {
-   //    case COLLECTIONS.History:
-   //       break;
-   //    case COLLECTIONS.Worker:
-   //       break;
-   //    default:
-   //       throw new Error("Wrong request");
-   // }
-
-   const resUpdateOne = (document) => {
-
-   };
-
-
+   delete doc._id;
+   console.log(doc);
 
    const resResult = (document) => {
       if (postJob != null) {
@@ -255,21 +248,40 @@ async function updateOneDecument(req, res, next, collection) {
       });
    };
 
-   // await modelQuery(QUERY.Updateone, Collection, { where: { _id }, update: doc }, {}).then(resResult).catch(next);
    await modelQuery(QUERY.Updateone, Collection, { where: { _id }, update: doc }, {}).catch(next);
    await modelQuery(QUERY.Findone, Collection, { _id }, {}).then(resResult).catch(next);
+}
+
+async function deleteOneDecument(req, res, next, collection) {
+   console.log("[deleteOneDecument]");
+   var Collection = collection.prototype.schema.options.collection;
+   console.log(Collection);
+
+   var doc = req.body;
+   console.log(doc);
+   var postJob; // 추가 작업용 함수포인터
 
 
-   // 기존코드
-   // await Collection.where({ _id }).updateOne(doc).then(resResult).catch(next);
-
+   const resResult = (document) => {
+      if (postJob != null) {
+         postJob();
+      }
+      res.json({
+         result: true,
+         data: JSON.stringify(document),
+      });
+   };
+   await modelQuery(QUERY.Remove, Collection, doc, {}).then(resResult).catch(next);
 }
 
 exports.historyRoot = (req, res, next) => {
    console.log("historyRoot");
    switch (req.path) {
       case CMD.create:
-         createDocument(req, res, next, History);
+         insertOneDocument(req, res, next, History);
+         break;
+      case CMD.insertOne:
+         insertOneDocument(req, res, next, History);
          break;
       case CMD.findOne:
          findOneDecument(req, res, next, History);
@@ -297,6 +309,59 @@ exports.workerRoot = (req, res, next) => {
          break;
       case CMD.updateOne:
          updateOneDecument(req, res, next, Worker);
+         break;
+      case CMD.deleteOne:
+         deleteOneDecument(req, res, next, Worker);
+         break;
+      default:
+         next();
+   }
+};
+
+exports.deviceRoot = (req, res, next) => {
+   console.log("[deviceRoot]");
+   switch (req.path) {
+      // case CMD.findOne:
+      //    findOneDecument(req, res, next, Device);
+      //    break;
+      // case CMD.find:
+      //    findDecuments(req, res, next, Device);
+      //    break;
+      case CMD.insertOne:
+         insertOneDocument(req, res, next, Device);
+         break;
+      case CMD.updateOne:
+         updateOneDecument(req, res, next, Device);
+         break;
+      case CMD.deleteOne:
+         deleteOneDecument(req, res, next, Device);
+         break;
+      default:
+         next();
+   }
+};
+
+exports.carRoot = (req, res, next) => {
+   console.log("[carRoot]");
+   switch (req.path) {
+      // case CMD.findOne:
+      //    findOneDecument(req, res, next, Device);
+      //    break;
+      // case CMD.find:
+      //    findDecuments(req, res, next, Device);
+      //    break;
+
+      case CMD.insertOne:
+         insertOneDocument(req, res, next, Car);
+         break;
+      case CMD.find:
+         findDecuments(req, res, next, Car);
+         break;
+      case CMD.updateOne:
+         updateOneDecument(req, res, next, Car);
+         break;
+      case CMD.deleteOne:
+         deleteOneDecument(req, res, next, Car);
          break;
       default:
          next();
@@ -331,8 +396,20 @@ exports.signIn = async(req, res) => {
       var worker = await Worker.findOneAndUpdate({ "GID": id, "EM": email }, { UA: Date.now() }, { new: true });
 
 
+      if (worker == null) {
+         return res.json({
+            result: false,
+            error: ERR_CODE.NO_SUCH_DATA,
+         });
+      }
+
+
+
       var resource = await Worker.aggregate([{
-            $match: { "_id": ObjectId("603495f9704af4696069c4ef") }
+            $match: {
+               // "_id": ObjectId("603495f9704af4696069c4ef")
+               "_id": worker._id
+            }
          },
          { "$addFields": { "comObjId": { "$toObjectId": "$CID" } } },
          {
@@ -379,9 +456,11 @@ exports.signIn = async(req, res) => {
             expiresIn: "1d",
          });
 
+
          return res.json({
             result: true,
             data: JSON.stringify(resource[0]),
+            // data:resource[0],
             token,
             // carUA
          });
@@ -502,7 +581,7 @@ exports.fineCompanies = async(req, res) => {
 
       var companies;
       if (CNU != null) {
-         companies = await Company.find({ CNU }, {
+         companies = await Company.find({ CNU: { $regex: CNU, $options: "$i" } }, {
             NA: 1,
             CNU: 1,
             CNA: 1,

@@ -25,8 +25,9 @@ router.post("/company/find/id", controller.findCompanyByID);
 router.post("/company/confirm/pw", controller.confirmConpanyPW);
 
 // 차량 관련
+router.use("/car/",controller.carRoot);
 router.post("/car/register", controller.registerCar);
-router.post("/car/find", controller.findCarByComID);
+// router.post("/car/find", controller.findCarByComID);
 router.post("/car/update", controller.updateCar);
 router.post("/car/delete", controller.deleteCar);
 
@@ -38,6 +39,7 @@ router.use("/history/", controller.historyRoot);
 router.post("/history/share",controller.registerKAKAO);
 
 // 소독기 관련
+router.use("/device/",controller.deviceRoot);
 router.post("/device/register", controller.registerDevice);
 router.post("/device/find", controller.findDevices);
 router.post("/device/update", controller.updateDevice);
