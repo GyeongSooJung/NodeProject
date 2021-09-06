@@ -297,7 +297,8 @@
 			
 			if($("input:checkbox[name=today]").is(":checked")==true) {
 				var company = $("input:checkbox[name=today]").val();
-				setCookie("close/"+company,"Y/"+company,1);
+				var kind = $("input:checkbox[name=today]").data("kind");
+				setCookie("close/"+company+"/"+kind,"Y/"+company+"/"+kind,1);
 			}
 			
 			if(!e){

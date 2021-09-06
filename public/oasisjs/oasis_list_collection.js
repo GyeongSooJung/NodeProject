@@ -1037,7 +1037,7 @@
      	
      	insertTr += "<tr>";
 		insertTr += "<th width='2.5%'></th>";
-		insertTr += "<th width='60.5%' name='TI'>"+i18nconvert("notice_title")+"<a href='javascript:sortList(pagingObject,TI);' name = 'TI'><i id = 'TI' class=' float-right mx-1 fas fa-lg fa-fw m-t-3 ";
+		insertTr += "<th width='55.5%' name='TI'>"+i18nconvert("notice_title")+"<a href='javascript:sortList(pagingObject,TI);' name = 'TI'><i id = 'TI' class=' float-right mx-1 fas fa-lg fa-fw m-t-3 ";
 		if(Object.sort == "TI-2")
 			insertTr += "fa-sort-up'></a></i></th>";
 		else if(Object.sort == "TI")
@@ -1052,6 +1052,9 @@
 			insertTr += "fa-sort-down'></a></i></th>";
 		else 
 			insertTr += "fa-sort'></a></i></th>";
+			if (Object.CID =="5fd6c731a26c914fbad53ebe") {
+				insertTr += "<th width='5%'>"+i18nconvert("notice_pop_ck")+"</th>";
+			}
 			insertTr += "</tr>";
      	
      	$("#memDiv1").append(insertTr);
@@ -1070,6 +1073,15 @@
 				  }
 				  else {
 				      insertTr += moment(Object.array[i].CA).format('YYYY-MM-DD');
+				  }
+				  if (Object.CID =="5fd6c731a26c914fbad53ebe") {
+					insertTr += "<td onclick='event.cancelBubble=true'><input onclick ='checkpop(this)' class ='ck_pop' type='checkbox' value ='"+Object.array[i]._id+"'";
+					if (Object.array[i].POP == true) {
+						insertTr += "checked /></td>";
+					}
+					else {
+						insertTr += "/></td>";
+					}
 				  }
 				  insertTr += "</tr>";
 				  num -= indexcount;

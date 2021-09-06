@@ -95,6 +95,7 @@ var pagingObject = new Object({name : "Notice", url : "/ajax/notice_list", CID :
 	// 검색 기능
 	$(document).ready(function() {
 		pagereload(pagingObject);
+		noticeLink();
 		
 		$('#selectpage').click(function() {
 			selectpage(pagingObject,{

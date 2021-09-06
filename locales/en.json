@@ -404,6 +404,7 @@
 	"notice_date" : "Registration date",
 	"notice_register" : "Notice has been registered.",
 	"notice_write" : "Writing",
+	"notice_pop_ck" : "Pop",
 	
 	"qrcode": "QR code",
 	"qrcode_create":  "QR create",

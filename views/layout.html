@@ -42,27 +42,30 @@
 		<div id="header" class="header navbar-default boxShadow">
 			<!-- begin navbar-header -->
 			<div class="navbar-header">
-				<h3 class="mb-0">{{page_title}}</h3>
+				<a href="/main" class="navbar-brand ml-3"><img src="../assets/img/oasis.png"></a>
+				<button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
 			</div>
-			<!--<div class="navbar-nav navbar-right">-->
-			<!--	{% if noticethree %}-->
-			<!--	<div class="d-flex justify-content-center align-items-center font-weight-bold">-->
-			<!--		<p class="width-80 mb-0 height-20">{{__('notice_list')}} &nbsp;:&nbsp;</p>-->
-			<!--		<div class="notice overflow-hidden height-20">-->
-			<!--			<ul class="rolling position-relative mb-0">-->
-			<!--				{% for notice in noticethree %}-->
-			<!--				<li class="height-20 mb-0">-->
-			<!--					<a href="javascript:;" onclick="noticepop(this)" name="{{notice._id}}" data-toggle="modal" data-target="#notice-modal">-->
-			<!--						{{notice.TI}}-->
-			<!--					</a>-->
-			<!--				</li>-->
-			<!--				{% endfor %}-->
-			<!--			</ul>-->
-			<!--		</div>-->
-			<!--	</div>-->
-			<!--	{% else %}-->
-			<!--	{% endif %}-->
-			<!--</div>-->
+			<div class="navbar-nav navbar-right">
+				{% if noticethree %}
+				<div class="d-flex justify-content-center align-items-center font-weight-bold">
+					<p class="width-80 mb-0 height-20">공지사항 &nbsp;:&nbsp;</p>
+					<div class="notice overflow-hidden height-20">
+						<ul class="rolling position-relative mb-0">
+							{% for notice in noticethree %}
+							<li class="height-20 mb-0">
+								<a href="javascript:;" onclick="noticepop(this)" name="{{notice._id}}" data-toggle='modal' data-target='#notice-modal' style='cursor:pointer'>{{notice.TI}}</a>
+							</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+				{% else %}
+				{% endif %}
+			</div>
 			<!-- end navbar-header -->
 			<!-- begin header-nav -->
 			<ul class="navbar-nav navbar-right d-flex align-items-center">
@@ -88,15 +91,6 @@
 						<div class="dropdown-divider"></div>
 						<a href="/shop" class="dropdown-item">{{__('layout_payment_point_purchase')}}</a>
 					</div>
-				</li>
-				<li class="navbar-user notice-bell">
-					<a href="#">
-						<i class="far fa-bell"></i>
-						{% if (aclist.length >= 1) %}
-						<div class="red-point"></div>
-						{% else %}
-						{% endif %}
-					</a>
 				</li>
 				<li class="dropdown navbar-user d-flex justify-content-around align-items-center">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -125,14 +119,6 @@
 					<li>
 						<a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify">
 							<i class="fa fa-angle-double-left"></i>
-						</a>
-					</li>
-					<li class="has-sub">
-						<a href="/main" class="custom-sidebar-logo">
-							<img src="../assets/img/oasis_logo.png" class="" width="35px" height="35px">
-							<span class="custom-sidebar-logo-span line-height-none">
-								<p class="mb-0">오아시스<br>관리자 시스템</p>
-							</span>
 						</a>
 					</li>
 					<li class="has-sub mt-3">
@@ -551,6 +537,9 @@
 	    	}
 	    	else if(string == "notice_register") {
 	    		return "{{__('notice_register')}}"
+	    	}
+	    	else if(string == "notice_pop_ck") {
+	    		return "{{__('notice_pop_ck')}}"
 	    	}
 	    	else if(string == "setting_point_success") {
 	    		return "{{__('setting_point_success')}}"

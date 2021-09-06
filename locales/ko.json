@@ -404,6 +404,7 @@
 	"notice_date" : "등록일",
 	"notice_register" : "공지사항을 등록했습니다.",
 	"notice_write" : "글 쓰기",
+	"notice_pop_ck" : "공지",
 	
 	"qrcode": "QR 코드",
 	"qrcode_create": "QR 생성",

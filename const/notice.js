@@ -2,6 +2,7 @@ const NOTICE = {
     "CID" : "CID",
     "TI" : "TI",
     "CO" : "CO",
+    "POP" : "POP",
     "CA" : "CA",
     schema : {
         //Company ID
@@ -14,6 +15,10 @@ const NOTICE = {
         },//Contents
         CO: {
             type: String,
+        },//Popup
+        POP: {
+            type: Boolean,
+            default: false,
         },//Create Time
         CA: {
             type: Date,

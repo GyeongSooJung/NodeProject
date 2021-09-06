@@ -140,6 +140,7 @@ router.get('/main', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) =
   const publishs = await modelQuery(QUERY.Find,COLLECTION_NAME.Publish,{ "CID": req.decoded.CID },{});
   const historys = await modelQuery(QUERY.Find,COLLECTION_NAME.History,{ "CID": req.decoded.CID },{});
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{limit : 3, sort : {CA : -1}});
+  const noticePop = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{"POP": true},{});
   
   var psum = 0;
   for(var i = 0; i < publishs.length; i++) {
@@ -170,10 +171,10 @@ router.get('/main', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) =
   const history_array = await (historys.reverse())[0];
   if (history_array) {
     const recent_history = history_array.PD;
-    res.render('main', { page_title: "main_dashboard", company: req.decoded.company, aclist, noticethree,  devices, cars, workers, historys, recent_history, history_array, history_count, HOME, psum });
+    res.render('main', { page_title: "main_dashboard", company: req.decoded.company, aclist, noticethree, noticePop, devices, cars, workers, historys, recent_history, history_array, history_count, HOME, psum });
   }
   else {
-    res.render('main', { page_title: "main_dashboard", company: req.decoded.company, aclist, noticethree,  devices, cars, workers, historys, history_array, history_count, HOME, psum });
+    res.render('main', { page_title: "main_dashboard", company: req.decoded.company, aclist, noticethree, noticePop, devices, cars, workers, historys, history_array, history_count, HOME, psum });
   }
 
 });
@@ -1016,6 +1017,23 @@ router.post('/ajax/notice_detail', isNotLoggedIn, DataSet, async(req, res, next)
     res.send({result : false});
   }
 });
+
+router.post('/ajax/notice_pop_check', isNotLoggedIn, async(req, res, next) => {
+  
+  try {
+    const noticeId = req.body.id;
+    const noticeCheck = req.body.ck;
+    
+    const noticeChange = await modelQuery(QUERY.Updateone,COLLECTION_NAME.Notice,{where: {_id: noticeId}, update: {POP: noticeCheck}},{});
+    
+    res.send({result: true});
+    
+    console.log(noticeChange);
+  } catch(err) {
+    console.error(err);
+    res.send({result : false});
+  }
+})
 
 
 
