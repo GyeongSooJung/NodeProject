@@ -1,5 +1,5 @@
 const DEVICE_DELETE = {
-    "CID" : "CID",
+    "CNU" : "CNU",
     "MD" : "MD",
     "MAC" : "MAC",
     "VER" : "VER",
@@ -8,7 +8,7 @@ const DEVICE_DELETE = {
     "UA" : "UA",
     "UT" : "UT",
     schema : {
-        CID: {
+        CNU: {
             type: String,
         },
         MD: {
@@ -23,6 +23,9 @@ const DEVICE_DELETE = {
         NN: {
             type: String,
         },
+        UT: {
+            type: Number,
+        },
         CA: {
             type: Date,
             default: Date.now
@@ -30,9 +33,6 @@ const DEVICE_DELETE = {
         UA: {
             type: Date,
             default: Date.now
-        },
-        UT: {
-            type: Number,
         }
     }
 }

@@ -1,5 +1,5 @@
 const CAR_DELETE = {
-  "CID" : "CID",
+  "CNU" : "CNU",
   "CC" : "CC",
   "CN" : "CN",
   "CPN" : "CPN",
@@ -8,7 +8,7 @@ const CAR_DELETE = {
   "UA" : "UA",
   
   schema : {  
-    CID: {
+    CNU: {
       type: String,
     },
     CC: {

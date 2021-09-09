@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 
 const Schema = require('../../schemas/schemas');
-const { History, Device, Worker, Company, Car } = Schema;
+const { History, Device, Worker, Company, Car, Point } = Schema;
 const { modelQuery } = require('../../schemas/query');
 const { COLLECTION_NAME, QUERY } = require('../../const/consts');
 
@@ -1098,7 +1098,7 @@ exports.registerKAKAO = async(req, res) => {
             try {
                const response = await Group.sendSimpleMessage(params);
                const pointone = await Point.insertMany({
-                  "CID": companyone._id,
+                  "CNU": companyone.CNU,
                   "PN": "알림톡 전송",
                   "PO": 50,
                   "MID": response.messageId,

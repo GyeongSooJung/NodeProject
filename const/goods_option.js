@@ -2,7 +2,7 @@ const GOODS_OPTION = {
     "GID" : "GID",
     "GNA" : "GNA",
     "OT" : "OT",
-    "ON" : "PN",
+    "ON" : "ON",
     "OP" : "OP",
     "CA" : "CA",
     schema : {

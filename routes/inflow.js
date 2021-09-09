@@ -8,15 +8,11 @@ const router = express.Router();
 router.get('/', async(req, res, next) => {
   var cn = req.query.cn;
   var cat = req.query.cat;
-  // var cid = req.query.cid;
   
   try {
     if(cat == 1) {
       res.render('inflow', { cn, cat });
     }
-    // else if(cat == 2) {
-    //   res.render('inflow', { cn, cat, cid });
-    // }
     else {
       res.render('error');
     }

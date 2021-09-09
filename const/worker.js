@@ -1,5 +1,5 @@
 const WORKER = {
-    "CID" : "CID",
+    "CNU" : "CNU",
     "WN" : "WN",
     "PN" : "PN",
     "GID" : "GID",
@@ -11,13 +11,13 @@ const WORKER = {
     "AC" : "AC",
     
     schema : {
-        CID: { // Company ID
+        CNU: { // Company Number
             type: String,
-            required: [true, 'CID is required'],
+            required: true,
         },
         WN: { // Worker Name
             type: String,
-            required: [true, 'WN is required!'],
+            required: true,
         },
         PN: { // Phone Number
             type: String,
@@ -29,7 +29,7 @@ const WORKER = {
         EM: { // Email
             type: String,
             unique: true,
-            required: [true, 'EM is required!'],
+            required: true,
         },
         PU: { // Photo URL
             type: String,

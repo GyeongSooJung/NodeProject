@@ -1,12 +1,12 @@
 const NOTICE = {
-    "CID" : "CID",
+    "CNU" : "CNU",
     "TI" : "TI",
     "CO" : "CO",
     "POP" : "POP",
     "CA" : "CA",
     schema : {
-        //Company ID
-        CID: {
+        //Company Number
+        CNU: {
             type: String,
             required: true,
         },//Title

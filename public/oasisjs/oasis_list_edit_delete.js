@@ -76,7 +76,7 @@
 			data: {
 				CN : $('#car-edit-form [name="CN"]').val(),
 				CPN : $('#car-edit-form [name="CPN"]').val(),
-				CID : Object.CID,
+				CNU : Object.CNU,
 				car_id : $('#car-edit-form [name="car_id"]').val()
 			}
 		}).done(function(data) {
@@ -176,7 +176,7 @@
 			dataType: 'json',
 			data: {
 				NN : $('#device-edit-form [name="NN"]').val(),
-				CID : Object.CID,
+				CNU : Object.CNU,
 				device_id : $('#device-edit-form [name="device_id"]').val()
 			}
 		}).done(function(data) {

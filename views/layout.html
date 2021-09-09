@@ -338,6 +338,18 @@
 	    	if(string == "ANA") {
 	    		return "{{__('agent_branch')}}";
 	    	}
+	    	else if(string == "CNA") {
+	    		return "{{__('company_name')}}";
+	    	}
+	    	else if(string == "ANA") {
+	    		return "{{__('agent_name')}}";
+	    	}
+	    	else if(string == "CNU") {
+	    		return "{{__('business_number')}}";
+	    	}
+	    	else if(string == "NA") {
+	    		return "{{__('representative')}}";
+	    	}
 	    	else if(string == "CN" ) {
 	    		return "{{__('car_number')}}";
 	    	} 
@@ -438,7 +450,13 @@
 	    	} 
 	    	else if(string == "reset" ) {
 	    		return "{{__('reset')}}";
-	    	} 
+	    	}
+	    	else if(string == "car_number") {
+	    		return "{{__('car_number')}}";
+	    	}
+	    	else if(string == "car_customer_phone") {
+	    		return "{{__('car_customer_phone')}}";
+	    	}
 	    	else if(string == "car_length_error" ) {
 	    		return "{{__('car_length_error')}}";
 	    	}
@@ -456,6 +474,18 @@
 	    	}
 	    	else if(string == "modify_failed" ) {
 	    		return "{{__('modify_failed')}}";
+	    	}
+	    	else if(string == "device_model" ) {
+	    		return "{{__('device_model')}}";
+	    	}
+	    	else if(string == "device_version" ) {
+	    		return "{{__('device_version')}}";
+	    	}
+	    	else if(string == "device_mac" ) {
+	    		return "{{__('device_mac')}}";
+	    	}
+	    	else if(string == "device_nick" ) {
+	    		return "{{__('device_nick')}}";
 	    	}
 	    	else if(string == "device_modify_success" ) {
 	    		return "{{__('device_modify_success')}}";
@@ -583,6 +613,9 @@
 	    	else if(string == "agent_code_duplicated" ) {
 	    		return "{{__('agent_code_duplicated')}}";
 	    	}
+	    	else if(string == "agent_code_num_over") {
+	    		return "{{__('agent_code_num_over')}}";
+	    	}
 	    	else if(string == "agent_edit_success" ) {
 	    		return "{{__('agent_edit_success')}}";
 	    	}
@@ -612,6 +645,27 @@
 	    	}
 	    	else if(string == "dashboard") {
 	    		return "{{__('main_dashboard')}}";
+	    	}
+	    	else if(string == "name") {
+	    		return "{{__('name')}}";
+	    	}
+	    	else if(string == "mobile_number") {
+	    		return "{{__('mobile_number')}}";
+	    	}
+	    	else if(string == "email") {
+	    		return "{{__('email')}}";
+	    	}
+	    	else if(string == "worker") {
+	    		return "{{__('worker')}}";
+	    	}
+	    	else if(string == "company_name") {
+	    		return "{{__('company_name')}}";
+	    	}
+	    	else if(string == "business_number") {
+	    		return "{{__('business_number')}}";
+	    	}
+	    	else if(string == "representative") {
+	    		return "{{__('representative')}}";
 	    	}
 	    	else if(string == "" ) {
 	    		return "{{__('')}}";

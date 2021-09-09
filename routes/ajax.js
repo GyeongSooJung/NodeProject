@@ -10,16 +10,94 @@ const {modelQuery} = require('../schemas/query')
 const {COLLECTION_NAME, QUERY} = require('../const/consts');
 
 //company list
-router.post('/company_list', isNotLoggedIn, DataSet, async(req, res, nex) => {
-  const CID = req.body.CID;
-  const companylist = await modelQuery(QUERY.Find,COLLECTION_NAME.Company,{},{});
-  res.send({ result: true, pagelist : companylist });
+router.post('/company_list', isNotLoggedIn, DataSet, async(req, res, next) => {
+  const CNU = req.body.CNU;
+  var sort = req.body.sort;
+  var search = req.body.search;
+  var searchtext = req.body.searchtext;
+  var searchdate = req.body.searchdate;
+  var sortText = "";
+  var sortNum = 0;
+  var companys = new Object;
+  
+  // 정렬 기능
+  if(sort.includes('-') == true) {
+    sortText = sort.split('-')[0];
+    sortNum = 1;
+  }
+  else {
+    sortText = sort;
+    sortNum = -1;
+  }
+  
+  try {
+    
+    if(companys.length == 0) {
+        return res.send({ result : "nothing" });
+    }
+    else {
+      if (searchdate) {
+        var searchtext2 = searchdate.split("~");
+        if(search == "CNA") {
+          companys = await modelQuery(QUERY.Find,COLLECTION_NAME.Company,{ "CNA" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} },{sort : { [sortText]: sortNum }},{});
+        }
+        else if(search == "ANA") {
+          companys = await modelQuery(QUERY.Find,COLLECTION_NAME.Company,{ "ANA" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} },{sort : { [sortText]: sortNum }},{});
+        }
+        else if(search == "CNU") {
+          companys = await modelQuery(QUERY.Find,COLLECTION_NAME.Company,{ "CNU" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} },{sort : { [sortText]: sortNum }},{});
+        }
+        else if(search == "NA") {
+          companys = await modelQuery(QUERY.Find,COLLECTION_NAME.Company,{ "NA" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} },{sort : { [sortText]: sortNum }},{});
+        }
+        else {
+          companys = await modelQuery(QUERY.Find,COLLECTION_NAME.Company,{ "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} },{sort : { [sortText]: sortNum }},{});
+        }
+      }
+      else {
+        if (search =="CNA") {
+          companys = await modelQuery(QUERY.Find,COLLECTION_NAME.Company,{ "CNA" : {$regex:searchtext} },{sort : { [sortText]: sortNum }},{});
+        }
+        else if (search =="ANA") {
+          companys = await modelQuery(QUERY.Find,COLLECTION_NAME.Company,{ "ANA" : {$regex:searchtext} },{sort : { [sortText]: sortNum }},{});
+        }
+        else if (search =="CNU") {
+          companys = await modelQuery(QUERY.Find,COLLECTION_NAME.Company,{ "CNU" : {$regex:searchtext} },{sort : { [sortText]: sortNum }},{});
+        }
+        else if (search =="NA") {
+          companys = await modelQuery(QUERY.Find,COLLECTION_NAME.Company,{ "NA" : {$regex:searchtext} },{sort : { [sortText]: sortNum }},{});
+        }
+        else {
+          console.log("여기");
+          companys = await modelQuery(QUERY.Find,COLLECTION_NAME.Company,{},{sort : { [sortText]: sortNum }});
+        }
+    }
+    
+  }
+    
+    if(companys.length == 0) {
+      return res.send({ result : "nothing"});
+    }
+    
+    var companylist = [];
+    if(companys.length) {
+      for(var i = 0; i < companys.length; i ++) {
+        companylist[i] = companys[i];
+      }
+    }
+    
+    res.send({ result: true, pagelist : companylist });
+  
+  } catch(err) {
+    console.error(err);
+    next(err);
+  }
   
 });
 
 // device list
 router.post('/device_list', isNotLoggedIn, DataSet, agentDevide, async function(req, res, next) {
-  const CID = req.body.CID;
+  const CNU = req.body.CNU;
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
@@ -29,11 +107,11 @@ router.post('/device_list', isNotLoggedIn, DataSet, agentDevide, async function(
   var devices = new Object;
   
   // company list에서 접속한 것인지 확인
-  if(CID.includes("#") == true) {
-    req.searchCID = [CID.split("#")[0]]; // '#' 을 잘라낸 뒤 문자열을 배열에 담음($in은 배열만 가능하기 때문)
+  if(CNU.includes("#") == true) {
+    req.searchCNU = CNU.split("#")[0]; // '#' 을 잘라
   }
   else {
-    req.searchCID = req.searchCID; // 기존 middleware에서 받아온 본사,지점 CID 그대로 다시 담음
+    req.searchCNU = req.searchCNU; // 기존 middleware에서 받아온 본사,지점 CNU 그대로 다시 담음
   }
   
   // 정렬 기능
@@ -49,8 +127,7 @@ router.post('/device_list', isNotLoggedIn, DataSet, agentDevide, async function(
   try {
     
     var doc = {
-      addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } ,
-      lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } ,
+      lookup : { from : "Company", localField : "CNU", foreignField : "CNU", as : "ANA" } ,
       unwind : "$ANA",
       match : {},
       project : { MD : '$MD', VER : '$VER', MAC : '$MAC', NN : '$NN', UN : '$UN', CA : '$CA', ANA : '$ANA.ANA'},
@@ -64,42 +141,42 @@ router.post('/device_list', isNotLoggedIn, DataSet, agentDevide, async function(
       if (searchdate) {
         var searchtext2 = searchdate.split("~");
         if(search == "ANA") {
-          doc.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else if(search == "MD") {
-          doc.match = { "CID" : { $in : req.searchCID }, "MD" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "MD" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else if(search == "VER") {
-          doc.match = { "CID" : { $in : req.searchCID }, "VER" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "VER" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else if(search == "MAC") {
-          doc.match = { "CID" : { $in : req.searchCID }, "MAC" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "MAC" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else if(search == "NN") {
-          doc.match = { "CID" : { $in : req.searchCID }, "NN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "NN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else {
-          doc.match = { "CID" : { $in : req.searchCID }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
       }
       else {
         if (search =="ANA") {
-          doc.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext} };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "ANA.ANA" : {$regex:searchtext} };
         }
         else if (search =="MD") {
-          doc.match = { "CID" : { $in : req.searchCID }, "MD" : {$regex:searchtext} };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "MD" : {$regex:searchtext} };
         }
         else if (search =="VER") {
-          doc.match = { "CID" : { $in : req.searchCID }, "VER" : {$regex:searchtext} };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "VER" : {$regex:searchtext} };
         }
         else if (search =="MAC") {
-          doc.match = { "CID" : { $in : req.searchCID }, "MAC" : {$regex:searchtext} };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "MAC" : {$regex:searchtext} };
         }
         else if (search =="NN") {
-          doc.match = { "CID" : { $in : req.searchCID }, "NN" : {$regex:searchtext} };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "NN" : {$regex:searchtext} };
         }
         else {
-          doc.match = { "CID" : { $in : req.searchCID } };
+          doc.match = { "CNU": { $regex: req.searchCNU } };
         }
     }
       
@@ -129,7 +206,7 @@ router.post('/device_list', isNotLoggedIn, DataSet, agentDevide, async function(
 
 //car list
 router.post('/car_list', isNotLoggedIn, DataSet, agentDevide, async function(req, res, next) {
-  const CID = req.body.CID;
+  const CNU = req.body.CNU;
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
@@ -139,11 +216,11 @@ router.post('/car_list', isNotLoggedIn, DataSet, agentDevide, async function(req
   var cars = new Object;
   
   // company list에서 접속한 것인지 확인
-  if(CID.includes("#") == true) {
-    req.searchCID = [CID.split("#")[0]]; // '#' 을 잘라낸 뒤 문자열을 배열에 담음($in은 배열만 가능하기 때문)
+  if(CNU.includes("#") == true) {
+    req.searchCNU = CNU.split("#")[0]; // '#' 을 잘라
   }
   else {
-    req.searchCID = req.searchCID; // 기존 middleware에서 받아온 본사,지점 CID 그대로 다시 담음
+    req.searchCNU = req.searchCNU; // 기존 middleware에서 받아온 본사,지점 CNU 그대로 다시 담음
   }
   
   // 정렬 기능
@@ -159,8 +236,7 @@ router.post('/car_list', isNotLoggedIn, DataSet, agentDevide, async function(req
   try {
     
     var doc = {
-      addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } ,
-      lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } ,
+      lookup : { from : "Company", localField : "CNU", foreignField : "CNU", as : "ANA" } ,
       unwind : "$ANA",
       match : {},
       project : { CN : '$CN', CPN : '$CPN', CA : '$CA', ANA : '$ANA.ANA' },
@@ -174,30 +250,30 @@ router.post('/car_list', isNotLoggedIn, DataSet, agentDevide, async function(req
       if (searchdate) {
       var searchtext2 = searchdate.split("~");
         if(search == "ANA") {
-          doc.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else if(search == "CN") {
-          doc.match = { "CID" : { $in : req.searchCID }, "CN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "CN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else if(search == "CPN") {
-          doc.match = { "CID" : { $in : req.searchCID }, "CPN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "CPN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else {
-          doc.match = { "CID" : { $in : req.searchCID }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } ;
+          doc.match = { "CNU": { $regex: req.searchCNU }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } } ;
         }
       }
       else {
           if(search == "ANA") {
-            doc.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext} };
+            doc.match = { "CNU": { $regex: req.searchCNU }, "ANA.ANA" : {$regex:searchtext} };
           }
           else if (search =="CN") {
-            doc.match = { "CID" : { $in : req.searchCID }, "CN" : {$regex:searchtext} };
+            doc.match = { "CNU": { $regex: req.searchCNU }, "CN" : {$regex:searchtext} };
           }
           else if (search =="CPN") {
-            doc.match = { "CID" : { $in : req.searchCID }, "CPN" : {$regex:searchtext} };
+            doc.match = { "CNU": { $regex: req.searchCNU }, "CPN" : {$regex:searchtext} };
           }
           else {
-            doc.match ={ "CID" : { $in : req.searchCID } };
+            doc.match ={ "CNU": { $regex: req.searchCNU } };
           }
       }
     }
@@ -224,7 +300,8 @@ router.post('/car_list', isNotLoggedIn, DataSet, agentDevide, async function(req
 
 //worker list
 router.post('/worker_list', isNotLoggedIn, DataSet, agentDevide, async function(req, res, next) {
-  const CID = req.body.CID;
+  const CNU = req.body.CNU;
+  console.log("###",CNU);
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
@@ -234,11 +311,11 @@ router.post('/worker_list', isNotLoggedIn, DataSet, agentDevide, async function(
   var workers = new Object;
   
   // company list에서 접속한 것인지 확인
-  if(CID.includes("#") == true) {
-    req.searchCID = [CID.split("#")[0]]; // '#' 을 잘라낸 뒤 문자열을 배열에 담음($in은 배열만 가능하기 때문)
+  if(CNU.includes("#") == true) {
+    req.searchCNU = CNU.split("#")[0]; // '#' 을 잘라
   }
   else {
-    req.searchCID = req.searchCID; // 기존 middleware에서 받아온 본사,지점 CID 그대로 다시 담음
+    req.searchCNU = req.searchCNU; // 기존 middleware에서 받아온 본사,지점 CNU 그대로 다시 담음
   }
   
   // 정렬 기능
@@ -252,15 +329,15 @@ router.post('/worker_list', isNotLoggedIn, DataSet, agentDevide, async function(
   }
   
   try {
-    if(CID == "5fd6c731a26c914fbad53ebe") {
+    if(CNU == "3388800960") {
       // 대리점 파악
-      var franchiseCIDlist = await modelQuery(QUERY.Aggregate,COLLECTION_NAME.Company,{match : {CK : "MK 대리점"}, project : {CID : 1}},{});
+      var franchiseCNUlist = await modelQuery(QUERY.Aggregate,COLLECTION_NAME.Company,{match : {CK : "MK 대리점"}, project : {CNU : 1}},{});
       
-      var CIDlist = [];
-      for (var i = 0; i < franchiseCIDlist.length; i ++) {
-        CIDlist.push(String(franchiseCIDlist[i]._id));
+      var CNUlist = [];
+      for (var i = 0; i < franchiseCNUlist.length; i ++) {
+        CNUlist.push(String(franchiseCNUlist[i].CNU));
       }
-      CIDlist.push(CID);
+      CNUlist.push("3388800960000");
       //
       
       
@@ -271,31 +348,30 @@ router.post('/worker_list', isNotLoggedIn, DataSet, agentDevide, async function(
         if (searchdate) {
         var searchtext2 = searchdate.split("~");
           if(search == "WN") {
-            workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": { $in : CIDlist }, "WN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} },{sort : { [sortText]: sortNum }});
+            workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": { $in : CNUlist }, "WN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} },{sort : { [sortText]: sortNum }});
           }
           else if(search == "PN") {
-            workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": { $in : CIDlist }, "PN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} },{sort : { [sortText]: sortNum }});
+            workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": { $in : CNUlist }, "PN" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} },{sort : { [sortText]: sortNum }});
           }
           else if(search == "EM") {
-            workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": { $in : CIDlist }, "EM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} },{sort : { [sortText]: sortNum }});
+            workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": { $in : CNUlist }, "EM" : {$regex:searchtext}, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} },{sort : { [sortText]: sortNum }});
           }
           else {
-            workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID" : { $in : CIDlist }, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} },{sort : { [sortText]: sortNum }});
+            workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU" : { $in : CNUlist }, "CA" : {$gte:searchtext2[0]+"T00:00:00.000Z", $lt:searchtext2[1]+"T23:59:59.999Z"} },{sort : { [sortText]: sortNum }});
           }
         }
         else {
           if (search =="WN") {
-            workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": { $in : CIDlist }, "WN" : {$regex:searchtext} },{sort : { [sortText]: sortNum }});
-            workers = await Worker.find({ "CID": { $in : CIDlist }, "WN" : {$regex:searchtext} }).sort({ [sortText]: sortNum });
+            workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": { $in : CNUlist }, "WN" : {$regex:searchtext} },{sort : { [sortText]: sortNum }});
           }
           else if (search =="PN") {
-            workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": { $in : CIDlist }, "PN" : {$regex:searchtext} },{sort : { [sortText]: sortNum }});
+            workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": { $in : CNUlist }, "PN" : {$regex:searchtext} },{sort : { [sortText]: sortNum }});
           }
           else if (search =="EM") {
-            workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": { $in : CIDlist }, "EM" : {$regex:searchtext} },{sort : { [sortText]: sortNum }});
+            workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": { $in : CNUlist }, "EM" : {$regex:searchtext} },{sort : { [sortText]: sortNum }});
           }
           else {
-            workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID" : { $in : CIDlist } },{sort : { [sortText]: sortNum }})
+            workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU" : { $in : CNUlist } },{sort : { [sortText]: sortNum }})
           }
         }
       }
@@ -303,8 +379,7 @@ router.post('/worker_list', isNotLoggedIn, DataSet, agentDevide, async function(
     else {
       
       var doc = {
-            addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } ,
-            lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } ,
+            lookup : { from : "Company", localField : "CNU", foreignField : "CNU", as : "ANA" } ,
             unwind : "$ANA",
             match : {},
             project : { WN : '$WN', PN : '$PN', EM : '$EM', PU : '$PU', AU : '$AU', AC : '$AC', CA : '$CA', ANA : '$ANA.ANA'},
@@ -318,33 +393,33 @@ router.post('/worker_list', isNotLoggedIn, DataSet, agentDevide, async function(
           var searchtext2 = searchdate.split("~");
             
             if(search == "WN") {
-              doc.match = { "CID" : { $in : req.searchCID }, "WN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+              doc.match = { "CNU": { $regex: req.searchCNU }, "WN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
             }
             else if(search == "PN") {
-              doc.match = { "CID" : { $in : req.searchCID }, "PN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+              doc.match = { "CNU": { $regex: req.searchCNU }, "PN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
             }
             else if(search == "EM") {
-              doc.match = { "CID" : { $in : req.searchCID }, "EM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+              doc.match = { "CNU": { $regex: req.searchCNU }, "EM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
             }
             else {
-              doc.match = { "CID" : { $in : req.searchCID }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+              doc.match = { "CNU": { $regex: req.searchCNU }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
             }
         }
         else {
             if (search =="ANA") {
-              doc.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext} };
+              doc.match = { "CNU": { $regex: req.searchCNU }, "ANA.ANA" : {$regex:searchtext} };
             }
             else if (search =="WN") {
-              doc.match = { "CID" : { $in : req.searchCID }, "WN" : {$regex:searchtext} };
+              doc.match = { "CNU": { $regex: req.searchCNU }, "WN" : {$regex:searchtext} };
             }
             else if (search =="PN") {
-              doc.match = { "CID" : { $in : req.searchCID }, "PN" : {$regex:searchtext} };
+              doc.match = { "CNU": { $regex: req.searchCNU }, "PN" : {$regex:searchtext} };
             }
             else if (search =="EM") {
-              doc.match = { "CID" : { $in : req.searchCID }, "EM" : {$regex:searchtext} };
+              doc.match = { "CNU": { $regex: req.searchCNU }, "EM" : {$regex:searchtext} };
             }
             else {
-              doc.match = { "CID" : { $in : req.searchCID } };
+              doc.match = { "CNU": { $regex: req.searchCNU } };
             }
         }
       }
@@ -374,7 +449,7 @@ router.post('/worker_list', isNotLoggedIn, DataSet, agentDevide, async function(
 
 //history list
 router.post('/history_list', isNotLoggedIn, DataSet, agentDevide, async function(req, res, next) {
-  const CID = req.body.CID;
+  const CNU = req.body.CNU;
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
@@ -384,11 +459,11 @@ router.post('/history_list', isNotLoggedIn, DataSet, agentDevide, async function
   var historys = new Object;
   
   // company list에서 접속한 것인지 확인
-  if(CID.includes("#") == true) {
-    req.searchCID = [CID.split("#")[0]]; // '#' 을 잘라낸 뒤 문자열을 배열에 담음($in은 배열만 가능하기 때문)
+  if(CNU.includes("#") == true) {
+    req.searchCNU = CNU.split("#")[0]; // '#' 을 잘라
   }
   else {
-    req.searchCID = req.searchCID; // 기존 middleware에서 받아온 본사,지점 CID 그대로 다시 담음
+    req.searchCNU = req.searchCNU; // 기존 middleware에서 받아온 본사,지점 CNU 그대로 다시 담음
   }
   
   // 정렬 기능
@@ -403,8 +478,7 @@ router.post('/history_list', isNotLoggedIn, DataSet, agentDevide, async function
   
   try {
     var doc = {
-            addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } ,
-            lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } ,
+            lookup : { from : "Company", localField : "CNU", foreignField : "CNU", as : "ANA" } ,
             unwind : "$ANA",
             match : {},
             project : { CNM : '$CNM', DNM : '$DNM', ET : '$ET', PD : {$size : '$PD'}, WNM : "$WNM", ANA : '$ANA.ANA' },
@@ -418,19 +492,19 @@ router.post('/history_list', isNotLoggedIn, DataSet, agentDevide, async function
       }
       else {
         if(search == "ANA") {
-          doc.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else if(search == "CNM") {
-          doc.match = { "CID" : { $in : req.searchCID }, "CNM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "CNM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else if(search == "DNM") {
-          doc.match = { "CID" : { $in : req.searchCID }, "DNM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "DNM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else if(search == "WNM") {
-          doc.match = { "CID" : { $in : req.searchCID }, "WNM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } }
+          doc.match = { "CNU": { $regex: req.searchCNU }, "WNM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } }
         }
         else {
-          doc.match = { "CID" : { $in : req.searchCID }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } }
+          doc.match = { "CNU": { $regex: req.searchCNU }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } }
         }
       }
     }
@@ -440,19 +514,19 @@ router.post('/history_list', isNotLoggedIn, DataSet, agentDevide, async function
       }
       else {
         if (search =="ANA") {
-          doc.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext} }
+          doc.match = { "CNU": { $regex: req.searchCNU }, "ANA.ANA" : {$regex:searchtext} }
         }
         else if (search =="CNM") {
-          doc.match = { "CID" : { $in : req.searchCID }, "CNM" : {$regex:searchtext} }
+          doc.match = { "CNU": { $regex: req.searchCNU }, "CNM" : {$regex:searchtext} }
         }
         else if (search =="DNM") {
-          doc.match = { "CID" : { $in : req.searchCID }, "DNM" : {$regex:searchtext} }
+          doc.match = { "CNU": { $regex: req.searchCNU }, "DNM" : {$regex:searchtext} }
         }
         else if (search =="WNM") {
-          doc.match = { "CID" : { $in : req.searchCID }, "WNM" : {$regex:searchtext} }
+          doc.match = { "CNU": { $regex: req.searchCNU }, "WNM" : {$regex:searchtext} }
         }
         else {
-          doc.match = { "CID" : { $in : req.searchCID } }
+          doc.match = { "CNU": { $regex: req.searchCNU } }
         }
       }
     }
@@ -479,7 +553,7 @@ router.post('/history_list', isNotLoggedIn, DataSet, agentDevide, async function
 
 //pay_list
 router.post('/pay_list', isNotLoggedIn, DataSet, agentDevide, async function(req, res, next) {
-  const CID = req.body.CID;
+  const CNU = req.body.CNU;
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
@@ -502,8 +576,7 @@ router.post('/pay_list', isNotLoggedIn, DataSet, agentDevide, async function(req
   try {
     
     var doc = {
-            addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } ,
-            lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } ,
+            lookup : { from : "Company", localField : "CNU", foreignField : "CNU", as : "ANA" } ,
             unwind : "$ANA",
             match : {},
             project : { MID : "$MID", IID : "$IID", GN : "$GN", AM : "$AM", CA : "$CA", ANA : '$ANA.ANA' },
@@ -517,36 +590,36 @@ router.post('/pay_list', isNotLoggedIn, DataSet, agentDevide, async function(req
       if (searchdate) {
         var searchtext2 = searchdate.split("~");
           if(search == "ANA") {
-            doc.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+            doc.match = { "CNU": { $regex: req.searchCNU }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
           }
           else if(search == "MID") {
-            doc.match = { "CID" : { $in : req.searchCID }, "MID" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+            doc.match = { "CNU": { $regex: req.searchCNU }, "MID" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
           }
           else if(search == "GN") {
-            doc.match = { "CID" : { $in : req.searchCID }, "GN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+            doc.match = { "CNU": { $regex: req.searchCNU }, "GN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
           }
           else if(search == "AM") {
-            doc.match = { "CID" : { $in : req.searchCID }, "strAM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+            doc.match = { "CNU": { $regex: req.searchCNU }, "strAM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
           }
           else {
-            doc.match = { "CID" : { $in : req.searchCID }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+            doc.match = { "CNU": { $regex: req.searchCNU }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
           }
       }
       else {
         if (search =="ANA") {
-          doc.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext} };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "ANA.ANA" : {$regex:searchtext} };
         }
         else if (search =="MID") {
-          doc.match = { "CID" : { $in : req.searchCID }, "MID" : {$regex:searchtext} };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "MID" : {$regex:searchtext} };
         }
         else if (search =="GN") {
-          doc.match = { "CID" : { $in : req.searchCID }, "GN" : {$regex:searchtext} };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "GN" : {$regex:searchtext} };
         }
         else if (search =="AM") {
-          doc.match = { "CID" : { $in : req.searchCID }, "strAM" : {$regex:searchtext} };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "strAM" : {$regex:searchtext} };
         }
         else {
-          doc.match = { "CID" : { $in : req.searchCID } };
+          doc.match = { "CNU": { $regex: req.searchCNU } };
         }
       }
     }
@@ -582,7 +655,7 @@ router.post('/pay_list_detail', isNotLoggedIn, DataSet, async(req, res, next) =>
 
 //point_list
 router.post('/point_list', isNotLoggedIn, DataSet, agentDevide, async function(req, res, next) {
-  const CID = req.body.CID;
+  const CNU = req.body.CNU;
   var sort = req.body.sort;
   var search = req.body.search;
   var searchtext = req.body.searchtext;
@@ -609,8 +682,7 @@ router.post('/point_list', isNotLoggedIn, DataSet, agentDevide, async function(r
   try {
     
     var doc = {
-            addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } ,
-            lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } ,
+            lookup : { from : "Company", localField : "CNU", foreignField : "CNU", as : "ANA" } ,
             unwind : "$ANA",
             match : {},
             project : { PN : '$PN', PO : '$PO', CA : '$CA', ANA : '$ANA.ANA' },
@@ -624,30 +696,30 @@ router.post('/point_list', isNotLoggedIn, DataSet, agentDevide, async function(r
       if (searchdate) {
       var searchtext2 = searchdate.split("~");
         if(search == "ANA") {
-          doc.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else if(search == "PN") {
-          doc.match = { "CID" : { $in : req.searchCID }, "PN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "PN" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else if(search == "PO") {
-          doc.match = { "CID" : { $in : req.searchCID }, "strPO" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "strPO" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else {
-          doc.match = { "CID" : { $in : req.searchCID }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
       }
       else {
         if (search =="ANA") {
-          doc.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext} };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "ANA.ANA" : {$regex:searchtext} };
         }
         else if (search =="PN") {
-          doc.match = { "CID" : { $in : req.searchCID }, "PN" : {$regex:searchtext} };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "PN" : {$regex:searchtext} };
         }
         else if (search =="PO") {
-          doc.match = { "CID" : { $in : req.searchCID }, "strPO" : {$regex:searchtext} };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "strPO" : {$regex:searchtext} };
         }
         else {
-          doc.match = { "CID" : { $in : req.searchCID } };
+          doc.match = { "CNU": { $regex: req.searchCNU } };
         }
       }
     }
@@ -676,7 +748,7 @@ router.post('/point_list', isNotLoggedIn, DataSet, agentDevide, async function(r
 
 //alarmtalk_list
 router.post('/alarmtalk_list', isNotLoggedIn, DataSet, agentDevide, async function(req, res, next) {
-  const CID = req.body.CID;
+  const CNU = req.body.CNU;
   
   var sort = req.body.sort;
   var search = req.body.search;
@@ -699,8 +771,7 @@ router.post('/alarmtalk_list', isNotLoggedIn, DataSet, agentDevide, async functi
   try {
     
     var doc = {
-            addFields : { objCID : { $convert: { input: '$CID', to : 'objectId', onError: '',onNull: '' } } } ,
-            lookup : { from : "Company", localField : "objCID", foreignField : "_id", as : "ANA" } ,
+            lookup : { from : "Company", localField : "CNU", foreignField : "CNU", as : "ANA" } ,
             unwind : "$ANA",
             match : {},
             project : { WNM : '$WNM', RE : '$RE', CA : '$CA', ANA : '$ANA.ANA' },
@@ -714,30 +785,30 @@ router.post('/alarmtalk_list', isNotLoggedIn, DataSet, agentDevide, async functi
       if (searchdate) {
         var searchtext2 = searchdate.split("~");
         if(search == "ANA") {
-          doc.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "ANA.ANA" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else if(search == "WNM") {
-          doc.match = { "CID" : { $in : req.searchCID }, "WNM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "WNM" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else if(search == "RE") {
-          doc.match = { "CID" : { $in : req.searchCID }, "RE" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "RE" : {$regex:searchtext}, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
         else {
-          doc.match = { "CID" : { $in : req.searchCID }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "CA" : { $gte: new Date(searchtext2[0]+"T00:00:00.000Z"), $lt: new Date(searchtext2[1]+"T23:59:59.999Z") } };
         }
       }
       else {
         if (search =="ANA") {
-          doc.match = { "CID" : { $in : req.searchCID }, "ANA.ANA" : {$regex:searchtext} };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "ANA.ANA" : {$regex:searchtext} };
         }
         else if (search =="WNM") {
-          doc.match = { "CID" : { $in : req.searchCID }, "WNM" : {$regex:searchtext} };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "WNM" : {$regex:searchtext} };
         }
         else if (search =="RE") {
-          doc.match = { "CID" : { $in : req.searchCID }, "RE" : {$regex:searchtext} };
+          doc.match = { "CNU": { $regex: req.searchCNU }, "RE" : {$regex:searchtext} };
         }
         else {
-          doc.match = { "CID" : { $in : req.searchCID } };
+          doc.match = { "CNU": { $regex: req.searchCNU } };
         }
       }
     }
@@ -799,6 +870,7 @@ router.post('/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
   try {
     const companyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{_id : CID},{});
       var al = companyone.AL;
+      console.log("에이",al);
       
       for (var i = 0; i < al.length; i ++) {
         anaarray.push(String(Object.keys(al[i])));
@@ -807,7 +879,12 @@ router.post('/agent', isNotLoggedIn, DataSet, async(req, res, next) => {
       maxANU = Math.max.apply(null, anuarray);
       plusANU = maxANU+1;
       
-      if(plusANU.toString().length <= 3) {
+      console.log("플플",plusANU);
+      
+      if(plusANU == "-Infinity") {
+        ANU = "001";
+      }
+      else if(plusANU.toString().length <= 3) {
         fillZero(3,plusANU.toString());
       }
       else {

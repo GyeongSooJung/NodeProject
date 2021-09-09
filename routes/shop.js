@@ -539,7 +539,7 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
                         // await Order.create({
                         //     GN : paymentData.name,
                         //     AM : paymentData.amount,
-                        //     CID: company._id,
+                        //     CNU: company.CNU,
                         //     BN : paymentData.buyer_name,
                         //     BE : paymentData.buyer_email,
                         //     BT : paymentData.buyer_tel,
@@ -553,7 +553,7 @@ router.post('/complete', isNotLoggedIn, DataSet, async (req, res, next) => {
                         await modelQuery(QUERY.Create,COLLECTION_NAME.Order,{
                             GN : paymentData.name,
                             AM : paymentData.amount,
-                            CID: company._id,
+                            CNU: company.CNU,
                             BN : paymentData.buyer_name,
                             BE : paymentData.buyer_email,
                             BT : paymentData.buyer_tel,
@@ -852,7 +852,7 @@ router.post("/iamport-webhook", isNotLoggedIn, DataSet, async(req, res, next) =>
                         // await Order.create({
                         //     GN : paymentData.name,
                         //     AM : paymentData.amount,
-                        //     CID: company._id,
+                        //     CNU: company.CNU,
                         //     BN : paymentData.buyer_name,
                         //     BE : paymentData.buyer_email,
                         //     BT : paymentData.buyer_tel,
@@ -866,7 +866,7 @@ router.post("/iamport-webhook", isNotLoggedIn, DataSet, async(req, res, next) =>
                         await modelQuery(QUERY.Create,COLLECTION_NAME.Order,{
                             GN : paymentData.name,
                             AM : paymentData.amount,
-                            CID: company._id,
+                            CNU: company.CNU,
                             BN : paymentData.buyer_name,
                             BE : paymentData.buyer_email,
                             BT : paymentData.buyer_tel,
@@ -1120,7 +1120,7 @@ router.post("/iamport-webhook", isNotLoggedIn, DataSet, async(req, res, next) =>
 //                         await Order.create({
 //                             GN : paymentData.name,
 //                             AM : paymentData.amount,
-//                             CID: company._id,
+//                             CNU: company.CNU,
 //                             BN : paymentData.buyer_name,
 //                             BE : paymentData.buyer_email,
 //                             BT : paymentData.buyer_tel,

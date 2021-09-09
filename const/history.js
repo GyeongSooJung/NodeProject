@@ -1,12 +1,11 @@
 const HISTORY = {
-    "WID" : "WID",
-    "DID" : "DID",
-    "CID" : "CID",
-    "VID" : "VID",
+    "CNU" : "CNU",
+    "CNA" : "CNA",
     "WNM" : "WNM",
     "CNM" : "CNM",
     "DNM" : "DNM",
     "DNN" : "DNN",
+    "DMAC" : "DMAC",
     "VER" : "VER",
     "ET" : "ET",
     "PD" : "PD",
@@ -17,20 +16,13 @@ const HISTORY = {
     "COS" : "COS",
     "CA" : "CA",
     schema : {
-        WID: {
+        CNU: {
             type: String,
-            required: [true, 'WID is required!'],
-        },
-        DID: {
+            required: true,
+        }, // Company Name
+        CNA: {
             type: String,
-            required: [true, 'DID is required!'],
-        },
-        CID: {
-            type: String,
-            required: [true, 'CID is required!'],
-        },
-        VID: {
-            type: String
+            required: true,
         },
         WNM: { // 작업자명
             type: String,
@@ -48,13 +40,17 @@ const HISTORY = {
             type: String,
             default: null,
         },
+        DMAC: {
+            type: String,
+            required: true,
+        },
         VER: { // 수행 공정의 펌웨어 버전
             type: String,
             default: null,
         },
         ET: {
             type: Date,
-            required: [true, 'ET is required!'],
+            required: true,
         },
         PD: {
             type: [String],
@@ -70,7 +66,7 @@ const HISTORY = {
         },
         RC: {
             type: Number,
-            required: [true, 'RC is required!'],
+            required: true,
         },
         RD: { // ResultDetail, 공정 상세 코드
             type: [Number()],
@@ -81,7 +77,7 @@ const HISTORY = {
         },
         CA: {
             type: Date,
-            required: [true, 'CA is required!'],
+            required: true,
             default: Date.now
         },
     }

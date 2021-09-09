@@ -20,20 +20,20 @@ const { isNotLoggedIn } = require('./middleware');
 router.post('/car_join', isNotLoggedIn, async (req, res, next) => {
   const { data } = req.body;
   const jsonData = JSON.parse(data);
-  const CID = req.decoded.CID;
+  // const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   
   try {
     // 차량번호 정규식
     var check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
     // 업체에 등록된 차량
-    const exCar = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CID" : CID, "CN" :  jsonData.CN },{});
+    const exCar = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CNU" : CNU, "CN" :  jsonData.CN },{});
       
     if(jsonData.CN.length >= 7 && jsonData.CN.length <= 8) {
       if(check.test(jsonData.CN) == true) {
         if(!exCar) {
           await modelQuery(QUERY.Create,COLLECTION_NAME.Car,{
-            "CID" : CID,
+            "CNU" : CNU,
             "CN" : jsonData.CN,
             "CPN" : jsonData.CPN
           },{});
@@ -65,7 +65,7 @@ router.post('/car_join', isNotLoggedIn, async (req, res, next) => {
 router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
   const { data } = req.body;
   const jsonData = JSON.parse(data);
-  const CID = req.decoded.CID;
+  // const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
   var current = moment().format('YYYY-MM-DD hh:mm:ss');
@@ -114,7 +114,7 @@ router.post('/car_join_excel', isNotLoggedIn, async (req, res, next) => {
     
     // 엑셀 데이터 DB에 upsert방식(없으면 insert, 있으면 update)으로 넣기
     for(var h = 0; h < excelCN.length; h++) {
-      await modelQuery(QUERY.Updateupsert,COLLECTION_NAME.Car,{where : { "CID" : CID, "CN" : excelCN[h] }, update : { "CID" : CID, "CN" : excelCN[h], "CPN" : excelCPN[h], "CA" : current }});
+      await modelQuery(QUERY.Updateupsert,COLLECTION_NAME.Car,{where : { "CNU" : CNU, "CN" : excelCN[h] }, update : { "CNU" : CNU, "CN" : excelCN[h], "CPN" : excelCPN[h], "CA" : current }});
     }
     
     await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : {"CNU" : CNU}, update : { "CUA" : CUA }},{});
@@ -192,9 +192,9 @@ router.post('/ajax/car_list_edit1', isNotLoggedIn, async(req, res, next) => {
 
 // 수정 - 데이터 수정
 router.post('/ajax/car_list_edit2', isNotLoggedIn, async(req, res, next) => {
-  const { CN, CPN, CID, car_id } = req.body;
+  const { CN, CPN, CNU, car_id } = req.body;
   
-  const exCar = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CID" : CID, "CN" :  CN },{});
+  const exCar = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CNU" : CNU, "CN" :  CN },{});
   const check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
   const numCheck = /^[0-9]*$/;
   try{
@@ -207,11 +207,11 @@ router.post('/ajax/car_list_edit2', isNotLoggedIn, async(req, res, next) => {
             const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
             
             await modelQuery(QUERY.Update,COLLECTION_NAME.Car, {where : { "_id" : car_id } , update : {
-                "CID" : CID,
+                "CNU" : CNU,
                 "CN" : CN,
                 "CPN" : CPN,
               }},{});
-              await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { "_id" : CID }, update : {"CUA" : CUA}},{});
+              await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { "CNU" : CNU }, update : {"CUA" : CUA}},{});
               
             return res.send({ result : "success" });
           }
@@ -240,18 +240,18 @@ router.post('/ajax/car_list_edit2', isNotLoggedIn, async(req, res, next) => {
 //차량 한개 삭제
 router.post('/ajax/car_deleteone', isNotLoggedIn, async (req, res, next) => {
   var select = req.body["select"];
-  const CID = req.decoded.CID;
+  // const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
   
   try {
-    const carone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select.split(' ') },{});
+    const carone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CNU" : CNU, "CN" : select.split(' ') },{});
     await modelQuery(QUERY.Create,COLLECTION_NAME.Cardelete,{
-      "CID" : carone.CID,
+      "CNU" : carone.CNU,
       "CC" : carone.CC,
       "CPN" : carone.CPN,
     },{});
-    await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select.split(' ') },{});
+    await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{ "CNU" : CNU, "CN" : select.split(' ') },{});
     await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : {"CNU" : CNU}, update : { "CUA" : CUA }},{});
       
     res.send({ result : 'success' });
@@ -265,7 +265,7 @@ router.post('/ajax/car_deleteone', isNotLoggedIn, async (req, res, next) => {
 //차량 선택삭제
 router.post('/ajax/car_delete', isNotLoggedIn ,async (req, res, next) => {
     var select = req.body["select[]"];
-    const CID = req.decoded.CID;
+    // const CID = req.decoded.CID;
     const CNU = req.decoded.CNU;
     const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
     try {
@@ -274,23 +274,23 @@ router.post('/ajax/car_delete', isNotLoggedIn ,async (req, res, next) => {
         }
         else {
           if (typeof(select) == 'string') {
-            const carone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select },{});
+            const carone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CNU" : CNU, "CN" : select },{});
             await modelQuery(QUERY.Create,COLLECTION_NAME.Cardelete,{
-                "CID" : carone.CID,
+                "CNU" : carone.CNU,
                 "CN" : carone.CN,
                 "CPN" : carone.CPN,
             },{});
-            await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select },{});
+            await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{ "CNU" : CNU, "CN" : select },{});
           }
           else {
              for(var i = 0; i < select.length; i++){
-                var carone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select[i] },{});
+                var carone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CNU" : CNU, "CN" : select[i] },{});
                 await modelQuery(QUERY.Create,COLLECTION_NAME.Cardelete,{
-                    "CID" : carone.CID,
+                    "CNU" : carone.CNU,
                     "CN" : carone.CN,
                     "CPN" : carone.CPN,
                 },{});
-                await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{ "CID" : CID, "CN" : select[i] },{});
+                await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{ "CNU" : CNU, "CN" : select[i] },{});
              }
           }
           

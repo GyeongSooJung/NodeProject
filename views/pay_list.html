@@ -100,7 +100,7 @@
 <!-- Begin Script -->
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <script>
-var pagingObject = new Object({name : "Pay", url : "/ajax/pay_list", CID : "{{company._id}}", array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
+var pagingObject = new Object({name : "Pay", url : "/ajax/pay_list", CNU : "{{company.CNU}}", array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
 // 검색 기능
 $(document).ready(function() {
 	pagereload(pagingObject);

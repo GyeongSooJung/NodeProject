@@ -1,21 +1,23 @@
 const ORDER = {
-    "GN" : "",
-    "AM" : "",
-    "CAM" : "",
-    "CID" : "CID",
-    "BN" : "",
-    "BE" : "",
-    "BT" : "",
-    "BA" : "",
-    "MID" : "",
-    "IID" : "",
-    "PAM" : "",
-    "PG" : "",
-    "PS" : "",
-    "CA" : "",
+    "CNU" : "CNU",
+    "GN" : "GN",
+    "AM" : "AM",
+    "BN" : "BN",
+    "BE" : "BE",
+    "BT" : "BT",
+    "BA" : "BA",
+    "MID" : "MID",
+    "IID" : "IID",
+    "PAM" : "PAM",
+    "PG" : "PG",
+    "PS" : "PS",
+    "CA" : "CA",
     
     schema : {
-        //Goods Name
+        //Company Number
+        CNU: {
+            type: String,
+        },//Goods Name
         GN: {
             type: String,
             required: true,
@@ -23,15 +25,7 @@ const ORDER = {
         AM: {
             type: Number,
             required: true,
-        },//Amount
-        CAM: {
-            type: Number,
-            default: 0,
-        },//Company ID
-        CID: {
-            type: String,
-            required: true,
-        }, //Buyer Name
+        },//Buyer Name
         BN: {
             type: String
         }, //Buyer Email

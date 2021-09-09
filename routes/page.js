@@ -85,7 +85,7 @@ router.get('/register', isLoggedIn, async(req, res, next) => {
 //회원정보 수정
 router.get('/profile', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
   const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   
   try {
     res.render('profile', { company: req.decoded.company, aclist });
@@ -107,7 +107,7 @@ router.get('/find', (req, res, next) => {
 // 환경?설정
 router.get('/setting', isNotLoggedIn, DataSet, agentDevide, async (req, res, next) => {
   const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   
   res.render('setting', { company: req.decoded.company, aclist });
 });
@@ -133,12 +133,12 @@ router.get('/main', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) =
 
   const HOME = process.env.IP;
 
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
-  const devices = await modelQuery(QUERY.Find,COLLECTION_NAME.Device,{ "CID": req.decoded.CID },{});
-  const cars = await modelQuery(QUERY.Find,COLLECTION_NAME.Car,{ "CID": req.decoded.CID },{});
-  const workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.decoded.CID },{});
-  const publishs = await modelQuery(QUERY.Find,COLLECTION_NAME.Publish,{ "CID": req.decoded.CID },{});
-  const historys = await modelQuery(QUERY.Find,COLLECTION_NAME.History,{ "CID": req.decoded.CID },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
+  const devices = await modelQuery(QUERY.Find,COLLECTION_NAME.Device,{ "CNU": {$regex: req.searchCNU} },{});
+  const cars = await modelQuery(QUERY.Find,COLLECTION_NAME.Car,{ "CNU": {$regex: req.searchCNU} },{});
+  const workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU} },{});
+  const publishs = await modelQuery(QUERY.Find,COLLECTION_NAME.Publish,{ "CNU": {$regex: req.searchCNU} },{});
+  const historys = await modelQuery(QUERY.Find,COLLECTION_NAME.History,{ "CNU": {$regex: req.searchCNU} },{});
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{limit : 3, sort : {CA : -1}});
   const noticePop = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{"POP": true},{});
   
@@ -158,7 +158,7 @@ router.get('/main', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) =
   
   sevenday.setDate(sevenday.getDate() - 7);
       
-  const history_date = await modelQuery(QUERY.Aggregate,COLLECTION_NAME.History,{match : {CID : CID, "CA": { $lte: today, $gte: sevenday }}, project : {_id : 0,CA : "$CA"} },{});
+  const history_date = await modelQuery(QUERY.Aggregate,COLLECTION_NAME.History,{match : {"CNU": {$regex: req.searchCNU}, "CA": { $lte: today, $gte: sevenday }}, project : {_id : 0,CA : "$CA"} },{});
   for (var i =  0; i < 7 ; i ++) {
         for(var j = await 0; j < history_date.length; j ++) {
           if((history_date[j].CA <=  (Date.now() - (Days * i))) && (history_date[j].CA >=  (Date.now() - Days * (i + 1)))) {
@@ -186,12 +186,10 @@ router.get('/main', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) =
 //사업자 목록
 router.get('/company_list', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
 
-  const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{limit : 3, sort : {CA : -1}});
-  const companys = await modelQuery(QUERY.Find,COLLECTION_NAME.Company,{ "AH": false },{});
   
-    res.render('company_list', { company: req.decoded.company, companys, aclist, noticethree });
+    res.render('company_list', { company: req.decoded.company, aclist, noticethree });
 });
 
 
@@ -242,8 +240,7 @@ router.get('/company_list', isNotLoggedIn, DataSet, agentDevide, async(req, res,
 
 //장비 등록
 router.get('/device_join', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{limit : 3, sort : {CA : -1}});
 
   res.render('device_join', { company: req.decoded.company, aclist, noticethree, });
@@ -251,17 +248,16 @@ router.get('/device_join', isNotLoggedIn, DataSet, agentDevide, async(req, res, 
 
 //장비 목록
 router.get('/device_list', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-  const CID = req.decoded.CID;
   const NN = req.query.NN;
   
   // 작업자 신규 등록 시 new 표시
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   // 공지사항 rolling 표시
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{limit : 3, sort : {CA : -1}});
 
   try {
-    const devices = await modelQuery(QUERY.Find,COLLECTION_NAME.Device,{ "CID": req.searchCID },{})
-    const deviceTodayCount = await modelQuery(QUERY.CountDoc,COLLECTION_NAME.Device,{ "CID" : req.searchCID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } },{})
+    const devices = await modelQuery(QUERY.Find,COLLECTION_NAME.Device,{ "CNU": {$regex: req.searchCNU} },{})
+    const deviceTodayCount = await modelQuery(QUERY.CountDoc,COLLECTION_NAME.Device,{ "CNU": {$regex: req.searchCNU}, "CA" : { "$gte": todayStart, "$lt" : todayEnd } },{})
     const deviceCount = devices.length;
 
     res.render('device_list', { company: req.decoded.company, aclist, devices, deviceTodayCount, deviceCount, noticethree });
@@ -280,8 +276,7 @@ router.get('/device_list', isNotLoggedIn, DataSet, agentDevide, async(req, res, 
 
 //차량 등록
 router.get('/car_join', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{limit : 3, sort : {CA : -1}});
 
   res.render('car_join', { company: req.decoded.company, aclist, noticethree });
@@ -289,12 +284,11 @@ router.get('/car_join', isNotLoggedIn, DataSet, agentDevide, async(req, res, nex
 
 //차량 목록
 router.get('/car_list', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{sort : {CA : -1}, limit : 3})
   
-  const cars = await modelQuery(QUERY.Find,COLLECTION_NAME.Car,{ "CID" : req.searchCID },{});
-  const carTodayCount = await modelQuery(QUERY.CountDoc,COLLECTION_NAME.Car,{ "CID" : req.searchCID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } },{});
+  const cars = await modelQuery(QUERY.Find,COLLECTION_NAME.Car,{ "CNU": {$regex: req.searchCNU} },{});
+  const carTodayCount = await modelQuery(QUERY.CountDoc,COLLECTION_NAME.Car,{ "CNU": {$regex: req.searchCNU}, "CA" : { "$gte": todayStart, "$lt" : todayEnd } },{});
   const carCount = cars.length;
   
   res.render('car_list', { company: req.decoded.company, aclist, noticethree, carTodayCount, carCount });
@@ -307,21 +301,19 @@ router.get('/car_list', isNotLoggedIn, DataSet, agentDevide, async(req, res, nex
 
 //작업자 목록
 router.get('/worker_list', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const CNU = req.decoded.CNU;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID" : req.searchCID, "AC": false },{})
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{})
   const WN = req.query.WN;
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{limit : 3, sort : {CA : -1}});
-  
-  if(CID == "5fd6c731a26c914fbad53ebe") {
+
+  if(req.searchCNU == "3388800960") {
     const workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{},{});
     const workerTodayCount = await modelQuery(QUERY.CountDoc,COLLECTION_NAME.Worker,{ "CA" : { "$gte": todayStart, "$lt" : todayEnd } },{});
     const workerCount = workers.length;
     res.render('worker_list', { company: req.decoded.company, aclist, noticethree, workers, workerTodayCount, workerCount });
   }
   else {
-    const workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID" : req.searchCID },{});
-    const workerTodayCount = await modelQuery(QUERY.CountDoc,COLLECTION_NAME.Worker,{ "CID" : req.searchCID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } },{});
+    const workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU} },{});
+    const workerTodayCount = await modelQuery(QUERY.CountDoc,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "CA" : { "$gte": todayStart, "$lt" : todayEnd } },{});
     const workerCount = workers.length;
   
     res.render('worker_list', { company: req.decoded.company, aclist, noticethree, workers, workerTodayCount, workerCount });
@@ -365,19 +357,17 @@ router.post('/ajax/post', isNotLoggedIn, DataSet, agentDevide, async function(re
 
 // 소독 목록
 router.get('/history_list', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const CNU = req.decoded.CNU;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{limit : 3, sort : {CA : -1}});
 
   try {
-    const cars = await modelQuery(QUERY.Find,COLLECTION_NAME.Car,{ "CID": CID },{});
-    const devices = await modelQuery(QUERY.Find,COLLECTION_NAME.Device,{ "CID": CID },{});
+    const cars = await modelQuery(QUERY.Find,COLLECTION_NAME.Car,{ "CNU": {$regex: req.searchCNU} },{});
+    const devices = await modelQuery(QUERY.Find,COLLECTION_NAME.Device,{ "CNU": {$regex: req.searchCNU} },{});
     const CN = req.query.CN;
     const MD = req.query.MD;
     
-    const historys = await modelQuery(QUERY.Find,COLLECTION_NAME.History,{ "CID": CID },{});
-    const historyTodayCount = await modelQuery(QUERY.CountDoc,COLLECTION_NAME.History,{ "CID" : req.searchCID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } },{});
+    const historys = await modelQuery(QUERY.Find,COLLECTION_NAME.History,{ "CNU": {$regex: req.searchCNU} },{});
+    const historyTodayCount = await modelQuery(QUERY.CountDoc,COLLECTION_NAME.History,{ "CNU": {$regex: req.searchCNU}, "CA" : { "$gte": todayStart, "$lt" : todayEnd } },{});
     const historyCount = historys.length;
 
     res.render('history_list', { company: req.decoded.company, aclist, noticethree, cars, devices, historys, historyTodayCount, historyCount });
@@ -392,9 +382,7 @@ router.get('/history_list', isNotLoggedIn, DataSet, agentDevide, async(req, res,
 
 //소독 그래프
 router.get('/history_chart/:_id', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const CNU = req.decoded.CNU;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{limit : 3, sort : {CA : -1}});
 
   try {
@@ -414,12 +402,10 @@ router.get('/history_chart/:_id', isNotLoggedIn, DataSet, agentDevide, async(req
 
 //포인트 결제
 router.get('/shop', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const CNU = req.decoded.CNU;
   const imp_code = process.env.imp_code;
   const HOME = process.env.IP;
 
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   const goods = await modelQuery(QUERY.Find,COLLECTION_NAME.Goods,{},{})
   
   try {
@@ -433,9 +419,7 @@ router.get('/shop', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) =
 
 //결제 완료 내역
 router.get('/pay_confirm', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const CNU = req.decoded.CNU;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   const imp_uid = req.query.imp_uid;
   const imp_code = process.env.imp_code;
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{limit : 3, sort : {CA : -1}});
@@ -478,16 +462,14 @@ router.get('/pay_confirm', isNotLoggedIn, DataSet, agentDevide, async(req, res, 
 
 //결제 목록
 router.get('/pay_list', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-
-  const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   const GN = req.query.GN;
   const IP = process.env.IP;
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{limit : 3, sort : {CA : -1}});
 
   try {
-    const orders = await modelQuery(QUERY.Find,COLLECTION_NAME.Order,{ "CID": req.searchCID },{});
-    const orderTodayCount = await modelQuery(QUERY.CountDoc,COLLECTION_NAME.Order,{ "CID" : req.searchCID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } },{});
+    const orders = await modelQuery(QUERY.Find,COLLECTION_NAME.Order,{ "CNU": {$regex: req.searchCNU} },{});
+    const orderTodayCount = await modelQuery(QUERY.CountDoc,COLLECTION_NAME.Order,{ "CNU": {$regex: req.searchCNU}, "CA" : { "$gte": todayStart, "$lt" : todayEnd } },{});
     const orderCount = orders.length;
     
     res.render('pay_list', { company: req.decoded.company, aclist, noticethree, IP, orders, orderTodayCount, orderCount });
@@ -501,9 +483,7 @@ router.get('/pay_list', isNotLoggedIn, DataSet, agentDevide, async(req, res, nex
 
 // 영수증
 router.get('/receipt', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-
-  const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   const imp_code = process.env.imp_code;
   const imp_uid = req.query.imp_uid;
 
@@ -546,15 +526,14 @@ router.get('/receipt', isNotLoggedIn, DataSet, agentDevide, async(req, res, next
 //포인트 사용 목록
 router.get('/point_list', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
 
-  const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   const GN = req.query.GN;
   const IP = process.env.IP;
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{limit : 3, sort : {CA : -1}});
 
   try {
-    const points = await modelQuery(QUERY.Find,COLLECTION_NAME.Point,{ "CID": req.searchCID },{});
-    const pointTodayCount = await modelQuery(QUERY.CountDoc,COLLECTION_NAME.Point,{ "CID" : req.searchCID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } },{});
+    const points = await modelQuery(QUERY.Find,COLLECTION_NAME.Point,{ "CNU": {$regex: req.searchCNU} },{});
+    const pointTodayCount = await modelQuery(QUERY.CountDoc,COLLECTION_NAME.Point,{ "CNU": {$regex: req.searchCNU}, "CA" : { "$gte": todayStart, "$lt" : todayEnd } },{});
     const pointCount = points.length;
 
     res.render('point_list', { company: req.decoded.company, aclist, noticethree, IP, points, pointTodayCount, pointCount });
@@ -575,8 +554,7 @@ router.get('/point_list', isNotLoggedIn, DataSet, agentDevide, async(req, res, n
 //QR코드 관리
 router.get('/publish_manage', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
   
-  const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   const HOME = process.env.IP;
   const cat = process.env.publish_cat;
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{limit : 3, sort : {CA : -1}});
@@ -593,9 +571,7 @@ router.get('/publish_manage', isNotLoggedIn, DataSet, agentDevide, async(req, re
 //QR Code Create
 router.get('/create', isNotLoggedIn, DataSet, agentDevide, async (req, res, next) => {
   
-  const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
-  
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   var main = req.query.main;
   var cid = req.query.cid;
   var cat = req.query.cat;
@@ -830,8 +806,7 @@ router.get('/sendsms', isNotLoggedIn, DataSet, async(req, res, next) => {
 
 // 알림톡 리스트
 router.get('/alarmtalk_list', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   const WNM = req.query.WNM;
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{limit : 3, sort : {CA : -1}});
   
@@ -846,7 +821,7 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, agentDevide, async(req, re
   const messageIds = []; //메세지 ID 담을 배열 선언
   
   //포인트에 있는 내용 중 CID를 비교해서 MID 배열에 넣음
-  const pointaggregate = await modelQuery(QUERY.Aggregate,COLLECTION_NAME.Point,{ match : {CID : CID} ,group : { _id : "$MID" }},{});
+  const pointaggregate = await modelQuery(QUERY.Aggregate,COLLECTION_NAME.Point,{ match : {"CNU": {$regex: req.searchCNU}} ,group : { _id : "$MID" }},{});
     
     //_id 키의 값들을 배열에 담음(mid들만)
     for (var i = 0; i < pointaggregate.length; i++) {
@@ -887,7 +862,7 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, agentDevide, async(req, re
                 await modelQuery(QUERY.InsertMany,COLLECTION_NAME.Alarm,{
                   "MID" : body.messageList[key]._id,
                   "WNM" : pointone.WNM,
-                  "CID" : pointone.CID,
+                  "CNU" : pointone.CNU,
                   "CA" : pointone.CA,
                   "RE" : "성공"
                 },{})
@@ -907,7 +882,7 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, agentDevide, async(req, re
                 await modelQuery(QUERY.InsertMany,COLLECTION_NAME.Alarm,{
                   "MID" : body.messageList[key]._id,
                   "WNM" : pointone.WNM,
-                  "CID" : pointone.CID,
+                  "CNU" : pointone.CNU,
                   "CA" : pointone.CA,
                   "RE" : "보내는중"
                 },{})
@@ -918,7 +893,7 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, agentDevide, async(req, re
                 await modelQuery(QUERY.InsertMany,COLLECTION_NAME.Alarm,{
                   "MID" : body.messageList[key]._id,
                   "WNM" : pointone.WNM,
-                  "CID" : pointone.CID,
+                  "CNU" : pointone.CNU,
                   "CA" : pointone.CA,
                   "RE" : "실패"
                 },{})
@@ -937,8 +912,8 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, agentDevide, async(req, re
     }
 
   try {
-    const alarms = await modelQuery(QUERY.Find,COLLECTION_NAME.Alarm,{ "CID": req.searchCID },{});
-    const alarmTodayCount = await modelQuery(QUERY.CountDoc,COLLECTION_NAME.Alarm,{ "CID" : req.searchCID, "CA" : { "$gte": todayStart, "$lt" : todayEnd } },{});
+    const alarms = await modelQuery(QUERY.Find,COLLECTION_NAME.Alarm,{ "CNU": {$regex: req.searchCNU} },{});
+    const alarmTodayCount = await modelQuery(QUERY.CountDoc,COLLECTION_NAME.Alarm,{ "CNU": {$regex: req.searchCNU}, "CA" : { "$gte": todayStart, "$lt" : todayEnd } },{});
     const alarmCount = alarms.length;
     res.render('alarmtalk_list', { company: req.decoded.company, aclist, noticethree, alarms, alarmCount, alarmTodayCount });
 
@@ -956,20 +931,15 @@ router.get('/alarmtalk_list', isNotLoggedIn, DataSet, agentDevide, async(req, re
 
 // 공지사항
 router.get('/notice_list', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
-  
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{limit : 3})
   res.render('notice_list',{company: req.decoded.company, aclist, noticethree});
-  
 });
 
 
 // 공지사항 입력
 router.get('/notice_write', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
-  
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   res.render('notice_write',{company: req.decoded.company, aclist});
 });
 
@@ -1068,23 +1038,20 @@ router.get('/ozone_spread', isNotLoggedIn, DataSet, agentDevide, async(req, res,
 //----------------------------------------------------------------------------//
 
 router.get('/agent_manager', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
 
   res.render('agent_manager', { company: req.decoded.company, aclist });
 });
 
 router.get('/agent_list', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
 
   res.render('agent_list', { company: req.decoded.company, aclist });
 });
 
 
 router.get('/gstest', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
-  const CID = req.decoded.CID;
-  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CID": req.searchCID, "AC": false },{});
+  const aclist = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU}, "AC": false },{});
   
     // Excel Test
   //로직 흐름 : 

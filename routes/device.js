@@ -16,7 +16,6 @@ const {isNotLoggedIn} = require('./middleware');
 router.post('/device_join', isNotLoggedIn, async (req, res, next) => {
   const { data } = req.body;
   const jsonData = JSON.parse(data);
-  const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
     
   try {
@@ -25,7 +24,7 @@ router.post('/device_join', isNotLoggedIn, async (req, res, next) => {
     if (check.test(jsonData.MAC) == true) {
       if(!exDevice) {
         await modelQuery(QUERY.Create,COLLECTION_NAME.Device,{
-          "CID" : CID,
+          "CNU" : CNU,
           "MD" : jsonData.MD,
           "VER" : jsonData.VER,
           "MAC" : jsonData.MAC,
@@ -59,11 +58,11 @@ router.post('/ajax/device_list_edit1', isNotLoggedIn, async(req, res, next) => {
 
 // 수정 - 데이터 수정
 router.post('/ajax/device_list_edit2', isNotLoggedIn, async(req, res, next) => {
-  const { NN, CID, device_id } = req.body;
+  const { NN, CNU, device_id } = req.body;
   
   try{
     await modelQuery(QUERY.Update,COLLECTION_NAME.Device,{where : {"_id" : device_id}, update : {
-        "CID" : CID,
+        "CNU" : CNU,
         "NN" : NN,
       }},{});
         
@@ -83,7 +82,7 @@ router.post('/ajax/device_deleteone', async (req, res, next) => {
   try {
     const deviceone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Device,{ "MAC" : select.split(' ') },{});
     await modelQuery(QUERY.Create,COLLECTION_NAME.Devicedelete,{
-      "CID" : deviceone.CID,
+      "CNU" : deviceone.CNU,
       "MD" : deviceone.MD,
       "VER" : deviceone.VER,
       "NN" : deviceone.NN,
@@ -115,7 +114,7 @@ router.post('/ajax/device_delete', isNotLoggedIn, async (req, res, next) => {
     
         const deviceone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Device,{"MAC" : select},{});
         await modelQuery(QUERY.Create,COLLECTION_NAME.Devicedelete,{
-          "CID" : deviceone.CID,
+          "CNU" : deviceone.CNU,
           "MD" : deviceone.MD,
           "VER" : deviceone.VER,
           "NN" : deviceone.NN,
@@ -129,13 +128,13 @@ router.post('/ajax/device_delete', isNotLoggedIn, async (req, res, next) => {
           
           var deviceone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Device,{"MAC" : select[i]},{});
           await modelQuery(QUERY.Create,COLLECTION_NAME.Devicedelete,{
-          "CID" : deviceone.CID,
-          "MD" : deviceone.MD,
-          "VER" : deviceone.VER,
-          "NN" : deviceone.NN,
-          "MAC" : deviceone.MAC
-        },{});
-        await modelQuery(QUERY.Remove,COLLECTION_NAME.Device,{ "MAC" :select[i]},{});
+            "CNU" : deviceone.CNU,
+            "MD" : deviceone.MD,
+            "VER" : deviceone.VER,
+            "NN" : deviceone.NN,
+            "MAC" : deviceone.MAC
+          },{});
+          await modelQuery(QUERY.Remove,COLLECTION_NAME.Device,{ "MAC" :select[i]},{});
         }
       }
       return res.send({ result : 'success' });

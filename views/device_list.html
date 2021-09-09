@@ -102,7 +102,7 @@
 <!-- Script -->
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <script>
-    var pagingObject = new Object({name : "Device", url : "/ajax/device_list", CID : "{{company._id}}", array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
+    var pagingObject = new Object({name : "Device", url : "/ajax/device_list", CNU : "{{company.CNU}}", array : [], sort : "CA", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
     
 	$(document).ready(function() {
 		pagereload(pagingObject, i18nconvert); // 첫 화면 페이지 로드

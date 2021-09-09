@@ -12,7 +12,6 @@ const {isNotLoggedIn} = require('./middleware');
 //소독이력 한개 삭제
 router.post('/ajax/history_deleteone', isNotLoggedIn, async (req, res, next) => {
   var select = req.body["select"];
-  const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   
   try {

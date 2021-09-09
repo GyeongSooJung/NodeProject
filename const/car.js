@@ -1,5 +1,5 @@
 const CAR  = {
-  "CID" : "CID",
+  "CNU" : "CNU",
   "CC" : "CC",
   "CN" : "CN",
   "CPN" : "CPN",
@@ -7,7 +7,7 @@ const CAR  = {
   "CA" : "CA",
   "UA" : "UA",
   schema : {
-    CID: {
+    CNU: {
       type: String,
       require: true
     },

@@ -1,5 +1,5 @@
 const WORKER_DELETE = {
-    "CID" : "CID",
+    "CNU" : "CNU",
     "WN" : "WN",
     "PN" : "PN",
     "GID" : "GID",
@@ -11,7 +11,7 @@ const WORKER_DELETE = {
     "AC" : "AC",
     
     schema : {
-        CID: { // Company ID
+        CNU: { // Company Number
             type: String,
         },
         WN: { // Worker Name

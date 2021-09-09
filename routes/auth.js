@@ -93,9 +93,9 @@ router.get("/withdrawal", isNotLoggedIn, async function(req, res, next){
   
   try {
     await modelQuery(QUERY.Remove,COLLECTION_NAME.Company,{"_id": CID},{});
-    await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{"CID": CID},{});
-    await modelQuery(QUERY.Remove,COLLECTION_NAME.Device,{"CID": CID},{});
-    await modelQuery(QUERY.Remove,COLLECTION_NAME.Worker,{"CID": CID},{});
+    await modelQuery(QUERY.Remove,COLLECTION_NAME.Car,{"CNU": CNU},{});
+    await modelQuery(QUERY.Remove,COLLECTION_NAME.Device,{"CNU": CNU},{});
+    await modelQuery(QUERY.Remove,COLLECTION_NAME.Worker,{"CNU": CNU},{});
 
     await res.cookie("token", req.cookies, { expiresIn : 0 });
     

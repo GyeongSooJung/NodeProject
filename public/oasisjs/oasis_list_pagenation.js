@@ -10,6 +10,7 @@
                 dataType: 'json',
                 data: {
                 	CID : Object.CID,
+                	CNU : Object.CNU,
                     sort : Object.sort,
                     search : Object.search,
                     searchtext : Object.searchtext,
@@ -208,8 +209,8 @@
     //초기화
     function refresh(Object) {
     	if(Object.name == "Company") {
-    		Object.url = "/ajax/company_list"
-    		Object.CID = "5fd6c731a26c914fbad53ebe"
+    		Object.url = "/ajax/company_list";
+    		Object.CID = "5fd6c731a26c914fbad53ebe";
     		Object.array = [];
 	    	Object.sort = "ET";
 	    	Object.page = 0;

@@ -24,14 +24,15 @@ router.get('/', async (req, res, next) => {
       if(historyone) {
         await modelQuery(QUERY.Updateupsert,COLLECTION_NAME.Publish,{where : {"PUC" : cat}, update : {$inc : {"PUN" : 1}}},{});
         
-        const companyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{"_id" : historyone.CID},{});
-        const deviceone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Device,{"_id" : historyone.DID},{});
+        // const companyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{"_id" : historyone.CID},{});
+        // const deviceone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Device,{"_id" : historyone.DID},{});
         const history_array = await historyone.PD;
         
         const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
         const term = await moment(timenow).diff(et, 'hours');
         
-        res.render('publish', {companyone, deviceone, historyone, history_array, term, kakao});
+        // res.render('publish', {companyone, deviceone, historyone, history_array, term, kakao});
+        res.render('publish', {historyone, history_array, term, kakao});
       }
       else {
         res.redirect('/inflow?cat='+cat+'&nodata=true');
@@ -43,14 +44,15 @@ router.get('/', async (req, res, next) => {
       if(historyone) { //historyone.RC == 1
         await modelQuery(QUERY.Updateupsert,COLLECTION_NAME.Publish,{where : {"PUC" : cat},update :{$inc : {"PUN" : 1}}},{});
         
-        const companyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{"_id" : historyone.CID},{});
-        const deviceone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Device,{"_id" : historyone.DID},{});
+        // const companyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{"_id" : historyone.CID},{});
+        // const deviceone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Device,{"_id" : historyone.DID},{});
         const history_array = await historyone.PD;
         
         const et = moment(historyone.ET).format('YYYY-MM-DD HH:mm');
         const term = await moment(timenow).diff(et, 'hours');
         
-        res.render('publish', {companyone, deviceone, historyone, history_array, term, kakao, cat});
+        // res.render('publish', {companyone, deviceone, historyone, history_array, term, kakao, cat});
+        res.render('publish', {historyone, history_array, term, kakao, cat});
       }
       else {
         res.redirect('/inflow?cat='+cat+'&nodata=true');
@@ -69,9 +71,10 @@ router.get('/brand', async (req, res, next) => {
   const cat = req.query.cat;
   
   const historyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.History,{"_id" : HID},{})
-  const companyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{"_id" : historyone.CID},{});
+  // const companyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{"_id" : historyone.CID},{});
   
-  res.render('publish_brand', {CN, HID, cat, companyone});
+  // res.render('publish_brand', {CN, HID, cat, companyone});
+  res.render('publish_brand', {CN, HID, cat});
 });
 
 // 바로 넘어갈 경우

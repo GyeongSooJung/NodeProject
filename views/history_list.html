@@ -99,7 +99,7 @@
 <!--Script-->
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <script>
-	var pagingObject = new Object({name : "History", url : "/ajax/history_list", CID : "{{company._id}}", array : [], sort : "ET", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
+	var pagingObject = new Object({name : "History", url : "/ajax/history_list", CNU : "{{company.CNU}}", array : [], sort : "ET", page : 0, postNum : 10, pageNum : 5, startpage : 0, endpage : 0, search: "", searchtext : "", searchdate : ""});
 		// 검색 기능
 	$(document).ready(function() {
 		pagereload(pagingObject); // 첫 화면 페이지 로드

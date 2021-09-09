@@ -1,5 +1,5 @@
 const DEVICE  = {
-    "CID" : "CID",
+    "CNU" : "CNU",
     "MD" : "MD",
     "MAC" : "MAC",
     "VER" : "VER",
@@ -9,42 +9,39 @@ const DEVICE  = {
     "UT" : "UT",
     "UN" : "UN",
     schema : {
-        CID: {
+        CNU: {
             type: String,
-            required: [true, 'CID is required'],
+            required: true,
         },
         MD: {
             type: String,
             trim: true,
-            required: [true, 'MD is required!'],
+            required: true,
         },
         MAC: {
             type: String,
             unique: true,
-            required: [true, 'MAC is required!'],
+            required: true,
         },
         VER: {
             type: String,
-            required: [true, 'VER is required!'],
+            required: true,
         },
         NN: {
             type: String,
+        },//Number of Use
+        UN: {
+            type: Number,
+            default: 0
         },
         CA: {
             type: Date,
-            required: [true, 'CA is required!'],
+            required: true,
             default: Date.now
         },
         UA: {
             type: Date,
             default: Date.now
-        },//Time of Use
-        UT: {
-            type: Number,
-        },//Number of Use
-        UN: {
-            type: Number,
-            default: 0
         }
     }
 }

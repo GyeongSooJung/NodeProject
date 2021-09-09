@@ -10,12 +10,11 @@ const { isNotLoggedIn } = require('./middleware');
 //작업자 한개 삭제
 router.post('/ajax/worker_deleteone', isNotLoggedIn, async (req, res, next) => {
   var select = req.body["select"];
-  const CID = req.decoded.CID;
   const CNU = req.decoded.CNU;
   try {
-    const workerone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Worker,{ "CID" : CID, "EM" : select.split(' ') },{});
+    const workerone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Worker,{ "CNU" : CNU, "EM" : select.split(' ') },{});
     await modelQuery(QUERY.Create,COLLECTION_NAME.Workerdelete,{
-      "CID" : workerone.CID,
+      "CNU" : workerone.CNU,
       "WN" : workerone.WN,
       "PN" : workerone.PN,
       "GID" : workerone.GID,
@@ -24,7 +23,7 @@ router.post('/ajax/worker_deleteone', isNotLoggedIn, async (req, res, next) => {
       "AU" : workerone.AU,
       "AC" :workerone.AC
     },{});
-    await modelQuery(QUERY.Remove,COLLECTION_NAME.Worker,{ "CID" : CID, "EM" : select.split(' ') },{});
+    await modelQuery(QUERY.Remove,COLLECTION_NAME.Worker,{ "CNU" : CNU, "EM" : select.split(' ') },{});
     
     res.send({ result : 'success' });
     
@@ -38,7 +37,6 @@ router.post('/ajax/worker_deleteone', isNotLoggedIn, async (req, res, next) => {
 //작업자 선택삭제
 router.post('/ajax/worker_delete', isNotLoggedIn ,async (req, res, next) => {
     var select = req.body["select[]"];
-    const CID = req.decoded.CID;
     const CNU = req.decoded.CNU;
     
     try {
@@ -47,9 +45,9 @@ router.post('/ajax/worker_delete', isNotLoggedIn ,async (req, res, next) => {
         }
         else {
           if (typeof(select) == 'string') {
-            const workerone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Worker,{ "CID" : CID, "EM" : select },{});
+            const workerone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Worker,{ "CNU" : CNU, "EM" : select },{});
             await modelQuery(QUERY.Create,COLLECTION_NAME.Workerdelete,{
-                "CID" : workerone.CID,
+                "CNU" : workerone.CNU,
                 "WN" : workerone.WN,
                 "PN" : workerone.PN,
                 "GID" : workerone.GID,
@@ -58,13 +56,13 @@ router.post('/ajax/worker_delete', isNotLoggedIn ,async (req, res, next) => {
                 "AU" : workerone.AU,
                 "AC" :workerone.AC
             },{});
-            await modelQuery(QUERY.Remove,COLLECTION_NAME.Worker,{ "CID" : CID, "EM" : select },{});
+            await modelQuery(QUERY.Remove,COLLECTION_NAME.Worker,{ "CNU" : CNU, "EM" : select },{});
           }
           else {
             for(var i = 0; i < select.length; i++){
-              var workerone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Worker,{ "CID" : CID, "EM" : select[i] },{});
+              var workerone = await modelQuery(QUERY.Findone,COLLECTION_NAME.Worker,{ "CNU" : CNU, "EM" : select[i] },{});
                 await modelQuery(QUERY.Create,COLLECTION_NAME.Workerdelete,{
-                    "CID" : workerone.CID,
+                    "CNU" : workerone.CNU,
                     "WN" : workerone.WN,
                     "PN" : workerone.PN,
                     "GID" : workerone.GID,
@@ -73,7 +71,7 @@ router.post('/ajax/worker_delete', isNotLoggedIn ,async (req, res, next) => {
                     "AU" : workerone.AU,
                     "AC" :workerone.AC
                 },{});
-                await modelQuery(QUERY.Remove,COLLECTION_NAME.Worker,{ "CID" : CID, "EM" : select[i] },{});
+                await modelQuery(QUERY.Remove,COLLECTION_NAME.Worker,{ "CNU" : CNU, "EM" : select[i] },{});
             }
           }
             

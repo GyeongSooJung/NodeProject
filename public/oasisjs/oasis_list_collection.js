@@ -13,6 +13,7 @@
 			insertTr += "<tr>"
 			insertTr += "<th></th>"
 			insertTr += "<th class='sort'>상호명</th>"
+			insertTr += "<th calss='sort'>지점명</th>"
 			insertTr += "<th class='sort'>사업자 번호</th>"
 			insertTr += "<th class='sort'>대표자</th>"
 			insertTr += "<th class='sort'>회사 전화번호</th>"
@@ -31,7 +32,8 @@
 						insertTr += "<tr>";
 						insertTr += "<td class='font-weight-bold'>"+(num - (Object.page*10)) +" </td>";
 						insertTr += "<td>"+ Object.array[i].CNA +"</td>";
-						insertTr += "<td>"+ Object.array[i].CNU+"</td>";
+						insertTr += "<td>"+ Object.array[i].ANA +"</td>";
+						insertTr += "<td>"+ Object.array[i].CNU.substring(0,10)+"</td>";
 						insertTr += "<td>"+ Object.array[i].NA+"</td>";
 						insertTr += "<td>"+ Object.array[i].PN+"</td>";
 						insertTr += "<td>"+ Object.array[i].MN+"</td>";
@@ -46,10 +48,10 @@
 						}
 						
 						insertTr +=	"<td class='d-flex flex-nowrap justify-content-around'>";
-						insertTr +=	"<button onClick='devicelist(pagingObject,this)' name = '"+ Object.array[i]._id +"' class='btn btn-primary mx-1 px-2'><i class='fas fa-lg fa-fw fa-microchip'></i></button>";
-						insertTr +=	"<button onClick='carlist(pagingObject,this)' name = '"+ Object.array[i]._id +"' class='btn btn-info mx-1 px-2'><i class='fas fa-lg fa-fw fa-car'></i></button>";
-						insertTr +=	"<button onClick='workerlist(pagingObject,this)' name = '"+ Object.array[i]._id +"' class='btn btn-warning mx-1 px-2'><i class='fas fa-lg fa-fw fa-user'></i></button>";
-						insertTr +=	"<button onClick='historylist(pagingObject,this)' name = '"+ Object.array[i]._id +"' class='btn btn-danger mx-1 px-2'><i class='fas fa-lg fa-fw fa-history'></i></button>";
+						insertTr +=	"<button onClick='devicelist(pagingObject,this)' name = '"+ Object.array[i].CNU +"' class='btn btn-primary mx-1 px-2'><i class='fas fa-lg fa-fw fa-microchip'></i></button>";
+						insertTr +=	"<button onClick='carlist(pagingObject,this)' name = '"+ Object.array[i].CNU +"' class='btn btn-info mx-1 px-2'><i class='fas fa-lg fa-fw fa-car'></i></button>";
+						insertTr +=	"<button onClick='workerlist(pagingObject,this)' name = '"+ Object.array[i].CNU +"' class='btn btn-warning mx-1 px-2'><i class='fas fa-lg fa-fw fa-user'></i></button>";
+						insertTr +=	"<button onClick='historylist(pagingObject,this)' name = '"+ Object.array[i].CNU +"' class='btn btn-danger mx-1 px-2'><i class='fas fa-lg fa-fw fa-history'></i></button>";
 						insertTr +=	"</td>";
 						insertTr += "</tr>";
 						num -= indexcount;
@@ -74,6 +76,17 @@
 	
 	function company_gotolist(Object) {
 	   	Object.name = "Company";
+	   	
+	   	if($(".dropdown-menu").hasClass("company-search")) {
+			$(".company-search").empty();
+			var insertTr = "";
+			insertTr += `<a href="javascript:searchoption('CNA',pagingObject,{CNA : 'CNA',ANA : 'ANA',CNU : 'CNU',NA : 'NA'});" class="dropdown-item">`+i18nconvert('company_name')+`</a>`;
+			insertTr += `<a href="javascript:searchoption('ANA',pagingObject,{CNA : 'CNA',ANA : 'ANA',CNU : 'CNU',NA : 'NA'});" class="dropdown-item">`+i18nconvert('agent_name')+`</a>`;
+			insertTr += `<a href="javascript:searchoption('CNU',pagingObject,{CNA : 'CNA',ANA : 'ANA',CNU : 'CNU',NA : 'NA'});" class="dropdown-item">`+i18nconvert('business_number')+`</a>`;
+			insertTr += `<a href="javascript:searchoption('NA',pagingObject,{CNA : 'CNA',ANA : 'ANA',CNU : 'CNU',NA : 'NA'});" class="dropdown-item">`+i18nconvert('representative')+`</a>`;
+			$(".company-search").append(insertTr);
+		}
+		
 	   	gotolist(Object);
     }
 	
@@ -81,7 +94,18 @@
 		refresh(Object);
 		Object.name = "Device";
 		Object.url = "/ajax/device_list";
-		Object.CID = $(obj).attr('name')+"#";
+		Object.CNU = $(obj).attr('name')+"#";
+		
+		if($(".dropdown-menu").hasClass("company-search")) {
+			$(".company-search").empty();
+			var insertTr = "";
+			insertTr += `<a href="javascript:searchoption('ANA',pagingObject,{ANA : 'ANA',MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN'});" class="dropdown-item">`+i18nconvert('agent_branch')+`</a>`;
+			insertTr += `<a href="javascript:searchoption('MD',pagingObject,{ANA : 'ANA',MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN'});" class="dropdown-item">`+i18nconvert('device_model')+`</a>`;
+			insertTr += `<a href="javascript:searchoption('VER',pagingObject,{ANA : 'ANA',MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN'});" class="dropdown-item">`+i18nconvert('device_version')+`</a>`;
+			insertTr += `<a href="javascript:searchoption('MAC',pagingObject,{ANA : 'ANA',MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN'});" class="dropdown-item">`+i18nconvert('device_mac')+`</a>`;
+			insertTr += `<a href="javascript:searchoption('NN',pagingObject,{ANA : 'ANA',MD : 'MD',VER : 'VER',MAC : 'MAC',NN : 'NN'});" class="dropdown-item">`+i18nconvert('device_nick')+`</a>`;
+			$(".company-search").append(insertTr);
+		}
 		
 		pagereload(Object);
 	}
@@ -90,7 +114,16 @@
 		refresh(Object);
 		Object.name = "Car";
 		Object.url = "/ajax/car_list";
-		Object.CID = $(obj).attr('name')+"#";
+		Object.CNU = $(obj).attr('name')+"#";
+		
+		if($(".dropdown-menu").hasClass("company-search")) {
+			$(".company-search").empty();
+			var insertTr = "";
+			insertTr += `<a href="javascript:searchoption('ANA',pagingObject,{ANA : 'ANA',CN : 'CN',CPN : 'CPN'});" class="dropdown-item">`+i18nconvert('agent_branch')+`</a>`;
+			insertTr += `<a href="javascript:searchoption('CN',pagingObject,{ANA : 'ANA',CN : 'CN',CPN : 'CPN'});" class="dropdown-item">`+i18nconvert('car_number')+`</a>`;
+			insertTr += `<a href="javascript:searchoption('CPN',pagingObject,{ANA : 'ANA',CN : 'CN',CPN : 'CPN'});" class="dropdown-item">`+i18nconvert('car_customer_phone')+`</a>`;
+			$(".company-search").append(insertTr);
+		}
 		
 		pagereload(Object);
 	}
@@ -99,7 +132,17 @@
 		refresh(Object);
 		Object.name = "Worker";
 		Object.url = "/ajax/worker_list";
-		Object.CID = $(obj).attr('name')+"#";
+		Object.CNU = $(obj).attr('name')+"#";
+		
+		if($(".dropdown-menu").hasClass("company-search")) {
+			$(".company-search").empty();
+			var insertTr = "";
+			insertTr += `<a href="javascript:searchoption('ANA',pagingObject,{ANA : 'ANA',WN : 'WN',PN : 'PN',EM : 'EM'});" class="dropdown-item">`+i18nconvert('agent_branch')+`</a>`;
+			insertTr += `<a href="javascript:searchoption('WN',pagingObject,{ANA : 'ANA',WN : 'WN',PN : 'PN',EM : 'EM'});" class="dropdown-item">`+i18nconvert('name')+`</a>`;
+			insertTr += `<a href="javascript:searchoption('PN',pagingObject,{ANA : 'ANA',WN : 'WN',PN : 'PN',EM : 'EM'});" class="dropdown-item">`+i18nconvert('mobile_number')+`</a>`;
+			insertTr += `<a href="javascript:searchoption('EM',pagingObject,{ANA : 'ANA',WN : 'WN',PN : 'PN',EM : 'EM'});" class="dropdown-item">`+i18nconvert('email')+`</a>`;
+			$(".company-search").append(insertTr);
+		}
 		
 		pagereload(Object)
 	}
@@ -108,7 +151,17 @@
 		refresh(Object);
 		Object.name = "History";
 		Object.url = "/ajax/history_list";
-		Object.CID = $(obj).attr('name')+"#";
+		Object.CNU = $(obj).attr('name')+"#";
+		
+		if($(".dropdown-menu").hasClass("company-search")) {
+			$(".company-search").empty();
+			var insertTr = "";
+			insertTr += `<a href="javascript:searchoption('ANA',pagingObject,{ANA : 'ANA',CNM : 'CNM',DNM : 'DNM',WNM : 'WNM'});" class="dropdown-item">`+i18nconvert('agent_branch')+`</a>`;
+			insertTr += `<a href="javascript:searchoption('CNM',pagingObject,{ANA : 'ANA',CNM : 'CNM',DNM : 'DNM',WNM : 'WNM'});" class="dropdown-item">`+i18nconvert('car_number')+`</a>`;
+			insertTr += `<a href="javascript:searchoption('DNM',pagingObject,{ANA : 'ANA',CNM : 'CNM',DNM : 'DNM',WNM : 'WNM'});" class="dropdown-item">`+i18nconvert('device_model')+`</a>`;
+			insertTr += `<a href="javascript:searchoption('WNM',pagingObject,{ANA : 'ANA',CNM : 'CNM',DNM : 'DNM',WNM : 'WNM'});" class="dropdown-item">`+i18nconvert('worker')+`</a>`;
+			$(".company-search").append(insertTr);
+		}
 		
 		pagereload(Object);
 	}
@@ -344,7 +397,7 @@
      	var indexcount = 1; // 인덱스번호 초기화
      	
 		
-		if (Object.CID =="5fd6c731a26c914fbad53ebe") {
+		if (Object.CNU == "3388800960") {
 			$("#memDiv1").empty();
 			insertTr +="<tr>";
 			insertTr +="<th width='1%'><input type='checkbox' class='neHeros' value='' onChange='allCheckedBox(this);'/></th>";
@@ -376,7 +429,7 @@
 				insertTr += "fa-sort'></a></i></th>";
 				
 			
-			if (Object.CID =="5fd6c731a26c914fbad53ebe") {
+			if (Object.CNU == "3388800960") {
 				insertTr +="<th width='10%'>본사/대리점</th>";
 				insertTr +="<th width='10%'>MK본사 권한</th>";
 				insertTr +="<th width='10%'>대리점 권한</th>";
@@ -408,7 +461,7 @@
 						insertTr += "<td>"+ Object.array[i].WN+"</td>";
 						insertTr += "<td>"+ Object.array[i].PN+"</td>";
 						insertTr += "<td>"+ Object.array[i].EM+"</td>";
-						if(Object.array[i].CID == "5fd6c731a26c914fbad53ebe")
+						if(Object.array[i].CNU = "3388800960000")
 						insertTr += "<td>본사</td>";
 						else
 						insertTr += "<td>대리점</td>";
@@ -449,7 +502,7 @@
 					}
 					else {
 					insertTr += "<tr>";
-					insertTr += "	<td colspan='10'>No Data</td>";
+					insertTr += "	<td colspan='13'>No Data</td>";
 					insertTr += "</tr>";
 					
 					break;
@@ -496,7 +549,7 @@
 			else 
 				insertTr += "fa-sort'></a></i></th>";
 			
-			if (Object.CID =="5fd6c731a26c914fbad53ebe") {
+			if (Object.CNU =="3388800960") {
 				insertTr +="<th width='10%'>본사/대리점</th>";
 				insertTr +="<th width='10%'>MK본사 권한</th>";
 				insertTr +="<th width='10%'>대리점 권한</th>";
@@ -557,7 +610,7 @@
 					}
 					else {
 					insertTr += "<tr>";
-					insertTr += "	<td colspan='10'>No Data</td>";
+					insertTr += "	<td colspan='13'>No Data</td>";
 					insertTr += "</tr>";
 					
 					break;
@@ -1052,7 +1105,7 @@
 			insertTr += "fa-sort-down'></a></i></th>";
 		else 
 			insertTr += "fa-sort'></a></i></th>";
-			if (Object.CID =="5fd6c731a26c914fbad53ebe") {
+			if (Object.CNU =="3388800960") {
 				insertTr += "<th width='5%'>"+i18nconvert("notice_pop_ck")+"</th>";
 			}
 			insertTr += "</tr>";
@@ -1074,7 +1127,7 @@
 				  else {
 				      insertTr += moment(Object.array[i].CA).format('YYYY-MM-DD');
 				  }
-				  if (Object.CID =="5fd6c731a26c914fbad53ebe") {
+				  if (Object.CNU =="3388800960") {
 					insertTr += "<td onclick='event.cancelBubble=true'><input onclick ='checkpop(this)' class ='ck_pop' type='checkbox' value ='"+Object.array[i]._id+"'";
 					if (Object.array[i].POP == true) {
 						insertTr += "checked /></td>";

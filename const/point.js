@@ -1,16 +1,16 @@
 const POINT = {
-     "CID" : "CID",
+     "CNU" : "CNU",
      "PN" : "PN",
      "PO" : "PO",
      "MID" : "MID",
      "WNM" : "WNM",
      "CA" : "CA",
+     "CNU" : "CNU",
      
     schema : {
-        //Company ID
-        CID: {
+        //Company Number
+        CNU: {
             type: String,
-            required: true,
         },//Point Name
         PN: {
             type: String,
