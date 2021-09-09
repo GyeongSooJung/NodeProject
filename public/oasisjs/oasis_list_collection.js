@@ -48,10 +48,10 @@
 						}
 						
 						insertTr +=	"<td class='d-flex flex-nowrap justify-content-around'>";
-						insertTr +=	"<button onClick='devicelist(pagingObject,this)' name = '"+ Object.array[i].CNU +"' class='btn btn-primary mx-1 px-2'><i class='fas fa-lg fa-fw fa-microchip'></i></button>";
-						insertTr +=	"<button onClick='carlist(pagingObject,this)' name = '"+ Object.array[i].CNU +"' class='btn btn-info mx-1 px-2'><i class='fas fa-lg fa-fw fa-car'></i></button>";
-						insertTr +=	"<button onClick='workerlist(pagingObject,this)' name = '"+ Object.array[i].CNU +"' class='btn btn-warning mx-1 px-2'><i class='fas fa-lg fa-fw fa-user'></i></button>";
-						insertTr +=	"<button onClick='historylist(pagingObject,this)' name = '"+ Object.array[i].CNU +"' class='btn btn-danger mx-1 px-2'><i class='fas fa-lg fa-fw fa-history'></i></button>";
+						insertTr +=	"<button onClick='devicelist(pagingObject,this)' name = '"+ Object.array[i].CNU +"' class='companydevice btn btn-primary mx-1 px-2'><i class='fas fa-lg fa-fw fa-microchip'></i></button>";
+						insertTr +=	"<button onClick='carlist(pagingObject,this)' name = '"+ Object.array[i].CNU +"' class='companycar btn btn-info mx-1 px-2'><i class='fas fa-lg fa-fw fa-car'></i></button>";
+						insertTr +=	"<button onClick='workerlist(pagingObject,this)' name = '"+ Object.array[i].CNU +"' class='companyworker btn btn-warning mx-1 px-2'><i class='fas fa-lg fa-fw fa-user'></i></button>";
+						insertTr +=	"<button onClick='historylist(pagingObject,this)' name = '"+ Object.array[i].CNU +"' class='companyhistory btn btn-danger mx-1 px-2'><i class='fas fa-lg fa-fw fa-history'></i></button>";
 						insertTr +=	"</td>";
 						insertTr += "</tr>";
 						num -= indexcount;
@@ -244,7 +244,7 @@
 						insertTr += moment( Object.array[i].CA).format('YYYY-MM-DD');
 					}
 					insertTr += "</td><td class='with-btn' nowrap>";
-					insertTr += "<a href='javascript:;' id = 'carid' onclick='car_editone(this);' data-type='show' name='"+ Object.array[i]._id +"'   class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>"+i18nconvert("modify")+"</a>";
+					insertTr += "<a href='javascript:;' id = 'carid' onclick='car_editone(this);' data-type='show' name='"+ Object.array[i]._id +"' data-carnum='"+ Object.array[i].CN +"' class='btn btn-sm btn-primary width-60 m-r-2 edit-btn'>"+i18nconvert("modify")+"</a>";
 					insertTr += "<input type='button' value='"+i18nconvert("delete")+"' onclick=delete_one(this,'/car/ajax/car_deleteone') class='btn btn-sm btn-white width-60' name =' "+  Object.array[i].CN +"'></td> ";
 					insertTr += "</tr>";
 					num -= indexcount;

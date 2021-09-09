@@ -192,11 +192,12 @@ router.post('/ajax/car_list_edit1', isNotLoggedIn, async(req, res, next) => {
 
 // 수정 - 데이터 수정
 router.post('/ajax/car_list_edit2', isNotLoggedIn, async(req, res, next) => {
-  const { CN, CPN, CNU, car_id } = req.body;
+  const { exCN, CN, CPN, CNU, car_id } = req.body;
   
   const exCar = await modelQuery(QUERY.Findone,COLLECTION_NAME.Car,{ "CNU" : CNU, "CN" :  CN },{});
   const check = /^[0-9]{2,3}[가-힣]{1}[0-9]{4}/gi;
   const numCheck = /^[0-9]*$/;
+  const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
   try{
     if (CN.length >= 7 && CN.length <= 8) {
       check.lastIndex = 0;
@@ -204,9 +205,7 @@ router.post('/ajax/car_list_edit2', isNotLoggedIn, async(req, res, next) => {
         
         if(!exCar) {
           if(numCheck.test(CPN) == true) {
-            const CUA = moment().format('YYYY-MM-DD hh:mm:ss');
-            
-            await modelQuery(QUERY.Update,COLLECTION_NAME.Car, {where : { "_id" : car_id } , update : {
+              await modelQuery(QUERY.Update,COLLECTION_NAME.Car, {where : { "_id" : car_id } , update : {
                 "CNU" : CNU,
                 "CN" : CN,
                 "CPN" : CPN,
@@ -220,7 +219,19 @@ router.post('/ajax/car_list_edit2', isNotLoggedIn, async(req, res, next) => {
           }
         }
         else {
-          return res.send({ result : 'exist' });
+          if(exCN == CN) {
+            await modelQuery(QUERY.Update,COLLECTION_NAME.Car, {where : { "_id" : car_id } , update : {
+              "CNU" : CNU,
+              "CN" : CN,
+              "CPN" : CPN,
+            }},{});
+            await modelQuery(QUERY.Update,COLLECTION_NAME.Company,{where : { "CNU" : CNU }, update : {"CUA" : CUA}},{});
+            
+            return res.send({ result : "success" });
+          }
+          else {
+            return res.send({ result : 'exist' });
+          }
         }
       }
       else {

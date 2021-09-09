@@ -97,6 +97,35 @@ var pagingObject = new Object({name : "Company" ,url : "/ajax/company_list",CNU 
 	$(document).ready(function() {
 		pagereload(pagingObject); // 첫 화면 페이지 로드
 		
+		$(".companydevice").hover(function(){ 
+			$(this).html("<p style='font-size:2px;'><br>장비</p>")
+			$(this).attr('style',"height:33px; line-height: 6px;")
+	    }, function(){ 
+	    	$(this).html("<i class='fas fa-lg fa-fw fa-microchip'></i>")
+	    	$(this).attr('style',"")
+	    }); 
+	    $(".companycar").hover(function(){ 
+			$(this).html("<p style='font-size:2px;'><br>차량</p>")
+			$(this).attr('style',"height:33px; line-height: 6px;")
+	    }, function(){ 
+	    	$(this).html("<i class='fas fa-lg fa-fw fa-car'></i>")
+	    	$(this).attr('style',"")
+	    });
+	    $(".companyworker").hover(function(){ 
+			$(this).html("<p style='font-size:1px;'><br>작업</p>")
+			$(this).attr('style',"height:33px; line-height: 6px;")
+	    }, function(){ 
+	    	$(this).html("<i class='fas fa-lg fa-fw fa-user'></i>")
+	    	$(this).attr('style',"")
+	    });
+	    $(".companyhistory").hover(function(){ 
+			$(this).html("<p style='font-size:2px;'><br>이력</p>")
+			$(this).attr('style',"height:33px; line-height: 6px;")
+	    }, function(){ 
+	    	$(this).html("<i class='fas fa-lg fa-fw fa-history'></i>")
+	    	$(this).attr('style',"")
+	    });
+		
     	$('#selectpage').click(function() {
 			selectpage(pagingObject,{
 				option : $('#selectpage option:selected').val()

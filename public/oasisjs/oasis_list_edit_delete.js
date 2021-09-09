@@ -3,6 +3,8 @@
 	// 차량 - 수정 나타내기
 	function car_editone(obj) {
 		var type = $(obj).data().type;
+		var exCN = $(obj).data().carnum;
+		console.log(exCN);
 		$('.tr-edit').empty();
 		$(obj).parents('tr').siblings().find('.edit-btn').text(i18nconvert("modify"));
 		$(obj).parents('tr').siblings().find('.edit-btn').removeData().type;
@@ -25,13 +27,14 @@
 						$(obj).removeData().type;
 						$(obj).data('type', 'hide');
 						insertTr += "<tr class='tr-edit'>";
-						insertTr += "<td colspan='6'>";
+						insertTr += "<td colspan='8'>";
 					    insertTr += "<div class='panel-body'>";
 						insertTr +=	"<form id='car-edit-form' action='' method='post' data-parsley-validate='true'>";
 						insertTr +=	"<div class='form-group row m-b-15'>";
 						insertTr +=	"<label class='col-md-4 col-sm-4 col-form-label' for='CN'>"+i18nconvert("CN")+" <span class='text-danger'>*</span> :</label>";
 						insertTr +=	"<div class='col-md-8 col-sm-8'>";
-						insertTr +=	"<input class='form-control' id='CN' type='text' name = 'CN'  placeholder='"+i18nconvert("CN")+"' data-parsley-required='true' />";
+						insertTr +=	"<input class='form-control' id='CN' type='text' name = 'CN' value='"+exCN+"'  placeholder='"+i18nconvert("CN")+"' data-parsley-required='true' />";
+						insertTr += "<input type='hidden' name='exCN' value='"+exCN+"' />"
 						insertTr +=	"</div>";
 						insertTr +=	"</div>";
 						insertTr +=	"<div class='form-group row m-b-15'>";
@@ -74,6 +77,7 @@
 			url: '/car/ajax/car_list_edit2',
 			dataType: 'json',
 			data: {
+				exCN : $('input[name=exCN]').val(),
 				CN : $('#car-edit-form [name="CN"]').val(),
 				CPN : $('#car-edit-form [name="CPN"]').val(),
 				CNU : Object.CNU,
