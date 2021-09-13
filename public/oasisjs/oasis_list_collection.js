@@ -1105,7 +1105,7 @@
 			insertTr += "fa-sort-down'></a></i></th>";
 		else 
 			insertTr += "fa-sort'></a></i></th>";
-			if (Object.CNU =="3388800960") {
+			if (Object.CNU =="3388800960000") {
 				insertTr += "<th width='5%'>"+i18nconvert("notice_pop_ck")+"</th>";
 			}
 			insertTr += "</tr>";
@@ -1127,7 +1127,7 @@
 				  else {
 				      insertTr += moment(Object.array[i].CA).format('YYYY-MM-DD');
 				  }
-				  if (Object.CNU =="3388800960") {
+				  if (Object.CNU =="3388800960000") {
 					insertTr += "<td onclick='event.cancelBubble=true'><input onclick ='checkpop(this)' class ='ck_pop' type='checkbox' value ='"+Object.array[i]._id+"'";
 					if (Object.array[i].POP == true) {
 						insertTr += "checked /></td>";
