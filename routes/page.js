@@ -35,7 +35,7 @@ const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
 
 //기본 페이지 설정
 router.get('/', (req, res, next) => {
-  res.render('index');
+  res.render('index', {title: "OASIS"});
 });
 
 router.get('/en', function(req, res) {
