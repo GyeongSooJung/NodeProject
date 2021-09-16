@@ -389,6 +389,7 @@ router.get('/history_chart/:_id', isNotLoggedIn, DataSet, agentDevide, async(req
   try {
     const historyone = await modelQuery(QUERY.Findone,COLLECTION_NAME.History,{ "_id": req.params._id },{});
     const history_array = historyone.PD;
+    console.log("씨에이",historyone.CA);
     res.render('history_chart', { company: req.decoded.company, aclist, noticethree, historyone, history_array });
   }
   catch (err) {

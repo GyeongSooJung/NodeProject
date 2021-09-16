@@ -1,208 +1,226 @@
-{% extends 'layout.html' %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8" />
+	<title>{{__('history_info')}}</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+	
+	<!-- ================== BEGIN BASE CSS STYLE ================== -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+	<link href="../assets/css/default/app.min.css" rel="stylesheet" />
+	<link href="../oasiscss/oasis.css" rel="stylesheet" />
+	<!-- ================== END BASE CSS STYLE ================== -->
+	<link href="../assets/plugins/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+	<link href="../assets/plugins/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" />
+	<link href="../assets/plugins/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" />
+	<link href="../assets/plugins/datatables.net-autofill-bs4/css/autoFill.bootstrap4.min.css" rel="stylesheet" />
+	<link href="../assets/plugins/datatables.net-colreorder-bs4/css/colReorder.bootstrap4.min.css" rel="stylesheet" />
+	<link href="../assets/plugins/datatables.net-keytable-bs4/css/keyTable.bootstrap4.min.css" rel="stylesheet" />
+	<link href="../assets/plugins/datatables.net-rowreorder-bs4/css/rowReorder.bootstrap4.min.css" rel="stylesheet" />
+	<link href="../assets/plugins/datatables.net-select-bs4/css/select.bootstrap4.min.css" rel="stylesheet" />
+	<link href="../assets/img/favicon.png" rel="icon">
+</head>
 
-{% block css %}
-<link href="../assets/plugins/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
-<link href="../assets/plugins/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" />
-<link href="../assets/plugins/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" />
-<link href="../assets/plugins/datatables.net-autofill-bs4/css/autoFill.bootstrap4.min.css" rel="stylesheet" />
-<link href="../assets/plugins/datatables.net-colreorder-bs4/css/colReorder.bootstrap4.min.css" rel="stylesheet" />
-<link href="../assets/plugins/datatables.net-keytable-bs4/css/keyTable.bootstrap4.min.css" rel="stylesheet" />
-<link href="../assets/plugins/datatables.net-rowreorder-bs4/css/rowReorder.bootstrap4.min.css" rel="stylesheet" />
-<link href="../assets/plugins/datatables.net-select-bs4/css/select.bootstrap4.min.css" rel="stylesheet" />
-{% endblock %}
-
-{% block content %}
-<!-- begin #content -->
-<div id="content" class="content">
-	<!-- begin page-header -->
-	<h1 class="page-header mt-3">{{__('history_info')}}</h1>
-	<!-- end page-header -->
-	<!-- begin panel -->
-	<div class="panel panel-inverse">
-		<!-- begin panel-heading -->
-		<div class="panel-heading">
-			<h4 class="panel-title">{{__('history_graph')}}</h4>
-		</div>
-		<!-- end panel-heading -->
-		<!-- begin panel-body -->
-  		<div class="panel-body">
-  		  {% if history_array %}
-  			<div id="history-chart-div" class="height-sm"></div>
-  			{% else %}
-  			
-  			{% endif %}
-  			  
-		 </div>
-		<!-- end panel-body -->
-	  	<!-- begin panel-body -->
-		<div class="panel-body">
-			<!-- begin table-responsive -->
-			<div class="table-responsive">
-				<table class="table m-b-0 text-center">
-					<thead>
-						<tr class="bg-grey">
-							<th width="15%">{{__('company_name')}}</th>
-							<th width="20%">{{__('car_number')}}</th>
-							<th width="20%">{{__('device_model')}}</th>
-							<th width="20%">{{__('worker')}}</th>
-							<th width="25%">{{__('history_date')}}</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr class="bg-light">
-							<td>{{company.CNA}}</td>
-							<td>{{historyone.CNM}}</td>
-							<td>{{historyone.DNM}}</td>
-							<td>{{historyone.WNM}}</td>
-							<td>
-								<script>
-									var het = moment('{{historyone.ET}}').format('YYYY-MM-DD HH:mm');
+<body>
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+	<!-- begin #content -->
+	<div class="mx-5">
+		<!-- begin page-header -->
+		<h1 class="page-header mt-3">{{__('history_info')}}</h1>
+		<!-- end page-header -->
+		<!-- begin panel -->
+		<div class="panel panel-inverse">
+			<!-- begin panel-heading -->
+			<div class="panel-heading">
+				<h4 class="panel-title">{{__('history_graph')}}</h4>
+			</div>
+			<!-- end panel-heading -->
+			<!-- begin panel-body -->
+	  		<div class="panel-body">
+	  		  {% if history_array %}
+	  			<div id="history-chart-div" class="height-sm"></div>
+	  			{% else %}
+	  			
+	  			{% endif %}
+	  			  
+			 </div>
+			<!-- end panel-body -->
+		  	<!-- begin panel-body -->
+			<div class="panel-body">
+				<!-- begin table-responsive -->
+				<div class="table-responsive">
+					<table class="table m-b-0 text-center">
+						<thead>
+							<tr class="bg-grey">
+								<th width="15%">{{__('company_name')}}</th>
+								<th width="20%">{{__('car_number')}}</th>
+								<th width="20%">{{__('device_model')}}</th>
+								<th width="20%">{{__('worker')}}</th>
+								<th width="25%">{{__('history_date')}}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="bg-light">
+								<td>{{company.CNA}}</td>
+								<td>{{historyone.CNM}}</td>
+								<td>{{historyone.DNM}}</td>
+								<td>{{historyone.WNM}}</td>
+								<td>
+									<script>
+										var het = moment('{{historyone.ET}}').format('YYYY-MM-DD HH:mm');
+										document.write(het);
+									</script>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- end table-responsive -->
+			</div>
+			<!-- end panel-body -->
+			<!-- begin panel-body -->
+			<div class="panel-body">
+				<!-- begin table-responsive -->
+				<div class="table-responsive">
+					<table class="table m-b-0 text-center">
+						<thead>
+							<tr class="bg-grey">
+								<th width="15%">{{__('history_time')}}</th>
+								<th width="20%">{{__('history_max')}}</th>
+								<th width="20%">{{__('history_end')}}</th>
+								<!--<th width="20%">{{__('history_result')}}</th>-->
+								<th width="25%">{{__('register_date')}}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="bg-light">
+						 	{% if (historyone.PD.length//60)==0  %}
+								<td>{{historyone.PD.length%60+"s"}}</td>
+							{% else %}
+								<td>{{historyone.PD.length//60+"m "+historyone.PD.length%60+"s"}}</td>
+							{% endif %}
+				              <td>{{historyone.MP}}</td>
+				              <td>{{historyone.FP}}</td>
+							<!--{% if historyone.RC == 1 %}-->
+							<!--	<td>{{__('success')}}</td>-->
+							<!--{% else %}-->
+							<!--	<td>{{__('failed')}}</td>-->
+							<!--{% endif %}-->
+				              <td>
+				              	<script>
+									var het = moment('{{historyone.CA}}').format('YYYY-MM-DD HH:mm');
 									document.write(het);
 								</script>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				              </td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- end table-responsive -->
 			</div>
-			<!-- end table-responsive -->
+			<!-- end panel-body -->
+			<div class="mx-auto">
+	            <div class="d-flex justify-content-center align-item-center py-3">
+	    			<a href="/publish?cat=1&hid={{historyone._id}}" class="btn btn-primary text-white px-3 mx-2">{{__('qrcode')}} {{__('link')}}</a>
+					<a href="javascript:window.close();" class="btn btn-primary text-white px-4 mx-2">{{__('window_close')}}</a>
+	            </div>
+	        </div>
 		</div>
-		<!-- end panel-body -->
-		<!-- begin panel-body -->
-		<div class="panel-body">
-			<!-- begin table-responsive -->
-			<div class="table-responsive">
-				<table class="table m-b-0 text-center">
-					<thead>
-						<tr class="bg-grey">
-							<th width="15%">{{__('history_time')}}</th>
-							<th width="20%">{{__('history_max')}}</th>
-							<th width="20%">{{__('history_end')}}</th>
-							<!--<th width="20%">{{__('history_result')}}</th>-->
-							<th width="25%">{{__('register_date')}}</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr class="bg-light">
-					 	{% if (historyone.PD.length//60)==0  %}
-							<td>{{historyone.PD.length%60+"s"}}</td>
-						{% else %}
-							<td>{{historyone.PD.length//60+"m "+historyone.PD.length%60+"s"}}</td>
-						{% endif %}
-			              <td>{{historyone.MP}}</td>
-			              <td>{{historyone.FP}}</td>
-						<!--{% if historyone.RC == 1 %}-->
-						<!--	<td>{{__('success')}}</td>-->
-						<!--{% else %}-->
-						<!--	<td>{{__('failed')}}</td>-->
-						<!--{% endif %}-->
-			              <td>
-			              	<script>
-								var het = moment('{{historyone.CA}}').format('YYYY-MM-DD HH:mm');
-								document.write(het);
-							</script>
-			              </td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<!-- end table-responsive -->
-		</div>
-		<!-- end panel-body -->
-		<div class="mx-auto">
-            <div class="d-flex justify-content-center align-item-center py-3">
-    			<a href="/publish?cat=1&hid={{historyone._id}}" class="btn btn-primary text-white px-3 mx-2">{{__('qrcode')}} {{__('link')}}</a>
-				<a href="/history_list" class="btn btn-primary text-white px-4 mx-2">{{__('return_list')}}</a>
-            </div>
-        </div>
+		<!-- end panel -->
 	</div>
-	<!-- end panel -->
-</div>
-<!-- end #content -->
-{% endblock %}
-
-{% block script %}
-<!-- Resources -->
-<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
-<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
-<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
-  
-<!-- Chart code -->
-<script>
-am4core.ready(function() {
+	<!-- end #content -->
 	
-	// Themes begin
-	am4core.useTheme(am4themes_animated);
-	// Themes end
-	
-	// Create chart instance
-	var chart = am4core.create("history-chart-div", am4charts.XYChart);
-	
-	//이것은 차트에 mongodb 연동하는 부분
-	{% set ss = 1 %}
-	
-	  {% for item in history_array %}
+	<!-- Resources -->
+	<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+	<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+	<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 	  
-	  chart.data.push({
-	    ss: {{ss}},
-	    ppm: {{item}}
-	  });
-	        
-	{% set ss = ss + 1 %}
+	<!-- Chart code -->
+	<script>
+	am4core.ready(function() {
+		
+		// Themes begin
+		am4core.useTheme(am4themes_animated);
+		// Themes end
+		
+		// Create chart instance
+		var chart = am4core.create("history-chart-div", am4charts.XYChart);
+		
+		//이것은 차트에 mongodb 연동하는 부분
+		{% set ss = 1 %}
+		
+		  {% for item in history_array %}
 		  
-	  {% endfor %}
+		  chart.data.push({
+		    ss: {{ss}},
+		    ppm: {{item}}
+		  });
+		        
+		{% set ss = ss + 1 %}
+			  
+		  {% endfor %}
+		
+		// Set input format for the dates
+		chart.logo.disabled = true;
+		chart.numberFormatter.numberFormat = "#";
+		
+		// Create axes
+		var ssAxis = chart.xAxes.push(new am4charts.ValueAxis());
+		var ppmAxis = chart.yAxes.push(new am4charts.ValueAxis());
+		
+		// Create series
+		var series = chart.series.push(new am4charts.LineSeries());
+		ssAxis.title.text = "{{__('time')}} (s)";
+		ppmAxis.title.text = "{{__('ozone')}} (ppm)";
+		series.dataFields.valueY = "ppm";
+		series.dataFields.valueX = "ss";
+		series.tooltipText = "{ppm}"
+		series.strokeWidth = 2;
+		series.minBulletDistance = 15;
+		
+		// Drop-shaped tooltips 이것은 마우스를 올렸을 때 말풍선이 나오는 것이여
+		series.tooltip.background.cornerRadius = 20;
+		series.tooltip.background.strokeOpacity = 0;
+		series.tooltip.pointerOrientation = "vertical";
+		series.tooltip.label.minWidth = 40;
+		series.tooltip.label.minHeight = 40;
+		series.tooltip.label.textAlign = "middle";
+		series.tooltip.label.textValign = "middle";
+		
+		// Make bullets grow on hover 이것은 각 점들의 크기
+		var bullet = series.bullets.push(new am4charts.CircleBullet());
+		bullet.circle.strokeWidth = 2;
+		bullet.circle.radius = 4;
+		bullet.circle.fill = am4core.color("#fff");
+		
+		var bullethover = bullet.states.create("hover");
+		bullethover.properties.scale = 1.3;
+		
+		// Make a panning cursor 이것은 마우스 올렸을 때 점선이여
+		chart.cursor = new am4charts.XYCursor();
+		chart.cursor.behavior = "panXY";
+		chart.cursor.xAxis = ssAxis;
+		chart.cursor.snapToSeries = series;
+		
+		ssAxis.start = 0;
+		ssAxis.keepSelection = true;
+		
+		
+	}); // end am4core.ready()
+	</script>
 	
-	// Set input format for the dates
-	chart.logo.disabled = true;
-	chart.numberFormatter.numberFormat = "#";
-	
-	// Create axes
-	var ssAxis = chart.xAxes.push(new am4charts.ValueAxis());
-	var ppmAxis = chart.yAxes.push(new am4charts.ValueAxis());
-	
-	// Create series
-	var series = chart.series.push(new am4charts.LineSeries());
-	ssAxis.title.text = "{{__('time')}} (s)";
-	ppmAxis.title.text = "{{__('ozone')}} (ppm)";
-	series.dataFields.valueY = "ppm";
-	series.dataFields.valueX = "ss";
-	series.tooltipText = "{ppm}"
-	series.strokeWidth = 2;
-	series.minBulletDistance = 15;
-	
-	// Drop-shaped tooltips 이것은 마우스를 올렸을 때 말풍선이 나오는 것이여
-	series.tooltip.background.cornerRadius = 20;
-	series.tooltip.background.strokeOpacity = 0;
-	series.tooltip.pointerOrientation = "vertical";
-	series.tooltip.label.minWidth = 40;
-	series.tooltip.label.minHeight = 40;
-	series.tooltip.label.textAlign = "middle";
-	series.tooltip.label.textValign = "middle";
-	
-	// Make bullets grow on hover 이것은 각 점들의 크기
-	var bullet = series.bullets.push(new am4charts.CircleBullet());
-	bullet.circle.strokeWidth = 2;
-	bullet.circle.radius = 4;
-	bullet.circle.fill = am4core.color("#fff");
-	
-	var bullethover = bullet.states.create("hover");
-	bullethover.properties.scale = 1.3;
-	
-	// Make a panning cursor 이것은 마우스 올렸을 때 점선이여
-	chart.cursor = new am4charts.XYCursor();
-	chart.cursor.behavior = "panXY";
-	chart.cursor.xAxis = ssAxis;
-	chart.cursor.snapToSeries = series;
-	
-	ssAxis.start = 0;
-	ssAxis.keepSelection = true;
-	
-	
-}); // end am4core.ready()
-</script>
-
-<script src="../assets/plugins/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="../assets/plugins/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script src="../assets/plugins/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-<script src="../assets/plugins/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
-<script src="../assets/js/demo/table-manage-default.demo.js"></script>
-{% endblock %}
+	<!-- ================== BEGIN BASE JS ================== -->
+	<script src="../assets/js/app.min.js"></script>
+	<script src="../assets/js/theme/default.min.js"></script>
+	<!-- ================== END BASE JS ================== -->
+	<script src="../oasisjs/oasis_browser_check.js"></script>
+	<script src="../assets/plugins/datatables.net/js/jquery.dataTables.min.js"></script>
+	<script src="../assets/plugins/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+	<script src="../assets/plugins/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+	<script src="../assets/plugins/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+	<script src="../assets/js/demo/table-manage-default.demo.js"></script>
+</body>
+</html>
