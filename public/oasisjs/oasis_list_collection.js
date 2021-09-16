@@ -716,7 +716,8 @@
 					
 					
 					insertTr += "<td class='with-btn' nowrap>"	;
-					insertTr += "<a href='/history_chart/"+Object.array[i]._id+"' class='btn btn-sm btn-white width-60 mx-1'>"+i18nconvert("main_indetail")+"</a>";
+					// insertTr += "<a href='/history_chart/"+Object.array[i]._id+"' class='btn btn-sm btn-white width-60 mx-1'>"+i18nconvert("main_indetail")+"</a>";
+					insertTr += "<button type='button' class='btn btn-sm btn-white width-60 mx-1' data-toggle='modal' data-target='history-chart' value='"+Object.array[i]._id+"'>"+i18nconvert("main_indetail")+"</button>"
 					insertTr += "<input type='button' value='"+i18nconvert("delete")+"' onclick=delete_one(this,'/history/ajax/history_deleteone') class='btn btn-sm btn-primary width-60 mx-1' name ='"+ Object.array[i]._id +"'></td> ";
 					insertTr += "</tr>";
 					num -= indexcount;
