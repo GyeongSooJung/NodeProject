@@ -185,14 +185,14 @@ async function findDecuments(req, res, next, collection) {
    var Collection = collection.prototype.schema.options.collection;
    switch (collection) {
       case History:
-         searchOption.CID = req.body.CID;
+         searchOption.CNU = req.body.CNU;
          projectOption.PD = false;
          break;
       case Worker:
          searchOption.CID = req.body.CID;
          break;
       case Car:
-         searchOption.CID = req.body.CID;
+         searchOption.CNU = req.body.CNU;
          break;
       default:
          throw new Error("Wrong request");
@@ -407,11 +407,11 @@ exports.signIn = async(req, res) => {
 
       var resource = await Worker.aggregate([{
             $match: {
-               // "_id": ObjectId("603495f9704af4696069c4ef")
                "_id": worker._id
+               // "CNU":worker.CNU
             }
          },
-         { "$addFields": { "comObjId": { "$toObjectId": "$CID" } } },
+         // { "$addFields": { "comObjId": { "$toObjectId": "$CID" } } },
          {
             $lookup: {
                from: COLLECTION_NAME.Worker,
@@ -424,8 +424,8 @@ exports.signIn = async(req, res) => {
          {
             $lookup: {
                from: COLLECTION_NAME.Company,
-               localField: "comObjId",
-               foreignField: "_id",
+               localField: "CNU",
+               foreignField: "CNU",
                as: "company"
             }
          },
@@ -433,16 +433,16 @@ exports.signIn = async(req, res) => {
          {
             $lookup: {
                from: COLLECTION_NAME.Car,
-               localField: "CID",
-               foreignField: "CID",
+               localField: "CNU",
+               foreignField: "CNU",
                as: "cars"
             }
          },
          {
             $lookup: {
                from: COLLECTION_NAME.Device,
-               localField: "CID",
-               foreignField: "CID",
+               localField: "CNU",
+               foreignField: "CNU",
                as: "devices"
             }
          },
@@ -484,9 +484,9 @@ exports.signIn = async(req, res) => {
 // 회원 가입
 exports.signUp = async(req, res) => {
    try {
-      const { CID, WN, PN, GID, EM, PU } = req.body;
+      const { CNU, WN, PN, GID, EM, PU } = req.body;
 
-      var result = await Worker.create({ CID, WN, PN, GID, EM, PU });
+      var result = await Worker.create({ CNU, WN, PN, GID, EM, PU });
       console.log(result);
 
       res.json({
