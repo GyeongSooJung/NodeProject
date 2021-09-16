@@ -19,6 +19,7 @@
     "color-hash": "^1.0.3",
     "convert-excel-to-json": "^1.2.0",
     "cookie-parser": "^1.4.5",
+    "crypto-js": "^4.1.1",
     "dotenv": "^8.2.0",
     "excel4node": "^1.7.2",
     "exceljs": "^4.2.1",

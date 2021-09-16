@@ -19,7 +19,7 @@ router.post('/register', async (req, res, next) => {
   
   try {
     const companyEA = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ "EA" : EA },{});
-    const companyCNU = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ "CNU" : CNU },{});
+    const companyCNU = await modelQuery(QUERY.Findone,COLLECTION_NAME.Company,{ "CNU" : CNU + ANU },{});
     
     if(!companyEA && !companyCNU) {
       if(bcrypt.compareSync(CEA, hashAuth)) {

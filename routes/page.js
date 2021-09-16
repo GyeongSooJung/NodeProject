@@ -3,6 +3,7 @@ require('dotenv').config();
 //schema
 const {modelQuery} = require('../schemas/query')
 const {COLLECTION_NAME, QUERY} = require('../const/consts');
+const {encrypt, decrypt} = require('./module');
 
 const moment = require('moment');
 const qrcode = require('qrcode');
@@ -1113,7 +1114,19 @@ router.get('/gstest', isNotLoggedIn, DataSet, agentDevide, async(req, res, next)
   
 })
 
-
+//테스트
+router.post('/password', async(req, res, next) => {
+  try {
+    const newPW = encrypt(req.body.name, process.env.cryptoKey);
+    const exPW = decrypt(newPW, process.env.cryptoKey);
+    
+    res.send({new: newPW, ex: exPW})
+    
+  } catch(err) {
+    console.error(err);
+    next(err);
+  }
+});
 
 
   

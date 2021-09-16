@@ -212,7 +212,7 @@
     		Object.url = "/ajax/company_list";
     		Object.CID = "5fd6c731a26c914fbad53ebe";
     		Object.array = [];
-	    	Object.sort = "ET";
+	    	Object.sort = "CA";
 	    	Object.page = 0;
 	    	Object.postNum = 10;
 	    	Object.pageNum = 5;
