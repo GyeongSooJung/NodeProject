@@ -1085,7 +1085,7 @@ exports.registerKAKAO = async(req, res) => {
 
 
       const historyone = await History.findOne({ '_id': historyid });
-      var companyone = await Company.findOne({ '_id': historyone.CID });
+      var companyone = await Company.findOne({ 'CNU': historyone.CNU });
       var companypoint = companyone.SPO;
 
 
@@ -1110,7 +1110,7 @@ exports.registerKAKAO = async(req, res) => {
                companypoint = companypoint - 50;
                console.log(companypoint);
 
-               await Company.where({ '_id': historyone.CID })
+               await Company.where({ 'CNU': historyone.CNU })
                   .update({ "SPO": companypoint }).setOptions({ runValidators: true })
                   .exec();
 
