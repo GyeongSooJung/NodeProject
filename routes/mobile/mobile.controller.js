@@ -456,6 +456,7 @@ exports.signIn = async(req, res) => {
             expiresIn: "1d",
          });
 
+         console.log(resource[0]);
 
          return res.json({
             result: true,
