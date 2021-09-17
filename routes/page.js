@@ -35,7 +35,7 @@ const todayEnd = moment(todayStart).add(1,'days').format('YYYY-MM-DD');
 
 //기본 페이지 설정
 router.get('/', (req, res, next) => {
-  res.render('index');
+  res.render('index', {title: "OASIS"});
 });
 
 router.get('/en', function(req, res) {
@@ -138,7 +138,7 @@ router.get('/main', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) =
   const devices = await modelQuery(QUERY.Find,COLLECTION_NAME.Device,{ "CNU": {$regex: req.searchCNU} },{});
   const cars = await modelQuery(QUERY.Find,COLLECTION_NAME.Car,{ "CNU": {$regex: req.searchCNU} },{});
   const workers = await modelQuery(QUERY.Find,COLLECTION_NAME.Worker,{ "CNU": {$regex: req.searchCNU} },{});
-  const publishs = await modelQuery(QUERY.Find,COLLECTION_NAME.Publish,{ "CNU": {$regex: req.searchCNU} },{});
+  const publishs = await modelQuery(QUERY.Find,COLLECTION_NAME.Publish,{},{});
   const historys = await modelQuery(QUERY.Find,COLLECTION_NAME.History,{ "CNU": {$regex: req.searchCNU} },{});
   const noticethree = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{},{limit : 3, sort : {CA : -1}});
   const noticePop = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{"POP": true},{});
@@ -158,7 +158,6 @@ router.get('/main', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) =
   const sevenday = new Date();
   
   sevenday.setDate(sevenday.getDate() - 7);
-      
   const history_date = await modelQuery(QUERY.Aggregate,COLLECTION_NAME.History,{match : {"CNU": {$regex: req.searchCNU}, "CA": { $lte: today, $gte: sevenday }}, project : {_id : 0,CA : "$CA"} },{});
   for (var i =  0; i < 7 ; i ++) {
         for(var j = await 0; j < history_date.length; j ++) {

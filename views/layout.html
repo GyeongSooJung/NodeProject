@@ -218,18 +218,18 @@
 							<i class="fas fa-lg fa-fw m-r-10 fa-user"></i>
 							<span> {{__('worker')}}
 								
-								<!--{% if (aclist.length >= 1) %}-->
-								<!--<span class="label label-theme">NEW</span>-->
-								<!--{% else %}-->
-								<!--{% endif %}-->
+								{% if (aclist.length >= 1) %}
+								<span class="label label-theme">NEW</span>
+								{% else %}
+								{% endif %}
 							</span>
 						</a>
 						<ul class="sub-menu">
 							<li><a href="/worker_list">{{__('layout_worker_list')}}
-							<!--{% if aclist.length >=1 %}-->
-							<!--<span class="label label-theme">{{ aclist.length }}</span>-->
-							<!--{% else %}-->
-							<!--{% endif %}-->
+							{% if aclist.length >=1 %}
+							<span class="label label-theme">{{ aclist.length }}</span>
+							{% else %}
+							{% endif %}
 							</a></li>
 						</ul>
 					</li>

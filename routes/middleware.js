@@ -59,10 +59,10 @@ exports.agentDevide = async(req, res, next) => {
     
     // 본사,지점 구분하여 mongoDB 검색용 CNU 생성
     if(req.decoded.ANU == "000") { // 본사
-      searchCNU = req.decoded.CNU.substring(0,10);
+      searchCNU += req.decoded.CNU.substring(0,10);
     }
     else { // 지점
-      searchCNU = req.decoded.CNU;
+      searchCNU += req.decoded.CNU;
     }
     
     // 사용하기 위해 req에 담아줌
