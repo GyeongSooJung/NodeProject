@@ -91,10 +91,10 @@
     }
 	
 	function devicelist(Object,obj) {
-		refresh(Object);
 		Object.name = "Device";
 		Object.url = "/ajax/device_list";
 		Object.CNU = $(obj).attr('name')+"#";
+		refresh(Object);
 		
 		if($(".dropdown-menu").hasClass("company-search")) {
 			$(".company-search").empty();
@@ -111,10 +111,10 @@
 	}
 	
 	function carlist(Object,obj) {
-		refresh(Object);
 		Object.name = "Car";
 		Object.url = "/ajax/car_list";
 		Object.CNU = $(obj).attr('name')+"#";
+		refresh(Object);
 		
 		if($(".dropdown-menu").hasClass("company-search")) {
 			$(".company-search").empty();
@@ -129,10 +129,10 @@
 	}
 	
 	function workerlist(Object,obj) {
-		refresh(Object);
 		Object.name = "Worker";
 		Object.url = "/ajax/worker_list";
 		Object.CNU = $(obj).attr('name')+"#";
+		refresh(Object);
 		
 		if($(".dropdown-menu").hasClass("company-search")) {
 			$(".company-search").empty();
@@ -148,10 +148,10 @@
 	}
 	
 	function historylist(Object,obj) {
-		refresh(Object);
 		Object.name = "History";
 		Object.url = "/ajax/history_list";
 		Object.CNU = $(obj).attr('name')+"#";
+		refresh(Object);
 		
 		if($(".dropdown-menu").hasClass("company-search")) {
 			$(".company-search").empty();
