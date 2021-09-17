@@ -68,7 +68,6 @@ router.post('/company_list', isNotLoggedIn, DataSet, async(req, res, next) => {
           companys = await modelQuery(QUERY.Find,COLLECTION_NAME.Company,{ "NA" : {$regex:searchtext} },{sort : { [sortText]: sortNum }},{});
         }
         else {
-          console.log("여기");
           companys = await modelQuery(QUERY.Find,COLLECTION_NAME.Company,{},{sort : { [sortText]: sortNum }});
         }
     }
