@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const { ALARM_COMPLETE, CAR, CAR_DELETE,
         COMPANY, DEVICE, DEVICE_DELETE,
         GOODS, GOODS_OPTION, HISTORY,
-        NOTICE, ORDER, ORDER_DETAIL,
+        NOTICE, NOTICE_UPLOAD, ORDER, ORDER_DETAIL,
         POINT, PUBLISH, WORKER, WORKER_DELETE
       } = require('../const/consts');
 
@@ -20,6 +20,7 @@ const goodsSchema = new Schema(GOODS.schema, { collection: 'Goods' });
 const goods_OptionSchema = new Schema(GOODS_OPTION.schema, { collection: 'GoodsOption' });
 const historySchema = new Schema(HISTORY.schema, { collection: 'History' });
 const noticeSchema = new Schema(NOTICE.schema, { collection: 'Notice' });
+const notice_uploadSchema = new Schema(NOTICE_UPLOAD.schema, { collection: 'NoticeUpload' });
 const OrderSchema = new Schema(ORDER.schema, { collection: 'Order' });
 const Order_DetailSchema = new Schema(ORDER_DETAIL.schema, { collection: 'OrderDetail' });
 const pointSchema = new Schema(POINT.schema, { collection: 'Point' });
@@ -37,6 +38,7 @@ const Goods = mongoose.model('Goods',goodsSchema);
 const GoodsOption = mongoose.model('GoodsOption',goods_OptionSchema);
 const History = mongoose.model('History',historySchema);
 const Notice = mongoose.model('Notice',noticeSchema);
+const NoticeUpload = mongoose.model('NoticeUpload',notice_uploadSchema);
 const Order = mongoose.model('Order',OrderSchema);
 const OrderDetail = mongoose.model('OrderDetail',Order_DetailSchema);
 const Point = mongoose.model('Point',pointSchema);
@@ -56,6 +58,7 @@ const COLLECTIONS = {
     "GoodsOption" : GoodsOption,
     "History" : History,
     "Notice" : Notice,
+    "NoticeUpload" : NoticeUpload,
     "Order" : Order,
     "OrderDetail" : OrderDetail,
     "Point" : Point,

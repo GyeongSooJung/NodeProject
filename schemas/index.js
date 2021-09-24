@@ -8,7 +8,7 @@ const connect = () => {
     if (process.env.NODE_ENV !== 'production') {
         mongoose.set('debug', true);
     }
-    mongoose.connect(mongoCon, {dbName: 'OASIS'}, {
+    mongoose.connect(mongoCon, {useNewUrlParser: true, useUnifiedTopology: true, dbName: 'OASIS'}, {
     }, (error) => {
         if (error) {
             console.log('DB Connection is Error', error);

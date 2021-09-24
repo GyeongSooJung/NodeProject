@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "sudo forever start -a --uid dokenly -w app.js",
+    "start": "sudo forever start -a --uid dokenly -w app.js --watchIgnore",
     "stop": "sudo forever stop dokenly"
   },
   "author": "MS",

@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const { ALARM_COMPLETE, CAR, CAR_DELETE,
         COMPANY, DEVICE, DEVICE_DELETE,
         GOODS, GOODS_OPTION, HISTORY,
-        NOTICE, ORDER, ORDER_DETAIL,
+        NOTICE, NOTICE_UPLOAD, ORDER, ORDER_DETAIL,
         POINT, PUBLISH, WORKER, WORKER_DELETE,
         COLLECTION_NAME, QUERY
       } = require('../const/consts'); //consts 파일들
@@ -13,7 +13,7 @@ const Schemas = require('./schemas')
 
 const { Alarm, Car, Cardelete, Company,
        Device, Devicedelete, Goods, GoodsOption,
-       History, Notice, Order, OrderDetail,
+       History, Notice, NoticeUpload, Order, OrderDetail,
        Point, Publish, Worker, Workerdelete
        } = Schemas; // 몽구스 model 파일들
 

@@ -8,6 +8,18 @@ const {encrypt, decrypt} = require('./module');
 const moment = require('moment');
 const qrcode = require('qrcode');
 const session = require('express-session');
+const multer = require('multer');
+const upload = multer({
+  // dest: 'public/assets/upload/notice',
+  storage: multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'public/assets/upload/notice');
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname);
+    }
+  }),
+});
 //Router or MiddleWare
 const router = express.Router();
 const { isLoggedIn, isNotLoggedIn, DataSet, agentDevide } = require('./middleware');
@@ -945,21 +957,28 @@ router.get('/notice_write', isNotLoggedIn, DataSet, agentDevide, async(req, res,
 });
 
 // 공지사항 입력 ajax
-router.post('/ajax/notice_write', isNotLoggedIn, DataSet, async(req, res, next) => {
-  const CID = req.decoded.CID;
+router.post('/ajax/notice_write', isNotLoggedIn, DataSet, agentDevide, async(req, res, next) => {
   
   const title = req.body.title;
   const text = req.body.text;
   
-  
   try {
-    await modelQuery(QUERY.Create,COLLECTION_NAME.Notice,{ CID : CID, TI : title , CO : text},{});
+    const noticeone = await modelQuery(QUERY.Create,COLLECTION_NAME.Notice,{ CNU: req.decoded.CNU, TI : title , CO : text},{});
+    res.send({result : true, oid : noticeone._id});
     
-    res.send({result : true});
   } catch(err) {
     console.error(err);
     res.send({result : false});
   }
+});
+
+router.post('/ajax/notice_file', isNotLoggedIn, DataSet, agentDevide, upload.array('noticeFile'), async(req, res, next) => {
+  const nin = req.body.nin;
+  const files = req.files;
+  const saveFile = files[0].destination+"/"+files[0].filename;
+  const originalName = files[0].originalname;
+  
+  await modelQuery(QUERY.Create,COLLECTION_NAME.NoticeUpload,{OID: nin, FI: saveFile, ON: originalName },{});
 });
 
 // 공지사항 팝업
@@ -981,8 +1000,9 @@ router.post('/ajax/notice_detail', isNotLoggedIn, DataSet, async(req, res, next)
   
   try {
     const noticedetail = await modelQuery(QUERY.Find,COLLECTION_NAME.Notice,{_id : noticeid},{});
+    const filedetail = await modelQuery(QUERY.Find,COLLECTION_NAME.NoticeUpload,{OID : noticeid},{});
     
-    res.send({result : true, noticedetail : noticedetail});
+    res.send({result : true, noticedetail : noticedetail, filedetail : filedetail});
   } catch(err) {
     console.error(err);
     res.send({result : false});

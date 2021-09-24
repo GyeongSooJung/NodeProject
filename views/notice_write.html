@@ -11,9 +11,11 @@
 <link href="../assets/plugins/datatables.net-select-bs4/css/select.bootstrap4.min.css" rel="stylesheet" />
 
 <link rel="stylesheet" href="../assets/css/summernote/summernote-lite.css">
+<link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
 {% endblock %}
 
 {% block content %}
+<script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
 <!-- begin #content -->
 <div id="content" class="content">
     <!-- begin page-header -->
@@ -27,20 +29,45 @@
 				<div class="panel-heading ui-sortable-handle">
 					<h4 class="panel-title">{{__('notice_list_write')}}</h4>
 				</div>
+				<!--<div class="panel-body p-0">-->
+				<!--	<div class="d-flex justify-content-around align-items-center m-20" >-->
+    <!--	  				<p class="p-title">{{__('notice_title')}} </p><input id ="titletext" type="text" class="form-control" placeholder ="" />-->
+    <!--	  			</div>-->
+				<!--</div>-->
 				<div class="panel-body p-0">
-					<div class="d-flex justify-content-around align-items-center m-20" >
-    	  			<p class="p-title">{{__('notice_title')}} </p><input id ="titletext" type="text" class="form-control" placeholder ="" />
-    	  			</div>
-				</div>
-				<div class="panel-body p-0">
-					<form method="post">
-                      <textarea id="summernote" name="editordata"></textarea>
+					<!--<form method="post" id="noticeForm">-->
+     <!--                 <textarea id="summernote" name="editordata"></textarea>-->
+     <!--               </form>-->
+                    <form method="POST" id="noticeFileForm" enctype="multipart/form-data" class="px-1 py-1 border">
+                        <div class="">
+                            <div class="d-flex justify-content-between align-items-center border">
+                                <span class="py-2 text-center bg-light" style="width: 100px;">
+                                    <p class="mb-0">{{__('notice_title')}}</p>
+                                </span>
+                                <input type="hidden" name="nin" />
+                                <input id="title" name="title" type="text" class="form-control border-0 rounded-0" placeholder ="" />
+                            </div>
+                            <div class="mt-1 border">
+                                <textarea id="summernote" name="text"></textarea>
+                            </div>
+                            <div class="mt-1">
+                                <div class="dropzone" id="noticeDropzone">
+                                    <div class="dz-message" style="font-size: 10px;">
+                                        <i class="fas fa-plus"></i>
+                                        <p class="mb-0">파일 업로드</p>
+                                    </div>
+                                    <!--<div class="fallback">-->
+                                    <!--    <input type="file" name="noticeFile" multiple />-->
+                                    <!--</div>-->
+                                </div>
+                            </div>
+                        </div>
                     </form>
 				</div>
 			</div>
 			
 			<div class="d-flex justify-content-center align-items-center">
-  					<a href="javascript:;" onclick="noticewrite('titletext','note-editable')" class="mt-40 btn btn-sm btn-white width-100" >{{__('registration')}}</a>
+  				<a href="javascript:;" id="noticeSubmit" class="mt-40 btn btn-sm btn-white width-100" >{{__('registration')}}</a>
   			</div>
 			<!-- end panel -->
 		</div>
@@ -55,6 +82,7 @@
     $(document).ready(function() {
     	//여기 아래 부분
     	$('.summernote').summernote({
+    	    disableResizeEditor: true,
 		    toolbar: [
 			    // [groupName, [list of button]]
 			    ['fontname', ['fontname']],
@@ -90,8 +118,90 @@
         $('#summernote').summernote('undo');
         // 앞으로가기
         $('#summernote').summernote('redo');
+        
+        // resizebar 없애기
+        $('.note-statusbar').hide();
+        
+        $(".note-editable").height(400) ;
+        $('.note-toolbar').css('background','#f2f3f4');
     
     });
+    
+    Dropzone.options.noticeDropzone = {
+        url: "/ajax/notice_file",
+        autoProcessQueue: false,
+        method: 'post',
+        paramName: 'noticeFile',
+        clickable: true,
+        thumbnailHeight: 90, // Upload icon size
+        thumbnailWidth: 90, // Upload icon size
+        maxFiles: 10, // 업로드 파일수
+        // maxFilesize: 10, // 최대업로드용량 : 10MB
+        uploadMultiple: false,
+        parallelUploads: 100, // 동시파일업로드 수(이걸 지정한 수 만큼 여러파일을 한번에 컨트롤러에 넘긴다.)
+        addRemoveLinks: true, // 삭제버튼 표시 여부
+        dictRemoveFile: `<i class="fas fa-trash-alt text-realred"></i> <span class="text-realred">remove</span>`, // 삭제버튼 표시 텍스트
+        dictResponseError: 'Error uploading file!',
+        
+        init: function () {
+
+            var submitButton = document.querySelector("#noticeSubmit");
+            var noticeDropzone = this;
+
+            submitButton.addEventListener("click", async function () {
+                var title = $('#title').val();
+                var text = $('#summernote').val();
+                
+                 $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: "/ajax/notice_write",
+                    data: {
+                        title: title,
+                        text: text
+                    }
+                }).done(function (data) {
+                    if(data.result == true) {
+                        $('input[name=nin]').val(data.oid);
+                        noticeDropzone.processQueue();
+                    }
+                    else {
+                        alert("{{__('car_excel_fail')}}");
+                    }
+                })
+            });
+            
+            noticeDropzone.on("addedfile", function(file) {
+                if (this.files.length) {
+                    var _i, _len;
+                    for (_i = 0, _len = this.files.length; _i < _len - 1; _i++) // -1 to exclude current file
+                    {
+                        if(this.files[_i].name === file.name && this.files[_i].size === file.size && this.files[_i].lastModifiedDate.toString() === file.lastModifiedDate.toString())
+                        {
+                            this.removeFile(file);
+                        }
+                    }
+                }
+            });
+            
+            noticeDropzone.on('sending', function(file, xhr, formData) {
+                // formData.append('title', $('#title').val());
+                // formData.append('text', $('#summernote').val());
+                formData.append('nin', $('input[name=nin]').val());
+            });
+            
+            noticeDropzone.on('error', function(file, res) {
+                $(file.previewElement).find('.dz-error-message').text(response);
+            });
+        },
+        success: function(file, res) {
+            console.log(file);
+        },
+        error: function(file, res) {
+            alert("{{__('car_excel_fail')}}");
+            location.reload();
+        }
+    };
 </script>
     
     

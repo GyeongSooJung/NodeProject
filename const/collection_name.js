@@ -9,6 +9,7 @@ const COLLECTION_NAME = {
     "GoodsOption" : "GoodsOption",
     "History" : "History",
     "Notice" : "Notice",
+    "NoticeUpload" : "NoticeUpload",
     "Order" : "Order",
     "OrderDetail" : "OrderDetail",
     "Point" : "Point",

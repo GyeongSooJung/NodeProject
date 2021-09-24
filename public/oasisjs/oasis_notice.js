@@ -29,6 +29,8 @@ function noticepop(obj) {
 	
 	$(".notice-body").empty();
 	$(".notice-date").empty();
+	$(".notice-file").addClass("d-none");
+	$(".file-list").empty();
 	
 	if (noticeid) {
 		$.ajax({
@@ -45,6 +47,18 @@ function noticepop(obj) {
         	    insertTr += "<div class='text-center'>" +data.noticedetail[0].CO + "</div>";
         	    $(".notice-body").append(insertTr);
         	    $(".notice-date").append("<h6 class='mb-0'>"+moment(data.noticedetail[0].CA).format('YYYY-MM-DD')+"</h6>");
+			
+				if(data.filedetail.length != 0) {
+        	    	$(".notice-file").removeClass("d-none");
+        	    	if(data.filedetail.length > 1) {
+        	    		for(var i = 0; i < data.filedetail.length; i ++) {
+        	    			$(".file-list").append(`<p><a href="`+data.filedetail[i].FI.replace('public','..')+`" download>`+data.filedetail[i].ON+`</a></p>`);
+        	    		}
+        	    	}
+        	    	else {
+        	    		$(".file-list").append(`<a href="`+data.filedetail[0].FI.replace('public','..')+`" download>`+data.filedetail[0].ON+`</a>`);
+        	    	}
+        	    }
 			}
 		})
 	}
@@ -53,30 +67,28 @@ function noticepop(obj) {
 	}
 }
 
-// 공지사항 작성
-function noticewrite(noticeTitle, noticeText) {
+// // 공지사항 작성
+// function noticewrite() {
+	
+//     var form = $('#noticeFileForm')[0];
+//     var data = new FormData(form);
     
-    var title = $('#'+noticeTitle).val();
-    var text = $('.'+noticeText).html();
-    
-     $.ajax({
-		url: "/ajax/notice_write",
-        type: "POST",
-        async: false,
-        dataType: 'json',
-        data: {
-           title : title,
-           text : text
-        }
-    }).done(function (data) { 
-        console.log(data)
-        if(data.result == true) {
-            alert(i18nconvert("notice_register"));
-			location = '/notice_list';
-        }
+//      $.ajax({
+//         type: "POST",
+//         processData: false,
+//         contentType: false,
+//         enctype: 'multipart/form-data',
+//         url: "/ajax/notice_write",
+//         data: data
         
-    })
-}
+//     }).done(function (data) { 
+//         console.log(data)
+//         if(data.result == true) {
+//             alert(i18nconvert("notice_register"));
+// 			location = '/notice_list';
+//         }
+//     })
+// }
 
 // 공지사항 팝업 체크
 function checkpop(checkbox) {
