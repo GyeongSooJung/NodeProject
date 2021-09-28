@@ -14,6 +14,9 @@ window.addEventListener('load', function() {
 	if (cut[1] == 'pay_confirm') {
 		cut[1] = 'shop';
 	}
+	if (cut[1] == 'notice_write') {
+		cut[1] = 'notice_list';
+	}
 	if (cut[1] == 'main') {
 		cut[1] = '';
 	}

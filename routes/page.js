@@ -979,6 +979,7 @@ router.post('/ajax/notice_file', isNotLoggedIn, DataSet, agentDevide, upload.arr
   const originalName = files[0].originalname;
   
   await modelQuery(QUERY.Create,COLLECTION_NAME.NoticeUpload,{OID: nin, FI: saveFile, ON: originalName },{});
+  res.send({result: true});
 });
 
 // 공지사항 팝업

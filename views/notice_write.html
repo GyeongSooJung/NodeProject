@@ -130,7 +130,6 @@
     Dropzone.options.noticeDropzone = {
         url: "/ajax/notice_file",
         autoProcessQueue: false,
-        method: 'post',
         paramName: 'noticeFile',
         clickable: true,
         thumbnailHeight: 90, // Upload icon size
@@ -195,7 +194,8 @@
             });
         },
         success: function(file, res) {
-            console.log(file);
+            alert("{{__('notice_register')}}");
+            location = '/notice_list';
         },
         error: function(file, res) {
             alert("{{__('car_excel_fail')}}");
