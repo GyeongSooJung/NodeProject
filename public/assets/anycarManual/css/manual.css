@@ -1,0 +1,28 @@
+body{
+    width: 100%;
+    margin: 0 auto;
+}
+
+img{
+    display: block;
+    margin: auto;
+}
+
+@media screen and (max-width: 1050px) {
+    img{
+        width: 800px;
+    }
+ }
+
+ @media screen and (max-width: 800px) {
+    img{
+        width: 600px;
+    }
+ }
+
+ @media screen and (max-width: 600px) {
+    img{
+        width: 300px;
+    }
+ }
+

@@ -1133,10 +1133,20 @@ router.get('/gstest', isNotLoggedIn, DataSet, agentDevide, async(req, res, next)
   //함수실행
     ExcelTest();
   
+});
+
+//애니카 메뉴얼
+router.get('/anycarManual', async(req, res, next) => {
+  try {
+    res.render('anycarManual');
+  } catch(err) {
+    console.error(err);
+    next(err);
+  }
 })
 
 //테스트
-router.post('/password', async(req, res, next) => {
+router.post('/passwordtest', async(req, res, next) => {
   try {
     const newPW = encrypt(req.body.name, process.env.cryptoKey);
     const exPW = decrypt(newPW, process.env.cryptoKey);
