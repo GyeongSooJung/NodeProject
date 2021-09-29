@@ -106,3 +106,6 @@ dist
 
 # package-loc.json
 package-lock.json
+
+# uploadfile
+.public/assets/upload/
