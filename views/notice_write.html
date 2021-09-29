@@ -161,8 +161,14 @@
                     }
                 }).done(function (data) {
                     if(data.result == true) {
-                        $('input[name=nin]').val(data.oid);
-                        noticeDropzone.processQueue();
+                        if(noticeDropzone.files.length > 0) {
+                            $('input[name=nin]').val(data.oid);
+                            noticeDropzone.processQueue();
+                        }
+                        else {
+                            alert("{{__('notice_register')}}");
+                            location = '/notice_list';
+                        }
                     }
                     else {
                         alert("{{__('car_excel_fail')}}");
@@ -184,8 +190,6 @@
             });
             
             noticeDropzone.on('sending', function(file, xhr, formData) {
-                // formData.append('title', $('#title').val());
-                // formData.append('text', $('#summernote').val());
                 formData.append('nin', $('input[name=nin]').val());
             });
             
