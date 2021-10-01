@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>영어 OASIS 보이는 소독 시스템</title>
+    <link rel="stylesheet" href="../assets/qrcode/css/main.css" class="css">
+    <script src="https://kit.fontawesome.com/71839e8cce.js" crossorigin="anonymous"></script>
+    <link href="../assets/img/favicon.png" rel="icon">
+  </head>
+  <body>
+    <div class="wrap-login">
+      <section class="section">
+        <div class="container">
+            <h1>
+              <img src="../assets/qrcode/assets/images/brand-symbol-w.svg" alt="오아시스 심볼" class="is-block mb-10">
+              <img src="../assets/qrcode/assets/images/brand-wordtype.svg" alt="오아시스">
+            </h1>
+            <p class="keymessage">
+              안전이 보이니<br>마음이 놓인다.
+            </p>
+            <form action="/publish" method="get">
+              <div class="form-group">
+                <input type="hidden" name="cat" value="{{cat}}" />
+                <input type="hidden" name="lang" value="{{lang}}" />
+                <input type="text" name="cn" value="{{cn}}" placeholder="차량 번호를 입력하세요." class="input">
+                <button type="submit" class="button">
+                  소독리포트 보기 <img src="../assets/qrcode/assets/images/chevron_right-24px.svg" alt="" class="ico_arrow-right">
+                </button>
+              </div>
+            </form>
+        </div>
+      </section>
+    </div>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="../oasisjs/oasis_error_link.js"></script>
+  </body>
+</html>

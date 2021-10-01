@@ -8,10 +8,16 @@ const router = express.Router();
 router.get('/', async(req, res, next) => {
   var cn = req.query.cn;
   var cat = req.query.cat;
+  var lang = req.query.lang;
   
   try {
     if(cat == 1) {
-      res.render('inflow', { cn, cat });
+      if(lang == 'en') {
+        res.render('inflow_en', { cn, cat, lang });
+      }
+      else {
+        res.render('inflow', { cn, cat, lang });
+      }
     }
     else {
       res.render('error');
