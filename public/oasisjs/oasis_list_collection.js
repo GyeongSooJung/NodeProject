@@ -397,7 +397,7 @@
      	var indexcount = 1; // 인덱스번호 초기화
      	
 		
-		if (Object.CNU == "3388800960") {
+		if (Object.CNU == "3388800960000") {
 			$("#memDiv1").empty();
 			insertTr +="<tr>";
 			insertTr +="<th width='1%'><input type='checkbox' class='neHeros' value='' onChange='allCheckedBox(this);'/></th>";
@@ -429,7 +429,7 @@
 				insertTr += "fa-sort'></a></i></th>";
 				
 			
-			if (Object.CNU == "3388800960") {
+			if (Object.CNU == "3388800960000") {
 				insertTr +="<th width='10%'>본사/대리점</th>";
 				insertTr +="<th width='10%'>MK본사 권한</th>";
 				insertTr +="<th width='10%'>대리점 권한</th>";
@@ -549,7 +549,7 @@
 			else 
 				insertTr += "fa-sort'></a></i></th>";
 			
-			if (Object.CNU =="3388800960") {
+			if (Object.CNU =="3388800960000") {
 				insertTr +="<th width='10%'>본사/대리점</th>";
 				insertTr +="<th width='10%'>MK본사 권한</th>";
 				insertTr +="<th width='10%'>대리점 권한</th>";
