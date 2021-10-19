@@ -160,7 +160,13 @@
       </section>
     </main>
     <footer class="footer">
-        <p>{{companyone.CNA}}</p>
+      {% if (historyone.CNM == '123가1234') %}
+      <p>주식회사 엠케이</p>
+      {% elseif (historyone.CNM == '123') %}
+      <p>주식회사 엠케이</p>
+      {% else %}
+      <p>{{historyone.CNA}}</p>
+      {% endif %}
     </footer>
 
     <!-- modal -->

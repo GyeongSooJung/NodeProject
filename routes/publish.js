@@ -90,10 +90,10 @@ router.get('/brand', async (req, res, next) => {
   
   // res.render('publish_brand', {CN, HID, cat, companyone});
   if(lang == 'en') {
-    res.render('publish_brand_en', {CN, HID, cat, lang});
+    res.render('publish_brand_en', {CN, HID, cat, historyone, lang});
   }
   else {
-    res.render('publish_brand', {CN, HID, cat});
+    res.render('publish_brand', {CN, HID, cat, historyone});
   }
 });
 

@@ -8,7 +8,7 @@
   <meta property="og:description" content="즐거운 드라이브를 위해 정기적으로 실시된 방역관리를 확인해보세요.">
   <meta property="og:image" content="../assets/img/oasis.png">
   <title>영어 OASIS 보이는 소독 시스템</title>
-  <link rel="stylesheet" href="../assets/qrcode/css/main.css" class="css">
+  <link rel="stylesheet" href="../assets/qrcode/css/main_en.css" class="css">
   <!--임의로 추가한 커스텀css파일-->
   <link rel="stylesheet" href="../assets/qrcode/css/custom.css" class="css">
   <!---->
@@ -30,14 +30,14 @@
         <div class="navbar-util">
           <a id="showModal" class="button is-light is-share">
             <i class="fas fa-share-square"></i>
-            <span>공유하기</span>
+            <span>SHARE</span>
           </a>
         </div>
         <div id="modal" class="modal">
           <div id="modal-background" class="modal-background"></div>
           <div class="modal-card">
             <header class="modal-card-head">
-              <p class="modal-card-title">링크 공유</p>
+              <p class="modal-card-title">SHARE</p>
               <button id="closetop" class="delete" aria-label="close"></button>
             </header>
             <section class="modal-card-body">
@@ -58,7 +58,7 @@
                    <!--카카오톡 공유 -->
               		<li>
                     <a href="javascript:shareKatalk()"><img src="../assets/qrcode/assets/images/sns_ka.png" width="40" alt="카카오톡 공유하기"></a>
-                    <p>카카오톡</p>
+                    <p>KakaoTalk</p>
                   </li>
                   <!-- 카카오스토리 공유 -->
                   <!--<li>-->
@@ -66,11 +66,11 @@
                   <!--</li>-->
                   <li>
                     <a href="javascript:copyLink()"><img src="../assets/qrcode/assets/images/copy_link.png" width="40" alt="링크 복사"></a>
-                    <p>링크 복사</p>
+                    <p>Link Copy</p>
                   </li>
                 </ul>
               </div>
-              <div class='toast'>링크가 복사되었습니다.</div>
+              <div class='toast'>The link has been copied.</div>
             </section>
             <!-- <footer class="modal-card-foot">
               <button id="closebtn" class="button">창 닫기</button>
@@ -85,8 +85,8 @@
       <h3 class="screen-out">소독리포트 요약</h3>
       <section class="section intro">
         <div class="container">
-          <p class="subtitle is-3">즐거운 드라이브를 위해</p>
-          <p class="title is-2"><strong>{{historyone.CNA}}는 정기적으로<br>방역관리를 실시합니다.</strong></p>
+          <!--<p class="subtitle is-3">즐거운 드라이브를 위해</p>-->
+          <p class="title is-2"><strong>We conduct regular quarantine control<br>for pleasant drive.</strong></p>
           <div class="ico-intro">
             <div class="ico-intro-inner">
               <svg xmlns="http://www.w3.org/2000/svg" width="122" height="140" viewBox="0 0 122 140" class="shape-hexagon">
@@ -108,7 +108,9 @@
           </div>
           <span class="desc-carnum">{{historyone.CNM}}</span>
           {% if (historyone.CNM == '123가1234') %}
-          <p>주식회사 엠케이</p>
+          <p>MK Co.,Ltd.</p>
+          {% elseif (historyone.CNM == '123') %}
+          <p>MK Co.,Ltd.</p>
           {% else %}
           <p>{{historyone.CNA}}</p>
           {% endif %}
@@ -117,14 +119,14 @@
       
       <h3 class="screen-out">소독리포트 상세정보</h3>
       <section class="section py-5 has-text-centered">
-        <p class="has-text-grey">안녕하세요 고객님!<br>이 차량의 소독을 담당한 {{historyone.WNM}}입니다.</p>
+        <p class="has-text-grey">Hello, customers!<br>I’m {{historyone.WNM}} who is in charge of disinfection for this car.</p>
       </section>
       <hr>
       <section class="section service">
         <div class="container">
           <div class="area-header">
             <h4 class="title is-2">
-              오아시스가 지켜드려요!
+              Oasis will keep you safe!
             </h4>
           </div>
           <div class="area-body">
@@ -133,25 +135,25 @@
                   <div class="box">
                     <img src="../assets/qrcode/assets/images/find_replace.svg" alt="" class="mr-6">
                     <div>
-                      <p><strong>똑똑한 소독 시스템</strong></p>
-                      <span class="is-size-6">빈틈없는 오존관리로 강력한 살균</span>
+                      <p><strong>Smart disinfection system</strong></p>
+                      <span class="is-size-6">Strong sterilization with thorough ozone management</span>
                     </div>
                   </div>
                   <div class="box">
                     <img src="../assets/qrcode/assets/images/receipt.svg" alt="" class="mr-6">
                     <div>
-                      <p><strong>소독리포트로 한번에</strong></p>
-                      <span class="is-size-6">QR코드로 간편하게 확인</span>
+                      <p><strong>At a glance with disinfection report</strong></p>
+                      <span class="is-size-6">Easily check with QR code</span>
                     </div>
                   </div>
                   <div class="box">
                     <img src="../assets/qrcode/assets/images/health_and_safety.svg" alt="" class="mr-6">
                     <div>
-                      <p><strong>믿을 수 있는 안전성</strong></p>
-                      <span class="is-size-6">공간은 안전하게 세균은 완벽하게</span>
+                      <p><strong>Reliable safety</strong></p>
+                      <span class="is-size-6">Make the space safe, remove germs perfectly</span>
                     </div>
                   </div>
-                  <a href="/publish/brand?cat={{cat}}&cn={{historyone.CNM}}&hid={{historyone._id}}&lang={{lang}}" class="button is-ghost is-fullwidth mt-6">자세히 보기<i class="fas fa-chevron-right fa-xs ml-3"></i></a>
+                  <a href="/publish/brand?cat={{cat}}&cn={{historyone.CNM}}&hid={{historyone._id}}&lang={{lang}}" class="button is-ghost is-fullwidth mt-6">See details<i class="fas fa-chevron-right fa-xs ml-3"></i></a>
                 </div>
               </div>
           </div>
@@ -161,41 +163,46 @@
         <div class="container">
           <div class="area-header">
             <h4 class="title is-2 is-spaced">
-              한눈에 보는 소독 리포트
+              Disinfection report checked at a glance
             </h4>
-            <p class="subtitle is-4">안전하게 소독공정 완료</p>
+            <p class="subtitle is-4">Disinfection process is completed safely</p>
           </div>
           <div class="area-body">
             <div class="columns is-mobile">
               <div class="column">
                 <div class="box">
-                  <span class="is-size-4">이 차량은</span>
+                  <span class="is-size-4">This car has been disinfected</span>
                   <p class="is-size-2">
                     <strong class="mr-2 has-text-info">
                       <!--홍보용-->
                       {% if (historyone.CNM == '123가1234') %}
-                        1일
+                        1days
+                      {% elseif (historyone.CNM == '123') %}
+                        1days
                       <!--기본-->
                       {% else %}
                         {% if (term <= 24) %}
-                          {{term}}시간
+                          {{term}}hours
                         {% elseif (term <= 48) %}
-                          {{term//24}}일{{term%24}}시간
+                          {{term//24}}days{{term%24}}hours
                         {% else %}
-                          <script>document.write(Math.floor({{term/24}})+"일");</script>
+                          <script>document.write(Math.floor({{term/24}})+"days");</script>
                         {% endif %}
                       {% endif %}
-                    전</strong>소독 공정 완료
+                    </strong>ago
                   </p>
                   <table class="table is-striped">
                     <tbody>
                       <tr>
-                        <th>최근 소독일</th>
+                        <th>Recent date of disinfection</th>
                         <td>
                           <script>
                             var et;
                             // 홍보용
                             if ('{{historyone.CNM}}' == '123가1234') {
+                              et = moment().add(-1, 'days').format('YYYY-MM-DD');
+                            }
+                            else if ('{{historyone.CNM}}' == '123') {
                               et = moment().add(-1, 'days').format('YYYY-MM-DD');
                             }
                             // 기본
@@ -207,7 +214,7 @@
                         </td>
                       </tr>
                       <tr>
-                        <th>소요시간</th>
+                        <th>Time required</th>
                         <td>
                           {% if (historyone.PD.length//60)==0  %}
                             {{historyone.PD.length%60+"s"}}
@@ -217,15 +224,17 @@
                         </td>
                       </tr>
                       <tr>
-                        <th>담당 렌터카</th>
+                        <th>Rental car in charge</th>
                         <td>{{historyone.CNA}}</td>
                       </tr>
                       <tr>
-                        <th>담당 작업자</th>
+                        <th>Person in charge</th>
                         <td>
                           <!--홍보용-->
                           {% if (historyone.CNM == '123가1234') %}
                             엠케이
+                          {% elseif (historyone.CNM == '123') %}
+                            MK
                           <!--기본-->
                           {% else %}
                             {{historyone.WNM}}
@@ -233,7 +242,7 @@
                         </td>
                       </tr>
                       <tr>
-                        <th>담당 소독기<br><small>(뒤 4자리)</small></th>
+                        <th>Disinfector in charge<br><small>Back four digits</small></th>
                         <td>
                           <script>
                             function macCut() {
@@ -267,9 +276,9 @@
         <div class="container">
           <div class="area-header">
             <h4 class="title is-2 is-spaced mb-2">
-              이제 안심하세요
+              Feel relieved now
             </h4>
-            <p class="subtitle is-4 has-text-grey">20여가지의 유해균 살균</p>
+            <p class="subtitle is-4 has-text-grey">20 types of harmful bacteria are sterilized </p>
           </div>
           <div class="area-body">
             <div class="accordions">
@@ -277,186 +286,186 @@
               <article class="accordion is-active">
                 <div class="accordion-header toggle">
                   <div>
-                    <p class="has-text-weight-bold">감기 바이러스</p>
-                    <span class="is-size-6 has-text-info">바이러스</span> &#xb7; <span class="is-size-6 has-text-grey">감기 원인균</span>
+                    <p class="has-text-weight-bold">Cold virus</p>
+                    <span class="is-size-6 has-text-info">Virus</span> &#xb7; <span class="is-size-6 has-text-grey">Causative organism of cold</span>
                   </div>
                 </div>
                 <div class="accordion-body">
                   <div class="accordion-content">
-                    주로 감염된 사람의 재채기나 기침을 통해 나온 비말 속에 섞여 공기 중으로 나옴. 이 비말을 접촉한 사람의 입이나 코를 통해 감기 바이러스가 몸 안으로 들어옴.
+                    It is released into the air by being mixed in droplets from sneeze or cough of infected man. Cold viruses enter into the body through mouth or nose of person who contacted this droplet.
                   </div>
                 </div>
               </article>
               <article class="accordion">
                 <div class="accordion-header">
                   <div>
-                    <p class="has-text-weight-bold">계 뇌척수염 바이러스</p>
-                    <span class="is-size-6 has-text-info">바이러스</span> &#xb7; <span class="is-size-6 has-text-grey">조류독감 원인균</span>
+                    <p class="has-text-weight-bold">Encephalomyelitis virus</p>
+                    <span class="is-size-6 has-text-info">Virus</span> &#xb7; <span class="is-size-6 has-text-grey">Causative organism of Bird Influenza</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
                 <div class="accordion-body">
                   <div class="accordion-content">
-                    조류독감을 유발하는 바이러스. 병아리에서는 운동실조, 마비 등이 나타나며, 성계에서는 산란율 감소가 나타나는 제 2종 가축전염병. 외부 환경에 대한 저항성이 매우 높으며, 분변을 통해 다량의 바이러스가 배출됨.
+                    As a virus that causes bird influenza, ataxia or paralysis may be caused in chicks. It is a second type of infectious disease in domestic animals that causes the reduction of spawning rate for matured fowl. It is very resistance to the external environment and a large amount of viruses are released through faces.
                   </div>
                 </div>
               </article>
               <article class="accordion">
                 <div class="accordion-header">
                   <div>
-                    <p class="has-text-weight-bold">인플루엔자</p>
-                    <span class="is-size-6 has-text-info">바이러스</span> &#xb7; <span class="is-size-6 has-text-grey">독감 원인균</span>
+                    <p class="has-text-weight-bold">Influenza</p>
+                    <span class="is-size-6 has-text-info">Virus</span> &#xb7; <span class="is-size-6 has-text-grey">Causative organism of flue</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
                 <div class="accordion-body">
                   <div class="accordion-content">
-                    두통, 발열, 오한, 근육통과 같은 전신 증상이 갑자기 발생하면서 기침이 나는 등 호흡기 증상이 동반됨. 일반적으로 고열이 발생하며, 그 외 증상은 환자별로 다양함. 감염경로는 크게 두가지로 비말(호흡 분비물)감염과 접촉감염으로 이루어짐.
+                    It is accompanied by respiratory symptom such as coughing while constitutional symptoms such as headache, fever, chill and muscular pains are suddenly appeared. In general, high fever occurs, and other symptoms may be varied depending on patients. Infection routes are mainly two which are droplets (respiratory secretion) infection and contact infection.
                   </div>
                 </div>
               </article>
               <article class="accordion">
                 <div class="accordion-header">
                   <div>
-                    <p class="has-text-weight-bold">견 파보 바이러스</p>
-                    <span class="is-size-6 has-text-info">바이러스</span> &#xb7; <span class="is-size-6 has-text-grey">개 전염균</span>
+                    <p class="has-text-weight-bold">Dog parvo virus</p>
+                    <span class="is-size-6 has-text-info">Virus</span> &#xb7; <span class="is-size-6 has-text-grey">Dog infectious bacteria</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
                 <div class="accordion-body">
                   <div class="accordion-content">
-                    개에서 발생되는 전염성 바이러스로 사람에게는 전염되지 않음. 전염성이 매우 높으며, 직간접적인 분비물로 인해 전파됨. 예방접종을 하지 않을 경우, 치사율은 91%에 다다름.
+                    As an infectious virus that occurs in dogs, it is not contagious against human. It is very contagious and is spread through indirect and direct secretions. Fatality rate would be reached to 91% without vaccination.
                   </div>
                 </div>
               </article>
               <article class="accordion">
                 <div class="accordion-header">
                   <div>
-                    <p class="has-text-weight-bold">견 전염성 간염바이러스</p>
-                    <span class="is-size-6 has-text-info">바이러스</span> &#xb7; <span class="is-size-6 has-text-grey">독감 원인균</span>
+                    <p class="has-text-weight-bold">Dog infectious virus</p>
+                    <span class="is-size-6 has-text-info">Virus</span> &#xb7; <span class="is-size-6 has-text-grey">Causative organism of flue</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
                 <div class="accordion-body">
                   <div class="accordion-content">
-                    주로 감염된 동물의 분비물로 인해 바이러스가 생성, 전파됨. 회복된 개는 뇨를 통해 6개월 이상 바이러스를 배출함. 개에게 심한 쇠약, 백혈구감소증, 출혈시간 연장 등이 나타남.
+                    Viruses are mainly caused and spread by secretions of infected animals. Recovered dogs release virus through urine for more than 6 months. Severe weakness, leukopenia and extension of bleeding time would be shown.
                 </div>
               </article>
               <article class="accordion">
                 <div class="accordion-header">
                   <div>
-                    <p class="has-text-weight-bold">대장균</p>
-                    <span class="is-size-6 has-text-info">박테리아</span> &#xb7; <span class="is-size-6 has-text-grey">장질환 원인균</span>
+                    <p class="has-text-weight-bold">Colon bacillus</p>
+                    <span class="is-size-6 has-text-info">Bacteria</span> &#xb7; <span class="is-size-6 has-text-grey">Causative organism of enteropathy</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
                 <div class="accordion-body">
                   <div class="accordion-content">
-                    대장에 분포하는 세균 종 가운데 하나로 대부분 인체에 무해함. 단, 면연력이 저하된 사람은 대장균의 종류에 따라 질환이 생길 수 있음.
+                   As one of bacterial classes that are found in large intestine, it is harmless to human body. However, people with reduced immunity may suffer from diseases according to the type of colon bacillus.
                 </div>
               </article>
               <article class="accordion">
                 <div class="accordion-header">
                   <div>
-                    <p class="has-text-weight-bold">포도상구균</p>
-                    <span class="is-size-6 has-text-info">박테리아</span> &#xb7; <span class="is-size-6 has-text-grey">비병원성</span>
+                    <p class="has-text-weight-bold">Staphylococcus</p>
+                    <span class="is-size-6 has-text-info">Bacteria</span> &#xb7; <span class="is-size-6 has-text-grey">Avirulent</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
                 <div class="accordion-body">
                   <div class="accordion-content">
-                    토양미생물이 대부분으로 인체에 무해함. 인간이나 여러 생물의 점막 혹은 피부에 서식함.
+                    Most of them are soil microorganisms and are harmless to human body. It inhabits the mucous membrane or skin of human or various living things.
                 </div>
               </article>
               <article class="accordion">
                 <div class="accordion-header">
                   <div>
-                    <p class="has-text-weight-bold">황색 포도상구균</p>
-                    <span class="is-size-6 has-text-info">박테리아</span> &#xb7; <span class="is-size-6 has-text-grey">식중독 원인균</span>
+                    <p class="has-text-weight-bold">Staphylococcus aureus</p>
+                    <span class="is-size-6 has-text-info">Bacteria</span> &#xb7; <span class="is-size-6 has-text-grey">Causative organism of food poisoning</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
                 <div class="accordion-body">
                   <div class="accordion-content">
-                    사람이나 동물의 피부, 소화관에 상재하는 포도상 구균의 하나임. 사람에게 농양 등 다양한 표피 감염, 식중독, 폐렴, 수막염, 패혈증 등을 일으킴. 하지만, 병원체가 아닌 정상 세균종으로 존재할 수도 있음.
+                    It is one of staphylococcus that live in skin and digestive canal of human or animals. It causes various epidermis infections such as abscess, food poisoning, pneumonia, meningitis and septicemia to human. However, it may also exist as normal bacteria, not pathogenic bacterium.
                 </div>
               </article>
               <article class="accordion">
                 <div class="accordion-header">
                   <div>
-                    <p class="has-text-weight-bold">살모넬라균</p>
-                    <span class="is-size-6 has-text-info">박테리아</span> &#xb7; <span class="is-size-6 has-text-grey">식중독 원인균</span>
+                    <p class="has-text-weight-bold">Salmonella</p>
+                    <span class="is-size-6 has-text-info">Bacteria</span> &#xb7; <span class="is-size-6 has-text-grey">Causative organism of food poisoning</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
                 <div class="accordion-body">
                   <div class="accordion-content">
-                    대표적인 식중독 원인균이며, 장티푸스와 파라티푸스 등의 질병을 일으킴. 주로 사람이나 동물의 장에 서식하고, 날고기 제품에서 자연적으로 발견될 수 있으며, 위생치 못한 식품 취급 방법을 통해 들어가게 됨.
+                    As a representative causative organism of food poisoning, it causes typhoid and paratyphoid. It normally lives in intestines of human and animals and is naturally found in raw meat products. It enters through unsanitary food handling process. 
                 </div>
               </article>
               <article class="accordion">
                 <div class="accordion-header">
                   <div>
-                    <p class="has-text-weight-bold">녹농균</p>
-                    <span class="is-size-6 has-text-info">박테리아</span> &#xb7; <span class="is-size-6 has-text-grey">패혈증환 원인균</span>
+                    <p class="has-text-weight-bold">Bacillus pyocyaneus</p>
+                    <span class="is-size-6 has-text-info">Bacteria</span> &#xb7; <span class="is-size-6 has-text-grey">Causative organism of septicemia</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
                 <div class="accordion-body">
                   <div class="accordion-content">
-                    기회성 병원균으로 건강한 사람에겐 무해함. 단, 면역력이 저하된 사람에게는 치명적으로 작용하여 사망에까지 이르게 할 수 있음. 녹농균은 모낭염과 같은 피부질환부터 각막염, 폐렴, 솔수염, 관절증, 복막염 등으로 이어질 수 있음. 특히 수술, 화상, 외상이 발생한 환자가 감염되면 패혈증, 뇌막염 등으로 진행됨.
+                    As opportunistic pathogen, it is harmless to healthy people. However, it may be fatal those with reduced immunity enough to lead to death. Bacillus pyocyaneus may lead to skin diseases such as follicultitis, keratitis, pneumonia, monochamus, arthropathy and peritonitis. If patients who had surgery, burns or trauma are infected, it may be developed to septicemia and meningitis. 
                 </div>
               </article>
               <article class="accordion">
                 <div class="accordion-header">
                   <div>
-                    <p class="has-text-weight-bold">곰팡이 진균</p>
-                    <span class="is-size-6 has-text-info">박테리아</span> &#xb7; <span class="is-size-6 has-text-grey">피부질환 원인균</span>
+                    <p class="has-text-weight-bold">Mould fungus</p>
+                    <span class="is-size-6 has-text-info">Bacteria</span> &#xb7; <span class="is-size-6 has-text-grey">Causative organism of skin diseases</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
                 <div class="accordion-body">
                   <div class="accordion-content">
-                    진균은 Bacteria와 비교하여 '진짜 균'이라는 의미를 가짐. 사람과 농작물에 큰 피해를 주는 균으로, 대표적으로 벼 도열병균과 각종 농작물의 잎 마름 병, 버섯의 녹병균을 일으킴. 사람에게는 무좀, 칸디다증(점막 염증), 아스퍼질러스증, 크립토콕쿠스 수염증 등을 일으킴. 건강한 사람에게는 대체로 발병 빈도가 낮으나, 면역력이 저하된 사람에게는 심각함.
+                    Fungus has the meaning of ‘real bacteria’ compared to bacterial. As bacteria that causes great damage to human and crops, it mainly causes blast fungus of rice, dieback of various crops and Uredinales of mushrooms. To human, it causes athlete’s foot, candidiasis (mucosal inflammation), aspergillusis and Cryptococcus meningitis. Occurrence frequency is relatively low for healthy people, but it would be fatal to those with reduced immunity.
                 </div>
               </article>
               <article class="accordion">
                 <div class="accordion-header">
                   <div>
-                    <p class="has-text-weight-bold">쥐티푸스균</p>
-                    <span class="is-size-6 has-text-info">박테리아</span> &#xb7; <span class="is-size-6 has-text-grey">식중독 원인균</span>
+                    <p class="has-text-weight-bold">Salmonella typhimurium</p>
+                    <span class="is-size-6 has-text-info">Bacteria</span> &#xb7; <span class="is-size-6 has-text-grey">Causative organism of food poisoning</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
                 <div class="accordion-body">
                   <div class="accordion-content">
-                    쥐에서 발생하는 티푸스균. 사람이나 동물에게 병원성을 나타내며, 사람에게는 식중독의 원인이 됨.
+                    Typhoid baccilus that occurs to mice. It has pathogen to human and animals, and it causes food poisoning to humans.
                 </div>
               </article>
               <article class="accordion">
                 <div class="accordion-header">
                   <div>
-                    <p class="has-text-weight-bold">고초균</p>
-                    <span class="is-size-6 has-text-info">박테리아</span> &#xb7; <span class="is-size-6 has-text-grey">비병원성, 기회감염균</span>
+                    <p class="has-text-weight-bold">Hay bacillus</p>
+                    <span class="is-size-6 has-text-info">Bacteria</span> &#xb7; <span class="is-size-6 has-text-grey">Pathogenic, opportunistic infection bacillus</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
                 <div class="accordion-body">
                   <div class="accordion-content">
-                    자연계에 널리 분포하는 비병원성, 호기성 간균의 일종. 기본적으로 비병원성이지만 안구가 손상되었을 때, 결막염, 홍채염 등 만성화농증을 일으킬 수 있음.
+                    It is a type of non-pathogenic and aerobic bacillus. In general, it is non-pathogenic, but it may cause chronic pneumonia such as eye inflammation and iritis when eyeballs are damaged.
                 </div>
               </article>
               <article class="accordion">
                 <div class="accordion-header">
                   <div>
-                    <p class="has-text-weight-bold">효모</p>
-                    <span class="is-size-6 has-text-info">박테리아</span> &#xb7; <span class="is-size-6 has-text-grey">비병원성, 기회감염균</span>
+                    <p class="has-text-weight-bold">Yeast</p>
+                    <span class="is-size-6 has-text-info">Bacteria</span> &#xb7; <span class="is-size-6 has-text-grey">Pathogenic, opportunistic infection bacillus</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
                 <div class="accordion-body">
                   <div class="accordion-content">
-                    균계에 속하는 단세포의 진핵미생물. 효모는 약 1,500여 종이 알려져 있으며 양조나 제빵에 사용되는 Sccharomyces가 가장 대표적임. 몇몇 종의 효모는 기회감염균으로, candida는 인간의 점막 등에서 쉽게 발견되는 편리공생을 하는 효모 종이나 가끔 병원성 균으로 작용함. candida albicans는 에이즈 환자나 기타 면역력이 저하된 사람의 구강, 폐에 감염을 일으킴.
+                    IT is eukaryotic microorganism of single cell that belongs to fungi kingdom. About 1,500 types of yeasts are known, and Sccharomyces that are used in brewing or baking is the most representative one. Some types of yeasts are opportunistic infection bacillus, and candida is yeast with commensalism that is easily found in mucous membrane of human, sometimes acting as pathogenic bacteria. Candida albicans causes infection in mouth and lung of AIDS patients or people with reduced immunity.
                 </div>
               </article>
               {% endif %}
@@ -464,14 +473,14 @@
               <article class="accordion">
                 <div class="accordion-header">
                   <div>
-                    <p class="has-text-weight-bold">바실러스 세레우스</p>
-                    <span class="is-size-6 has-text-info">박테리아</span> &#xb7; <span class="is-size-6 has-text-grey">식중독 원인균</span>
+                    <p class="has-text-weight-bold">Bacillu cereus</p>
+                    <span class="is-size-6 has-text-info">Bacteria</span> &#xb7; <span class="is-size-6 has-text-grey">Causative organism of food poisoning</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
                 <div class="accordion-body">
                   <div class="accordion-content">
-                    식중독 유발. 그람 양성 호기성 간균이지만, 어느 정도의 혐기상태에서도 증식하며 내포자를 형성하는 균.
+                    It causes food poisoning. It is a gram-positive bacillus, but it also proliferates in some anaerobic condition and forms endospore.
                 </div>
               </article>
               {% endif %}
@@ -480,7 +489,7 @@
                 <div class="accordion-header">
                   <div>
                     <p class="has-text-weight-bold">B.stearothermophilus</p>
-                    <span class="is-size-6 has-text-info">박테리아</span> &#xb7; <span class="is-size-6 has-text-grey">식품부패 원인균</span>
+                    <span class="is-size-6 has-text-info">Bacteria</span> &#xb7; <span class="is-size-6 has-text-grey">식품부패 원인균</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
@@ -493,7 +502,7 @@
                 <div class="accordion-header">
                   <div>
                     <p class="has-text-weight-bold">Cladosporium</p>
-                    <span class="is-size-6 has-text-info">박테리아</span> &#xb7; <span class="is-size-6 has-text-grey">식품오염 원인균</span>
+                    <span class="is-size-6 has-text-info">Bacteria</span> &#xb7; <span class="is-size-6 has-text-grey">식품오염 원인균</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
@@ -506,7 +515,7 @@
                 <div class="accordion-header">
                   <div>
                     <p class="has-text-weight-bold">웰치간균</p>
-                    <span class="is-size-6 has-text-info">박테리아</span> &#xb7; <span class="is-size-6 has-text-grey">식중독 원인균</span>
+                    <span class="is-size-6 has-text-info">Bacteria</span> &#xb7; <span class="is-size-6 has-text-grey">식중독 원인균</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
@@ -519,7 +528,7 @@
                 <div class="accordion-header">
                   <div>
                     <p class="has-text-weight-bold">곰팡이균</p>
-                    <span class="is-size-6 has-text-info">박테리아</span> &#xb7; <span class="is-size-6 has-text-grey">알레르기 원인균</span>
+                    <span class="is-size-6 has-text-info">Bacteria</span> &#xb7; <span class="is-size-6 has-text-grey">알레르기 원인균</span>
                   </div>
                   <button class="toggle" aria-label="toggle"></button>
                 </div>
@@ -534,13 +543,15 @@
         </div>
       </section>
       <section class="section mt-10 mb-8 has-text-centered">
-        <a href="/inflow?cat=1&lang={{lang}}" class="button re-enter is-medium">다른 차량 확인하기</a>
+        <a href="/inflow?cat=1&lang={{lang}}" class="button re-enter is-medium">See other vehicles</a>
       </section>
 
     </main>
     <footer class="footer">
       {% if (historyone.CNM == '123가1234') %}
-      <p>주식회사 엠케이</p>
+      <p>MK Co.,Ltd</p>
+      {% elseif (historyone.CNM == '123') %}
+      <p>MK Co.,Ltd</p>
       {% else %}
       <p>{{historyone.CNA}}</p>
       {% endif %}
@@ -664,8 +675,8 @@
       var ssAxis = chart.xAxes.push(new am4charts.ValueAxis());
       var ppmAxis = chart.yAxes.push(new am4charts.ValueAxis());
       ssAxis.renderer.grid.template.strokeWidth = 0;
-      ssAxis.title.text = "시간(s)";
-      ppmAxis.title.text = "오존\n(ppm)";
+      ssAxis.title.text = "TIME(s)";
+      ppmAxis.title.text = "OZONE\n(ppm)";
       ppmAxis.layout = "absolute";
       ppmAxis.title.rotation = 0;
       ppmAxis.title.align = "center";
@@ -681,7 +692,7 @@
       series.dataFields.valueY = "ppm";
       series.strokeWidth = 2;
       series.minBulletDistance = 15;
-      series.legendSettings.labelText = "소독 그래프";
+      series.legendSettings.labelText = "Disinfection graph";
       
       // Range Color
       var range1 = ppmAxis.createSeriesRange(series);
@@ -715,7 +726,7 @@
       columnSeries.columns.template.propertyFields.strokeWidth = "strokeWidth";
       columnSeries.columns.template.propertyFields.strokeDasharray = "columnDash";
       columnSeries.tooltip.label.textAlign = "middle";
-      columnSeries.legendSettings.labelText = "오존 안전농도";
+      columnSeries.legendSettings.labelText = "Safe concentration of ozone";
       columnSeries.stroke = am4core.color("#74e883");
       columnSeries.strokeOpacity = 0.5;
       columnSeries.fill = am4core.color("#74e883");
