@@ -225,16 +225,22 @@
                       </tr>
                       <tr>
                         <th>Rental car in charge</th>
-                        <td>{{historyone.CNA}}</td>
+                        {% if (historyone.CNM == '123가1234') %}
+                          <td>MK Co.,Ltd</td>
+                        {% elseif (historyone.CNM == '123') %}
+                          <td>MK Co.,Ltd</td>
+                        {% else %}
+                          <td>{{historyone.CNA}}</td>
+                        {% endif %}
                       </tr>
                       <tr>
                         <th>Person in charge</th>
                         <td>
                           <!--홍보용-->
                           {% if (historyone.CNM == '123가1234') %}
-                            엠케이
+                            MK Co.,Ltd
                           {% elseif (historyone.CNM == '123') %}
-                            MK
+                            MK Co.,Ltd
                           <!--기본-->
                           {% else %}
                             {{historyone.WNM}}
@@ -597,8 +603,8 @@
     shareButton.addEventListener('click', event => {
       if(navigator.share) {
         navigator.share({
-          title: 'OASIS | 안전이 보이니 마음이 놓인다.',
-          text: '즐거운 드라이브를 위해 정기적으로 실시된 방역관리를 확인해보세요.',
+          title: 'OASIS | Feel relieved by seeing safety',
+          text: 'Check out the quarantine management conducted regularly for a pleasant drive.',
           url: link
         }).then(() => {
           console.log('공유 완료');
